@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Finance</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:5px 0;font-size:14px}
+ .g{color:#facc15;font-weight:bold}.e{color:#4ade80;font-weight:bold}
+ button{border:none;border-radius:8px;padding:8px 12px;font-weight:bold;cursor:pointer}
+ .gr{background:#22c55e;color:#052e16}.rd{background:#dc2626;color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>💰 Finance</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a><a href="company.html">🏭 Company</a></div>
+
+ <div class="card">
+   <b> Dompet Pribadi</b>
+   <div class="row"><span>💶 Euro</span><span class="e" id="pEuro">0</span></div>
+   <div class="row"><span>🥇 Gold</span><span class="g" id="pGold">0</span></div>
+   <div class="row"><span>💰 Koin Lokal</span><span class="g" id="pCoin">0</span></div>
+ </div>
+
+ <div class="card">
+   <b>🏦 Global Funds</b>
+   <div id="funds"></div>
+ </div>
+
+ <div class="card">
+   <b>🏰 Kas Organisasi</b>
+   <div class="row"><span id="orgName">-</span><span class="g" id="orgGold">0</span></div>
+ </div>
+
+ <div class="card">
+   <b>🤝 Partners Fund (Invest/Withdraw 1 Euro)</b><br><br>
+   <button class="gr" onclick="invest()">📈 Invest</button>
+   <button class="rd" onclick="withdraw()">📉 Withdraw</button>
+ </div>
+</div>
+<script>
+// ===== MODE DEMO: wallets + funds (4 fund global) + kas org =====
+const W=JSON.parse(localStorage.getItem('gv_demo_wallet')||'null')||{local_coin:0,euro:0,gold:0};
+const O=JSON.parse(localStorage.getItem('gv_org')||'null');
+let F=JSON.parse(localStorage.getItem('gv_funds')||'null')||
+ {partners:{euro:1200,gold:300},war:{euro:35,gold:1},arena:{euro:500,gold:50},global_market:{euro:5000,gold:100}};
+const $=id=>document.getElementById(id);
+const saveF=()=>localStorage.setItem('gv_funds',JSON.stringify(F));
+const NAME={partners:'🤝 Partners',war:'⚔️ War',arena:'🏆 Arena',global_market:'🌍 Global Market'};
+
+function render(){
+  $('pEuro').innerText=W.euro||0; $('pGold').innerText=W.gold||0; $('pCoin').innerText=W.local_coin||0;
+  $('funds').innerHTML=Object.entries(F).map(([k,v])=>
+    '<div class="row"><span>'+NAME[k]+'</span><span><span class="e">💶'+v.euro+'</span> · <span class="g">🥇'+v.gold+'</span></span></div>').join('');
+  $('orgName').innerText=O?O.name:'(belum ada org)';
+  $('orgGold').innerText=O?'🥇 0':'-';
+}
+function invest(){ if((W.euro||0)<1){alert('Euro tidak cukup!');return;} W.euro--;F.partners.euro++;saveF();localStorage.setItem('gv_demo_wallet',JSON.stringify(W));render(); }
+function withdraw(){ if(F.partners.euro<1){alert('Fund kosong!');return;} F.partners.euro--;W.euro=(W.euro||0)+1;saveF();localStorage.setItem('gv_demo_wallet',JSON.stringify(W));render(); }
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — News</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:12px;margin:10px 0}
+ .post{border-bottom:1px dashed #24324f;padding:8px 0;font-size:14px}
+ .who{color:#93c5fd;font-weight:bold}
+ .time{color:#64748b;font-size:11px}
+ .gold{color:#facc15;font-weight:bold}
+ input{width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #24324f;background:#0b1020;color:#fff}
+ button{width:100%;margin-top:6px;border:none;border-radius:8px;padding:10px;font-weight:bold;cursor:pointer;background:#facc15;color:#0b1020}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>📰 Worldwide Shouts</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a></div>
+ <div class="card">
+   <div>🥇 Gold kamu: <span class="gold" id="g">0</span> · <small>Shout = 2 Gold (D-73)</small></div>
+   <input id="txt" maxlength="120" placeholder="Tulis shout...">
+   <button onclick="post()">📣 SHOUT (−2 🥇)</button>
+ </div>
+ <div class="card" id="feed"></div>
+</div>
+<script>
+// ===== D-73: shout bayar 2 gold (anti-spam) =====
+const WKEY='gv_demo_wallet', KEY='gv_news';
+let W=JSON.parse(localStorage.getItem(WKEY)||'null')||{local_coin:0,gold:0};
+// demo: kasih 10 gold sekali biar bisa tes
+if(!localStorage.getItem('gv_gold_demo')){W.gold=(W.gold||0)+10;localStorage.setItem('gv_gold_demo','1');localStorage.setItem(WKEY,JSON.stringify(W));}
+const NPC=[
+ {f:'🇮',n:'ZEAWOLF',t:'WTS company Moldova, low wages & low rate supplies!',d:'16h'},
+ {f:'🇲🇰',n:'Muskroon',t:'Looking for 5 more active players to join our war org.',d:'1d'},
+ {f:'🇮',n:'Phoenix',t:'GLORY SQUAD jangan lari, war lagi besok! ⚔️',d:'2d'},
+];
+let MINE=JSON.parse(localStorage.getItem(KEY)||'[]');
+const $=id=>document.getElementById(id);
+function post(){
+  const t=$('txt').value.trim(); if(!t)return;
+  if((W.gold||0)<2){alert('🥇 Gold tidak cukup (butuh 2)!');return;}
+  W.gold-=2; localStorage.setItem(WKEY,JSON.stringify(W));
+  MINE.unshift({f:'🇮',n:'METAVERSE',t:t,d:'now'});
+  localStorage.setItem(KEY,JSON.stringify(MINE)); $('txt').value=''; render();
+}
+function render(){
+  $('g').innerText=W.gold||0;
+  $('feed').innerHTML=MINE.concat(NPC).map(p=>
+    '<div class="post"><span class="who">'+p.f+' '+p.n+'</span> <span class="time">· '+p.d+'</span><br>'+p.t+'</div>'
+  ).join('');
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Login</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;display:flex;align-items:center;justify-content:center;min-height:100vh}
+ .box{width:340px;background:#16213a;border:1px solid #facc15;border-radius:16px;padding:24px;text-align:center}
+ h1{color:#facc15;margin:0 0 4px} .tag{color:#93c5fd;font-size:12px;margin-bottom:16px}
+ label{display:block;text-align:left;color:#93c5fd;font-size:12px;margin:8px 0 4px}
+ input{width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #24324f;background:#0b1020;color:#fff}
+ .btns{display:flex;gap:8px;margin-top:14px}
+ button{flex:1;padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer}
+ #reg{background:#22c55e;color:#052e16} #log{background:#0ea5e9;color:#fff}
+ #msg{margin-top:12px;font-size:13px;color:#4ade80;min-height:16px}
+</style>
+</head>
+<body>
+<div class="box">
+ <h1>GloryVerse</h1>
+ <div class="tag">Enter the arena. Become a legend</div>
+ <label>Username (Permanen)</label><input id="user" placeholder="mis. Advan">
+ <label>Email</label><input id="email" type="email" placeholder="email@kamu.com">
+ <label>Password</label><input id="pass" type="password" placeholder="••••••••">
+ <div class="btns">
+   <button id="reg">📝 DAFTAR</button>
+   <button id="log">MASUK</button>
+ </div>
+ <div id="msg"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const goHome=()=>{ $('msg').innerText='✅ Sukses! Masuk ke menu...'; setTimeout(()=>location.href='home.html',800); };
+
+$('log').onclick=async()=>{
+  $('msg').innerText='⏳...';
+  const r=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('pass').value});
+  if(r.error){ $('msg').innerText='❌ '+r.error.message; $('msg').style.color='#f87171'; return; }
+  goHome();
+};
+
+$('reg').onclick=async()=>{
+  const u=$('user').value.trim();
+  if(!u){ $('msg').innerText='❌ Username wajib diisi'; return; }
+  $('msg').innerText='⏳ mendaftar...';
+  const r=await db.auth.signUp({
+    email:$('email').value.trim(), password:$('pass').value,
+    options:{data:{username:u, full_name:u, country_code:'ID'}}
+  });
+  if(r.error){ $('msg').innerText='❌ '+r.error.message; $('msg').style.color='#f87171'; return; }
+  if(r.data.session){ goHome(); }
+  else{ $('msg').innerText='✅ Registrasi berhasil! Cek email untuk konfirmasi, lalu MASUK.'; }
+};
+</script>
+</body>
+</html>

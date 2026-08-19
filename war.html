@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — War</title>
+<style>
+ body{font-family:Arial;margin:0;background:#d9c39a;color:#1e293b;padding:12px}
+ .wrap{max-width:460px;margin:0 auto} h1{text-align:center}
+ .hud{display:flex;justify-content:space-between;background:#1e293b;color:#fff;border-radius:10px;padding:8px 12px;font-size:13px}
+ .g{color:#4ade80}.r{color:#f87171}.y{color:#facc15}
+ #field{position:relative;background:#e7d7b0;border:2px solid #b09468;border-radius:12px;height:260px;margin:10px 0;overflow:hidden}
+ .unit{position:absolute;width:56px;text-align:center}
+ .box{height:34px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px}
+ .blue .box{background:#2563eb}.red .box{background:#dc2626}
+ .hp{height:6px;background:#0006;border-radius:3px;margin-top:3px}.hpf{height:6px;border-radius:3px}
+ .blue .hpf{background:#3b82f6}.red .hpf{background:#ef4444}
+ button{width:100%;padding:14px;border:none;border-radius:10px;font-size:17px;font-weight:bold;cursor:pointer}
+ #btnFire{background:#dc2626;color:#fff}
+ #feed{font-size:12px;background:#0003;border-radius:8px;padding:6px;height:90px;overflow:auto}
+ #glory{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;flex-direction:column}
+ #glory h2{color:#facc15;font-size:60px;margin:0;text-shadow:0 0 30px #f59e0b;animation:pop .7s ease}
+ @keyframes pop{0%{transform:scale(.2);opacity:0}60%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+ .conf{position:fixed;top:-20px;font-size:22px;animation:fall linear forwards;pointer-events:none}
+ @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>⚔️ MV Arena — <span id="mvname"></span></h1>
+ <div class="hud">
+   <span>🟩 <b id="kills">0</b> · 🟥 <b id="deaths">0</b></span>
+   <span>KS: <b class="y" id="ks">0</b> (+<b id="buff">0</b>%)</span>
+   <span>Wave <b id="wave">1</b></span>
+ </div>
+ <div id="field"></div>
+ <button id="btnFire">🔥 FIRE</button>
+ <div style="margin-top:8px"><b>Bintang:</b> <span id="stars"></span></div>
+ <div id="feed"></div>
+</div>
+<div id="glory"><h2>GLORY!!!</h2><button style="width:200px;background:#22c55e" onclick="nextWave()">Wave Berikutnya ➜</button></div>
+
+<script>
+const SEL=localStorage.getItem('gv_selected_mv')||'tank';
+const MV={tank:{name:'Heavy Tank',hp:140,dmg:12,ico:'🛡'},jet:{name:'Bomber Jet',hp:80,dmg:18,ico:'🛩'}}[SEL];
+let KS=0,kills=0,deaths=0,wave=1,stars={Cannon:5,Gun:5,Engine:5};
+let you={hp:MV.hp,max:MV.hp},enemies=[];
+const $=id=>document.getElementById(id);
+const baseDmg=()=>MV.dmg*(1+Math.min(KS,10)*0.1);
+function spawn(){enemies=[0,1,2].map(i=>({hp:30+i*10,max:30+i*10,alive:true}));}
+function feed(t){$('feed').innerHTML='<div>'+t+'</div>'+$('feed').innerHTML;}
+
+// ===== D-67: GLORY! victory moment (fanfare + teriakan + confetti + flash) =====
+function playGlory(){
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [523,659,784,1046].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='triangle';o.frequency=f;
+      g.gain.setValueAtTime(0.0001,ctx.currentTime+i*0.12);
+      g.gain.exponentialRampToValueAtTime(0.3,ctx.currentTime+i*0.12+0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+i*0.12+0.3);
+      o.connect(g);g.connect(ctx.destination);o.start(ctx.currentTime+i*0.12);o.stop(ctx.currentTime+i*0.12+0.35);});
+    setTimeout(()=>{try{const u=new SpeechSynthesisUtterance('GLORY!');u.rate=0.7;u.pitch=0.5;u.volume=1;speechSynthesis.speak(u);}catch(e){}},450);
+  }catch(e){}
+}
+function showGlory(){
+  $('glory').style.display='flex';
+  const f=document.createElement('div');f.style.cssText='position:fixed;inset:0;background:radial-gradient(circle,#fde68a,transparent 70%);pointer-events:none';
+  document.body.appendChild(f);f.animate([{opacity:0},{opacity:.9,offset:.2},{opacity:0}],{duration:700});setTimeout(()=>f.remove(),800);
+  const em=['🎉','✨','🔥','⚔️'];
+  for(let i=0;i<24;i++){const s=document.createElement('span');s.className='conf';s.innerText=em[i%4];
+    s.style.left=Math.random()*100+'vw';s.style.animationDuration=(1.5+Math.random()*1.5)+'s';s.style.animationDelay=(Math.random()*.5)+'s';
+    document.body.appendChild(s);setTimeout(()=>s.remove(),3500);}
+  playGlory();
+}
+
+function render(){
+  $('mvname').innerText=MV.name;
+  $('kills').innerText=kills;$('deaths').innerText=deaths;$('ks').innerText=KS;
+  $('buff').innerText=Math.min(KS,10)*10;$('wave').innerText=wave;
+  $('stars').innerText=Object.entries(stars).map(([k,v])=>k+' '+'★'.repeat(v)+'☆'.repeat(5-v)).join('  ');
+  let html='<div class="unit blue" style="left:12px;top:110px"><div class="box">'+MV.ico+'</div><div class="hp"><div class="hpf" style="width:'+(you.hp/you.max*100)+'%"></div></div></div>';
+  enemies.forEach((e,i)=>{if(e.alive)html+='<div class="unit red" style="right:16px;top:'+(40+i*70)+'px"><div class="box">🛡</div><div class="hp"><div class="hpf" style="width:'+(e.hp/e.max*100)+'%"></div></div></div>';});
+  $('field').innerHTML=html;
+}
+function fire(){
+  const t=enemies.find(e=>e.alive);if(!t)return;
+  t.hp-=baseDmg();
+  if(t.hp<=0){t.alive=false;kills++;KS++;feed('🟩 MV musuh hancur! KS +1');}
+  else feed('💥 Tembakan −'+baseDmg().toFixed(0));
+  if(enemies.every(e=>!e.alive))showGlory();
+  render();
+}
+function enemyTick(){
+  const a=enemies.filter(e=>e.alive);if(!a.length)return;
+  you.hp-=a.length*3;
+  if(you.hp<=0){deaths++;KS=0;const k=Object.keys(stars),s=k[Math.floor(Math.random()*k.length)];if(stars[s]>0)stars[s]--;you.hp=you.max;feed('🟥 MV hancur! KS reset, '+s+' −1');}
+  render();
+}
+function nextWave(){wave++;spawn();you.hp=you.max;$('glory').style.display='none';feed('🌊 Wave '+wave+'!');render();}
+$('btnFire').onclick=fire;
+spawn();render();setInterval(enemyTick,1500);
+</script>
+</body>
+</html>

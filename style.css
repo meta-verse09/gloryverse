@@ -1,0 +1,23 @@
+/* style.css — tema GloryVerse */
+:root{--bg:#0a0f1e;--card:#14213f;--line:#233252;--gold:#facc15;--gold2:#f59e0b;
+--green:#22c55e;--blue:#38bdf8;--txt:#e2e8f0;--mut:#8ea0c0}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:system-ui,Segoe UI,Arial;color:var(--txt);
+background:radial-gradient(1200px 600px at 50% -100px,#1b2c55 0%,var(--bg) 60%)}
+.chip{background:#0b1020;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:bold}
+.chip b{color:var(--gold)}
+.card{background:linear-gradient(180deg,var(--card),#0f1a35);border:1px solid var(--line);
+border-radius:16px;padding:12px;margin:10px 0;box-shadow:0 8px 24px #0006}
+.card h3{margin:0 0 8px;color:var(--gold);font-size:14px}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:bold;
+color:#08101f;background:linear-gradient(180deg,var(--gold),var(--gold2));
+box-shadow:0 4px 0 #b45309;cursor:pointer;transition:.08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #b45309}
+.btn.green{background:linear-gradient(180deg,#4ade80,#16a34a);color:#06220f;box-shadow:0 4px 0 #14532d}
+.btn.blue{background:linear-gradient(180deg,#38bdf8,#0284c7);color:#fff;box-shadow:0 4px 0 #075985}
+.bar{height:10px;background:#0b1020;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:7px 8px;border-bottom:1px solid var(--line)}
+th{color:var(--mut);text-align:left;font-size:11px;text-transform:uppercase}

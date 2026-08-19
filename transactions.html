@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Transactions</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:5px 0}
+ .in{color:#4ade80;font-weight:bold}.out{color:#f87171;font-weight:bold}
+ .tx{border-bottom:1px dashed #24324f;padding:6px 0;font-size:14px}
+ .f{background:#24324f;color:#e2e8f0;border:none;border-radius:8px;padding:6px 12px;margin:2px;cursor:pointer}
+ .f.on{background:#facc15;color:#0b1020}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>📜 Transactions</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a><a href="finance.html">💰 Finance</a></div>
+
+ <div class="card">
+   <div class="row"><span>📈 Total Pemasukan</span><span class="in" id="tin">0</span></div>
+   <div class="row"><span>📉 Total Pengeluaran</span><span class="out" id="tout">0</span></div>
+ </div>
+
+ <div style="text-align:center">
+   <button class="f on" data-f="all">Semua</button>
+   <button class="f" data-f="work">⚒️ Kerja</button>
+   <button class="f" data-f="buy">🛒 Belanja</button>
+ </div>
+
+ <div class="card" id="list"></div>
+</div>
+<script>
+// ===== MODE DEMO: riwayat transaksi + filter + ringkasan =====
+const W=JSON.parse(localStorage.getItem('gv_demo_wallet')||'null')||{tx:[]};
+const tx=W.tx||[]; let filter='all';
+const $=id=>document.getElementById(id);
+const num=(s,re)=>{const m=s.match(re);return m?parseFloat(m[1]):0;};
+
+function render(){
+  let tin=0,tout=0;
+  tx.forEach(t=>{ if(t.includes('✅'))tin+=num(t,/\+([\d.]+)/); if(t.includes('🛒'))tout+=num(t,/−([\d.]+)/); });
+  $('tin').innerText=tin.toFixed(1); $('tout').innerText=tout.toFixed(1);
+  const show=tx.filter(t=> filter==='all' || (filter==='work'&&t.includes('✅')) || (filter==='buy'&&t.includes('🛒')));
+  $('list').innerHTML=show.length?show.map(t=>{
+    const isOut=t.includes('🛒');
+    return '<div class="tx">'+t+' <span class="'+(isOut?'out':'in')+'">'+(isOut?'OUT':'IN')+'</span></div>';
+  }).join(''):'<div class="tx">Belum ada transaksi.</div>';
+  document.querySelectorAll('.f').forEach(b=>b.classList.toggle('on',b.dataset.f===filter));
+}
+document.querySelectorAll('.f').forEach(b=>b.onclick=()=>{filter=b.dataset.f;render();});
+render();
+</script>
+</body>
+</html>

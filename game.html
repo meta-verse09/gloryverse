@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Work</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:420px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .badge{background:#14532d;color:#bbf7d0;border-radius:999px;padding:4px 10px;font-size:12px}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:6px 0}
+ .coin{color:#facc15;font-weight:bold}
+ .bar{background:#24324f;border-radius:999px;height:12px;overflow:hidden}
+ .fill{background:#22c55e;height:12px}
+ button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:bold;font-size:16px;cursor:pointer}
+ #btnWork{background:#22c55e;color:#052e16} #btnWork:disabled{background:#334155;color:#94a3b8}
+ a{color:#93c5fd}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>⚒️ Work</h1>
+ <div style="text-align:center"><span class="badge">🔌 ONLINE</span> · <a href="home.html">🏠 Home</a></div>
+ <div class="card">
+   <div class="row"><span>💰 Koin</span><span class="coin" id="coin">0</span></div>
+   <div class="row"><span>🥇 Gold</span><span id="gold">0</span></div>
+   <div class="row"><span>💶 Euro</span><span id="euro">0</span></div>
+ </div>
+ <div class="card">
+   <div class="row"><span>⚡ Energi</span><span id="en">100/100</span></div>
+   <div class="bar"><div class="fill" id="enbar" style="width:100%"></div></div>
+   <div class="row"><span>🕐 Shift hari ini</span><span id="sh">0/3</span></div>
+   <div class="row"><span>⏳ Shift berikutnya</span><span id="cd" style="color:#4ade80">siap!</span></div>
+ </div>
+ <button id="btnWork">KERJA (+15 Koin · −25 Energi)</button>
+ <div class="card" id="msg" style="color:#94a3b8"></div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const COOLDOWN=4*3600*1000;
+let W={},uid=null;
+async function loadWallet(){
+  let w=await db.from('wallets').select('*').eq('user_id',uid).single();
+  if(w.error)w=await db.from('wallets').select('*').eq('id',uid).single();
+  W=w.data||{};
+  $('coin').innerText=W.local_coin??0; $('gold').innerText=W.gold??0; $('euro').innerText=W.euro??0;
+  $('en').innerText=(W.energy??100)+'/100'; $('enbar').style.width=(W.energy??100)+'%';
+  $('sh').innerText=(W.shifts_today??0)+'/3';
+  tick();
+}
+function tick(){
+  const ready=!W.last_work || (Date.now()-new Date(W.last_work).getTime())>=COOLDOWN;
+  const shOk=(W.shifts_today??0)<3 && (W.energy??100)>=25;
+  if(ready){ $('cd').innerText='✅ siap!'; $('btnWork').disabled=!shOk; }
+  else{
+    const r=COOLDOWN-(Date.now()-new Date(W.last_work).getTime());
+    const j=Math.floor(r/3600000), m=Math.floor(r/60000)%60, s=Math.floor(r/1000)%60;
+    $('cd').innerText=j+'j '+m+'m '+s+'d';
+    $('btnWork').disabled=true;
+  }
+}
+(async()=>{
+  const {data:{session}}=await db.auth.getSession();
+  if(!session){location.href='login.html';return;}
+  uid=session.user.id; await loadWallet();
+  setInterval(tick,1000);
+})();
+$('btnWork').onclick=async()=>{
+  $('msg').innerText='⏳ bekerja...';
+  const r=await db.rpc('do_work');
+  if(r.error){ $('msg').innerText='❌ '+r.error.message; await loadWallet(); return; }
+  $('msg').innerText='✅ Shift selesai! +15 Koin (server)';
+  await loadWallet();
+};
+</script>
+</body>
+</html>

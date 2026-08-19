@@ -1,0 +1,32 @@
+/* layout.css — kerangka template ala MyProfitLand */
+header{display:flex;align-items:center;gap:8px;padding:8px 10px;background:linear-gradient(180deg,#182749,#101a33);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:70}
+.logo{color:var(--gold);font-size:16px}
+nav.main{display:flex;gap:2px;background:#0d1730;border-bottom:1px solid var(--line);padding:4px 8px;overflow-x:auto}
+nav.main a{padding:7px 12px;font-size:11px;font-weight:bold;color:var(--mut);text-decoration:none;white-space:nowrap;border-radius:8px}
+nav.main a.on{background:#1b2c55;color:var(--gold)}
+.grid{display:grid;grid-template-columns:220px minmax(0,1fr) 260px;gap:10px;padding:10px;max-width:1280px;margin:0 auto}
+.side .box{background:linear-gradient(180deg,var(--card),#0f1a35);border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:10px}
+.side h3{margin:0 0 6px;color:var(--gold);font-size:13px}
+.menu a{display:block;padding:8px;font-size:12px;font-weight:bold;color:var(--txt);text-decoration:none;border-bottom:1px solid #ffffff12}
+.menu a:hover{color:var(--gold)}
+.fr{font-size:12px;padding:3px 0}
+.sh{font-size:12px;border-bottom:1px solid #ffffff12;padding:6px 0}
+.sh small{display:block;color:var(--mut)}
+#shMsg{width:100%;margin:6px 0;padding:8px;border-radius:8px;border:1px solid var(--line);background:#0b1020;color:var(--txt)}
+/* Panorama 360 */
+.pano{position:relative;height:300px;border-radius:14px;overflow:hidden;border:1px solid var(--line);cursor:grab;touch-action:pan-y;background-repeat:repeat-x;background-position:left center;background-size:auto 100%}
+.pano:active{cursor:grabbing}
+.pano::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,#0a0f1ecc,transparent 10%,transparent 90%,#0a0f1ecc)}
+#sky,#fx{position:absolute;inset:0;pointer-events:none}
+#markers{position:absolute;inset:0;pointer-events:none}
+.mk{position:absolute;top:10px;transform:translateX(-50%);background:#000a;border:1px solid #22c55e;color:#bbf7d0;font-size:10px;font-weight:bold;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.panoHint{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);z-index:3;font-size:10px;color:#fffc;background:#0006;padding:3px 10px;border-radius:999px}
+/* Cuaca */
+#fx.rain{background:repeating-linear-gradient(75deg,transparent 0 7px,#9cd3ff2e 7px 8px);animation:rn .4s linear infinite}
+@keyframes rn{to{background-position:0 40px}}
+#fx.snow{background-image:radial-gradient(2px 2px at 20% 10%,#fffc 50%,transparent 51%),radial-gradient(3px 3px at 70% 40%,#fffb 50%,transparent 51%);background-size:90px 90px;animation:sn 5s linear infinite}
+@keyframes sn{to{background-position:6px 90px,-6px 90px}}
+#fx.fog{background:linear-gradient(90deg,#fff2,#fff5,#fff2);animation:fg 9s ease-in-out infinite alternate}
+@keyframes fg{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
+#fx.cloud{background:#0003}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}

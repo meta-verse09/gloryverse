@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — War Negara</title>
+<style>
+ body{font-family:Arial;margin:0;background:#f1ead8;color:#1e293b;padding:12px;font-size:14px}
+ .wrap{max-width:520px;margin:0 auto} h1{text-align:center;font-size:17px}
+ .bar{display:flex;height:14px;border-radius:7px;overflow:hidden;margin:8px 0}
+ .bA{background:#f59e0b}.bD{background:#3b82f6}
+ .cols{display:flex;gap:10px}.col{flex:1;background:#fff;border:1px solid #d8cfae;border-radius:10px;padding:8px}
+ .p{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:4px 0}
+ .me{background:#fef3c7;font-weight:bold}
+ .card{background:#fff;border:1px solid #d8cfae;border-radius:10px;padding:10px;margin:10px 0}
+ button{border:none;border-radius:8px;padding:10px;font-weight:bold;cursor:pointer}
+ #btnFire{width:100%;background:#dc2626;color:#fff;font-size:16px}
+ button:disabled{background:#9ca3af!important;color:#fff}
+ .eb{background:#0002;border-radius:999px;height:10px;overflow:hidden}.ef{background:#22c55e;height:10px}
+ .ws{color:#b45309;font-weight:bold} a{color:#2563eb}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+// ===== D-70 + D-71 (war 24 jam, open war maks 2/hari, defense terbuka) =====
+const HIT_CD=5,CONS_CD=5,E_HIT=5,E_KOPI=5,E_MOKA=20,E_MILK=2,WS_REQ=350000;
+const MAX_ATTACK=2, WAR_DUR=24*3600*1000; // 24 jam
+const ORG=JSON.parse(localStorage.getItem('gv_org')||'null');
+let WAR=JSON.parse(localStorage.getItem('gv_war')||'null');
+let INV=JSON.parse(localStorage.getItem('gv_inventory')||'{}');
+let ATT=JSON.parse(localStorage.getItem('gv_attacks')||'null');
+const today=()=>new Date().toISOString().slice(0,10);
+if(!ATT||ATT.date!==today())ATT={date:today(),count:0};
+const saveI=()=>localStorage.setItem('gv_inventory',JSON.stringify(INV));
+const saveA=()=>localStorage.setItem('gv_attacks',JSON.stringify(ATT));
+let A,D,hitCd=0,cofCd=0,mokCd=0,energy=100,ws=false;
+const $=id=>document.getElementById(id); const fmt=n=>n.toLocaleString('id-ID');
+const stok=n=>INV[n]||0;
+const sisa=()=>{if(!WAR)return'';let r=WAR.ends_at-Date.now();if(r<0)r=0;
+ const h=Math.floor(r/3600000),m=Math.floor(r/60000)%60,s=Math.floor(r/1000)%60;
+ return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;};
+function startBattle(){A=[{n:'METAVERSE (You)',d:0,me:1},{n:'rhaenyra',d:120000}];D=[{n:'bouny',d:75000}];}
+
+function render(){
+ const a=$('app');
+ if(!ORG){a.innerHTML='<div class="card">Belum punya org. <a href="org.html">🏰 Buat/Join</a></div>';return;}
+ if(!WAR){
+   if(ORG.role!=='leader'){a.innerHTML='<div class="card">🕐 Menunggu Leader declare war...</div>';return;}
+   a.innerHTML='<div class="card"><b>⚔️ Declare War (Leader '+ORG.name+')</b>'+
+    '<div>Open war hari ini: <b>'+ATT.count+'/'+MAX_ATTACK+'</b></div>'+
+    '<div style="color:#64748b;font-size:12px">🛡 Defense: tergantung yang menyerang (bisa multi-attacker)</div><br>'+
+    'Musuh: <select id="def"><option>Macedonia</option><option>Maldives</option></select> '+
+    '<button id="dec" style="background:#dc2626;color:#fff">🚀 DECLARE</button></div>';
+   $('dec').onclick=()=>{ if(ATT.count>=MAX_ATTACK){alert('❌ Maksimal '+MAX_ATTACK+' open war per hari!');return;}
+     ATT.count++;saveA();
+     WAR={def:$('def').value,region:'Lucerne',ends_at:Date.now()+WAR_DUR};
+     localStorage.setItem('gv_war',JSON.stringify(WAR));startBattle();render();};
+   return;
+ }
+ const sA=A.reduce((s,x)=>s+x.d,0),sD=D.reduce((s,x)=>s+x.d,0),tot=sA+sD||1;
+ a.innerHTML='<h1>🇮 '+ORG.name+' vs '+WAR.def+' · '+WAR.region+'</h1>'+
+  '<div class="card">⏳ Sisa war: <b>'+sisa()+'</b> · Open war: <b>'+ATT.count+'/'+MAX_ATTACK+'</b>/hari</div>'+
+  '<div class="bar"><div class="bA" style="width:'+(sA/tot*100)+'%"></div><div class="bD" style="width:'+(sD/tot*100)+'%"></div></div>'+
+  '<div class="card">⚡ Energi <b>'+energy+'%</b><div class="eb"><div class="ef" style="width:'+energy+'%"></div></div>'+
+  ' <span class="ws">'+(ws?'🎖 WS AKTIF':'🎖 WS: 350k/48jam')+'</span> <label><input type="checkbox" id="wsT" '+(ws?'checked':'')+'> Simulate WS</label></div>'+
+  '<div class="cols"><div class="col"><b>⚔️ Attackers</b>'+A.slice().sort((x,y)=>y.d-x.d).map(p=>'<div class="p'+(p.me?' me':'')+'"><span>'+p.n+'</span><b>'+fmt(p.d)+'</b></div>').join('')+'</div>'+
+  '<div class="col"><b>🛡 Defenders</b>'+D.map(p=>'<div class="p"><span>'+p.n+'</span><b>'+fmt(p.d)+'</b></div>').join('')+'</div></div>'+
+  '<div class="card"><button id="btnFire">💥 TEMBAK (−5%)</button><div id="cdn" style="color:#dc2626"></div>'+
+  '<button id="bK" style="background:#92400e;color:#fff">☕ +5% (×'+stok('Coffee')+')</button> '+
+  '<button id="bM" style="background:#7c2d12;color:#fff">🍫 +20% (×'+stok('Moccaccino')+')</button> '+
+  '<button id="bL" style="background:#0369a1;color:#fff">🥛 +2% (×'+stok('Milk Jug')+')</button>'+
+  (ORG.role==='leader'?'<button id="bE" style="width:100%;margin-top:6px;background:#334155;color:#fff">🏳️ AKHIRI WAR</button>':'')+'</div>';
+ $('cdn').innerText=(hitCd>0?'⏳ hit '+hitCd+'s ':'')+(cofCd>0?'· ☕ '+cofCd+'s ':'')+(mokCd>0?'· 🍫 '+mokCd+'s':'');
+ $('btnFire').disabled=(hitCd>0||energy<E_HIT);
+ $('bK').disabled=(cofCd>0||stok('Coffee')<1);
+ $('bM').disabled=(mokCd>0||!ws||stok('Moccaccino')<1);
+ $('bL').disabled=(stok('Milk Jug')<1);
+ $('wsT').onchange=e=>{ws=e.target.checked;render();};
+ $('btnFire').onclick=()=>{if(hitCd>0||energy<E_HIT)return;energy-=E_HIT;A[0].d+=5000;hitCd=HIT_CD;render();};
+ $('bK').onclick=()=>{if(cofCd>0||stok('Coffee')<1)return;INV.Coffee--;energy=Math.min(100,energy+E_KOPI);cofCd=CONS_CD;saveI();render();};
+ $('bM').onclick=()=>{if(mokCd>0||!ws||stok('Moccaccino')<1)return;INV.Moccaccino--;energy=Math.min(100,energy+E_MOKA);mokCd=CONS_CD;saveI();render();};
+ $('bL').onclick=()=>{if(stok('Milk Jug')<1)return;INV['Milk Jug']--;energy=Math.min(100,energy+E_MILK);saveI();render();};
+ if($('bE'))$('bE').onclick=()=>{const w=sA>sD;localStorage.removeItem('gv_war');WAR=null;alert(w?'🏆 MENANG!':'😞 Kalah');render();};
+}
+setInterval(()=>{if(!WAR)return; if(hitCd>0)hitCd--; if(cofCd>0)cofCd--; if(mokCd>0)mokCd--;
+ A[1].d+=Math.floor(Math.random()*900); D[0].d+=Math.floor(Math.random()*800); render();},1000);
+if(WAR)startBattle(); render();
+</script>
+</body>
+</html>

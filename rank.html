@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Rankings</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .tabs{display:flex;gap:6px;justify-content:center;margin:10px 0}
+ .t{background:#24324f;color:#e2e8f0;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold}
+ .t.on{background:#facc15;color:#0b1020}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:12px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #24324f;font-size:14px}
+ .me{background:#3a2b12;border-radius:8px;padding:0 6px}
+ .medal{font-size:16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🏆 Rankings</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a></div>
+ <div class="tabs">
+   <button class="t on" data-t="war">⚔️ Warrior</button>
+   <button class="t" data-t="org">🏰 Org</button>
+   <button class="t" data-t="sultan">💰 Sultan</button>
+ </div>
+ <div class="card" id="list"></div>
+</div>
+<script>
+// ===== MODE DEMO: leaderboard (nanti baca dari server) =====
+const DATA={
+ war:[['ZEAWOLF',38],['Phoenix',31],['METAVERSE (You)',5],['Eagle',4],['Bulux',2]],
+ org:[['The Hunter',1250000],['GLORY SQUAD',208597],['T N I II',150000],['Golden Harvest',90000]],
+ sultan:[['Archammera',707720],['Nico tin',402110],['METAVERSE (You)',55],['Aris',1200]]
+};
+let tab='war';
+const $=id=>document.getElementById(id);
+const UNIT={war:'KS',org:'dmg',sultan:'🪙'};
+function render(){
+  const rows=DATA[tab].slice().sort((a,b)=>b[1]-a[1]);
+  $('list').innerHTML=rows.map((r,i)=>{
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':(i+1)+'.';
+    const me=r[0].includes('You')?' me':'';
+    return '<div class="row'+me+'"><span><span class="medal">'+medal+'</span> '+r[0]+'</span><b>'+r[1].toLocaleString('id-ID')+' '+UNIT[tab]+'</b></div>';
+  }).join('');
+  document.querySelectorAll('.t').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+}
+document.querySelectorAll('.t').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();});
+render();
+</script>
+</body>
+</html>

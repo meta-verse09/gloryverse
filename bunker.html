@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Bunker</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:5px 0}
+ .ok{color:#4ade80;font-weight:bold}.no{color:#f87171;font-weight:bold}
+ .coin{color:#facc15;font-weight:bold}
+ button{width:100%;border:none;border-radius:10px;padding:12px;font-weight:bold;cursor:pointer;background:#22c55e;color:#052e16;margin-top:6px}
+ button:disabled{background:#334155;color:#94a3b8}
+ input{width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #24324f;background:#0b1020;color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🛡 Bunker — Region Lucerne</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a><a href="war_org.html">🌍 War</a></div>
+
+ <div class="card">
+   <div class="row"><span>Status</span><span id="st"></span></div>
+   <div class="row"><span>Level</span><b id="lv">0</b></div>
+   <div class="row"><span>Reduksi damage</span><b id="red">0%</b></div>
+   <div class="row"><span>💰 Koin</span><span class="coin" id="coin">0</span></div>
+   <button id="btnB"></button>
+ </div>
+
+ <div class="card">
+   <b>🧪 Simulasi Serangan Musuh</b>
+   <input id="dmg" type="number" value="10000">
+   <button id="btnS" style="background:#dc2626;color:#fff">💥 HIT!</button>
+   <div id="res" style="margin-top:8px"></div>
+ </div>
+</div>
+<script>
+// ===== D-72: Bunker (reduksi damage masuk) =====
+const WKEY='gv_demo_wallet', BKEY='gv_bunker';
+const RED=[0,20,35,50], COST=[100,250,500];
+let W=JSON.parse(localStorage.getItem(WKEY)||'null')||{local_coin:0};
+let B=JSON.parse(localStorage.getItem(BKEY)||'null')||{level:0};
+const $=id=>document.getElementById(id);
+
+function render(){
+  $('coin').innerText=W.local_coin;
+  $('lv').innerText=B.level; $('red').innerText=RED[B.level]+'%';
+  $('st').innerHTML=B.level>0?'<span class="ok">✅ FORTIFIED (Bunker L'+B.level+')</span>':'<span class="no">❌ Not fortified</span>';
+  const b=$('btnB');
+  if(B.level>=3){b.innerText='🛡 MAX LEVEL';b.disabled=true;}
+  else{b.innerText=(B.level===0?'🏗 BANGUN BUNKER':'⬆ UPGRADE ke L'+(B.level+1))+' ('+COST[B.level]+' Koin)';
+    b.disabled=W.local_coin<COST[B.level];}
+}
+$('btnB').onclick=()=>{ if(B.level>=3||W.local_coin<COST[B.level])return;
+  W.local_coin-=COST[B.level]; B.level++;
+  localStorage.setItem(WKEY,JSON.stringify(W)); localStorage.setItem(BKEY,JSON.stringify(B)); render(); };
+$('btnS').onclick=()=>{
+  const d=+($('dmg').value||0), after=Math.round(d*(1-RED[B.level]/100));
+  $('res').innerHTML='Damage musuh: <b>'+d.toLocaleString('id-ID')+'</b><br>'+
+   'Kena reduksi bunker −'+RED[B.level]+'% → masuk cuma <b style="color:#4ade80">'+after.toLocaleString('id-ID')+'</b>';
+};
+render();
+</script>
+</body>
+</html>

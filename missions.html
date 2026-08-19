@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Missions</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:12px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:4px 0}
+ .bar{background:#24324f;border-radius:999px;height:8px;overflow:hidden;margin:6px 0}
+ .fill{background:#22c55e;height:8px}
+ button{background:#facc15;color:#0b1020;border:none;border-radius:8px;padding:8px 14px;font-weight:bold;cursor:pointer}
+ button:disabled{background:#334155;color:#94a3b8}
+ .done{color:#4ade80;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>📋 Missions Harian</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a></div>
+ <div id="list"></div>
+</div>
+<script>
+// ===== MODE DEMO: missions membaca progres asli + claim reward =====
+const WKEY='gv_demo_wallet', CKEY='gv_companies', OKEY='gv_org', MKEY='gv_missions';
+const W=JSON.parse(localStorage.getItem(WKEY)||'null')||{shifts:0,tx:[],local_coin:0};
+const C=JSON.parse(localStorage.getItem(CKEY)||'[]');
+const O=JSON.parse(localStorage.getItem(OKEY)||'null');
+let M=JSON.parse(localStorage.getItem(MKEY)||'{}');
+const $=id=>document.getElementById(id);
+const buyCount=(W.tx||[]).filter(t=>t.includes('🛒')).length;
+
+const MIS=[
+ {id:'work', icon:'⚒️', txt:'Kerja 3 shift', goal:3, now:W.shifts, reward:10},
+ {id:'buy',  icon:'🛒', txt:'Belanja 2 item', goal:2, now:buyCount, reward:5},
+ {id:'comp', icon:'🏭', txt:'Bangun 1 company', goal:1, now:C.length, reward:20},
+ {id:'org',  icon:'🏰', txt:'Punya organisasi', goal:1, now:O?1:0, reward:15},
+];
+
+function claim(id,r){
+  if(M[id])return;
+  M[id]=true; localStorage.setItem(MKEY,JSON.stringify(M));
+  W.local_coin=(W.local_coin||0)+r; localStorage.setItem(WKEY,JSON.stringify(W));
+  render();
+}
+function render(){
+  $('list').innerHTML=MIS.map(m=>{
+    const done=m.now>=m.goal, claimed=M[m.id];
+    const pct=Math.min(100,m.now/m.goal*100);
+    return '<div class="card"><div class="row"><b>'+m.icon+' '+m.txt+'</b>'+
+      '<span>'+(claimed?'<span class="done">✅ Claimed</span>':'+'+m.reward+' 🪙')+'</span></div>'+
+      '<div class="bar"><div class="fill" style="width:'+pct+'%"></div></div>'+
+      '<div class="row"><span>Progres</span><b>'+Math.min(m.now,m.goal)+'/'+m.goal+'</b></div>'+
+      '<button '+(done&&!claimed?'':'disabled')+' onclick="claim(\''+m.id+'\','+m.reward+')">'+
+      (claimed?'Sudah diambil':(done?'🎁 CLAIM':'Belum selesai'))+'</button></div>';
+  }).join('');
+}
+render();
+</script>
+</body>
+</html>

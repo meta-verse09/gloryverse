@@ -1,0 +1,30 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Kebun Sayur</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+</head>
+<body data-img="pano_vege.jpg" data-title="Kebun Sayur" data-lat="-6.9" data-lon="107.6">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--</span><span class="chip" id="wthr">🌤️</span></header>
+<nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
+ <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
+ <a href="org.html">ORGANIZATIONS</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
+   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card"><h3>🥕 Gathering — Vegetable</h3>
+   <button class="btn green" id="workBtn">⚒️ PANEN SAYUR</button><div id="workMsg"></div></div>
+ </main>
+ <aside class="side" id="right"></aside>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
+<script>
+workBtn.onclick=async()=>{ // contoh logika kerja
+ const {data:{session}}=await db.auth.getSession(); if(!session)return alert('login dulu');
+ await db.rpc('work_once',{uid:session.user.id,coin:5,en:10});
+ workMsg.innerText='✅ +5 koin, -10 energi';};
+</script>
+</body></html>

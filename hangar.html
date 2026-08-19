@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Hangar</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:460px;margin:0 auto}
+ h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .rank{background:#16213a;border:1px solid #facc15;border-radius:12px;padding:10px;text-align:center;margin:10px 0}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:12px 0;position:relative}
+ .card.locked{opacity:.6}
+ .row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
+ .g{color:#4ade80}.r{color:#f87171}
+ .stars{color:#facc15;letter-spacing:2px}
+ button{width:100%;padding:12px;border:none;border-radius:10px;font-weight:bold;font-size:15px;cursor:pointer;background:#22c55e;color:#052e16}
+ button:disabled{background:#334155;color:#94a3b8}
+ .lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fca5a5;background:#0006;border-radius:12px}
+ .unit{font-size:40px;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🏗️ Hangar</h1>
+ <div class="nav"><a href="warrior.html">🪖 Warrior</a><a href="war.html">⚔️ Arena</a></div>
+
+ <div class="rank">Pangkatmu: <b style="color:#facc15">⭐ Kapten</b><br>
+   <small>Loadout: Tank ✅ · Bomber 🔒 (butuh Jenderal)</small></div>
+
+ <div class="card">
+   <div class="unit">🛡</div>
+   <div class="row"><b>Heavy Tank</b><span>🟩 <b class="g">0</b> · 🟥 <b class="r">0</b></span></div>
+   <div class="row"><span>HP</span><b>14000</b></div>
+   <div class="row"><span>Initiative</span><b>13/15</b></div>
+   <div class="row"><span>Damage</span><b>25/menit</b></div>
+   <div class="row"><span>Main Cannon</span><span class="stars">★★★☆☆</span></div>
+   <div class="row"><span>Engine</span><span class="stars">★★★★★</span></div>
+   <button id="btnTank">DEPLOY TANK</button>
+ </div>
+
+ <div class="card locked">
+   <div class="unit">🛩</div>
+   <div class="row"><b>Bomber Jet</b><span>🟩 <b class="g">0</b> · 🟥 <b class="r">0</b></span></div>
+   <div class="row"><span>HP</span><b>5000</b></div>
+   <div class="row"><span>Initiative</span><b>5/15</b></div>
+   <div class="row"><span>Damage</span><b>16/menit</b></div>
+   <div class="row"><span>Bomb Storage</span><span class="stars">★☆☆☆☆</span></div>
+   <button disabled>DEPLOY BOMBER</button>
+   <div class="lock">🔒 BUTUH PANGKAT JENDERAL</div>
+ </div>
+ <div id="msg" style="text-align:center;color:#4ade80"></div>
+</div>
+<script>
+document.getElementById('btnTank').onclick=()=>{
+  localStorage.setItem('gv_selected_mv','tank');
+  document.getElementById('msg').innerText='🛡 Tank deployed! Siap tempur → buka Arena.';
+};
+</script>
+</body>
+</html>

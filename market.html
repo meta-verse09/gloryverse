@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Market</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:460px;margin:0 auto}
+ h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:8px 0}
+ .nav a{color:#0b1020;background:#3b82f6;border-radius:8px;padding:6px 14px;text-decoration:none;font-weight:bold}
+ .badge{background:#7c2d12;color:#fed7aa;border-radius:999px;padding:4px 10px;font-size:12px}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:12px;margin:10px 0}
+ .coin{color:#facc15;font-weight:bold}
+ .item{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #24324f;padding:8px 0}
+ .item small{color:#94a3b8}
+ button{background:#22c55e;color:#052e16;border:none;border-radius:8px;padding:6px 12px;font-weight:bold;cursor:pointer}
+ button:disabled{background:#334155;color:#94a3b8}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🛒 Market</h1>
+ <div class="nav"><a href="game.html">⬅ Kerja</a></div>
+ <div style="text-align:center"><span class="badge">MODE DEMO</span> &nbsp; 💰 <span class="coin" id="coin">0</span> Koin</div>
+
+ <div class="card"><b>🎒 Inventaris:</b> <span id="inv">-</span></div>
+ <div class="card" id="list"></div>
+</div>
+
+<script>
+// ===== MODE DEMO: dompet & inventaris di localStorage =====
+const WKEY='gv_demo_wallet', IKEY='gv_inventory';
+// Katalog (nanti diganti ambil dari tabel items via Supabase)
+const CAT=[["Water",0,0.1],["Electricity",0,0.1],["Sand",1,0.3],["Wheat",1,0.5],["Wood",1,0.5],["Vegetables",1,0.5],["Stone",1,0.6],["Grapes",1,0.6],["Herbs",1,0.6],["Coal",1,0.8],["Cotton",1,0.8],["Iron",1,1],["Oil",1,1],["Flour",2,1],["Milk",2,1],["Paper",2,1.5],["Meat",2,1.5],["Fertilizer",2,1.5],["Fabric",2,2],["Plastics",2,2],["Glass",2,2],["Steel",2,2.5],["Parts",2,2.5],["Coffee",3,1],["Snack",3,1],["Beer",3,1.5],["Wine",3,2],["Bread",3,2],["Breakfast",3,2],["Lunch",3,3],["Dinner",3,3],["Clothes",3,4],["Coffee",3,1],["Moccaccino",3,3],["Milk Jug",3,2]];
+
+function loadW(){let w=JSON.parse(localStorage.getItem(WKEY)||'null');if(!w)w={local_coin:0,gold:0,euro:0,energy:100,shifts:0,date:'',tx:[]};return w;}
+function saveW(w){localStorage.setItem(WKEY,JSON.stringify(w));}
+function loadI(){return JSON.parse(localStorage.getItem(IKEY)||'{}');}
+function saveI(i){localStorage.setItem(IKEY,JSON.stringify(i));}
+let W=loadW(), INV=loadI();
+
+function render(){
+  document.getElementById('coin').innerText=W.local_coin;
+  document.getElementById('inv').innerText=Object.keys(INV).length?Object.entries(INV).map(([k,v])=>k+'×'+v).join(', '):'-';
+  document.getElementById('list').innerHTML=CAT.map(([n,t,p],i)=>
+    '<div class="item"><div>'+n+' <small>T'+t+'</small></div>'+
+    '<div>'+p+' 🪙 <button data-i="'+i+'" '+(W.local_coin<p?'disabled':'')+'>Beli</button></div></div>'
+  ).join('');
+  document.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>buy(+b.dataset.i));
+}
+function buy(i){
+  const [n,t,p]=CAT[i];
+  if(W.local_coin<p){alert('Koin tidak cukup!');return;}
+  W.local_coin-=p; W.tx.unshift('🛒 Beli '+n+' −'+p+' Koin');
+  INV[n]=(INV[n]||0)+1;
+  saveW(W);saveI(INV);render();
+}
+render();
+</script>
+</body>
+</html>

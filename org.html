@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Organization</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:440px;margin:0 auto}
+ h1{color:#facc15;text-align:center}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:5px 0}
+ input,select{width:100%;box-sizing:border-box;padding:10px;border-radius:8px;border:1px solid #24324f;background:#0b1020;color:#fff;margin:4px 0}
+ button{border:none;border-radius:8px;padding:10px 14px;font-weight:bold;cursor:pointer}
+ .gr{background:#22c55e;color:#052e16}.bl{background:#3b82f6;color:#fff}.rd{background:#dc2626;color:#fff}
+ .spec{border-radius:999px;padding:2px 10px;font-size:12px}
+ .war{background:#7f1d1d;color:#fca5a5}.prod{background:#14532d;color:#bbf7d0}
+ .m{border-bottom:1px dashed #24324f;padding:5px 0;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🏰 Organization</h1>
+ <div id="app"></div>
+</div>
+<script>
+// ===== MODE DEMO: organizations + memberships (GDD) =====
+const KEY='gv_org';
+const NPC=[{name:'The Hunter',spec:'war',members:12},{name:'Golden Harvest',spec:'productivity',members:8}];
+let ORG=JSON.parse(localStorage.getItem(KEY)||'null');
+const $=id=>document.getElementById(id);
+const save=()=>localStorage.setItem(KEY,JSON.stringify(ORG));
+const specBadge=s=>'<span class="spec '+s+'">'+(s==='war'?'⚔️ WAR':'🌾 PRODUCTIVITY')+'</span>';
+
+function render(){
+  const a=$('app');
+  if(!ORG){
+    a.innerHTML=
+     '<div class="card"><b>Buat Organisasi Baru</b>'+
+     '<input id="oname" placeholder="Nama organisasi (unik)">'+
+     '<select id="ospec"><option value="war">⚔️ Specialization: WAR</option><option value="productivity">🌾 Specialization: PRODUCTIVITY</option></select>'+
+     '<button class="gr" onclick="create()">🏰 BUAAT (kamu jadi Leader)</button></div>'+
+     '<div class="card"><b>Atau Join Organisasi:</b>'+
+     NPC.map((o,i)=>'<div class="m"><span>'+o.name+' '+specBadge(o.spec)+' · '+o.members+' member</span><button class="bl" onclick="join('+i+')">JOIN</button></div>').join('')+
+     '</div>';
+  }else{
+    a.innerHTML=
+     '<div class="card"><div class="row"><b style="font-size:18px">'+ORG.name+'</b>'+specBadge(ORG.spec)+'</div>'+
+     '<div class="row"><span>Level</span><b>1</b></div>'+
+     '<div class="row"><span>Org Gold</span><b style="color:#facc15">0</b></div>'+
+     '<div class="row"><span>Role kamu</span><b style="color:#4ade80">'+ORG.role.toUpperCase()+'</b></div></div>'+
+     '<div class="card"><b>Roster ('+ORG.members.length+')</b>'+
+     ORG.members.map(m=>'<div class="m"><span>'+m.n+'</span><b>'+m.role+'</b></div>').join('')+'</div>'+
+     '<button class="rd" onclick="leave()">🚪 Keluar Organisasi</button>';
+  }
+}
+function create(){
+  const n=$('oname').value.trim(); if(!n){alert('Isi nama organisasi!');return;}
+  ORG={name:n,spec:$('ospec').value,role:'leader',members:[{n:'METAVERSE',role:'leader'}]};
+  save();render();
+}
+function join(i){
+  const o=NPC[i];
+  ORG={name:o.name,spec:o.spec,role:'member',members:[{n:'(Leader) Raven',role:'leader'},{n:'(Officer) Blake',role:'officer'},{n:'METAVERSE',role:'member'}]};
+  save();render();
+}
+function leave(){ if(confirm('Yakin keluar dari '+ORG.name+'?')){ORG=null;localStorage.removeItem(KEY);render();} }
+render();
+</script>
+</body>
+</html>

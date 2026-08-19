@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse — Company</title>
+<style>
+ body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
+ .wrap{max-width:460px;margin:0 auto} h1{color:#facc15;text-align:center}
+ .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
+ .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
+ .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:14px;margin:10px 0}
+ .row{display:flex;justify-content:space-between;margin:5px 0;font-size:14px}
+ .coin{color:#facc15;font-weight:bold}
+ select,button{border-radius:8px;padding:10px;font-weight:bold;border:none;cursor:pointer}
+ select{background:#0b1020;color:#fff;border:1px solid #24324f;width:100%}
+ .gr{background:#22c55e;color:#052e16}.bl{background:#3b82f6;color:#fff}.yl{background:#facc15;color:#0b1020}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🏭 My Companies</h1>
+ <div class="nav"><a href="home.html">🏠 Home</a><a href="market.html">🛒 Market</a></div>
+ <div class="card">💰 Koin: <span class="coin" id="coin">0</span></div>
+
+ <div class="card">
+   <b>Bangun Company Baru (biaya 50 Koin)</b>
+   <select id="ctype">
+     <option value="Farm">🌾 Farm (Wheat)</option>
+     <option value="Mine">⛏ Mine (Coal)</option>
+     <option value="Factory">🏭 Factory (Steel)</option>
+     <option value="Utility">💧 Utility (Water)</option>
+   </select>
+   <button class="gr" style="width:100%;margin-top:6px" onclick="create()">🏗 BANGUN</button>
+ </div>
+
+ <div id="list"></div>
+</div>
+<script>
+// ===== MODE DEMO: companies (produksi -> jual -> profit) =====
+const WKEY='gv_demo_wallet', IKEY='gv_inventory', CKEY='gv_companies';
+const ITEM={Farm:'Wheat',Mine:'Coal',Factory:'Steel',Utility:'Water'};
+const PRICE={Wheat:0.5,Coal:0.8,Steel:2.5,Water:0.1};
+const loadW=()=>JSON.parse(localStorage.getItem(WKEY)||'null')||{local_coin:0};
+const saveW=w=>localStorage.setItem(WKEY,JSON.stringify(w));
+const loadI=()=>JSON.parse(localStorage.getItem(IKEY)||'{}');
+const saveI=i=>localStorage.setItem(IKEY,JSON.stringify(i));
+const loadC=()=>JSON.parse(localStorage.getItem(CKEY)||'[]');
+const saveC=c=>localStorage.setItem(CKEY,JSON.stringify(c));
+let W=loadW(),INV=loadI(),C=loadC();
+const $=id=>document.getElementById(id);
+
+function create(){
+  const t=$('ctype').value;
+  if(W.local_coin<50){alert('Koin tidak cukup (butuh 50)!');return;}
+  W.local_coin-=50; C.push({type:t,item:ITEM[t],workplaces:1,level:1});
+  saveW(W);saveC(C);render();
+}
+function produce(i){ INV[C[i].item]=(INV[C[i].item]||0)+5; saveI(INV);render(); }
+function sell(i){
+  const it=C[i].item, q=INV[it]||0; if(q<=0){alert('Stok kosong, produksi dulu!');return;}
+  W.local_coin+=q*PRICE[it]; INV[it]=0;
+  saveW(W);saveI(INV);render();
+}
+function render(){
+  $('coin').innerText=W.local_coin;
+  $('list').innerHTML=C.length?C.map((c,i)=>
+    '<div class="card"><div class="row"><b>'+c.type+'</b><span>Lv '+c.level+' · 👷 '+c.workplaces+'</span></div>'+
+    '<div class="row"><span>Produksi</span><b>'+c.item+'</b></div>'+
+    '<div class="row"><span>Stok</span><b>'+(INV[c.item]||0)+'</b></div>'+
+    '<div class="row"><span>Harga jual</span><span class="coin">'+PRICE[c.item]+'/unit</span></div>'+
+    '<button class="bl" onclick="produce('+i+')">⚙️ Produksi +5</button> '+
+    '<button class="yl" onclick="sell('+i+')">💰 Jual Semua</button></div>'
+  ).join(''):'<div class="card">Belum punya company. Bangun yang pertama! 🏗</div>';
+}
+render();
+</script>
+</body>
+</html>
