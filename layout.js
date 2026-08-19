@@ -41,7 +41,7 @@ function phase(h){
  if(h>=16&&h<19)return{i:'🌇',f:'sepia(.45) hue-rotate(-25deg) brightness(.88)',c:'#ff6a0055'};
  return{i:'🌙',f:'brightness(.42) saturate(.65) hue-rotate(10deg)',c:'#0a1a3c99'}}
 setInterval(()=>{const n=new Date(),p=phase(n.getHours());
- $('clock').innerText=p.i+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0')join(:);
+ $('clock').innerText=p.i+' '+[n.getHours(),n.getMinutes(),n.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
  pano.style.filter=p.f; $('sky').style.background=p.c},1000);
 
 /* Cuaca region */
