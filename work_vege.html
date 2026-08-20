@@ -54,41 +54,57 @@ function gain(c,e){COIN+=c;EN=Math.max(0,EN-e);hud();
 
 /* ===== PHASER: KEBUN HIDUP ===== */
 const W=960,H=430,WORLD=2000;
-const plots=[];for(let x=250;x<=1750;x+=250)plots.push({x,y:378,st:0});
+const plots=[];for(let x=250;x<=1750;x+=250)plots.push({x,y:350,st:0});
 new Phaser.Game({type:Phaser.AUTO,parent:'game',width:W,height:H,
- backgroundColor:'#0b1020',
+ backgroundColor:'#1a3a1a',
  scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_HORIZONTALLY},
  scene:{preload,create,update}});
 function preload(){this.load.image('vege','pano_vege.jpeg');}
 function create(){const S=this;
+ /* latar kebun */
  S.add.image(WORLD/2,H/2,'vege').setDisplaySize(WORLD,H)
   .setTint((h=>h<6||h>=18?0x8fa0c8:0xffffff)(new Date().getHours()));
- S.farmer=S.add.text(500,378,'🧑‍🌾').setFontSize(42).setOrigin(.5,.5);
+ /* petani = lingkaran + segitiga (topi) */
+ S.farmer=S.add.container(500,350);
+ const body=S.add.circle(0,0,16,0xffcc00);
+ const head=S.add.circle(0,-22,10,0xffe0a0);
+ const hat=S.add.triangle(0,-36,0,-12,14,0,-14,0,0x8B4513);
+ const lbl=S.add.text(0,24,'PETANI',{fontSize:'11px',color:'#fff',fontStyle:'bold'}).setOrigin(.5,0);
+ S.farmer.add([body,head,hat,lbl]);
  S.target=null;
+ /* petak tanam = kotak coklat */
+ S.pt=plots.map(p=>{
+  const c=S.add.container(p.x,p.y);
+  const bg=S.add.rectangle(0,0,50,50,0x8B6914).setStrokeStyle(2,0x5a4510);
+  const ico=S.add.text(0,0,'',{fontSize:'20px'}).setOrigin(.5);
+  c.add([bg,ico]); c.bg=bg; c.ico=ico; return c;});
+ /* kamera */
  S.cameras.main.setBounds(0,0,WORLD,H);
  S.cameras.main.startFollow(S.farmer,true,.08);
- S.pt=plots.map(p=>S.add.text(p.x,p.y,'').setFontSize(30).setOrigin(.5,.5));
- S.add.text(WORLD/2,14,'Tap tanah: jalan • Tap petak: nanam/panen • ← → geser')
-  .setFontSize(14).setColor('#ffd76a').setOrigin(.5,0);
+ /* instruksi */
+ S.add.text(WORLD/2,14,'Tap tanah: jalan | Tap petak coklat: nanam/panen | Geser kiri-kanan',
+  {fontSize:'13px',color:'#ffd76a',backgroundColor:'#00000066',padding:{x:8,y:4}}).setOrigin(.5,0);
+ /* input */
  S.input.on('pointerdown',pt=>{
   for(let i=0;i<plots.length;i++){const p=plots[i];
-   if(Math.abs(pt.worldX-p.x)<60&&Math.abs(pt.worldY-p.y)<45)return tapPlot(S,i);}
+   if(Math.abs(pt.worldX-p.x)<30&&Math.abs(pt.worldY-p.y)<30)return tapPlot(S,i);}
   S.target={x:Phaser.Math.Clamp(pt.worldX,60,WORLD-60),
-            y:Phaser.Math.Clamp(pt.worldY,340,410)};});
+            y:Phaser.Math.Clamp(pt.worldY,300,400)};});
  S.key=S.input.keyboard.createCursorKeys();}
-function tapPlot(S,i){const p=plots[i],t=S.pt[i];
- if(p.st===0){p.st=1;t.setText('🌱');
-  S.time.delayedCall(20000,()=>{p.st=2;t.setText(i%2?'🥕':'🥬');});}
- else if(p.st===2){p.st=0;t.setText('');gain(5,2);
-  const f=S.add.text(p.x,p.y-40,'+5 🪙').setFontSize(18).setColor('#7CFC9B').setOrigin(.5);
-  S.tweens.add({targets:f,y:p.y-90,alpha:0,duration:900,onComplete:()=>f.destroy()});}}
+function tapPlot(S,i){const p=plots[i],c=S.pt[i];
+ if(p.st===0&&EN>=2){p.st=1;c.bg.setFillStyle(0x3a7a1a);c.ico.setText('~');
+  S.time.delayedCall(20000,()=>{p.st=2;c.bg.setFillStyle(0xff6600);
+   c.ico.setText(i%2?'V':'O');});}
+ else if(p.st===2){p.st=0;c.bg.setFillStyle(0x8B6914);c.ico.setText('');gain(5,2);
+  const f=S.add.text(p.x,p.y-50,'+5 KOIN',
+   {fontSize:'16px',color:'#7CFC9B',fontStyle:'bold'}).setOrigin(.5);
+  S.tweens.add({targets:f,y:p.y-100,alpha:0,duration:900,onComplete:()=>f.destroy()});}}
 function update(t,dt){const S=this,v=dt/1000*180;
  if(S.key.left.isDown)S.target={x:S.farmer.x-140,y:S.farmer.y};
  if(S.key.right.isDown)S.target={x:S.farmer.x+140,y:S.farmer.y};
  if(S.target){const dx=S.target.x-S.farmer.x,dy=S.target.y-S.farmer.y,d=Math.hypot(dx,dy);
   if(d<6){S.farmer.setPosition(S.target.x,S.target.y);S.target=null;}
-  else{S.farmer.x+=dx/d*v;S.farmer.y+=dy/d*v;S.farmer.setFlipX(dx<0);}}}
-
+  else{S.farmer.x+=dx/d*v;S.farmer.y+=dy/d*v;}}}
 /* ===== PINTU PRO: TANAM 4 JAM ===== */
 const KEY='gv_vege_plant',pb=$('plantIdle'),cb=$('collectIdle'),it=$('idleTxt');
 function idleTick(){const t=+localStorage.getItem(KEY)||0;
