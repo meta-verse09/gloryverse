@@ -2,10 +2,16 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GloryVerse — Kebun Sayur</title>
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>.pano{display:none}
+#game{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b1020}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
+.idle{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}</style>
 </head>
-<body data-img="pano_vege.jpg" data-title="Kebun Sayur" data-lat="-6.9" data-lon="107.6">
+<body data-img="pano_vege.jpeg" data-title="Kebun Sayur">
 <header><b class="logo">⚔️ GloryVerse</b>
- <span class="chip" id="clock">--:--</span><span class="chip" id="wthr">🌤️</span></header>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
 <nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
  <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
  <a href="org.html">ORGANIZATIONS</a><a href="rank.html">RANKINGS</a></nav>
@@ -14,17 +20,85 @@
  <main>
   <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
-  <div class="card"><h3>🥕 Gathering — Vegetable</h3>
-   <button class="btn green" id="workBtn">⚒️ PANEN SAYUR</button><div id="workMsg"></div></div>
+  <div id="game"></div>
+  <div class="card">
+   <h3>🥕 Lumbung Sayur</h3>
+   <div class="row"><span>Koin</span><b id="coin2">0</b></div>
+   <div class="row"><span>Energi</span><b id="en2">100</b></div>
+   <div class="idle">
+    <button class="btn" id="plantIdle">🌾 Tanam (4 jam)</button>
+    <button class="btn" id="collectIdle" disabled>⏳ Panen +50 🪙</button>
+    <small id="idleTxt" style="color:var(--mut)"></small>
+   </div>
+   <small style="color:var(--mut)">Pintu santai: main di kebun atas. Pintu pro: tanam 4 jam, panen otomatis.</small>
+  </div>
  </main>
  <aside class="side" id="right"></aside>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 <script src="config.js"></script><script src="layout.js"></script>
 <script>
-workBtn.onclick=async()=>{ // contoh logika kerja
- const {data:{session}}=await db.auth.getSession(); if(!session)return alert('login dulu');
- await db.rpc('work_once',{uid:session.user.id,coin:5,en:10});
- workMsg.innerText='✅ +5 koin, -10 energi';};
+let UID=null,COIN=0,EN=100;
+(async()=>{try{
+ const {data:{session}}=await db.auth.getSession();
+ if(session){UID=session.user.id;
+  const w=await db.from('wallets').select('*').eq('user_id',UID).single();
+  COIN=w.data?.local_coin??0;EN=w.data?.energy??100;$('mode').innerText='🟢 MODE ONLINE';
+ }else $('mode').innerText='MODE DEMO';
+}catch(e){$('mode').innerText='MODE DEMO'} hud();})();
+function hud(){$('coin').innerText=COIN;$('en').innerText=EN;
+ $('coin2').innerText=COIN;$('en2').innerText=EN;}
+function gain(c,e){COIN+=c;EN=Math.max(0,EN-e);hud();
+ if(UID)db.rpc('work_once',{uid:UID,coin:c,en:e}).catch(()=>{});}
+
+/* ===== PHASER: KEBUN HIDUP ===== */
+const W=960,H=430,WORLD=2000;
+const plots=[];for(let x=250;x<=1750;x+=250)plots.push({x,y:378,st:0});
+new Phaser.Game({type:Phaser.AUTO,parent:'game',width:W,height:H,
+ backgroundColor:'#0b1020',
+ scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_HORIZONTALLY},
+ scene:{preload,create,update}});
+function preload(){this.load.image('vege','pano_vege.jpeg');}
+function create(){const S=this;
+ S.add.image(WORLD/2,H/2,'vege').setDisplaySize(WORLD,H)
+  .setTint((h=>h<6||h>=18?0x8fa0c8:0xffffff)(new Date().getHours()));
+ S.farmer=S.add.text(500,378,'🧑‍🌾').setFontSize(42).setOrigin(.5,.5);
+ S.target=null;
+ S.cameras.main.setBounds(0,0,WORLD,H);
+ S.cameras.main.startFollow(S.farmer,true,.08);
+ S.pt=plots.map(p=>S.add.text(p.x,p.y,'').setFontSize(30).setOrigin(.5,.5));
+ S.add.text(WORLD/2,14,'Tap tanah: jalan • Tap petak: nanam/panen • ← → geser')
+  .setFontSize(14).setColor('#ffd76a').setOrigin(.5,0);
+ S.input.on('pointerdown',pt=>{
+  for(let i=0;i<plots.length;i++){const p=plots[i];
+   if(Math.abs(pt.worldX-p.x)<60&&Math.abs(pt.worldY-p.y)<45)return tapPlot(S,i);}
+  S.target={x:Phaser.Math.Clamp(pt.worldX,60,WORLD-60),
+            y:Phaser.Math.Clamp(pt.worldY,340,410)};});
+ S.key=S.input.keyboard.createCursorKeys();}
+function tapPlot(S,i){const p=plots[i],t=S.pt[i];
+ if(p.st===0){p.st=1;t.setText('🌱');
+  S.time.delayedCall(20000,()=>{p.st=2;t.setText(i%2?'🥕':'🥬');});}
+ else if(p.st===2){p.st=0;t.setText('');gain(5,2);
+  const f=S.add.text(p.x,p.y-40,'+5 🪙').setFontSize(18).setColor('#7CFC9B').setOrigin(.5);
+  S.tweens.add({targets:f,y:p.y-90,alpha:0,duration:900,onComplete:()=>f.destroy()});}}
+function update(t,dt){const S=this,v=dt/1000*180;
+ if(S.key.left.isDown)S.target={x:S.farmer.x-140,y:S.farmer.y};
+ if(S.key.right.isDown)S.target={x:S.farmer.x+140,y:S.farmer.y};
+ if(S.target){const dx=S.target.x-S.farmer.x,dy=S.target.y-S.farmer.y,d=Math.hypot(dx,dy);
+  if(d<6){S.farmer.setPosition(S.target.x,S.target.y);S.target=null;}
+  else{S.farmer.x+=dx/d*v;S.farmer.y+=dy/d*v;S.farmer.setFlipX(dx<0);}}}
+
+/* ===== PINTU PRO: TANAM 4 JAM ===== */
+const KEY='gv_vege_plant',pb=$('plantIdle'),cb=$('collectIdle'),it=$('idleTxt');
+function idleTick(){const t=+localStorage.getItem(KEY)||0;
+ if(!t){pb.disabled=false;cb.disabled=true;it.innerText='';return;}
+ const left=t+4*3600e3-Date.now();
+ if(left<=0){pb.disabled=true;cb.disabled=false;it.innerText='Siap panen!';}
+ else{pb.disabled=true;cb.disabled=true;
+  it.innerText='⏳ '+Math.floor(left/60000)+'m '+Math.floor(left/1000)%60+'s lagi';}}
+pb.onclick=()=>{localStorage.setItem(KEY,Date.now());idleTick();};
+cb.onclick=()=>{localStorage.removeItem(KEY);gain(50,0);idleTick();};
+setInterval(idleTick,1000);idleTick();
 </script>
 </body></html>
