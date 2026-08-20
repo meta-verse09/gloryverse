@@ -96,6 +96,11 @@ function tapPlot(S,i){const p=plots[i],c=S.pt[i];
   S.time.delayedCall(20000,()=>{p.st=2;c.bg.setFillStyle(0xff6600);
    c.ico.setText(i%2?'V':'O');});}
  else if(p.st===2){p.st=0;c.bg.setFillStyle(0x8B6914);c.ico.setText('');gain(5,2);
+                   let c=(+localStorage.getItem('gv_m1c')||0)+1;localStorage.setItem('gv_m1c',c);
+  if(c===3){localStorage.setItem('gv_m1','1');gain(20,0);
+   const m=S.add.text(p.x,p.y-70,'MISI SELESAI! +20',
+    {fontSize:'16px',color:'#ffd76a',fontStyle:'bold'}).setOrigin(.5);
+   S.tweens.add({targets:m,y:p.y-120,alpha:0,duration:1200,onComplete:()=>m.destroy()});}
   const f=S.add.text(p.x,p.y-50,'+5 KOIN',
    {fontSize:'16px',color:'#7CFC9B',fontStyle:'bold'}).setOrigin(.5);
   S.tweens.add({targets:f,y:p.y-100,alpha:0,duration:900,onComplete:()=>f.destroy()});}}
