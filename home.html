@@ -10,7 +10,7 @@
 .rg.on{border-color:var(--gold);color:var(--gold);background:#1b2c55}
 </style>
 </head>
-<body data-img="region1.jpeg" data-title="Markas Utama" data-lat="-6.2" data-lon="106.8">
+<body data-img='region1.jpeg' data-title="Markas Utama" data-lat="-6.2" data-lon="106.8">
 <header><b class="logo">⚔️ GloryVerse</b>
  <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
  <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
@@ -46,8 +46,8 @@
 <script>
 /* Data region MVP — nanti pindah ke tabel DB (biar bisa direbut saat war!) */
 const REGIONS={
- ID:[{n:'Solok',img:'region1.jepg',s:'🟢'},{n:'Bandung',img:'region2.jpeg',s:'🟢'},
-     {n:'Surabaya',img:'pano_vege.jepg',s:'🔥'},{n:'Medan',img:'region1.jepg',s:'⚪'}],
+ ID:[{n:'Solok',img:'region1.jpeg',s:'🟢'},{n:'Bandung',img:'region2.jpeg',s:'🟢'},
+     {n:'Surabaya',img:'pano_vege.jpeg',s:'🔥'},{n:'Medan',img:'region1.jpeg',s:'⚪'}],
 };
 (async()=>{try{
  const {data:{session}}=await db.auth.getSession();
