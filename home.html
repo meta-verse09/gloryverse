@@ -29,6 +29,11 @@
    <div class="rgWrap" id="regions"></div>
    <small style="color:var(--mut)">Klik region untuk mengintai wilayahnya lewat panorama.</small>
   </div>
+  <div class="card" id="m1" style="border:1px solid var(--gold);box-shadow:0 0 12px #d4a01755">
+   <h3>🌱 MISI PERTAMA</h3>
+   <p style="margin:4px 0;font-size:14px">Panen 3 sayur di Kebun Surabaya. Hadiah: <b style="color:var(--gold)">+20 🪙</b></p>
+   <a class="btn" style="display:block;text-align:center" href="work_vege.html">PERGI KE KEBUN →</a>
+  </div>
 
   <div class="card">
    <div class="row"><span>Player</span><b id="name">-</b></div>
@@ -77,5 +82,6 @@ const REGIONS={
    $('locName').innerText=r.n;
  });
 }catch(e){$('mode').innerText='MODE DEMO'}})();
+ if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
 </script>
 </body></html>
