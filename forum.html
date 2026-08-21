@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Forum Warga</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>.pano{display:none}
+.t{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:#0b1020;cursor:pointer}
+.t:hover{border-color:var(--gold)}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
+textarea,input,select{width:100%;background:#0b1020;color:var(--txt);border:1px solid var(--line);
+ border-radius:8px;padding:8px;margin:4px 0;font-size:14px}</style>
+</head>
+<body data-img="region1.jpeg" data-title="Forum Warga">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+ <a href="market.html">MARKETS</a><a class="on" href="forum.html">FORUM</a>
+ <a href="org.html">ORGANIZATIONS</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
+   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card"><h3>🛋️ Forum Warga</h3>
+   <small style="color:var(--mut)">Tempat nongkrong warga GloryVerse — strategi, dagang, sampai lapor bug.</small>
+   <div class="row"><select id="catFilter"></select>
+    <button class="btn" id="newBtn">＋ Buat Thread</button></div></div>
+  <div class="card" id="newBox" style="display:none">
+   <input id="fTitle" placeholder="Judul thread...">
+   <select id="fCat"></select>
+   <textarea id="fBody" rows="4" placeholder="Isi thread..."></textarea>
+   <button class="btn" id="fPost">KIRIM THREAD</button></div>
+  <div id="view"></div>
+ </main>
+ <aside class="side" id="right"></aside>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
+<script>
+let UID=null,NAME='Warga';
+const TID=new URLSearchParams(location.search).get('id');
+(async()=>{try{const {data:{session}}=await db.auth.getSession();
+ if(session){UID=session.user.id;$('mode').innerText='🟢 MODE ONLINE';
+  const p=await db.from('profiles').select('*').eq('id',UID).single();
+  NAME=p.data?.username??'Warga';}
+ else $('mode').innerText='MODE DEMO';}catch(e){}
+ TID?renderThread():renderList();})();
+function ago(d){const s=(Date.now()-new Date(d))/1000;
+ if(s<60)return'baru saja';if(s<3600)return Math.floor(s/60)+'m lalu';
+ if(s<86400)return Math.floor(s/3600)+'j lalu';return Math.floor(s/86400)+'h lalu';}
+async function renderList(){const V=$('view');
+ const c=await db.from('categories').select('*').order('order_index');
+ const cats=c.data||[];
+ $('catFilter').innerHTML='<option value="">📂 Semua Kategori</option>'+
+  cats.map(x=>`<option value="${x.id}">${x.icon||''} ${x.name}</option>`).join('');
+ $('fCat').innerHTML=cats.map(x=>`<option value="${x.id}">${x.icon||''} ${x.name}</option>`).join('');
+ $('catFilter').onchange=load;load();
+ async function load(){const f=$('catFilter').value;
+  let q=db.from('threads').select('*').order('created_at',{ascending:false}).limit(40);
+  if(f)q=q.eq('category_id',f);
+  const t=await q;V.innerHTML=(t.data||[]).map(x=>`
+   <div class="t" onclick="location.href='forum.html?id=${x.id}'">
+    <div class="row"><b>${x.title}</b><span style="color:var(--mut)">💬 ${x.replies||0}</span></div>
+    <small style="color:var(--mut)">oleh <b style="color:var(--gold)">${x.author_name||'Warga'}</b> • ${ago(x.created_at)}</small>
+   </div>`).join('')||'<div class="card">Belum ada thread — jadilah yang pertama! 🛋️</div>';}}
+$('newBtn').onclick=()=>{const b=$('newBox');b.style.display=b.style.display==='none'?'block':'none';};
+$('fPost').onclick=async()=>{if(!UID)return alert('Login dulu buat bikin thread!');
+ const t=$('fTitle').value.trim(),b=$('fBody').value.trim();
+ if(!t||!b)return alert('Judul & isi wajib diisi!');
+ await db.from('threads').insert({title:t,content:b,category_id:$('fCat').value,
+  user_id:UID,author_name:NAME});location.reload();};
+async function renderThread(){const V=$('view');
+ const t=await db.from('threads').select('*').eq('id',TID).single();
+ const r=await db.from('replies').select('*').eq('thread_id',TID).order('created_at');
+ const x=t.data;if(!x){V.innerHTML='<div class="card">Thread tidak ditemukan.</div>';return;}
+ V.innerHTML=`<div class="card"><a href="forum.html" style="color:var(--gold)">← Kembali</a>
+  <h3>${x.title}</h3>
+  <small style="color:var(--mut)">oleh <b style="color:var(--gold)">${x.author_name||'Warga'}</b> • ${ago(x.created_at)}</small>
+  <p style="white-space:pre-wrap;margin:8px 0">${x.content||''}</p></div>`+
+  (r.data||[]).map(y=>`<div class="t" style="cursor:default">
+   <small style="color:var(--gold)">${y.author_name||'Warga'}</small>
+   <small style="color:var(--mut)"> • ${ago(y.created_at)}</small>
+   <p style="white-space:pre-wrap;margin:4px 0">${y.content||''}</p></div>`).join('')+
+  `<div class="card"><textarea id="rBody" rows="3" placeholder="Tulis balasan..."></textarea>
+   <button class="btn" id="rPost">BALAS</button></div>`;
+ $('rPost').onclick=async()=>{if(!UID)return alert('Login dulu buat membalas!');
+  const b=$('rBody').value.trim();if(!b)return;
+  await db.rpc('add_reply',{p_thread:TID,p_content:b,p_name:NAME});location.reload();};}
+</script>
+</body></html>
