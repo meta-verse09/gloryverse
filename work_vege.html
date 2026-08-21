@@ -119,7 +119,9 @@ function idleTick(){const t=+localStorage.getItem(KEY)||0;
  else{pb.disabled=true;cb.disabled=true;
   it.innerText='⏳ '+Math.floor(left/60000)+'m '+Math.floor(left/1000)%60+'s lagi';}}
 pb.onclick=()=>{localStorage.setItem(KEY,Date.now());idleTick();};
-cb.onclick=()=>{localStorage.removeItem(KEY);gain(50,0);idleTick();};
+cb.onclick=()=>{localStorage.removeItem(KEY);
+ localStorage.setItem('gv_idle_c',(+localStorage.getItem('gv_idle_c')||0)+1);
+ gain(50,0);idleTick();};
 setInterval(idleTick,1000);idleTick();
 </script>
 </body></html>
