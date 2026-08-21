@@ -1,64 +1,70 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GloryVerse — Missions</title>
-<style>
- body{font-family:Arial;margin:0;background:#0b1020;color:#e2e8f0;padding:16px}
- .wrap{max-width:440px;margin:0 auto} h1{color:#facc15;text-align:center}
- .nav{display:flex;gap:8px;justify-content:center;margin:6px 0}
- .nav a{background:#3b82f6;color:#0b1020;border-radius:8px;padding:6px 12px;text-decoration:none;font-weight:bold}
- .card{background:#16213a;border:1px solid #24324f;border-radius:12px;padding:12px;margin:10px 0}
- .row{display:flex;justify-content:space-between;margin:4px 0}
- .bar{background:#24324f;border-radius:999px;height:8px;overflow:hidden;margin:6px 0}
- .fill{background:#22c55e;height:8px}
- button{background:#facc15;color:#0b1020;border:none;border-radius:8px;padding:8px 14px;font-weight:bold;cursor:pointer}
- button:disabled{background:#334155;color:#94a3b8}
- .done{color:#4ade80;font-weight:bold}
-</style>
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Misi</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>.pano{display:none}
+.m{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:#0b1020}
+.mbar{height:8px;background:#1b2c55;border-radius:6px;margin:6px 0}
+.mbar i{display:block;height:100%;background:var(--gold);border-radius:6px;width:0}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}</style>
 </head>
-<body>
-<div class="wrap">
- <h1>📋 Missions Harian</h1>
- <div class="nav"><a href="home.html">🏠 Home</a></div>
- <div id="list"></div>
+<body data-img="region1.jpeg" data-title="Papan Misi">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+ <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
+ <a href="org.html">ORGANIZATIONS</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
+   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card"><h3>📜 Papan Misi</h3>
+   <small style="color:var(--mut)">Selesaikan tugas, klaim hadiah. Misi harian & misi region menyusul!</small></div>
+  <div id="list"></div>
+ </main>
+ <aside class="side" id="right"></aside>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
 <script>
-// ===== MODE DEMO: missions membaca progres asli + claim reward =====
-const WKEY='gv_demo_wallet', CKEY='gv_companies', OKEY='gv_org', MKEY='gv_missions';
-const W=JSON.parse(localStorage.getItem(WKEY)||'null')||{shifts:0,tx:[],local_coin:0};
-const C=JSON.parse(localStorage.getItem(CKEY)||'[]');
-const O=JSON.parse(localStorage.getItem(OKEY)||'null');
-let M=JSON.parse(localStorage.getItem(MKEY)||'{}');
-const $=id=>document.getElementById(id);
-const buyCount=(W.tx||[]).filter(t=>t.includes('🛒')).length;
-
-const MIS=[
- {id:'work', icon:'⚒️', txt:'Kerja 3 shift', goal:3, now:W.shifts, reward:10},
- {id:'buy',  icon:'🛒', txt:'Belanja 2 item', goal:2, now:buyCount, reward:5},
- {id:'comp', icon:'🏭', txt:'Bangun 1 company', goal:1, now:C.length, reward:20},
- {id:'org',  icon:'🏰', txt:'Punya organisasi', goal:1, now:O?1:0, reward:15},
+let UID=null,COIN=0;
+(async()=>{try{const {data:{session}}=await db.auth.getSession();
+ if(session){UID=session.user.id;
+  const w=await db.from('wallets').select('*').eq('user_id',UID).single();
+  COIN=w.data?.local_coin??0;$('coin').innerText=COIN;$('en').innerText=w.data?.energy??100;
+  $('mode').innerText='🟢 MODE ONLINE';}
+ else $('mode').innerText='MODE DEMO';
+}catch(e){} render();})();
+const MS=[
+ {id:'m1',ic:'🌱',n:'Panen 3 sayur',d:'Tap petak di kebun Surabaya sampai 3 panen.',t:3,
+  g:()=>+localStorage.getItem('gv_m1c')||0,r:20,auto:1},
+ {id:'m2',ic:'🌾',n:'Panen malas',d:'Tanam (4 jam) lalu panen sekali — pintu pro!',t:1,
+  g:()=>+localStorage.getItem('gv_idle_c')||0,r:10},
+ {id:'m3',ic:'🥕',n:'Rajin bertani',d:'Total 10 panen sayur di kebun.',t:10,
+  g:()=>+localStorage.getItem('gv_m1c')||0,r:30},
+ {id:'m4',ic:'🪙',n:'Kolektor koin',d:'Punya 100 koin di dompet.',t:100,g:()=>COIN,r:15}
 ];
-
-function claim(id,r){
-  if(M[id])return;
-  M[id]=true; localStorage.setItem(MKEY,JSON.stringify(M));
-  W.local_coin=(W.local_coin||0)+r; localStorage.setItem(WKEY,JSON.stringify(W));
-  render();
-}
-function render(){
-  $('list').innerHTML=MIS.map(m=>{
-    const done=m.now>=m.goal, claimed=M[m.id];
-    const pct=Math.min(100,m.now/m.goal*100);
-    return '<div class="card"><div class="row"><b>'+m.icon+' '+m.txt+'</b>'+
-      '<span>'+(claimed?'<span class="done">✅ Claimed</span>':'+'+m.reward+' 🪙')+'</span></div>'+
-      '<div class="bar"><div class="fill" style="width:'+pct+'%"></div></div>'+
-      '<div class="row"><span>Progres</span><b>'+Math.min(m.now,m.goal)+'/'+m.goal+'</b></div>'+
-      '<button '+(done&&!claimed?'':'disabled')+' onclick="claim(\''+m.id+'\','+m.reward+')">'+
-      (claimed?'Sudah diambil':(done?'🎁 CLAIM':'Belum selesai'))+'</button></div>';
-  }).join('');
-}
-render();
+function render(){const L=$('list');L.innerHTML='';
+ MS.forEach(m=>{const p=Math.min(m.g(),m.t),done=p>=m.t,
+  cl=localStorage.getItem('gv_cl_'+m.id),
+  doneShow=m.auto?localStorage.getItem('gv_m1'):cl;
+  const d=document.createElement('div');d.className='m';
+  d.innerHTML=`<div class="row"><b>${m.ic} ${m.n}</b>
+   <span style="color:var(--gold)">+${m.r} 🪙</span></div>
+   <small style="color:var(--mut)">${m.d}</small>
+   <div class="mbar"><i style="width:${(p/m.t)*100}%"></i></div>
+   <div class="row"><small style="color:var(--mut)">${p}/${m.t}</small>
+   ${doneShow?'<b style="color:var(--green)">✅ SELESAI</b>':
+    done?`<button class="btn" data-id="${m.id}">KLAIM HADIAH</button>`:
+    `<small style="color:var(--mut)">belum selesai</small>`}</div>`;
+  L.appendChild(d);});
+ L.querySelectorAll('button[data-id]').forEach(b=>b.onclick=()=>claim(b.dataset.id));}
+function claim(id){const m=MS.find(x=>x.id===id);if(!m)return;
+ if(!UID){alert('Login dulu buat klaim hadiah!');return}
+ localStorage.setItem('gv_cl_'+id,'1');COIN+=m.r;$('coin').innerText=COIN;
+ db.rpc('work_once',{uid:UID,coin:m.r,en:0}).catch(()=>{});render();}
 </script>
-</body>
-</html>
+</body></html>
