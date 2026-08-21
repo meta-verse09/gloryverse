@@ -1,3 +1,13 @@
+/* ===== ADSENSE VERIFIKASI ===== */
+(function(){
+ if(!document.querySelector('script[src*="adsbygoogle"]')){
+  var s=document.createElement('script');
+  s.async=true;
+  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206';
+  s.crossOrigin='anonymous';
+  document.head.appendChild(s);
+ }
+})();
 /* layout.js v2 — mesin template + logo otomatis */
 const $=id=>document.getElementById(id);
 const D=document.body.dataset;
