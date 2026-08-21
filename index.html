@@ -1,11 +1,77 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>GloryVerse</title>
-<meta http-equiv="refresh" content="0; url=login.html">
-<script>location.replace('login.html')</script>
-<style>body{background:#0b1020;color:#facc15;font-family:Arial;text-align:center;padding-top:40px}</style>
-</head>
-<body>⚔️ Memuat GloryVerse...</body>
-</html>
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Papan Kabar Dunia</title>
+<meta name="description" content="GloryVerse: negara metaverse Indonesia. Baca kabar dunia, warga baru, papan kehormatan. Daftar gratis!">
+<link rel="stylesheet" href="style.css">
+<style>
+.wrap{max-width:960px;margin:0 auto;padding:16px}
+.mast{text-align:center;padding:22px 10px 10px;border-bottom:3px double var(--gold)}
+.mast img{width:110px;border-radius:12px}
+.mast h1{margin:8px 0 2px;letter-spacing:2px;color:var(--gold);font-size:26px}
+.mast small{color:var(--mut)}
+.edition{display:flex;justify-content:space-between;gap:8px;color:var(--mut);font-size:12px;margin:10px 0;border-bottom:1px solid var(--line);padding-bottom:6px}
+.cta{display:flex;gap:10px;justify-content:center;margin:14px 0;flex-wrap:wrap}
+.cta .btn{text-decoration:none;padding:10px 22px}
+.rg{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.rg span{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:12px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:12px 0}
+.news h3{color:var(--gold);margin:0 0 6px;font-size:15px}
+.news ul{margin:0;padding-left:16px}
+.news li{margin:7px 0;font-size:13px;line-height:1.45}
+.news time{color:var(--mut);font-size:11px;display:block}
+footer{border-top:1px solid var(--line);margin-top:18px;padding:14px 6px 20px;color:var(--mut);font-size:12px;text-align:center}
+footer a{color:var(--gold);text-decoration:none;margin:0 6px}
+</style></head>
+<body><div class="wrap">
+ <div class="mast">
+  <img src="logo.png" alt="GloryVerse">
+  <h1>GLORYVERSE</h1>
+  <small>PAPAN KABAR DUNIA — Negara Metaverse Indonesia</small>
+ </div>
+ <div class="edition"><span id="edisi">Edisi —</span><span>Region: Earth • Bahasa: ID</span></div>
+ <div class="cta">
+  <a class="btn" id="ctaMasuk" href="login.html">⚔️ MASUK ARENA</a>
+  <a class="btn" href="login.html">📜 DAFTAR GRATIS</a>
+ </div>
+ <div class="rg">
+  <span>🟢 Solok — Ibukota</span><span>🟢 Bandung</span><span>🔥 Surabaya — kebun dibuka</span><span>⚪ Medan</span>
+ </div>
+ <div class="cols">
+  <div class="card news"><h3>🗞️ Kabar Terkini</h3><ul id="nKabar"></ul></div>
+  <div class="card news"><h3>🧑 Warga Baru</h3><ul id="nWarga"></ul></div>
+  <div class="card news"><h3>🏆 Papan Kehormatan</h3><ul id="nTop"></ul></div>
+ </div>
+ <footer>
+  <div>© 2026 GloryVerse — Dibangun dengan ❤️ di Indonesia. Seluruh isi dunia adalah milik negara GloryVerse.</div>
+  <div style="margin-top:6px"><a href="terms.html">Syarat & Ketentuan</a>•<a href="privacy.html">Kebijakan Privasi</a>•<a href="login.html">Masuk</a></div>
+ </footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+$('edisi').innerText='Edisi '+new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+function isi(id,arr){const u=$(id);u.innerHTML='';arr.forEach(h=>{const l=document.createElement('li');l.innerHTML=h;u.appendChild(l);});}
+function rel(t){const m=Math.max(1,Math.round((Date.now()-new Date(t))/60000));
+ if(m<60)return m+' mnt lalu';const j=Math.round(m/60);
+ if(j<24)return j+' jam lalu';return Math.round(j/24)+' hari lalu';}
+(async()=>{try{const {data:{session}}=await db.auth.getSession();
+ if(session){$('ctaMasuk').href='home.html';$('ctaMasuk').innerText='⚔️ LANJUT KE ARENA';}}catch(e){}})();
+(async()=>{try{
+ const [sh,pr,tp]=await Promise.all([
+  db.from('shouts').select('*').order('created_at',{ascending:false}).limit(4),
+  db.from('profiles').select('*').order('created_at',{ascending:false}).limit(4),
+  db.from('profiles').select('*').order('xp',{ascending:false}).limit(3)]);
+ if(!sh.data||!sh.data.length)throw 0;
+ isi('nKabar',sh.data.map(s=>'<b>'+s.name+':</b> '+s.msg+'<time>'+rel(s.created_at)+'</time>'));
+ isi('nWarga',(pr.data||[]).map(p=>'🪪 <b>'+p.name+'</b> tercatat jadi warga<time>'+rel(p.created_at)+'</time>'));
+ isi('nTop',(tp.data||[]).map(p=>'⭐ <b>'+p.name+'</b> — '+(p.rank||'Kadet')+' • Lv '+Math.floor((p.xp||0)/100)+1));
+}catch(e){
+ isi('nKabar',['<b>REDAKSI:</b> Solok dinyatakan sebagai ibukota GloryVerse.',
+  '<b>REDAKSI:</b> Kebun sayur Surabaya dibuka — misi pertama +20 koin.',
+  '<b>REDAKSI:</b> Tank Verse masuk garasi: hover tank berbatik siap tempur.',
+  '<b>REDAKSI:</b> Papan Kabar tayang perdana — berita dunia kini menulis dirinya sendiri.']);
+ isi('nWarga',['📜 Jadilah warga pertama yang tercatat sejarah — daftar gratis!']);
+ isi('nTop',['🏆 Papan kehormatan menunggu legenda pertama.']);
+}})();
+</script></body></html>
