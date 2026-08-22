@@ -44,9 +44,23 @@ let UID=null;
  if(session){UID=session.user.id;$('mode').innerText='🟢 MODE ONLINE';}
  else $('mode').innerText='MODE DEMO';}catch(e){}})();
 const ACC={
- 'Sumatera Barat':['sumbar','padang','sumatera barat','bukittinggi','minang'],
- 'Jawa Timur':['jawa timur','surabaya','malang','madura','rawon'],
- 'Bali':['bali','denpasar','ubud','gianyar']};
+ 'Indonesia':['indonesia','jakarta','padang','sumbar','bandung'],
+ 'Malaysia':['malaysia','kuala lumpur','kl'],
+ 'Singapura':['singapura','singapore'],
+ 'Thailand':['thailand','bangkok'],
+ 'Jepang':['jepang','japan','tokyo'],
+ 'Korea':['korea','seoul'],
+ 'Filipina':['filipina','manila','philippine'],
+ 'Vietnam':['vietnam','ho chi minh'],
+ 'Australia':['australia','sydney'],
+ 'Prancis':['prancis','perancis','france','paris'],
+ 'Inggris':['inggris','england','london','uk','britain'],
+ 'Belanda':['belanda','netherland','amsterdam'],
+ 'Jerman':['jerman','germany','berlin'],
+ 'Italia':['italia','italy','roma','rome'],
+ 'Spanyol':['spanyol','spain','madrid'],
+ 'Turki':['turki','turkey','istanbul'],
+ 'Amerika':['amerika','usa','america','new york']};
 let cur=null,curUrl='',hints=3,tries=0,round=1,solved=false;
 async function gv(body){try{const r=await fetch('https://gv-ai.m-gazali1975.workers.dev/',
  {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
