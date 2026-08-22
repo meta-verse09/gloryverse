@@ -25,7 +25,7 @@ $('left').innerHTML=`<div class="box"><b id="pName">Player</b>
  <div class="box menu"><a href="home.html">🏠 Home</a><a href="game.html">⚒️ Work</a>
  <a href="market.html">🛒 Market</a><a href="war.html">⚔️ War</a>
  <a href="bunker.html">🛡️ Bunker</a><a href="rank.html">🏆 Rankings</a>
- <a href="missions.html">📋 Missions</a><a href="news.html">📰 News</a><a href="forum.html">🛋️ Forum</a></div>`;<a href="forum.html">🛋️ Forum</a><a href="mapverse.html">🗺️ MapVerse</a></div>`;
+ <a href="missions.html">📋 Missions</a><a href="news.html">📰 News</a><a href="forum.html">🛋️ Forum</a><a href="mapverse.html">🗺️ MapVerse</a></div>`;
 $('right').innerHTML=`<div class="box"><h3>🟢 Teman Online</h3><div id="friends"></div></div>
  <div class="box"><h3>📢 Shout Dunia</h3><div id="shouts"></div>
  <input id="shMsg" placeholder="teriak sesuatu..."><button class="btn" id="shBtn">Kirim</button></div>`;
