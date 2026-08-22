@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — MapVerse</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>.pano{display:none}
+#mvPano{height:260px;border-radius:12px;border:1px solid var(--line);
+ background-size:auto 100%;background-repeat:repeat-x;cursor:grab;touch-action:pan-y;margin:8px 0}
+.row{display:flex;gap:6px;margin:6px 0;align-items:center}
+input{flex:1;background:#0b1020;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px}
+.hint{border-left:3px solid var(--gold);padding:4px 8px;margin:4px 0;font-size:13px;background:#0b1020;border-radius:4px}
+#judge{margin:8px 0;padding:10px;border-radius:12px;border:1px solid var(--gold);background:#1b2c55;display:none;font-size:14px}</style>
+</head>
+<body data-img="region1.jpeg" data-title="MapVerse">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+ <a class="on" href="mapverse.html">MAPVERSE</a><a href="forum.html">FORUM</a>
+ <a href="market.html">MARKETS</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
+   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card"><h3>🗺️ MapVerse — Edisi Nusantara</h3>
+   <small style="color:var(--mut)">Drag panorama ↔, baca petunjuk (plat, atap, makanan), tebak provinsinya! Juri Llama akan mengomentari jawabanmu.</small></div>
+  <div id="mvPano"></div>
+  <div class="row"><button class="btn" id="hintBtn">💡 Tanya Burung Hantu (3)</button>
+   <span class="chip" id="st">Ronde 1</span></div>
+  <div id="hints"></div>
+  <div class="row"><input id="guess" placeholder="contoh: Sumatera Barat">
+   <button class="btn" id="goBtn">TEBAK!</button></div>
+  <div id="judge"></div>
+  <div class="row"><button class="btn" id="nextBtn" style="display:none">RONDE BERIKUT →</button></div>
+ </main>
+ <aside class="side" id="right"></aside>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
+<script>
+let UID=null;
+(async()=>{try{const {data:{session}}=await db.auth.getSession();
+ if(session){UID=session.user.id;$('mode').innerText='🟢 MODE ONLINE';}
+ else $('mode').innerText='MODE DEMO';}catch(e){}})();
+const SPOTS=[
+ {img:'https://gloryverse.id/mv1.jpeg',name:'Sumatera Barat',accept:['sumbar','padang','sumatera barat','bukittinggi','minang']},
+ {img:'https://gloryverse.id/mv2.jpeg',name:'Jawa Timur',accept:['jawa timur','surabaya','malang','madura','rawon']},
+ {img:'https://gloryverse.id/mv3.jpeg',name:'Bali',accept:['bali','denpasar','ubud','gianyar']}
+];
+let cur=null,hints=3,tries=0,round=1,solved=false;
+function start(){hints=3;tries=0;solved=false;
+ $('hints').innerHTML='';$('judge').style.display='none';
+ $('nextBtn').style.display='none';$('guess').value='';
+ $('hintBtn').innerText='💡 Tanya Burung Hantu (3)';
+ let n;do{n=SPOTS[Math.floor(Math.random()*SPOTS.length)]}while(SPOTS.length>1&&n===cur);
+ cur=n;const p=$('mvPano');p.style.backgroundImage=`url('${cur.img}')`;
+ let pos=0,drag=null;
+ p.onpointerdown=e=>{drag={x:e.clientX,pos};p.setPointerCapture(e.pointerId);};
+ p.onpointermove=e=>{if(drag){pos=drag.pos+(e.clientX-drag.x);p.style.backgroundPositionX=pos+'px';}};
+ ['pointerup','pointercancel'].forEach(v=>p.addEventListener(v,()=>drag=null));
+ $('st').innerText='Ronde '+round;}
+async function ai(body){try{const r=await fetch('https://gv-ai.m-gazali1975.workers.dev/',
+ {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+ const d=await r.json();return d.text||'';}catch(e){return ''}}
+$('hintBtn').onclick=async()=>{if(solved||hints<=0)return;hints--;
+ $('hintBtn').innerText='💡 Tanya Burung Hantu ('+hints+')';
+ const t=await ai({prompt:'Foto pemandangan Indonesia. Beri petunjuk kecil tentang provinsinya TANPA menyebut nama provinsi. Satu kalimat santai.',image_url:cur.img});
+ const d=document.createElement('div');d.className='hint';
+ d.innerText='🦉 '+(t||'Hmm... coba perhatikan plat motor dan bentuk atapnya...');
+ $('hints').appendChild(d);};
+$('goBtn').onclick=async()=>{if(solved)return;
+ const g=$('guess').value.trim().toLowerCase();if(!g)return;tries++;
+ const ok=cur.accept.some(a=>g.includes(a))||g.includes(cur.name.toLowerCase());
+ const J=$('judge');J.style.display='block';
+ if(ok){solved=true;const used=3-hints,rw=Math.max(10,30-used*10);
+  if(UID)db.rpc('work_once',{uid:UID,coin:rw,en:0}).catch(()=>{});
+  const c=await ai({prompt:`Foto Indonesia. Tebakan pemain: "${g}". Jawaban benar: "${cur.name}". Vonis: BENAR. Tulis pujian santai lucu 1 kalimat maks 15 kata.`,image_url:cur.img});
+  J.innerHTML=`<b style="color:var(--gold)">BENAR! +${rw} 🪙</b><br>🦙 ${c||'Matamu tajam, Kawan! 🦅'}`;
+  $('nextBtn').style.display='block';
+ }else if(tries>=2){solved=true;
+  const c=await ai({prompt:`Foto Indonesia. Tebakan pemain: "${g}". Jawaban benar: "${cur.name}". Vonis: SALAH. Tulis kalimat santai yang menghibur dan menyebut jawaban, maks 15 kata.`,image_url:cur.img});
+  J.innerHTML=`<b style="color:#f87171">BELUM TEPAT.</b><br>🦙 ${c||('Jawabannya: '+cur.name+'. Ronde depan pasti bisa!')}`;
+  $('nextBtn').style.display='block';
+ }else{J.innerHTML='<b style="color:var(--gold)">BELUM!</b> Satu kesempatan lagi — perhatikan petunjuknya. 🔍';}};
+$('nextBtn').onclick=()=>{round++;start();};
+start();
+</script>
+</body></html>
