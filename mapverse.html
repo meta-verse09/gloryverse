@@ -74,15 +74,16 @@ let UID=null,NAMA='Warga';
   const {data:pr}=await db.from('profiles').select('username').eq('id',UID).single();
   if(pr&&pr.username)NAMA=pr.username;}
  else $('mode').innerText='MODE DEMO';}catch(e){}})();
-const ROUNDS=5;let cur=null,guess=null,hints=3,ronde=0,total=0,lock=false;
+const ROUNDS=5;let cur=null,hints=3,ronde=0,total=0,lock=false;
 const map=L.map('map',{worldCopyJump:true}).setView([5,110],2);
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
 let gMark=null,aMark=null,line=null;
 function hav(a,b,c,d){const R=6371,k=Math.PI/180;const x=(c-a)*k,y=(d-b)*k;
  const s=Math.sin(x/2)**2+Math.cos(a*k)*Math.cos(c*k)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
-async function gv(body){try{const r=await fetch('https://gv-ai.m-gazali1975.workers.dev/',
- {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- return await r.json();}catch(e){return {}}}
+async function gv(body){try{const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),15000);
+ const r=await fetch('https://gv-ai.m-gazali1975.workers.dev/',
+ {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ctl.signal});
+ clearTimeout(to);return await r.json();}catch(e){return {}}}
 async function startRound(){ronde++;hints=3;lock=false;
  $('hintBox').innerHTML='';$('hintBtn').innerText='🦉 Bisikan (3)';
  $('fRonde').innerText='Ronde '+ronde+'/'+ROUNDS;$('fSkor').innerText='Skor '+total;
@@ -92,7 +93,7 @@ async function startRound(){ronde++;hints=3;lock=false;
  const d=await gv({mly_rand:1});
  if(!d.url){cur={name:'Sumatera Barat',lat:-0.95,lng:100.35,fb:1,url:'https://gloryverse.id/mv1.jpeg'};}
  else cur=d;
- $('fMode').innerText=cur.fb?'🇮 Nusantara':'🌍 Dunia';
+ $('fMode').innerText=cur.fb?'🇮 Nusantara':' Dunia';
  p.style.backgroundImage=`url('${cur.url}')`;
  let pos=0,drag=null;
  p.onpointerdown=e=>{drag={x:e.clientX,pos};p.setPointerCapture(e.pointerId);};
@@ -108,33 +109,37 @@ $('hintBtn').onclick=async()=>{if(lock||hints<=0||!cur)return;hints--;
  const el=document.createElement('div');el.className='chip';el.style.background='#0b1020';
  el.innerText='🦉 '+(d.text||'Perhatikan plat kendaraan & gaya bangunannya...');
  $('hintBox').appendChild(el);};
-$('tebakBtn').onclick=async()=>{if(lock||!cur)return;
+$('tebakBtn').onclick=()=>{if(lock||!cur)return;
  if(!gMark){alert('Pasang pin dulu di atlas! 🗺️');return;}
  lock=true;
- const g=gMark.getLatLng();
- const d=hav(cur.lat,cur.lng,g.lat,g.lng);
- const skor=Math.round(5000*Math.pow(Math.max(0,1-d/20000),2));
- total+=skor;$('fSkor').innerText='Skor '+total;
- aMark=L.marker([cur.lat,cur.lng]).addTo(map);
- line=L.polyline([[g.lat,g.lng],[cur.lat,cur.lng]],{color:'#fbbf24',weight:3}).addTo(map);
- map.fitBounds(line.getBounds(),{padding:[30,30]});
- const km=d<1?Math.round(d*1000)+' m':Math.round(d).toLocaleString('id-ID')+' km';
- $('hJarak').innerText='📏 '+km;
- $('hSkor').innerText='+'+skor+' poin';
- const koin=Math.round(skor/100);
- $('hKoin').innerText='🪙 +'+koin+' koin';
- if(UID){db.rpc('work_once',{uid:UID,coin:koin,en:0}).catch(()=>{});
-  db.from('mv_rounds').insert({uid:UID,nama:NAMA,spot:cur.name,jarak_km:Math.round(d),skor:skor,mode:cur.fb?'nusantara':'dunia'}).then(()=>loadLB());}
- const ai=await gv({prompt:`Jarak tebakan pemain ${Math.round(d)} km dari jawaban ${cur.name}. Skor ${skor}/5000. Komentar SATU kalimat bahasa Indonesia gaul: pujian jika dekat, hiburan jika jauh. Tanpa bahasa Inggris.`,max_tokens:60});
- $('hAi').innerText='🦙 '+(ai.text||'Ronde yang seru!');
- $('hasil').style.display='flex';};
+ try{
+  const g=gMark.getLatLng();
+  const d=hav(cur.lat,cur.lng,g.lat,g.lng);
+  const skor=Math.round(5000*Math.pow(Math.max(0,1-d/20000),2));
+  total+=skor;$('fSkor').innerText='Skor '+total;
+  aMark=L.marker([cur.lat,cur.lng]).addTo(map);
+  line=L.polyline([[g.lat,g.lng],[cur.lat,cur.lng]],{color:'#fbbf24',weight:3}).addTo(map);
+  map.fitBounds(line.getBounds(),{padding:[30,30]});
+  const km=d<1?Math.round(d*1000)+' m':Math.round(d).toLocaleString('id-ID')+' km';
+  $('hJarak').innerText='📏 '+km;
+  $('hSkor').innerText='+'+skor+' poin';
+  const koin=Math.round(skor/100);
+  $('hKoin').innerText='🪙 +'+koin+' koin';
+  $('hAi').innerText='🦙 juri sedang berbisik...';
+  $('hasil').style.display='flex';
+  if(UID){db.rpc('work_once',{uid:UID,coin:koin,en:0}).catch(()=>{});
+   db.from('mv_rounds').insert({uid:UID,nama:NAMA,spot:cur.name,jarak_km:Math.round(d),skor:skor,mode:cur.fb?'nusantara':'dunia'}).then(()=>loadLB()).catch(()=>{});}
+  gv({prompt:`Jarak tebakan pemain ${Math.round(d)} km dari jawaban ${cur.name}. Skor ${skor}/5000. Komentar SATU kalimat bahasa Indonesia gaul: pujian jika dekat, hiburan jika jauh. Tanpa bahasa Inggris.`,max_tokens:60})
+   .then(ai=>{$('hAi').innerText='🦙 '+(ai.text||'Ronde yang seru!');});
+ }catch(e){$('hAi').innerText='🦙 Ronde yang seru!';$('hasil').style.display='flex';}
+};
 $('nextBtn').onclick=()=>{$('hasil').style.display='none';
  if(ronde>=ROUNDS)finish();else startRound();};
 $('doneBtn').onclick=finish;
 function finish(){$('hasil').style.display='none';$('fs').style.display='none';loadLB();}
 async function loadLB(){try{const {data}=await db.from('mv_rounds').select('nama,skor,mode').order('skor',{ascending:false}).limit(10);
  $('lb').innerHTML='<tr><th>#</th><th>Warga</th><th>Skor</th><th>Mode</th></tr>'+
- ((data&&data.length)?data.map((r,i)=>`<tr><td>${i+1}</td><td>${r.nama||'Warga'}</td><td>${r.skor}</td><td>${r.mode==='dunia'?'🌍':'🇮'}</td></tr>`).join(''):'<tr><td colspan="4">Belum ada skor — jadilah yang pertama!</td></tr>');}
+ ((data&&data.length)?data.map((r,i)=>`<tr><td>${i+1}</td><td>${r.nama||'Warga'}</td><td>${r.skor}</td><td>${r.mode==='dunia'?'🌍':''}</td></tr>`).join(''):'<tr><td colspan="4">Belum ada skor — jadilah yang pertama!</td></tr>');}
  catch(e){$('lb').innerHTML='<tr><td colspan="4">Papan skor aktif setelah login.</td></tr>'}}
 loadLB();
 </script>
