@@ -23,13 +23,13 @@ input{flex:1;background:#0b1020;color:var(--txt);border:1px solid var(--line);bo
  <main>
   <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
-  <div class="card"><h3>🗺️ MapVerse — Edisi Nusantara</h3>
-   <small style="color:var(--mut)">Foto NYATA acak dari Mapillary. Drag ↔, baca plat & atap, tebak provinsi — juri Llama mengomentari!</small></div>
+  <div class="card"><h3>🗺️ MapVerse — Edisi Dunia</h3>
+   <small style="color:var(--mut)">Foto NYATA acak dari Mapillary. Drag ↔, baca plat & atap, tebak negaranya — juri Llama mengomentari!</small></div>
   <div id="mvPano"></div>
   <div class="row"><button class="btn" id="hintBtn">💡 Tanya Burung Hantu (3)</button>
    <span class="chip" id="st">Ronde 1</span></div>
   <div id="hints"></div>
-  <div class="row"><input id="guess" placeholder="contoh: Sumatera Barat">
+  <div class="row"><input id="guess" placeholder="contoh: Jepang">
    <button class="btn" id="goBtn">TEBAK!</button></div>
   <div id="judge"></div>
   <div class="row"><button class="btn" id="nextBtn" style="display:none">RONDE BERIKUT →</button></div>
@@ -69,9 +69,9 @@ async function start(){hints=3;tries=0;solved=false;
  $('hints').innerHTML='';$('judge').style.display='none';
  $('nextBtn').style.display='none';$('guess').value='';
  $('hintBtn').innerText='💡 Tanya Burung Hantu (3)';
- const p=$('mvPano');p.style.backgroundImage='';p.innerText='memuat dunia nyata...';
+ const p=$('mvPano');p.style.backgroundImage='';p.innerText='memuat dunia...';
  const d=await gv({mly_rand:1});
- if(!d.url){p.innerText='Gagal memuat spot: '+(d.error||'cek token Mapillary di worker.');return;}
+ if(!d.url){p.innerText='Gagal memuat spot: '+(d.error||'coba lagi.');return;}
  cur={name:d.name,accept:ACC[d.name]||[d.name.toLowerCase()]};curUrl=d.url;
  p.innerText='';p.style.backgroundImage=`url('${curUrl}')`;
  let pos=0,drag=null;
@@ -79,11 +79,11 @@ async function start(){hints=3;tries=0;solved=false;
  p.onpointermove=e=>{if(drag){pos=drag.pos+(e.clientX-drag.x);p.style.backgroundPositionX=pos+'px';}};
  ['pointerup','pointercancel'].forEach(v=>p.addEventListener(v,()=>drag=null));
  $('st').innerText='Ronde '+round;}
-$('hintBtn').onclick=async()=>{if(solved||hints<=0||!curUrl)return;hints--;
+$('hintBtn').onclick=async()=>{if(solved||hints<=0||!cur)return;hints--;
  $('hintBtn').innerText='💡 Tanya Burung Hantu ('+hints+')';
- const d=await gv({prompt:'Foto jalan di Indonesia. Beri petunjuk kecil tentang provinsinya TANPA menyebut nama provinsi. Satu kalimat santai.',image_url:curUrl});
+ const d=await gv({prompt:`Kunci: "${cur.name}". Tulis SATU kalimat petunjuk santai BAHASA INDONESIA biar pemain bisa menebak tempat ini. DILARANG menyebut nama tempat, DILARANG langkah berpikir, DILARANG bahasa Inggris.`,max_tokens:60});
  const el=document.createElement('div');el.className='hint';
- el.innerText='🦉 '+(d.text||'Hmm... perhatikan plat motor & bentuk atapnya...');
+ el.innerText='🦉 '+(d.text||'Hmm... perhatikan plat kendaraan & gaya bangunannya...');
  $('hints').appendChild(el);};
 $('goBtn').onclick=async()=>{if(solved)return;
  const g=$('guess').value.trim().toLowerCase();if(!g)return;tries++;
@@ -91,11 +91,11 @@ $('goBtn').onclick=async()=>{if(solved)return;
  const J=$('judge');J.style.display='block';
  if(ok){solved=true;const rw=Math.max(10,30-(3-hints)*10);
   if(UID)db.rpc('work_once',{uid:UID,coin:rw,en:0}).catch(()=>{});
-  const d=await gv({prompt:`Foto Indonesia. Tebakan pemain: "${g}". Jawaban benar: "${cur.name}". Vonis BENAR. Pujian santai lucu maks 15 kata.`,image_url:curUrl});
+  const d=await gv({prompt:`Tebakan pemain: "${g}". Jawaban: "${cur.name}". Vonis BENAR. Puji lucu SATU kalimat bahasa Indonesia gaul maks 15 kata, tanpa bahasa Inggris.`,max_tokens:60});
   J.innerHTML=`<b style="color:var(--gold)">BENAR! +${rw} 🪙</b><br>🦙 ${d.text||'Matamu tajam, Kawan! 🦅'}`;
   $('nextBtn').style.display='block';
  }else if(tries>=2){solved=true;
-  const d=await gv({prompt:`Foto Indonesia. Tebakan pemain: "${g}". Jawaban benar: "${cur.name}". Vonis SALAH. Kalimat santai menghibur & menyebut jawaban, maks 15 kata.`,image_url:curUrl});
+  const d=await gv({prompt:`Tebakan pemain: "${g}". Jawaban: "${cur.name}". Vonis SALAH. Hibur SATU kalimat bahasa Indonesia gaul & sebut jawabannya, maks 15 kata.`,max_tokens:60});
   J.innerHTML=`<b style="color:#f87171">BELUM TEPAT.</b><br>🦙 ${d.text||('Jawabannya: '+cur.name+'.')}`;
   $('nextBtn').style.display='block';
  }else J.innerHTML='<b style="color:var(--gold)">BELUM!</b> Satu kesempatan lagi 🔍';};
