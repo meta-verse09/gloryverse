@@ -2,13 +2,18 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GloryVerse — MapVerse</title>
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>.pano{display:none}
-#mvPano{height:260px;border-radius:12px;border:1px solid var(--line);
- background-size:auto 100%;background-repeat:repeat-x;cursor:grab;touch-action:pan-y;margin:8px 0;background-color:#0b1020}
+#fs{position:fixed;inset:0;z-index:60;background:#000;display:none}
+#fsPano{position:absolute;inset:0;background-size:auto 100%;background-repeat:repeat-x;cursor:grab;touch-action:pan-y}
+#fsTop{position:absolute;top:8px;left:8px;right:8px;display:flex;gap:6px;flex-wrap:wrap;z-index:5}
+#map{position:absolute;bottom:12px;right:12px;width:min(48vw,360px);height:min(42vh,280px);z-index:5;border:2px solid var(--gold);border-radius:10px;background:#0b1020}
+#fsBtns{position:absolute;bottom:12px;left:12px;z-index:6;display:flex;flex-direction:column;gap:6px;max-width:55vw}
+#hasil{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:#0009}
+#hCard{background:#101a33;border:2px solid var(--gold);border-radius:14px;padding:16px;width:min(92vw,430px);text-align:center}
 .row{display:flex;gap:6px;margin:6px 0;align-items:center}
-input{flex:1;background:#0b1020;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px}
-.hint{border-left:3px solid var(--gold);padding:4px 8px;margin:4px 0;font-size:13px;background:#0b1020;border-radius:4px}
-#judge{margin:8px 0;padding:10px;border-radius:12px;border:1px solid var(--gold);background:#1b2c55;display:none;font-size:14px}</style>
+#lb td,#lb th{padding:4px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left}
+</style>
 </head>
 <body data-img="region1.jpeg" data-title="MapVerse">
 <header><b class="logo">⚔️ GloryVerse</b>
@@ -23,83 +28,114 @@ input{flex:1;background:#0b1020;color:var(--txt);border:1px solid var(--line);bo
  <main>
   <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
-  <div class="card"><h3>🗺️ MapVerse — Edisi Dunia</h3>
-   <small style="color:var(--mut)">Foto NYATA acak dari Mapillary. Drag ↔, baca plat & atap, tebak negaranya — juri Llama mengomentari!</small></div>
-  <div id="mvPano"></div>
-  <div class="row"><button class="btn" id="hintBtn">💡 Tanya Burung Hantu (3)</button>
-   <span class="chip" id="st">Ronde 1</span></div>
-  <div id="hints"></div>
-  <div class="row"><input id="guess" placeholder="contoh: Jepang">
-   <button class="btn" id="goBtn">TEBAK!</button></div>
-  <div id="judge"></div>
-  <div class="row"><button class="btn" id="nextBtn" style="display:none">RONDE BERIKUT →</button></div>
+  <div class="card"><h3>🗺️ MapVerse — Arena Dunia</h3>
+   <small style="color:var(--mut)">Panorama layar penuh. Pasang pin di atlas, ukur jarakmu ke kenyataan, panen skor 0–5000. 5 ronde = 1 sesi.</small>
+   <div class="row"><button class="btn" id="mainBtn">🎮 MAIN MAPVERSE</button></div>
+  </div>
+  <div class="card"><h3>🏆 Papan Juara MapVerse</h3>
+   <table id="lb" style="width:100%"></table>
+  </div>
+  <!-- SLOT IKLAN ADSENSE: tempel unit iklan di sini nanti -->
  </main>
  <aside class="side" id="right"></aside>
 </div>
+<div id="fs">
+ <div id="fsPano"></div>
+ <div id="fsTop">
+  <span class="chip" id="fRonde">Ronde 1/5</span>
+  <span class="chip" id="fSkor">Skor 0</span>
+  <span class="chip" id="fMode">🌍</span>
+  <button class="btn" id="hintBtn">🦉 Bisikan (3)</button>
+  <button class="btn" id="mapBtn">🗺️ Atlas</button>
+ </div>
+ <div id="map"></div>
+ <div id="fsBtns">
+  <div id="hintBox" style="display:flex;flex-direction:column;gap:4px"></div>
+  <button class="btn" id="tebakBtn">🎯 TEBAK!</button>
+ </div>
+</div>
+<div id="hasil"><div id="hCard">
+ <h2 id="hJarak">—</h2>
+ <div id="hSkor" style="font-size:18px;color:var(--gold)"></div>
+ <div id="hKoin"></div>
+ <div id="hAi" style="margin:8px 0;font-size:14px"></div>
+ <div class="row" style="justify-content:center">
+  <button class="btn" id="nextBtn">➡️ Ronde Berikut</button>
+  <button class="btn" id="doneBtn">🏁 Selesai</button>
+ </div>
+</div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="config.js"></script><script src="layout.js"></script>
 <script>
-let UID=null;
+let UID=null,NAMA='Warga';
 (async()=>{try{const {data:{session}}=await db.auth.getSession();
- if(session){UID=session.user.id;$('mode').innerText='🟢 MODE ONLINE';}
+ if(session){UID=session.user.id;$('mode').innerText='🟢 MODE ONLINE';
+  const {data:pr}=await db.from('profiles').select('username').eq('id',UID).single();
+  if(pr&&pr.username)NAMA=pr.username;}
  else $('mode').innerText='MODE DEMO';}catch(e){}})();
-const ACC={
- 'Indonesia':['indonesia','jakarta','padang','sumbar','bandung'],
- 'Malaysia':['malaysia','kuala lumpur','kl'],
- 'Singapura':['singapura','singapore'],
- 'Thailand':['thailand','bangkok'],
- 'Jepang':['jepang','japan','tokyo'],
- 'Korea':['korea','seoul'],
- 'Filipina':['filipina','manila','philippine'],
- 'Vietnam':['vietnam','ho chi minh'],
- 'Australia':['australia','sydney'],
- 'Prancis':['prancis','perancis','france','paris'],
- 'Inggris':['inggris','england','london','uk','britain'],
- 'Belanda':['belanda','netherland','amsterdam'],
- 'Jerman':['jerman','germany','berlin'],
- 'Italia':['italia','italy','roma','rome'],
- 'Spanyol':['spanyol','spain','madrid'],
- 'Turki':['turki','turkey','istanbul'],
- 'Amerika':['amerika','usa','america','new york']};
-let cur=null,curUrl='',hints=3,tries=0,round=1,solved=false;
+const ROUNDS=5;let cur=null,guess=null,hints=3,ronde=0,total=0,lock=false;
+const map=L.map('map',{worldCopyJump:true}).setView([5,110],2);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);
+let gMark=null,aMark=null,line=null;
+function hav(a,b,c,d){const R=6371,k=Math.PI/180;const x=(c-a)*k,y=(d-b)*k;
+ const s=Math.sin(x/2)**2+Math.cos(a*k)*Math.cos(c*k)*Math.sin(y/2)**2;return 2*R*Math.asin(Math.sqrt(s));}
 async function gv(body){try{const r=await fetch('https://gv-ai.m-gazali1975.workers.dev/',
  {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
  return await r.json();}catch(e){return {}}}
-async function start(){hints=3;tries=0;solved=false;
- $('hints').innerHTML='';$('judge').style.display='none';
- $('nextBtn').style.display='none';$('guess').value='';
- $('hintBtn').innerText='💡 Tanya Burung Hantu (3)';
- const p=$('mvPano');p.style.backgroundImage='';p.innerText='memuat dunia...';
+async function startRound(){ronde++;hints=3;lock=false;
+ $('hintBox').innerHTML='';$('hintBtn').innerText='🦉 Bisikan (3)';
+ $('fRonde').innerText='Ronde '+ronde+'/'+ROUNDS;$('fSkor').innerText='Skor '+total;
+ if(gMark){map.removeLayer(gMark);gMark=null}if(aMark){map.removeLayer(aMark);aMark=null}if(line){map.removeLayer(line);line=null}
+ map.setView([5,110],2);
+ const p=$('fsPano');p.style.backgroundImage='';
  const d=await gv({mly_rand:1});
- if(!d.url){p.innerText='Gagal memuat spot: '+(d.error||'coba lagi.');return;}
- cur={name:d.name,accept:ACC[d.name]||[d.name.toLowerCase()]};curUrl=d.url;
- p.innerText='';p.style.backgroundImage=`url('${curUrl}')`;
+ if(!d.url){cur={name:'Sumatera Barat',lat:-0.95,lng:100.35,fb:1,url:'https://gloryverse.id/mv1.jpeg'};}
+ else cur=d;
+ $('fMode').innerText=cur.fb?'🇮 Nusantara':'🌍 Dunia';
+ p.style.backgroundImage=`url('${cur.url}')`;
  let pos=0,drag=null;
  p.onpointerdown=e=>{drag={x:e.clientX,pos};p.setPointerCapture(e.pointerId);};
  p.onpointermove=e=>{if(drag){pos=drag.pos+(e.clientX-drag.x);p.style.backgroundPositionX=pos+'px';}};
- ['pointerup','pointercancel'].forEach(v=>p.addEventListener(v,()=>drag=null));
- $('st').innerText='Ronde '+round;}
-$('hintBtn').onclick=async()=>{if(solved||hints<=0||!cur)return;hints--;
- $('hintBtn').innerText='💡 Tanya Burung Hantu ('+hints+')';
- const d=await gv({prompt:`Kunci: "${cur.name}". Tulis SATU kalimat petunjuk santai BAHASA INDONESIA biar pemain bisa menebak tempat ini. DILARANG menyebut nama tempat, DILARANG langkah berpikir, DILARANG bahasa Inggris.`,max_tokens:60});
- const el=document.createElement('div');el.className='hint';
- el.innerText='🦉 '+(d.text||'Hmm... perhatikan plat kendaraan & gaya bangunannya...');
- $('hints').appendChild(el);};
-$('goBtn').onclick=async()=>{if(solved)return;
- const g=$('guess').value.trim().toLowerCase();if(!g)return;tries++;
- const ok=cur.accept.some(a=>g.includes(a));
- const J=$('judge');J.style.display='block';
- if(ok){solved=true;const rw=Math.max(10,30-(3-hints)*10);
-  if(UID)db.rpc('work_once',{uid:UID,coin:rw,en:0}).catch(()=>{});
-  const d=await gv({prompt:`Tebakan pemain: "${g}". Jawaban: "${cur.name}". Vonis BENAR. Puji lucu SATU kalimat bahasa Indonesia gaul maks 15 kata, tanpa bahasa Inggris.`,max_tokens:60});
-  J.innerHTML=`<b style="color:var(--gold)">BENAR! +${rw} 🪙</b><br>🦙 ${d.text||'Matamu tajam, Kawan! 🦅'}`;
-  $('nextBtn').style.display='block';
- }else if(tries>=2){solved=true;
-  const d=await gv({prompt:`Tebakan pemain: "${g}". Jawaban: "${cur.name}". Vonis SALAH. Hibur SATU kalimat bahasa Indonesia gaul & sebut jawabannya, maks 15 kata.`,max_tokens:60});
-  J.innerHTML=`<b style="color:#f87171">BELUM TEPAT.</b><br>🦙 ${d.text||('Jawabannya: '+cur.name+'.')}`;
-  $('nextBtn').style.display='block';
- }else J.innerHTML='<b style="color:var(--gold)">BELUM!</b> Satu kesempatan lagi 🔍';};
-$('nextBtn').onclick=()=>{round++;start();};
-start();
+ ['pointerup','pointercancel'].forEach(v=>p.addEventListener(v,()=>drag=null));}
+map.on('click',e=>{if(lock)return;
+ if(gMark)gMark.setLatLng(e.latlng);else gMark=L.marker(e.latlng).addTo(map);});
+$('mainBtn').onclick=()=>{$('fs').style.display='block';ronde=0;total=0;startRound();setTimeout(()=>map.invalidateSize(),60);};
+$('mapBtn').onclick=()=>{const m=$('map');m.style.display=m.style.display==='none'?'block':'none';map.invalidateSize();};
+$('hintBtn').onclick=async()=>{if(lock||hints<=0||!cur)return;hints--;
+ $('hintBtn').innerText='🦉 Bisikan ('+hints+')';
+ const d=await gv({prompt:`Kunci: "${cur.name}". Tulis SATU kalimat petunjuk santai BAHASA INDONESIA biar pemain menebak tempat ini. DILARANG menyebut nama tempat, DILARANG langkah berpikir, DILARANG bahasa Inggris.`,max_tokens:60});
+ const el=document.createElement('div');el.className='chip';el.style.background='#0b1020';
+ el.innerText='🦉 '+(d.text||'Perhatikan plat kendaraan & gaya bangunannya...');
+ $('hintBox').appendChild(el);};
+$('tebakBtn').onclick=async()=>{if(lock||!cur)return;
+ if(!gMark){alert('Pasang pin dulu di atlas! 🗺️');return;}
+ lock=true;
+ const g=gMark.getLatLng();
+ const d=hav(cur.lat,cur.lng,g.lat,g.lng);
+ const skor=Math.round(5000*Math.pow(Math.max(0,1-d/20000),2));
+ total+=skor;$('fSkor').innerText='Skor '+total;
+ aMark=L.marker([cur.lat,cur.lng]).addTo(map);
+ line=L.polyline([[g.lat,g.lng],[cur.lat,cur.lng]],{color:'#fbbf24',weight:3}).addTo(map);
+ map.fitBounds(line.getBounds(),{padding:[30,30]});
+ const km=d<1?Math.round(d*1000)+' m':Math.round(d).toLocaleString('id-ID')+' km';
+ $('hJarak').innerText='📏 '+km;
+ $('hSkor').innerText='+'+skor+' poin';
+ const koin=Math.round(skor/100);
+ $('hKoin').innerText='🪙 +'+koin+' koin';
+ if(UID){db.rpc('work_once',{uid:UID,coin:koin,en:0}).catch(()=>{});
+  db.from('mv_rounds').insert({uid:UID,nama:NAMA,spot:cur.name,jarak_km:Math.round(d),skor:skor,mode:cur.fb?'nusantara':'dunia'}).then(()=>loadLB());}
+ const ai=await gv({prompt:`Jarak tebakan pemain ${Math.round(d)} km dari jawaban ${cur.name}. Skor ${skor}/5000. Komentar SATU kalimat bahasa Indonesia gaul: pujian jika dekat, hiburan jika jauh. Tanpa bahasa Inggris.`,max_tokens:60});
+ $('hAi').innerText='🦙 '+(ai.text||'Ronde yang seru!');
+ $('hasil').style.display='flex';};
+$('nextBtn').onclick=()=>{$('hasil').style.display='none';
+ if(ronde>=ROUNDS)finish();else startRound();};
+$('doneBtn').onclick=finish;
+function finish(){$('hasil').style.display='none';$('fs').style.display='none';loadLB();}
+async function loadLB(){try{const {data}=await db.from('mv_rounds').select('nama,skor,mode').order('skor',{ascending:false}).limit(10);
+ $('lb').innerHTML='<tr><th>#</th><th>Warga</th><th>Skor</th><th>Mode</th></tr>'+
+ ((data&&data.length)?data.map((r,i)=>`<tr><td>${i+1}</td><td>${r.nama||'Warga'}</td><td>${r.skor}</td><td>${r.mode==='dunia'?'🌍':'🇮'}</td></tr>`).join(''):'<tr><td colspan="4">Belum ada skor — jadilah yang pertama!</td></tr>');}
+ catch(e){$('lb').innerHTML='<tr><td colspan="4">Papan skor aktif setelah login.</td></tr>'}}
+loadLB();
 </script>
 </body></html>
