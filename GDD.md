@@ -155,4 +155,28 @@ gloryverse-web/
 | D-86 | Dasbor player = Markas (penyatuan data yang sudah ada) |
 | D-87 | Dasbor admin = Ruang Kendali, RLS role + audit log |
 
+---
+
+---
+## 📎 ADENDUM A-03 (24 Agu 2026) — Visi 10 Tahun & Profil Warga
+### A. Visi Strategis
+- V-1 Target usia: 10 tahun+. Keberlanjutan menang atas hype.
+- V-2 Warga sasaran: pria 35–55 ("bapak-bapak") — hiburan, waktu terbatas, daya beli ada, haus status & sosialisasi.
+- V-3 Monetisasi rupiah (top-up/offerwall) mulai bulan 6 (± Feb 2027). Bulan 1–5 = fase royal gratis.
+- V-4 Posisi GloryVerse: "warung kopi digital yang ada mainannya" — tempat nongkrong harian, bukan game viral sebulan.
+### B. Konsekuensi Desain
+- B-10 Async & singkat: semua aktivitas inti selesai 5–10 menit per kunjungan.
+- B-11 Mode teks besar / kontras tinggi (aksesibilitas mata).
+- B-12 Status > kecepatan: pangkat, gelar, medali, hall of fame = mesin retensi utama.
+- B-13 Tombol bagikan skor & referral dioptimalkan untuk grup WhatsApp.
+- B-14 Badge "Warga Pendiri" permanen untuk 1.000 pendaftar pertama.
+- B-15 Jadwal ramah bapak: war akhir pekan, turnamen malam hari.
+- B-16 HUT negara tiap 17 Agustus = event tahunan (lahir 17-08-2026).
+### C. Log Keputusan
+| D-88 | Usia target 10 tahun+; keberlanjutan > hype |
+| D-89 | Demografi: bapak-bapak 35–55 |
+| D-90 | Monetisasi rupiah mulai bulan 6 |
+| D-91 | Badge Warga Pendiri (1.000 pertama) |
+| D-92 | Mode teks besar + share WA = fitur dasar |
+
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
