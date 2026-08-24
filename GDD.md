@@ -144,5 +144,15 @@ gloryverse-web/
 | D-84 | War v2 fusion eDominacy × MyProfitLand |
 | D-85 | 19 pangkat Damage Last Hit |
 
+---
+
+## 📎 ADENDUM A-02 (24 Agu 2026) — Dasbor Admin & Player
+### A. Pasal Baru
+- C-1 **Dasbor Player "Markas"**: profil terpadu — identitas & emblem, pangkat + progress bar, statistik (KS, skor MapVerse, akurasi), dompet & transaksi, referral & downline, gelar/medali, status misi sosial.
+- C-2 **Dasbor Admin "Ruang Kendali"**: warga (cari/mute/BAN/moderator), ekonomi (koin beredar, koreksi ter-log), moderasi (antrian laporan), siaran News, analitik (DAU, ronde/hari), kontrol turnamen.
+- C-3 **Keamanan**: kolom `role` di profiles; RLS admin memeriksa `role='admin'` server-side; tabel `admin_logs` untuk audit setiap tindakan admin.
+### B. Log Keputusan
+| D-86 | Dasbor player = Markas (penyatuan data yang sudah ada) |
+| D-87 | Dasbor admin = Ruang Kendali, RLS role + audit log |
 
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
