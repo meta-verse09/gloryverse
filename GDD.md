@@ -108,4 +108,41 @@ gloryverse-web/
 | HTTPS gloryverse.id | ⏳ terbit otomatis |
 
 ---
+
+---
+## 📎 ADENDUM A-01 (24 Agu 2026) — Sesi "Room Dunia"
+> Poin di bawah resmi menjadi bagian GDD. Bila bertentangan dengan pasal lama, adendum menang.
+
+### A. Revisi Fakta
+- A-1 Hosting: **Cloudflare Pages + Workers** (bukan Netlify).
+- A-2 RPC kerja lapangan: `work_once(uid, coin, en)` — samakan penamaan dengan `do_work`.
+- A-3 Tabel ke-11: `mv_rounds(id, uid, nama, spot, jarak_km, skor, mode, created_at)`.
+- A-4 Layar ONLINE data asli: forum, missions, news, mapverse.
+- A-5 **AdSense** = pilar monetisasi (berdampingan dengan offerwall).
+
+### B. Pasal Baru
+- B-1 **MAPVERSE — Arena Dunia**: panorama layar penuh; pin atlas (Leaflet+OSM); skor = 5000×(1−d/20000)²; koin = skor/100; 5 ronde/sesi; Bisikan Burung Hantu (Llama, 3/ronde); Papan Juara Top Explorer. Roadmap: biaya ⚡10/ronde.
+- B-2 **Sumber foto berjenjang**: 60% Pustaka Benih (KV `mv-store`, panen Mapillary, thumb 1024) → Wikimedia (casual) → Mapillary live → AI Nusantara (darurat saja). Filosofi: **meta segar** untuk pro.
+- B-3 **19 pangkat** Unrank→Panglima Glory via **Damage Last Hit** (0→5.000.000); loadout gating tetap.
+- B-4 **Referral 1 tingkat**: pajak 10% aktivitas / 5% top-up / 3% turnamen, **ditanggung kas** (opsi A); anti-abuse ≥5 ronde + email; gelar Perekrut.
+- B-5 **Misi Sosial**: bonus follow akun resmi; komplit +200 & gelar Duta GloryVerse.
+- B-6 **Turnamen**: Piala Mingguan (agregat mv_rounds) & Piala Region.
+- B-7 **Mabar** (roadmap): kamar 4 digit, spot sama, timer 60 dtk, realtime.
+- B-8 **War v2 UI**: atas eDominacy (bendera, bar tarik-ulur, kartu unit, banner = panorama MapVerse) × bawah MyProfitLand (roster, war fund, buff Nusantara).
+- B-9 **Kamus Meta**: halaman edukasi meta untuk komunitas.
+
+### C. Log Keputusan
+| D-75 | MapVerse = arena foto nyata, skor berbasis jarak |
+| D-76 | Pustaka Benih KV = sumber utama arena pro |
+| D-77 | Wikimedia = arena casual |
+| D-78 | AI Nusantara = mode terpisah / darurat |
+| D-79 | Referral 1 tingkat, pajak ditanggung kas |
+| D-80 | Follow sosmed berbonus |
+| D-81 | Piala Mingguan & Piala Region |
+| D-82 | Mabar realtime |
+| D-83 | AdSense pilar monetisasi |
+| D-84 | War v2 fusion eDominacy × MyProfitLand |
+| D-85 | 19 pangkat Damage Last Hit |
+
+
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
