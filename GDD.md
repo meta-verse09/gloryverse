@@ -179,4 +179,10 @@ gloryverse-web/
 | D-91 | Badge Warga Pendiri (1.000 pertama) |
 | D-92 | Mode teks besar + share WA = fitur dasar |
 
+---
+
+## 📎 ADENDUM A-04 (25 Agu 2026) — Rumus Damage
+Formula: `Final = (Energi*Senjata*Rank*KS/100)*Bunker*Baju`
+Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10 jadi 4053.
+
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
