@@ -1,8 +1,7 @@
 <!DOCTYPE html><html lang="id"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GloryVerse — Home</title>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206"
-     crossorigin="anonymous"></script>
+<title>GloryVerse — Markas Negara</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
 <style>
 .row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
@@ -10,6 +9,14 @@
 .rg{flex:1;min-width:90px;background:#0b1020;border:1px solid var(--line);color:var(--txt);
  border-radius:10px;padding:9px;font-size:12px;font-weight:bold;cursor:pointer}
 .rg.on{border-color:var(--gold);color:var(--gold);background:#1b2c55}
+.duo{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:900px){.duo{grid-template-columns:1fr 1fr}}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}
+.tbl th{color:var(--gold)}
+.dim{color:var(--mut);font-size:12px}
+.bar{height:8px;background:#0b1020;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar i{display:block;height:100%;background:var(--gold)}
 </style>
 </head>
 <body data-img='region1.jpeg' data-title="Markas Utama" data-lat="-6.2" data-lon="106.8">
@@ -19,7 +26,7 @@
  <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
 <nav class="main"><a class="on" href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
  <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
- <a href="org.html">ORGANIZATIONS</a><a href="rank.html">RANKINGS</a></nav>
+ <a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a></nav>
 <div class="grid">
  <aside class="side" id="left"></aside>
  <main>
@@ -28,22 +35,38 @@
 
   <div class="card">
    <h3 id="regionTitle">🗺️ Peta Region</h3>
+   <div class="row"><span>Kewarganegaraan</span><b id="cty">-</b></div>
    <div class="rgWrap" id="regions"></div>
-   <small style="color:var(--mut)">Klik region untuk mengintai wilayahnya lewat panorama.</small>
+   <small class="dim">Klik region untuk mengintai wilayahnya lewat panorama.</small>
   </div>
+
   <div class="card" id="m1" style="border:1px solid var(--gold);box-shadow:0 0 12px #d4a01755">
    <h3>🌱 MISI PERTAMA</h3>
    <p style="margin:4px 0;font-size:14px">Panen 3 sayur di Kebun Surabaya. Hadiah: <b style="color:var(--gold)">+20 🪙</b></p>
    <a class="btn" style="display:block;text-align:center" href="work_vege.html">PERGI KE KEBUN →</a>
   </div>
 
-  <div class="card">
-   <div class="row"><span>Player</span><b id="name">-</b></div>
-   <div class="row"><span>Pangkat</span><b id="rank" style="color:var(--gold)">-</b></div>
-   <div class="row"><span>Level XP</span><b id="lv" style="color:var(--green)">Lv 1</b></div>
-   <div class="bar"><i id="xpBar" style="width:0%"></i></div>
-   <small style="color:var(--mut)">XP <span id="xp">0</span>/100 ke level berikutnya</small>
-   <div class="row" style="margin-top:6px"><span>Negara</span><b id="cty">-</b></div>
+  <div class="duo">
+   <div class="card"><h3>⚔️ Perang Aktif</h3><table class="tbl" id="warTbl">
+    <tr><th>Region</th><th>Penyerang</th><th>Bertahan</th><th>Mulai</th></tr></table></div>
+   <div class="card"><h3>📈 Statistik Region</h3>
+    <div class="row"><span>Bonus Produktivitas</span><b id="bProd">0%</b></div>
+    <div class="row"><span>Bonus Damage War</span><b id="bWar">0%</b></div>
+    <div class="row"><span>Bonus Payout Offers</span><b id="bOff">0%</b></div>
+    <div class="row"><span>Infrastruktur</span><b class="dim">Segera</b></div></div>
+   <div class="card"><h3>🛋️ Forum Terbaru</h3><div id="postList" class="dim">memuat...</div></div>
+   <div class="card"><h3>📰 Kabar Terbaru</h3><div id="newsList" class="dim">memuat...</div></div>
+   <div class="card"><h3>💼 Ekonomi Region</h3>
+    <div class="row"><span>Kerja / shift</span><b style="color:var(--gold)">+15 🪙 · −25⚡</b></div>
+    <div class="row"><span>Bonus kerja 3 hari beruntun</span><b>+350 🪙</b></div>
+    <div class="row"><span>Upah minimum perusahaan</span><b>1 🪙 / jam</b></div>
+    <div class="row"><span>Shift per hari</span><b>3 (cooldown 4 jam)</b></div></div>
+   <div class="card"><h3>🎖️ Status Warga</h3>
+    <div class="row"><span>Nama</span><b id="name">-</b></div>
+    <div class="row"><span>Pangkat</span><b id="rank" style="color:var(--gold)">-</b></div>
+    <div class="row"><span>Level XP</span><b id="lv" style="color:var(--green)">Lv 1</b></div>
+    <div class="bar"><i id="xpBar" style="width:0%"></i></div>
+    <small class="dim">XP <span id="xp">0</span>/100 ke level berikutnya</small></div>
   </div>
  </main>
  <aside class="side" id="right"></aside>
@@ -51,11 +74,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script>
 <script>
-/* Data region MVP — nanti pindah ke tabel DB (biar bisa direbut saat war!) */
-const REGIONS={
- ID:[{n:'Solok',img:'region1.jpeg',s:'🟢'},{n:'Bandung',img:'region2.jpeg',s:'🟢'},
-     {n:'Surabaya',img:'pano_vege.jpeg',s:'🔥'},{n:'Medan',img:'region1.jpeg',s:'⚪'}],
-};
+const REGIONS={ID:[{n:'Solok',img:'region1.jpeg',s:'🟢'},{n:'Bandung',img:'region2.jpeg',s:'🟢'},
+ {n:'Surabaya',img:'pano_vege.jpeg',s:'🔥'},{n:'Medan',img:'region1.jpeg',s:'⚪'}]};
+function ago(t){const s=(Date.now()-new Date(t))/1000;if(s<60)return'baru saja';if(s<3600)return Math.floor(s/60)+' mnt';if(s<86400)return Math.floor(s/3600)+' jam';return Math.floor(s/86400)+' hari'}
 (async()=>{try{
  const {data:{session}}=await db.auth.getSession();
  if(!session){$('mode').innerText='MODE DEMO';return}
@@ -67,23 +88,29 @@ const REGIONS={
  const P=p.data||{},W=w.data||{};
  $('name').innerText=P.username||'Player';
  $('rank').innerText='⭐ '+(P.rank||'Kadet');
- $('cty').innerText=P.country_code||'ID';
+ $('cty').innerText=(P.country_code||'ID')+' — Indonesia';
  $('coin').innerText=W.local_coin??0; $('en').innerText=W.energy??100;
  $('pEn').style.width=(W.energy??100)+'%';
- const xp=P.xp??0;
- $('lv').innerText='Lv '+(Math.floor(xp/100)+1);
+ const xp=P.xp??0; $('lv').innerText='Lv '+(Math.floor(xp/100)+1);
  $('xp').innerText=xp%100; $('xpBar').style.width=(xp%100)+'%';
- const cty=P.country_code||'ID', list=REGIONS[cty]||REGIONS.ID;
- $('regionTitle').innerText='🗺️ Peta Region — '+cty;
+ const list=REGIONS[P.country_code||'ID']||REGIONS.ID;
+ $('regionTitle').innerText='🗺️ Peta Region — '+(P.country_code||'ID');
  $('regions').innerHTML=list.map((r,i)=>`<button class="rg ${i==0?'on':''}" data-i="${i}">${r.s} ${r.n}</button>`).join('');
  document.querySelectorAll('.rg').forEach(b=>b.onclick=()=>{
-   const r=list[b.dataset.i];
-   document.querySelectorAll('.rg').forEach(x=>x.classList.remove('on'));
-   b.classList.add('on');
-   pano.style.backgroundImage=`url('${r.img}')`;
-   $('locName').innerText=r.n;
- });
+  const r=list[b.dataset.i];
+  document.querySelectorAll('.rg').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); pano.style.backgroundImage=`url('${r.img}')`; $('locName').innerText=r.n;});
 }catch(e){$('mode').innerText='MODE DEMO'}})();
- if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
+(async()=>{try{const {data}=await db.from('wars').select('*').order('id',{ascending:false}).limit(5);
+ $('warTbl').innerHTML='<tr><th>Region</th><th>Penyerang</th><th>Bertahan</th></tr>'+
+ ((data&&data.length)?data.map(w=>`<tr><td>${w.region||w.name||('War #'+w.id)}</td><td>${w.attacker||w.attacker_name||'—'}</td><td>${w.defender||w.defender_name||'—'}</td></tr>`).join('')
+ :'<tr><td colspan="3" class="dim">Damai sejahtera — belum ada perang aktif.</td></tr>');}catch(e){$('warTbl').innerHTML+='<tr><td colspan="3" class="dim">Sistem perang segera hadir.</td></tr>'}})();
+(async()=>{try{const {data}=await db.from('posts').select('*').order('id',{ascending:false}).limit(6);
+ $('postList').innerHTML=(data&&data.length)?data.map(x=>`<div class="row"><span>💬 ${x.title||x.topic||x.msg||'Post'}</span><small class="dim">${ago(x.created_at)}</small></div>`).join('')
+ :'Belum ada postingan — jadilah yang pertama di Forum!';}catch(e){$('postList').innerText='Forum segera.'}})();
+(async()=>{try{const {data}=await db.from('news').select('*').order('id',{ascending:false}).limit(4);
+ $('newsList').innerHTML=(data&&data.length)?data.map(x=>`<div class="row"><span>📰 ${x.title}</span><small class="dim">${ago(x.created_at)}</small></div>`).join('')
+ :'Belum ada kabar resmi.';}catch(e){$('newsList').innerText='Kabar segera.'}})();
+if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
 </script>
 </body></html>
