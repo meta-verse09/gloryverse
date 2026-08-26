@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Region</title>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.tab{background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:bold;cursor:pointer}
+.tab.on{border-color:var(--gold);color:var(--gold);background:#1b2c55}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left}
+.tbl th{color:var(--gold)}
+.dim{color:var(--mut);font-size:12px}
+.bar{height:8px;background:#0b1020;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:3px 0}
+.bar i{display:block;height:100%;background:var(--gold)}
+.resRow{display:flex;justify-content:space-between;margin:4px 0;font-size:13px}
+</style>
+</head>
+<body data-img='region1.jpeg' data-title="Region">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+ <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
+ <a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
+   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card">
+   <div class="row"><span style="font-size:16px"><b id="rgTitle">🏙️ Region</b></span>
+    <select id="rgPick" style="background:#0b1020;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:4px"></select></div>
+   <div class="row"><span>Status</span><b id="rgStatus">-</b></div>
+   <div class="row"><span>Warga tercatat</span><b id="rgCit">-</b></div>
+   <div class="row"><span>Ibukota Negara</span><b style="color:var(--gold)">👑 Solok</b></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="card" id="tabContent">memuat...</div>
+ </main>
+ <aside class="side" id="right"></aside>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
+<script>
+const RG={
+ 'Solok':{c:[-0.95,100.35],img:'region1.jpeg',res:['Padi','Kopi','Sayur','Ikan Danau','Kayu','Batu']},
+ 'Betawi':{c:[-6.2,106.8],img:'region2.jpeg',res:['Sayur','Ikan','Rempah','Pasir']},
+ 'Priangan':{c:[-6.9,107.6],img:'region2.jpeg',res:['Teh','Kopi','Sayur','Tembakau']},
+ 'Banten':{c:[-6.1,106.15],img:'region1.jpeg',res:['Pasir','Batu','Ikan','Gula']},
+ 'Mataram':{c:[-6.99,110.42],img:'region1.jpeg',res:['Padi','Jati','Tembakau','Kapas']},
+ 'Arek':{c:[-7.25,112.75],img:'pano_vege.jpeg',res:['Kopi','Tembakau','Gula','Garam','Ikan']},
+ 'Bali':{c:[-8.65,115.22],img:'region1.jpeg',res:['Kelapa','Ikan','Rempah','Kopi']},
+ 'Medan':{c:[3.6,98.67],img:'region1.jpeg',res:['Sawit','Tembakau','Karet','Kopi']},
+ 'Borneo':{c:[-3.32,114.59],img:'region1.jpeg',res:['Kayu','Batu Bara','Sawit','Besi']},
+ 'Makassar':{c:[-5.14,119.43],img:'region1.jpeg',res:['Kakao','Ikan','Padi','Mete']}};
+const q=new URLSearchParams(location.search); let CUR=q.get('r')||'Solok'; if(!RG[CUR])CUR='Solok';
+const R=RG[CUR];
+pano.style.backgroundImage=`url('${R.img}')`; $('locName').innerText=CUR;
+$('rgTitle').innerText=(CUR==='Solok'?'👑 ':'🏙️ ')+CUR;
+$('rgStatus').innerText=CUR==='Solok'?'👑 IBUKOTA NEGARA':'🟢 Provinsi';
+$('rgPick').innerHTML=Object.keys(RG).map(k=>`<option ${k===CUR?'selected':''}>${k}</option>`).join('');
+$('rgPick').onchange=e=>location='region.html?r='+e.target.value;
+const TABS=[['warga','👥 Warga'],['daya','🌾 Sumber Daya'],['cabang','🏢 Cabang'],['kerja','💼 Kerja'],['jual','🛒 Jual-Beli'],['trans','🚌 Transportasi'],['dekat','📍 Terdekat'],['gerak','🕐 Pergerakan']];
+let CURTAB='warga';
+$('tabs').innerHTML=TABS.map(t=>`<button class="tab ${t[0]==='warga'?'on':''}" data-t="${t[0]}">${t[1]}</button>`).join('');
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{CURTAB=b.dataset.t;
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on')); b.classList.add('on'); render();});
+function hav(a,b,c,d){const K=Math.PI/180;const x=(c-a)*K,y=(d-b)*K;
+ const s=Math.sin(x/2)**2+Math.cos(a*K)*Math.cos(c*K)*Math.sin(y/2)**2;return 2*6371*Math.asin(Math.sqrt(s));}
+async function render(){const C=$('tabContent'); C.innerHTML='memuat...';
+ if(CURTAB==='warga'||CURTAB==='gerak'){try{
+  let d; const lim=CURTAB==='warga'?30:10;
+  try{d=(await db.from('profiles').select('username,rank,last_seen').eq('region',CUR).order('last_seen',{ascending:false}).limit(lim)).data;}
+  catch(e){d=(await db.from('profiles').select('username,rank,last_seen').order('last_seen',{ascending:false}).limit(lim)).data;}
+  $('rgCit').innerText=(d||[]).length+(CURTAB==='warga'?'':' (seluruh negara)');
+  C.innerHTML=(d&&d.length)?'<table class="tbl"><tr><th>Warga</th><th>Pangkat</th><th>Aktivitas</th></tr>'+
+   d.map(p=>`<tr><td>${p.username}</td><td style="color:var(--gold)">${p.rank||'Kadet'}</td><td class="dim">${ago(p.last_seen)}</td></tr>`).join('')+'</table>'
+   :'<span class="dim">Belum ada warga menetap di '+CUR+' — jadilah pionir!</span>';}catch(e){C.innerHTML='<span class="dim">Data warga segera.</span>'}}
+ else if(CURTAB==='daya'){const per=new Date().getDate()<15?1:2;
+  C.innerHTML=R.res.map(s=>{const h=hash(CUR+s+per);const st=h%41;
+   return `<div class="resRow"><span>${s}</span><b>${st} / 40 Unit</b></div><div class="bar"><i style="width:${st/40*100}%"></i></div>`;}).join('')+
+   `<div style="margin-top:10px;border-top:1px solid var(--line);padding-top:8px"><b>♻️ Bank Sampah</b>
+   <p class="dim">Bersih-bersih region: −25% ⚡ → +🪙. Region ini terakhir dibersihkan <b>1 minggu lalu</b>.</p>
+   <button class="btn" onclick="alert('Segera hadir!')">BERSIHKAN SAMPAH</button></div>`;}
+ else if(CURTAB==='cabang'){try{let d;
+  try{d=(await db.from('companies').select('*').eq('region',CUR).limit(20)).data;}catch(e){d=(await db.from('companies').select('*').limit(20)).data;}
+  C.innerHTML=(d&&d.length)?'<table class="tbl"><tr><th>Perusahaan</th><th>Tipe</th><th>Pemilik</th></tr>'+
+   d.map(x=>`<tr><td>${x.name||x.nama||'-'}</td><td>${x.type||x.tipe||'-'}</td><td class="dim">${x.owner||x.owner_name||'-'}</td></tr>`).join('')+'</table>'
+   :'<span class="dim">Belum ada perusahaan di '+CUR+' — peluang bisnis buatmu!</span>';}catch(e){C.innerHTML='<span class="dim">Data perusahaan segera.</span>'}}
+ else if(CURTAB==='kerja'){C.innerHTML=['🌱 Kebun Sayur — 5 slot','🏭 Pabrik Kopi — 3 slot','⛏️ Tambang Batu — 2 slot','🧺 Bank Sampah — 10 slot']
+   .map(j=>`<div class="resRow"><span>${j}</span><button class="btn" onclick="alert('Segera hadir!')">LAMAR</button></div>`).join('');}
+ else if(CURTAB==='jual'){C.innerHTML='<span class="dim">Jual-beli lokal segera. Sementara kunjungi </span><a href="market.html" style="color:var(--gold)">MARKETS →</a>';}
+ else if(CURTAB==='trans'){C.innerHTML=Object.keys(RG).filter(k=>k!==CUR).map(k=>{
+   const km=Math.round(hav(R.c[0],R.c[1],RG[k].c[0],RG[k].c[1]));
+   return `<div class="resRow"><span>🚌 ${k} • ${km} km</span><b>${10+Math.floor(km/50)} 🪙</b></div>`;}).join('')+
+   '<button class="btn" style="margin-top:8px" onclick="alert(\'Segera hadir!\')">BERANGKAT</button>';}
+ else if(CURTAB==='dekat'){C.innerHTML='<table class="tbl"><tr><th>Region</th><th>Negara</th><th>Jarak</th></tr>'+
+   Object.keys(RG).filter(k=>k!==CUR).map(k=>({k,km:hav(R.c[0],R.c[1],RG[k].c[0],RG[k].c[1])}))
+   .sort((a,b)=>a.km-b.km).map(o=>`<tr><td>${o.k}</td><td>🇮 Indonesia</td><td>${Math.round(o.km)} km</td></tr>`).join('')+'</table>';}
+}
+render();
+</script>
+</body></html>
