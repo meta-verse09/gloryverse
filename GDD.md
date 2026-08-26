@@ -185,4 +185,25 @@ gloryverse-web/
 Formula: `Final = (Energi*Senjata*Rank*KS/100)*Bunker*Baju`
 Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10 jadi 4053.
 
+---
+
+---
+## 📎 ADENDUM A-05 (26 Agu 2026) — Halaman Detail Region
+### A. Pasal Baru
+- Setiap region punya halaman detail (region.html) dengan 8 tab:
+  👥 Warga Lokal · 🌾 Sumber Daya (replenish tgl 1 & 15) · ♻️ Bank Sampah
+  (−25%⚡ → +) ·  Cabang · 💼 Lapangan Kerja · 🛒 Jual-Beli ·
+  🚌 Transportasi · 📍 Region Terdekat (jarak km nyata) · 🕐 Pergerakan.
+- Sumber daya per region:
+  Solok 👑 Padi/Kopi/Sayur/Ikan Danau/Kayu/Batu • Betawi Sayur/Ikan/Rempah/Pasir •
+  Priangan Teh/Kopi/Sayur/Tembakau • Banten Pasir/Batu/Ikan/Gula •
+  Mataram Padi/Jati/Tembakau/Kapas • Arek Kopi/Tembakau/Gula/Garam/Ikan •
+  Bali Kelapa/Ikan/Rempah/Kopi • Medan Sawit/Tembakau/Karet/Kopi •
+  Borneo Kayu/Batu Bara/Sawit/Besi • Makassar Kakao/Ikan/Padi/Mete.
+### B. Log Keputusan
+| D-92 | Halaman region detail 8 tab, rasa Indonesia |
+| D-93 | Bank Sampah = lokalisasi Recyclable Waste |
+| D-94 | Jarak region dari koordinat kota nyata |
+
+---
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
