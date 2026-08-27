@@ -13,6 +13,7 @@
 #hud img{width:26px;vertical-align:-6px}
 #ov{position:absolute;inset:0;background:#000a;display:flex;flex-direction:column;align-items:center;
  justify-content:center;gap:10px;color:#fff;text-align:center;z-index:9}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
 </style>
 </head>
 <body data-img='pano_vege.jpeg' data-title="Kebun Surabaya">
@@ -20,7 +21,7 @@
  <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
  <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
  <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
-<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+<nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
  <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
  <a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a></nav>
 <div class="grid">
@@ -29,8 +30,15 @@
   <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
   <div class="card">
+   <h3>💼 Kerja Shift</h3>
+   <div class="row"><span>Upah</span><b style="color:var(--gold)">+15 🪙 • −25⚡</b></div>
+   <div class="row"><span>Energi kamu</span><b id="enW">-</b></div>
+   <button class="btn" id="workBtn" style="width:100%">KERJA SHIFT</button>
+   <small class="dim" id="shiftInfo"></small>
+  </div>
+  <div class="card">
    <h3>🌱 Kebun Sayur — Minigame Panen</h3>
-   <p class="dim" style="font-size:13px">Ketuk tomat secepat mungkin! 30 detik • 1 tomat = 1 🪙 saat klaim.</p>
+   <p class="dim" style="font-size:13px">Ketuk tomat secepat mungkin! 30 detik • 1 tomat = 1 🪙 • cooldown panen 4 jam.</p>
    <div id="game">
     <div id="hud"><span><img src="kb_keranjang.png"> <b id="scrN">0</b></span><span>⏱ <b id="tmr">30</b></span></div>
     <div id="ov"><h2 id="ovT">🌱 SIAP PANEN?</h2><button class="btn" id="ovB">MULAI</button></div>
@@ -42,6 +50,30 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script>
 <script>
+const CD=4*3600000;
+const cdLeft=k=>{const t=+localStorage.getItem(k)||0;const d=Date.now()-t;return d>=CD?0:CD-d};
+const fmt=ms=>Math.floor(ms/3600000)+'j '+Math.floor(ms%3600000/60000)+'m';
+const today=new Date().toDateString();
+if(localStorage.getItem('gv_sdate')!==today){localStorage.setItem('gv_sdate',today);localStorage.setItem('gv_scount','0')}
+function shiftInfo(){$('shiftInfo').innerText='Shift hari ini: '+localStorage.getItem('gv_scount')+'/3 • Cooldown: '+(cdLeft('gv_shift')?fmt(cdLeft('gv_shift')):'siap')}
+shiftInfo();
+(async()=>{try{const {data:{session}}=await db.auth.getSession();if(!session){$('mode').innerText='MODE DEMO';return}
+ $('mode').innerText='🟢 MODE ONLINE';
+ const w=await db.from('wallets').select('local_coin,energy').eq('user_id',session.user.id).single();
+ $('coin').innerText=w.data?.local_coin??0;$('en').innerText=w.data?.energy??100;$('enW').innerText=w.data?.energy??100;
+}catch(e){$('mode').innerText='MODE DEMO'}})();
+$('workBtn').onclick=async()=>{try{
+ const {data:{session}}=await db.auth.getSession();if(!session){alert('Login dulu!');return}
+ if(+localStorage.getItem('gv_scount')>=3){alert('Shift hari ini habis (3/3). Kembali besok!');return}
+ const cl=cdLeft('gv_shift');if(cl){alert('Cooldown kerja: '+fmt(cl));return}
+ await db.rpc('work_once',{uid:session.user.id,coin:15,en:-25});
+ localStorage.setItem('gv_scount',String(+localStorage.getItem('gv_scount')+1));
+ localStorage.setItem('gv_shift',String(Date.now()));
+ const w=await db.from('wallets').select('local_coin,energy').eq('user_id',session.user.id).single();
+ $('coin').innerText=w.data?.local_coin??0;$('en').innerText=w.data?.energy??100;$('enW').innerText=w.data?.energy??100;
+ shiftInfo();alert('✅ +15 🪙 masuk! (−25⚡)');
+}catch(e){alert('Gagal kerja: '+String(e&&e.message||e))}};
+/* ---- MINIGAME PANEN ---- */
 const SPOTS=[[20,52],[33,47],[44,58],[27,68],[40,74],[18,70],[47,45]];
 let skor=0,sisa=30,run=false,iv=null;
 function spawn(i){const t=document.createElement('img');t.src='kb_tomat.png';t.className='tom';
@@ -51,6 +83,8 @@ function spawn(i){const t=document.createElement('img');t.src='kb_tomat.png';t.c
    t.style.left=s2[0]+'%';t.style.top=s2[1]+'%';t.style.display='block'},2000)};
  $('game').appendChild(t)}
 for(let i=0;i<5;i++)spawn(i);
+const hl=cdLeft('gv_harv');
+if(hl){$('ovT').innerText='⏳ PANEN BERIKUTNYA';$('ovB').innerText='Dalam '+fmt(hl);$('ovB').disabled=true}
 $('ovB').onclick=()=>{$('ov').style.display='none';run=true;skor=0;sisa=30;
  $('scrN').innerText=0;$('tmr').innerText=30;
  iv=setInterval(()=>{sisa--;$('tmr').innerText=sisa;if(sisa<=0)end()},1000)};
@@ -61,6 +95,7 @@ async function klaim(){try{
  const {data:{session}}=await db.auth.getSession();
  if(!session){alert('Login dulu untuk klaim!');return}
  await db.rpc('work_once',{uid:session.user.id,coin:skor,en:0});
+ localStorage.setItem('gv_harv',String(Date.now()));
  $('ovB').innerText='✅ '+skor+' 🪙 MASUK DOMPET';$('ovB').disabled=true;
  const w=await db.from('wallets').select('local_coin').eq('user_id',session.user.id).single();
  $('coin').innerText=w.data?.local_coin??0;
