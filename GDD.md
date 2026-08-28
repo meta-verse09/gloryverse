@@ -264,4 +264,26 @@ Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10
 | D-102 | Ibukota kebal |
 | D-103 | Gambar perang statis + Ken Burns |
 
+---
+## 📎 ADENDUM A-09 (29 Agu 2026) — Meja Koa Ceki
+### A. Aturan Inti (v0.2 final)
+- 4 pemain/2 tim berseberangan • 180 kartu (30 motif × 6) • deal 2-2-2-2 ×3.
+- Giliran: ambil tengah/klaim buangan → susun → buang terbuka di depan area.
+- Set terbuka di meja: KOA(2) KAKI(3) MATA(3).
+- Klaim berebut = siapa cepat dia dapat (jendela reaksi realtime).
+- Menang = 3 set + deklarasi CEKI (titik hijau di atas nama).
+### B. Produk
+- Kategori MEJA BUDAYA ibukota Solok; latar lapau/Rumah Gadang.
+- Fase: 1) latihan vs bot → 2) meja 4 realtime → 3) Piala Koa Ceki Solok.
+- Semua room Mabar wajib menampilkan nama player.
+### C. Log Keputusan
+| D-104 | Koa Ceki = meja budaya pertama |
+| D-105 | Race-claim "siapa cepat dia dapat" |
+| D-106 | Deklarasi CEKI = titik hijau + nama |
+- Tangan individu tertutup (juga dari partner); bentrok motif = fitur sosial.
+- Tim menang bila salah satu anggota CEKI.
+- Layar REVEAL akhir ronde + sorot bentrok + tombol share WA.
+| D-107 | Bentrok partner = momen cerita + share WA |
+
+
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
