@@ -4,13 +4,11 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
 <style>
-#topBanner{height:96px;background:url('banner.jpeg') center/cover;border-bottom:2px solid var(--gold);
- display:flex;align-items:center;padding:0 10px}
+#topBanner{height:96px;background:url('banner.jpeg') center/cover;border-bottom:2px solid var(--gold);display:flex;align-items:center;padding:0 10px}
 #topBanner img{height:70px;border-radius:12px;background:#fff;padding:3px;box-shadow:0 2px 10px #000a}
-.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px}
+.row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px;align-items:center}
 .rgWrap{display:flex;gap:6px;flex-wrap:wrap}
-.rg{flex:1;min-width:90px;background:#0b1020;border:1px solid var(--line);color:var(--txt);
- border-radius:10px;padding:9px;font-size:12px;font-weight:bold;cursor:pointer}
+.rg{flex:1;min-width:90px;background:#0b1020;border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px;font-size:12px;font-weight:bold;cursor:pointer}
 .rg.on{border-color:var(--gold);color:var(--gold);background:#1b2c55}
 .duo{display:grid;grid-template-columns:1fr;gap:10px}
 @media(min-width:900px){.duo{grid-template-columns:1fr 1fr}}
@@ -36,11 +34,20 @@
  <main>
   <div class="pano" id="pano"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  <div class="card" id="trip" style="display:none;background:#14532d;color:#bbf7d0;font-weight:800"></div>
+  <div class="card" style="display:flex;gap:6px;flex-wrap:wrap">
+   <button class="btn" style="flex:1" id="bPanen">🌱 PANEN</button>
+   <button class="btn" style="flex:1" id="bKerja">💼 KERJA</button>
+   <a class="btn" style="flex:1;text-align:center" href="market.html">🛒 PASAR</a>
+   <button class="btn" style="flex:1" id="bTrans">🚌 TRANSPORT</button>
+  </div>
   <div class="card">
    <h3 id="regionTitle">🗺️ Peta Region</h3>
    <div class="row"><span>Kewarganegaraan</span><b id="cty">-</b></div>
    <div class="rgWrap" id="regions"></div>
-   <small class="dim">👑 Solok = Ibukota Negara • Klik region untuk mengintai lewat panorama.</small>
+   <div class="row"><span>🌾 RAW region ini</span></div>
+   <div id="rawList" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+   <small class="dim">👑 Solok = Ibukota Negara • Gambar ciri khas menyusul (fallback otomatis).</small>
   </div>
   <div class="card" id="m1" style="border:1px solid var(--gold);box-shadow:0 0 12px #d4a01755">
    <h3>🌱 MISI PERTAMA</h3>
@@ -57,11 +64,6 @@
     <div class="row"><span>Infrastruktur</span><b class="dim">Segera</b></div></div>
    <div class="card"><h3>🛋️ Forum Terbaru</h3><div id="postList" class="dim">memuat...</div></div>
    <div class="card"><h3>📰 Kabar Terbaru</h3><div id="newsList" class="dim">memuat...</div></div>
-   <div class="card"><h3>💼 Ekonomi Region</h3>
-    <div class="row"><span>Kerja / shift</span><b style="color:var(--gold)">+15 🪙 · −25⚡</b></div>
-    <div class="row"><span>Bonus kerja 3 hari beruntun</span><b>+350 🪙</b></div>
-    <div class="row"><span>Upah minimum perusahaan</span><b>1 🪙 / jam</b></div>
-    <div class="row"><span>Shift per hari</span><b>3 (cooldown 4 jam)</b></div></div>
   </div>
  </main>
  <aside class="side" id="right"></aside>
@@ -69,18 +71,57 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script><script src="kebun.js"></script>
 <script>
-const REGIONS={ID:[
- {n:'Solok',img:'region1.jpeg',s:'👑'},
- {n:'Betawi',img:'region2.jpeg',s:'🟢'},
- {n:'Priangan',img:'region2.jpeg',s:'🟢'},
- {n:'Banten',img:'region1.jpeg',s:'🟢'},
- {n:'Mataram',img:'region1.jpeg',s:'🟢'},
- {n:'Arek',img:'pano_vege.jpeg',s:'🔥'},
- {n:'Bali',img:'region1.jpeg',s:'🟢'},
- {n:'Medan',img:'region1.jpeg',s:'🟢'},
- {n:'Borneo',img:'region1.jpeg',s:'🟢'},
- {n:'Makassar',img:'region1.jpeg',s:'🟢'}]};
+const RG={
+ 'Solok':{c:[-0.95,100.35],img:'region1.jpeg',res:['Padi','Kopi','Sayur','Ikan Danau','Kayu','Batu']},
+ 'Betawi':{c:[-6.2,106.8],img:'region2.jpeg',res:['Sayur','Ikan','Rempah','Pasir']},
+ 'Priangan':{c:[-6.9,107.6],img:'region2.jpeg',res:['Teh','Kopi','Sayur','Tembakau']},
+ 'Banten':{c:[-6.1,106.15],img:'region1.jpeg',res:['Pasir','Batu','Ikan','Gula']},
+ 'Mataram':{c:[-6.99,110.42],img:'region1.jpeg',res:['Padi','Jati','Tembakau','Kapas']},
+ 'Arek':{c:[-7.25,112.75],img:'pano_vege.jpeg',res:['Kopi','Tembakau','Gula','Garam','Ikan']},
+ 'Bali':{c:[-8.65,115.22],img:'region1.jpeg',res:['Kelapa','Ikan','Rempah','Kopi']},
+ 'Medan':{c:[3.6,98.67],img:'region1.jpeg',res:['Sawit','Tembakau','Karet','Kopi']},
+ 'Borneo':{c:[-3.32,114.59],img:'region1.jpeg',res:['Kayu','Batu Bara','Sawit','Besi']},
+ 'Makassar':{c:[-5.14,119.43],img:'region1.jpeg',res:['Kakao','Ikan','Padi','Mete']}};
+let CURR=localStorage.getItem('gv_region')||'Solok'; if(!RG[CURR])CURR='Solok';
+function hav(a,b,c,d){const K=Math.PI/180,x=(c-a)*K,y=(d-b)*K,s=Math.sin(x/2)**2+Math.cos(a*K)*Math.cos(c*K)*Math.sin(y/2)**2;return 2*6371*Math.asin(Math.sqrt(s))}
+function setBG(n){const r=RG[n];const u='reg_'+n.toLowerCase()+'.jpeg';const i=new Image();
+ i.onload=()=>{pano.style.backgroundImage=`url('${u}')`};
+ i.onerror=()=>{pano.style.backgroundImage=`url('${r.img}')`};
+ i.src=u; $('locName').innerText=n;
+ $('rawList').innerHTML=r.res.map(s=>`<span class="chip">${s}</span>`).join(' ');}
 function ago(t){const s=(Date.now()-new Date(t))/1000;if(s<60)return'baru saja';if(s<3600)return Math.floor(s/60)+' mnt';if(s<86400)return Math.floor(s/3600)+' jam';return Math.floor(s/86400)+' hari'}
+function travelLeft(){const T=JSON.parse(localStorage.getItem('gv_travel')||'null');if(!T)return null;
+ const l=T.arrive-Date.now();
+ if(l<=0){localStorage.removeItem('gv_travel');localStorage.setItem('gv_region',T.to);CURR=T.to;renderRegions();setBG(T.to);toast('🛬 Tiba di '+T.to);return null}
+ return {l,to:T.to,mode:T.mode}}
+function lockBtns(d){['bPanen','bKerja','bTrans'].forEach(id=>$(id).disabled=d)}
+setInterval(()=>{const ti=travelLeft();
+ if(ti){$('trip').style.display='block';$('trip').innerText=(ti.mode==='bus'?'🚌 Menuju ':'🚆 Menuju ')+ti.to+' — '+Math.ceil(ti.l/1000)+' dtk';lockBtns(true)}
+ else{$('trip').style.display='none';lockBtns(false)}},1000);
+function renderRegions(){$('regions').innerHTML=Object.keys(RG).map(k=>`<button class="rg ${k===CURR?'on':''}" data-k="${k}">${k==='Solok'?'👑':(k==='Arek'?'🔥':'🟢')} ${k}</button>`).join('');
+ document.querySelectorAll('.rg').forEach(b=>b.onclick=()=>{if(travelLeft())return toast('Sedang dalam perjalanan!');
+  CURR=b.dataset.k;localStorage.setItem('gv_region',CURR);renderRegions();setBG(CURR);});}
+renderRegions(); setBG(CURR);
+$('bPanen').onclick=()=>{if(travelLeft())return toast('Sedang dalam perjalanan!');if(window.onHS)window.onHS({act:'kebun',lb:'Kebun'})};
+$('bKerja').onclick=()=>{if(travelLeft())return toast('Sedang dalam perjalanan!');location.href='work_vege.html'};
+$('bTrans').onclick=()=>{if(travelLeft())return toast('Sedang dalam perjalanan!');
+ let rows='';for(const k of Object.keys(RG)){if(k===CURR)continue;
+  const km=Math.round(hav(RG[CURR].c[0],RG[CURR].c[1],RG[k].c[0],RG[k].c[1]));
+  rows+=`<div class="row"><span><b>${k}</b> • ${km} km</span><span style="display:flex;gap:4px">
+   <button class="btn" data-m="bus" data-k="${k}" data-km="${km}">🚌 ${Math.max(1,Math.round(km*0.5/60))}m −${Math.ceil(km/100)}⚡</button>
+   <button class="btn" data-m="train" data-k="${k}" data-km="${km}">🚆 ${Math.max(1,Math.round(km*0.25/60))}m −${Math.ceil(km/200)}⚡</button></span></div>`}
+ openOvl('<h3 style="color:var(--gold)">🚌 Transportasi Umum</h3><p class="dim">Waktu & energi proporsional jarak nyata.</p>'+rows);
+ document.querySelectorAll('#ovlC [data-m]').forEach(b=>b.onclick=()=>go(b.dataset.m,b.dataset.k,+b.dataset.km));};
+async function go(m,k,km){try{
+ const {data:{session}}=await db.auth.getSession();if(!session){alert('Login dulu!');return}
+ const en=m==='bus'?Math.ceil(km/100):Math.ceil(km/200);
+ const ms=m==='bus'?km*500:km*250;
+ await db.rpc('work_once',{uid:session.user.id,coin:0,en:-en});
+ localStorage.setItem('gv_travel',JSON.stringify({to:k,mode:m,arrive:Date.now()+ms}));
+ closeOvl();toast('🛫 Berangkat ke '+k);
+ const w=await db.from('wallets').select('energy').eq('user_id',session.user.id).single();
+ $('en').innerText=w.data?.energy??0;
+}catch(e){alert('Gagal: '+String(e&&e.message||e))}}
 $('left').innerHTML=`
  <div class="box" style="text-align:center">
   <img src="logo.png" style="width:56px;border-radius:10px;background:#fff;padding:2px">
@@ -94,14 +135,12 @@ $('left').innerHTML=`
   <div class="bar"><i id="hHp" style="background:#ef4444;width:100%"></i></div>
   <small>🎖️ XP Level: <b id="hLv">1</b></small>
   <div class="bar"><i id="hXp" style="background:#38bdf8;width:0%"></i></div>
-  <div style="margin-top:6px"><span class="chip" id="hWork">💼 Siap Kerja</span></div>
  </div>
  <div class="box">
   <div class="row"><span>💶 Euro</span><b id="hEuro">0</b></div>
   <div class="row"><span>🏅 Gold</span><b id="hGold">0</b></div>
   <div class="row"><span>🪙 Koin</span><b id="hCoin">0</b></div>
  </div>
- <div class="box dim">🍱 Ransum: +12% energi tiap 12:00.<br>Punya <b id="hUnit">0</b> unit di inventaris. <a href="market.html" style="color:var(--gold)">Beli lagi</a></div>
  <div class="box menu">
   <a href="company.html">Business</a><a href="transactions.html">Collection</a>
   <a href="missions.html">Assistant</a><a href="hangar.html">Garage</a>
@@ -109,10 +148,6 @@ $('left').innerHTML=`
   <a href="#" onclick="alert('Segera hadir!');return false">Cosmetics</a><a href="bunker.html">Housing</a>
   <a href="org.html">Squad</a><a href="rank.html">Badges</a>
   <a href="news.html">News</a><a href="#regions">Area</a>
- </div>
- <div class="box" style="display:flex;gap:6px">
-  <a class="btn" style="flex:1;text-align:center" href="finance.html">Invest</a>
-  <a class="btn" style="flex:1;text-align:center" href="finance.html">Withdraw</a>
  </div>`;
 (async()=>{try{
  const {data:{session}}=await db.auth.getSession();
@@ -126,21 +161,14 @@ $('left').innerHTML=`
  $('hName').innerText=P.username||'Player';
  $('hCty').innerText=(P.country_code||'ID')+' • '+(P.rank||'Kadet');
  const en=W.energy??100;
- $('hEn').style.width=en+'%'; $('hEnT').innerText=en+'%'; $('en').innerText=en;
+ $('hEn').style.width=Math.min(en,100)+'%'; $('hEnT').innerText=en+'%'; $('en').innerText=en;
  const hp=P.health??100;
  $('hHp').style.width=hp+'%'; $('hHpT').innerText=hp+'%';
  const xp=P.xp??0;
  $('hLv').innerText=Math.floor(xp/100)+1; $('hXp').style.width=(xp%100)+'%';
  $('hCoin').innerText=W.local_coin??0; $('coin').innerText=W.local_coin??0;
- $('hGold').innerText=W.gold??0; $('hEuro').innerText=W.euro??0; $('hUnit').innerText=W.items??0;
- const list=REGIONS[P.country_code||'ID']||REGIONS.ID;
- $('regionTitle').innerText='🗺️ Peta Region — '+(P.country_code||'ID');
+ $('hGold').innerText=W.gold??0; $('hEuro').innerText=W.euro??0;
  $('cty').innerText=(P.country_code||'ID')+' — Indonesia';
- $('regions').innerHTML=list.map((r,i)=>`<button class="rg ${i==0?'on':''}" data-i="${i}">${r.s} ${r.n}</button>`).join('');
- document.querySelectorAll('.rg').forEach(b=>b.onclick=()=>{
-  const r=list[b.dataset.i];
-  document.querySelectorAll('.rg').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on'); pano.style.backgroundImage=`url('${r.img}')`; $('locName').innerText=r.n;});
 }catch(e){$('mode').innerText='MODE DEMO'}})();
 (async()=>{try{const {data}=await db.from('wars').select('*').order('id',{ascending:false}).limit(5);
  $('warTbl').innerHTML='<tr><th>Region</th><th>Penyerang</th><th>Bertahan</th></tr>'+
