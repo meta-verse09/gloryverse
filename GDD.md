@@ -206,4 +206,15 @@ Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10
 | D-94 | Jarak region dari koordinat kota nyata |
 
 ---
+## 📎 ADENDUM A-06 (28 Agu 2026) — Dunia Hidup
+- Panorama 360° = PANGGUNG GAME (bukan hiasan).
+- Aktivitas = hotspot di dalam panorama, sesuai sumber daya region (A-05).
+- Klik hotspot → overlay aktivitas di atas panorama.
+- Warga online tampil sebagai avatar + nama di atasnya, di dalam dunia.
+- Mabar = berbagi panggung yang sama, skor live.
+| D-95 | Panorama = panggung game |
+| D-96 | Hotspot aktivitas per region |
+| D-97 | Avatar + nama warga di dalam dunia |
+
+
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
