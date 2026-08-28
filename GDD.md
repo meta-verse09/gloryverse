@@ -145,6 +145,30 @@ gloryverse-web/
 | D-85 | 19 pangkat Damage Last Hit |
 
 ---
+### A. Revisi Konsep
+- Panorama 360° = VISUAL SIGNATURE SAJA (tetap ber-swing, tanpa interaksi klik yang kompleks).
+- Aktivitas ekonomi (Kebun, Kerja, Company) = halaman terpisah dengan tombol di bawah panorama.
+- 10 region = 10 gambar panorama berbeda sesuai ciri khas daerah (dikurasi manual oleh komandan).
+- Company tier 1 = berbeda per region sesuai sumber daya (A-05).
+
+### B. Pasal Baru: Transportasi Umum
+- Setiap perpindahan antar region = **jarak km × kecepatan konstan**.
+- Rumus dasar: kecepatan bus umum = 60 km/jam, kereta = 100 km/jam, pesawat = 600 km/jam.
+- Contoh: Solok ↔ Jakarta (Betawi) = 900 km → bus 15 jam, kereta 9 jam, pesawat 1,5 jam.
+- Selama perjalanan = **timer real-time** (player bisa main MapVerse/kerja sambil menunggu).
+- Bisa "batal perjalanan" dengan refund 50%.
+
+### C. Urutan Fondasi
+- Pondasi #5: Transportasi Umum (buka akses antar region).
+- Pondasi #6: Company Kendaraan (perusahaan angkutan milik player).
+- Pondasi #7: Company tier 2–3 (pabrik lanjutan).
+
+### D. Log Keputusan
+| D-98 | Panorama visual-only, aktivitas via tombol di bawah |
+| D-99 | 10 panorama unik per region (ciri khas daerah) |
+| D-100 | Company tier 1 berbeda per region |
+| D-101 | Transportasi umum mendahului company kendaraan |
+| D-102 | Timer perjalanan = real-time (selaras dunia nyata) |
 
 ## 📎 ADENDUM A-02 (24 Agu 2026) — Dasbor Admin & Player
 ### A. Pasal Baru
