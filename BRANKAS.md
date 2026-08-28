@@ -28,3 +28,10 @@ Piala Mingguan (agregat mv_rounds per pekan, gelar King Map Verse) | Piala Regio
 
 ## 7. Mabar
 Kode kamar 4 digit, spot sama, timer 60 dtk, 5 ronde, skor live via Supabase Realtime.
+
+## 8. Glory Clash (Arena PvP Kartu)
+- Inspirasi: Clash Royale versi 2D web
+- Engine: Phaser.js + Supabase Realtime
+- Mekanik: deploy kartu, unit auto-walk, hancurkan tower, 3 menit
+- Kartu gating: unlock via pangkat militer GDD
+- Timeline: mulai bulan 3-4 setelah fondasi ekonomi stabil
