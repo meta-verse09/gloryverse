@@ -241,7 +241,6 @@ Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10
 | D-97 | Avatar + nama warga di dalam dunia |
 
 ---
----
 ## 📎 ADENDUM A-07 (28 Agu 2026) — Interaksi & Transportasi
 - Panorama tetap swing; tombol aksi di BAWAH gambar.
 - 10 gambar region baru sesuai ciri khas; sistem fallback otomatis sampai gambar di-upload.
@@ -253,5 +252,16 @@ Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10
 | D-98 | Tombol aksi di bawah panorama |
 | D-99 | Transportasi umum sebelum company kendaraan |
 | D-100 | Waktu/biaya perjalanan proporsional jarak |
+
+---
+## 📎 ADENDUM A-08 (28 Agu 2026) — Arena War Negara
+- Format MyProfitLand, tampilan eDominacy; gambar tengah STATIS + Ken Burns (bukan swing).
+- Countdown 24 jam di tengah arena.
+- Damage Breakdown transparan (rumus A-04, server-side).
+- 👑 Ibukota (Solok) KEBAL serangan.
+- Pemenang menguasai region (region_owner) + loot 50🪙/peserta.
+| D-101 | War 24 jam, timer tengah arena |
+| D-102 | Ibukota kebal |
+| D-103 | Gambar perang statis + Ken Burns |
 
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
