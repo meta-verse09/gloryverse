@@ -50,9 +50,14 @@ window.closeOvl=()=>{$('ovl').style.display='none'};
 window.toast=m=>{const T=$('toast');T.innerText=m;T.style.display='block';setTimeout(()=>T.style.display='none',1800)};
 img.onload=()=>{tileW=pano.clientHeight*(img.width/img.height);paint()};
 const mod=(n,m)=>((n%m)+m)%m, hash=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)};
-pano.onpointerdown=e=>{if(e.target.closest('.hs'))return;drag={x:e.clientX,pos};moved=0;auto=false;pano.setPointerCapture(e.pointerId)};
+let hsSkip=false;
+pano.onpointerdown=e=>{hsSkip=!!e.target.closest('.hs');if(hsSkip)return;drag={x:e.clientX,pos};moved=0;auto=false;pano.setPointerCapture(e.pointerId)};
 pano.onpointermove=e=>{if(drag){moved+=Math.abs(e.clientX-drag.x);pos=drag.pos+(e.clientX-drag.x);paint()}};
-['pointerup','pointercancel'].forEach(v=>pano.addEventListener(v,()=>{drag=null;setTimeout(()=>auto=true,2500)}));
+['pointerup','pointercancel'].forEach(v=>pano.addEventListener(v,e=>{drag=null;setTimeout(()=>auto=true,2500);
+ if(v==='pointerup'&&hsSkip&&e.clientX!==undefined){
+  const el=document.elementFromPoint(e.clientX,e.clientY);const hs=el&&el.closest?el.closest('.hs'):null;
+  if(hs){const h=HS[+hs.dataset.i];if(h){if(h.href){location.href=h.href;return}
+   if(window.onHS){window.onHS(h);return}toast(h.lb+': segera hadir!')}}}}));
 $('markers').addEventListener('click',e=>{const el=e.target.closest('.hs');if(!el||moved>8)return;
  const h=HS[+el.dataset.i]; if(!h)return;
  if(h.href){location.href=h.href;return}
