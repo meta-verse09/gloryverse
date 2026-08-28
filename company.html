@@ -43,7 +43,7 @@ select{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-r
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script><script src="config.js"></script><script src="layout.js"></script><script src="dividen.js"></script>
 <script>
-const TYPES=[['Kebun Sayur',100],['Warung Makan',150],['Pabrik Kopi',250],['Tambang Batu',500],['Bank',1000]];
+const TYPES=[['Kebun Sayur',100],['Warung Makan',150],['Pabrik Kopi',250],['Tambang Batu',500],['Bank',1000],['Kedai Kopi',300],['Toko Kain',400]];
 const REGS=['Solok','Betawi','Priangan','Banten','Mataram','Arek','Bali','Medan','Borneo','Makassar'];
 $('pTipe').innerHTML=TYPES.map((t,i)=>`<option value="${i}">${t[0]}</option>`).join('');
 $('pReg').innerHTML=REGS.map(r=>`<option>${r}</option>`).join('');
