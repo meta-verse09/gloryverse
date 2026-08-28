@@ -1,22 +1,29 @@
-/* ===== ADSENSE VERIFIKASI ===== */
-(function(){
- if(!document.querySelector('script[src*="adsbygoogle"]')){
-  var s=document.createElement('script');
-  s.async=true;
-  s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206';
-  s.crossOrigin='anonymous';
-  document.head.appendChild(s);
- }
-})();
-/* layout.js v2 — mesin template + logo otomatis */
+/* layout.js v3 — DUNIA HIDUP: hotspot + avatar warga */
 const $=id=>document.getElementById(id);
 const D=document.body.dataset;
+const PAL=['#e11d48','#2563eb','#16a34a','#d97706','#7c3aed','#0891b2','#db2777','#65a30d'];
 
 /* Logo kiri-atas di SEMUA halaman */
 document.head.insertAdjacentHTML('beforeend',
  '<style>.logo img{height:34px;border-radius:8px;background:#fff;padding:2px 8px;box-shadow:0 2px 8px #0008}</style>');
 const lg=document.querySelector('.logo');
 if(lg) lg.innerHTML='<img src="logo.png" alt="GloryVerse">';
+
+/* Style Dunia Hidup */
+document.head.insertAdjacentHTML('beforeend',`<style>
+.mk{position:absolute;bottom:16%;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:none;z-index:3}
+.mk .nm{font-size:10px;font-weight:800;color:#fff;text-shadow:0 1px 3px #000;background:#0007;padding:1px 6px;border-radius:8px}
+.mk .av{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;border:2px solid #fff;box-shadow:0 2px 6px #000a}
+.hs{position:absolute;bottom:10%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:1px;cursor:pointer;z-index:4}
+.hs .ic{font-size:26px;filter:drop-shadow(0 2px 4px #000c);animation:hsb 2s infinite}
+.hs .lb{font-size:10px;font-weight:800;color:var(--gold);background:#0009;padding:1px 6px;border-radius:8px;border:1px solid var(--gold)}
+@keyframes hsb{50%{transform:translateY(-4px)}}
+#ovl{position:absolute;inset:0;background:#000c;z-index:8;display:none;align-items:center;justify-content:center}
+#ovl .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:14px;max-width:94%;max-height:94%;overflow:auto;position:relative}
+#ovl .x{position:absolute;top:6px;right:10px;cursor:pointer;font-weight:900;color:var(--gold)}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#000c;color:var(--gold);font-weight:800;padding:8px 16px;border-radius:10px;border:1px solid var(--gold);display:none;z-index:99}
+</style>`);
+document.body.insertAdjacentHTML('beforeend','<div id="toast"></div>');
 
 /* Sidebar otomatis */
 $('left').innerHTML=`<div class="box"><b id="pName">Player</b>
@@ -31,17 +38,31 @@ $('right').innerHTML=`<div class="box"><h3>🟢 Teman Online</h3><div id="friend
  <input id="shMsg" placeholder="teriak sesuatu..."><button class="btn" id="shBtn">Kirim</button></div>`;
 if($('locName'))$('locName').innerText=D.title||'';
 
-/* Panorama 360 */
+/* Panorama 360 + Dunia Hidup */
 const pano=$('pano'); pano.style.backgroundImage=`url('${D.img}')`;
+pano.insertAdjacentHTML('beforeend','<div id="ovl"><div class="in"><span class="x" onclick="closeOvl()">✕</span><div id="ovlC"></div></div></div>');
 const img=new Image(); img.src=D.img;
-let tileW=1600,pos=0,drag=null,auto=true,t=0,friends=[];
+let tileW=1600,pos=0,drag=null,auto=true,t=0,friends=[],moved=0;
+let HS=[{x:.25,ic:'🌱',lb:'Kebun',act:'kebun'},{x:.5,ic:'💼',lb:'Kerja',act:'kerja'},{x:.75,ic:'🛒',lb:'Pasar',act:'pasar',href:'market.html'}];
+window.setHotspots=l=>{HS=l;paint()};
+window.openOvl=h=>{$('ovlC').innerHTML=h;$('ovl').style.display='flex'};
+window.closeOvl=()=>{$('ovl').style.display='none'};
+window.toast=m=>{const T=$('toast');T.innerText=m;T.style.display='block';setTimeout(()=>T.style.display='none',1800)};
 img.onload=()=>{tileW=pano.clientHeight*(img.width/img.height);paint()};
 const mod=(n,m)=>((n%m)+m)%m, hash=s=>{let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))|0;return Math.abs(h)};
-pano.onpointerdown=e=>{drag={x:e.clientX,pos};auto=false;pano.setPointerCapture(e.pointerId)};
-pano.onpointermove=e=>{if(drag){pos=drag.pos+(e.clientX-drag.x);paint()}};
+pano.onpointerdown=e=>{drag={x:e.clientX,pos};moved=0;auto=false;pano.setPointerCapture(e.pointerId)};
+pano.onpointermove=e=>{if(drag){moved+=Math.abs(e.clientX-drag.x);pos=drag.pos+(e.clientX-drag.x);paint()}};
 ['pointerup','pointercancel'].forEach(v=>pano.addEventListener(v,()=>{drag=null;setTimeout(()=>auto=true,2500)}));
+$('markers').addEventListener('click',e=>{const el=e.target.closest('.hs');if(!el||moved>8)return;
+ const h=HS[+el.dataset.i]; if(!h)return;
+ if(h.href){location.href=h.href;return}
+ if(window.onHS){window.onHS(h);return}
+ toast(h.lb+': segera hadir!')});
 function paint(){pano.style.backgroundPositionX=pos+'px';
- $('markers').innerHTML=friends.map(f=>`<span class="mk" style="left:${mod(f.x*tileW+pos,tileW)}px">🟢 ${f.name}</span>`).join('')}
+ $('markers').innerHTML=
+  friends.map(f=>{const c=PAL[hash(f.name)%PAL.length];
+   return `<span class="mk" style="left:${mod(f.x*tileW+pos,tileW)}px"><span class="nm">${f.name}</span><span class="av" style="background:${c}">${(f.name[0]||'?').toUpperCase()}</span></span>`}).join('')+
+  HS.map((h,i)=>`<span class="hs" data-i="${i}" style="left:${mod(h.x*tileW+pos,tileW)}px"><span class="ic">${h.ic}</span><span class="lb">${h.lb}</span></span>`).join('');}
 (function loop(){if(auto){t+=.004;pos=Math.sin(t)*tileW*.3;paint()}requestAnimationFrame(loop)})();
 
 /* Jam + siang/malam real-time */
