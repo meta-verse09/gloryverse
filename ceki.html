@@ -3,114 +3,98 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GloryVerse — Koa Ceki Lapau Solok</title>
+<title>GloryVerse — Koa Ceki</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="layout.css">
 <style>
-#table{position:relative;height:430px;border-radius:14px;border:1px solid var(--gold);overflow:hidden;
- background:url('lapau.jpeg') center/cover}
-.seat{position:absolute;text-align:center;color:#fff;font-size:12px;font-weight:800;text-shadow:0 2px 4px #000}
-.seat .av{width:44px;height:44px;border-radius:50%;background:#7c3aed;border:2px solid var(--gold);
- display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 2px}
-.coki{display:none;color:#fde047;font-weight:900;animation:ck 1s infinite}
-@keyframes ck{50%{opacity:.4}}
-.mini{width:16px;height:38px;background:#111;border:2px solid #f5f0e6;border-radius:3px;display:inline-block;margin:0 -4px}
-#pile{position:absolute;left:50%;top:47%;width:52px;height:34px;background:#f2b705;border-radius:4px;transform:translate(-50%,-50%);
- color:#111;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
-#lastD{position:absolute;left:50%;top:60%;transform:translateX(-50%)}
-#lastD svg,#lastD img{width:34px;height:80px}
-#hand{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:8px 0}
-.cd{cursor:pointer}
-.cd.sel{transform:translateY(-10px);filter:drop-shadow(0 0 6px #fde047)}
-.cd svg,.cd img{width:52px;height:120px;display:block}
-#ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:50}
-#ov .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:92%;text-align:center}
+.btn{background:linear-gradient(180deg,#ffd75e 0%,#f2b705 55%,#d99a00 100%);
+ color:#241a00;border:1px solid #8a6400;border-radius:12px;padding:12px 20px;
+ box-shadow:0 4px 0 #8a6400,0 7px 14px #0009,inset 0 1px 0 #ffffff88;
+ text-shadow:0 1px 0 #ffec8a;font-weight:900;cursor:pointer}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #8a6400}
+.card{background:#0d1430cc;border:1px solid var(--line);border-radius:14px;padding:16px;margin:10px}
 .dim{color:var(--mut);font-size:12px}
-.btns{display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap}
-input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px}
+.chip{background:#101a3d;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;display:inline-block;margin:2px}
 </style>
 </head>
-<body data-img='reg_solok.jpeg' data-title="Lapau Solok">
-<header><b class="logo">⚔️ GloryVerse</b>
- <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
- <span class="chip"> <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
- <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
-<nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
- <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
- <a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a></nav>
+<body>
 <div class="grid">
- <aside class="side" id="left"></aside>
- <main>
-  <div class="pano" id="pano" style="height:120px"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
-   <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
-  
-  <!-- LOBBY -->
-  <div class="card" id="lobby">
-   <h3>🎴 Meja Koa Ceki — Lapau Solok</h3>
-   <div class="btns">
-    <button class="btn" id="bSolo">▶ MAIN SOLO (vs 3 bot)</button>
-    <button class="btn" id="bBuat">🌐 BUAT MEJA MABAR</button>
-   </div>
-   <div id="roomBox" style="display:none;margin-top:12px">
-    <div class="dim">Kode meja: <b id="roomCode" style="color:var(--gold);font-size:18px"></b></div>
+ <main style="padding:10px">
+  <div class="card">
+   <h3 style="color:var(--gold);margin:0 0 12px">🎴 Meja Koa Ceki</h3>
+   
+   <button class="btn" id="bSolo" style="width:100%;margin-bottom:8px">▶ MAIN SOLO</button>
+   <button class="btn" id="bBuat" style="width:100%;margin-bottom:12px">🌐 BUAT MEJA MABAR</button>
+   
+   <div id="roomBox" style="display:none;background:#0b1020;border:1px solid var(--gold);border-radius:10px;padding:12px;margin-bottom:12px">
+    <div class="dim">Kode meja:</div>
+    <div id="roomCode" style="color:var(--gold);font-size:24px;font-weight:bold;margin:6px 0"></div>
     <div class="dim" id="roomLink"></div>
-    <div id="seatList" style="margin:6px 0"></div>
-    <button class="btn" id="bStart" style="width:100%;margin-top:8px">MULAI (kursi kosong = bot)</button>
+    <div style="margin:8px 0">
+     <span class="chip">🙂 Kamu</span>
+     <span class="chip">🤖 kosong</span>
+     <span class="chip">🤖 kosong</span>
+     <span class="chip">🤖 kosong</span>
+    </div>
+    <button class="btn" id="bStart" style="width:100%">MULAI</button>
    </div>
-   <div class="btns" style="margin-top:12px">
-    <input id="joinCode" placeholder="kode meja...">
+   
+   <div style="display:flex;gap:6px">
+    <input id="joinCode" placeholder="kode meja..." style="flex:1;background:#0b1020;border:1px solid var(--line);border-radius:8px;padding:10px">
     <button class="btn" id="bJoin">GABUNG</button>
    </div>
-   <div class="dim" style="margin-top:8px">Kursi kosong diisi bot otomatis. Host wajib tetap membuka halaman.</div>
   </div>
   
-  <!-- GAME AREA -->
-  <div id="gameArea" style="display:none">
-  <div class="card"><h3>🎴 Koa Ceki — <span id="roomTitle">Lapau Solok</span></h3>
-   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Pertama PUTUS (3×) juara.</div></div>
-  <div id="table">
-   <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av" id="a2">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
-   <div class="seat" style="left:8px;top:40%"><div class="av" id="a3">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
-   <div class="seat" style="right:8px;top:40%"><div class="av" id="a1">🤖</div><span id="n1">Kanan</span> <span id="s1"></span><div class="coki" id="c1">COKI</div><div id="d1"></div></div>
-   <div class="seat" style="bottom:6px;left:12px"><div class="av" id="a0" style="background:#16a34a">🙂</div><span id="n0">Kamu</span> <span id="s0"></span><div class="coki" id="c0">COKI</div></div>
-   <div id="pile">-</div><div id="lastD"></div>
-   <div id="stat" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#fde047;font-weight:800;font-size:13px"></div>
-  </div>
-  <div id="hand"></div>
-  <div class="btns">
-   <button class="btn" id="bCabut" style="display:none">CABUT</button>
-   <button class="btn" id="bMakan" style="display:none">MAKAN!</button>
-   <button class="btn" id="bTurun" style="display:none">TURUN</button>
-   <button class="btn" id="bKoa" style="display:none;background:#16a34a">KOA! 🟢</button>
-   <button class="btn" id="bSusun" style="display:none">SUSUN</button>
-  </div>
-  <div class="dim" id="info" style="text-align:center"></div>
+  <div id="gameArea" style="display:none" class="card">
+   <h3 style="color:var(--gold)">🎮 Game Area</h3>
+   <p>Game akan muncul di sini...</p>
+   <button class="btn" onclick="location.reload()">Kembali</button>
   </div>
  </main>
- <aside class="side" id="right"></aside>
 </div>
-<div id="ov"><div class="in"><h2 id="ovT">-</h2><p id="ovM" class="dim"></p>
- <div class="btns"><button class="btn" id="ovWA">📲 Share WA</button><button class="btn" id="ovL">Lanjut</button></div></div></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="layout.js"></script>
-<script src="lapau.js"></script>
 <script>
-// ===== FALLBACK BINDING =====
-window.addEventListener('load', function(){
-  setTimeout(function(){
-    console.log('🔧 Fallback binding...');
-    var btns = ['bSolo','bBuat','bJoin','bStart','bCabut','bMakan','bTurun','bKoa','bSusun'];
-    btns.forEach(function(id){
-      var el = document.getElementById(id);
-      if(el && !el.onclick){
-        console.log('⚠️ ' + id + ' belum ada onclick');
-      }
-    });
-    console.log('✅ Fallback ready');
-  }, 1000);
-});
+console.log(' Ceki Simple Loaded');
+
+// BUAT MEJA
+document.getElementById('bBuat').onclick = function(){
+  console.log(' BUAT MEJA clicked');
+  var code = Math.random().toString(36).slice(2,6).toUpperCase();
+  console.log('✅ Code:', code);
+  
+  document.getElementById('roomCode').innerText = code;
+  document.getElementById('roomLink').innerText = 'gloryverse.id/ceki?room=' + code;
+  document.getElementById('roomBox').style.display = 'block';
+  
+  try { localStorage.setItem('gv_ceki_host', code); } catch(e){}
+  
+  console.log('✅ Room box displayed');
+};
+
+// MAIN SOLO
+document.getElementById('bSolo').onclick = function(){
+  console.log('▶️ SOLO clicked');
+  document.getElementById('gameArea').style.display = 'block';
+  document.querySelector('.card').style.display = 'none';
+};
+
+// GABUNG
+document.getElementById('bJoin').onclick = function(){
+  var code = document.getElementById('joinCode').value.trim().toUpperCase();
+  if(!code){ alert('Masukkan kode meja!'); return; }
+  console.log('🤝 GABUNG:', code);
+  alert('Fitur gabung akan segera hadir!');
+};
+
+// MULAI
+document.getElementById('bStart').onclick = function(){
+  console.log('🚀 MULAI clicked');
+  document.getElementById('gameArea').style.display = 'block';
+  document.getElementById('roomBox').style.display = 'none';
+  document.querySelector('.card').style.display = 'none';
+};
+
+console.log('✅ All buttons bound');
 </script>
 </body>
 </html>
