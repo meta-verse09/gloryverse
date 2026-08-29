@@ -202,14 +202,16 @@ gloryverse-web/
 | D-90 | Monetisasi rupiah mulai bulan 6 |
 | D-91 | Badge Warga Pendiri (1.000 pertama) |
 | D-92 | Mode teks besar + share WA = fitur dasar |
+- Katalog 30 motif terkunci (9 keluarga); merah = Hiu Pusek, Tali Sirah,
+  dan 1 hiu merah penuh (nama terluka → riset lapau).
+- Arah seni: blok cetak kayu hitam-putih + aksen merah; aset SVG ringan.
+| D-110 | Katalog motif & arah seni terkunci |
 
 ---
 
 ## 📎 ADENDUM A-04 (25 Agu 2026) — Rumus Damage
 Formula: `Final = (Energi*Senjata*Rank*KS/100)*Bunker*Baju`
 Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10 jadi 4053.
-
----
 
 ---
 ## 📎 ADENDUM A-05 (26 Agu 2026) — Halaman Detail Region
@@ -284,6 +286,10 @@ Contoh 3648: `(94.48*3000*1.1*1.3/100)*0.9 = 3648`. Baju 9/10 = 0.9, kalau 10/10
 - Tim menang bila salah satu anggota CEKI.
 - Layar REVEAL akhir ronde + sorot bentrok + tombol share WA.
 | D-107 | Bentrok partner = momen cerita + share WA |
+- Katalog 30 motif terkunci (9 keluarga); merah = Hiu Pusek, Tali Sirah,
+  dan 1 hiu merah penuh (nama terluka → riset lapau).
+- Arah seni: blok cetak kayu hitam-putih + aksen merah; aset SVG ringan.
+| D-110 | Katalog motif & arah seni terkunci |
 
 
 *© 2026 GloryVerse — Muhammad Gazali. Dokumen ini sumber kebenaran desain; semua fitur baru wajib selaras dengannya.*
