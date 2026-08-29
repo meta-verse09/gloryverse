@@ -106,6 +106,60 @@ document.addEventListener('DOMContentLoaded', function(){
     };
   }
 });
+<script src="lapau.js"></script>
+<script>
+// Fallback: pastikan tombol MABAR berfungsi
+setTimeout(function(){
+  var bBuat = document.getElementById('bBuat');
+  var bSolo = document.getElementById('bSolo');
+  var bJoin = document.getElementById('bJoin');
+  var bStart = document.getElementById('bStart');
+  
+  console.log(' Fallback check:', {
+    bBuat: !!bBuat,
+    bSolo: !!bSolo,
+    bJoin: !!bJoin,
+    bStart: !!bStart,
+    bBuat_onclick: !!bBuat.onclick
+  });
+  
+  // Force binding jika belum ada
+  if(bBuat && !bBuat.onclick){
+    console.log('️ bBuat onclick belum ada - force binding');
+    bBuat.onclick = function(){
+      try {
+        var code = Math.random().toString(36).slice(2,6).toUpperCase();
+        localStorage.setItem('gv_ceki_host', code);
+        
+        var roomBox = document.getElementById('roomBox');
+        var roomCode = document.getElementById('roomCode');
+        var roomLink = document.getElementById('roomLink');
+        var seatList = document.getElementById('seatList');
+        
+        if(roomBox) roomBox.style.display = 'block';
+        if(roomCode) roomCode.innerText = code;
+        if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
+        if(seatList) seatList.innerHTML = '<span class="chip">🙂 Kamu</span> <span class="chip">🤖 kosong</span> <span class="chip">🤖 kosong</span> <span class="chip">🤖 kosong</span>';
+        
+        console.log('✅ Room dibuat:', code);
+      } catch(e) {
+        console.error('❌ Error buat room:', e);
+      }
+    };
+  }
+  
+  if(bSolo && !bSolo.onclick){
+    console.log('⚠️ bSolo onclick belum ada - force binding');
+    bSolo.onclick = function(){
+      console.log('Solo mode clicked');
+      // Panggil startRound jika ada
+      if(typeof startRound === 'function') startRound();
+    };
+  }
+  
+  console.log('✅ Fallback binding selesai');
+}, 1000);
 </script>
+</body>
 </body>
 </body></html>
