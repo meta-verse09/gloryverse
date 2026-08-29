@@ -1,4 +1,4 @@
-/* lapau.js v3 — WASIT KOA CEKI, transport KURIR REST (polling) */
+/* lapau.js v4 — WASIT KOA CEKI + SVG OTENTIK */
 if(typeof window.phase!=='function'&&typeof window.phaseOf==='function')window.phase=window.phaseOf;
 var FAM=['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'];
 var VAR={HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],JARUM:['Wajik','Besar','Kecil'],
@@ -6,18 +6,75 @@ SUDUNG:['Putih','Hitam','Pinggang'],BENGKOK:['Hitam','Besar','Kecil'],TALI:['Mer
 PECAH:['Manik','Delapan','Halus'],BATUNG:['Manik','Enam','Kecil'],SISIR:['Besar','Kecil','Bendera'],BABI:['Pusat','Besar','Kecil']};
 var RED={'HIU/Penci':1,'HIU/Babak':2,'TALI/Merah':1};
 var MID=[];FAM.forEach(function(f){VAR[f].forEach(function(n){MID.push({f:f,n:n,red:RED[f+'/'+n]||0})})});
-function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#151515';
- var W='stroke="#f5f0e6" stroke-width="3" fill="none"',g='',i,n;
- if(M.f=='HIU'){n=v+1;g='<path d="M14 20 h32" '+W+'/>';for(i=0;i<n;i++)g+='<rect x="18" y="'+(30+i*28)+'" width="24" height="20" '+W+'/>';}
- if(M.f=='JARUM'){n=v+1;for(i=0;i<n;i++)g+='<path d="M30 '+(18+i*34)+' l12 14 -12 14 -12 -14 z" '+W+'/>';}
- if(M.f=='SUDUNG'){n=v+2;for(i=0;i<n;i++)g+='<circle cx="30" cy="'+(26+i*(88/(n-1)))+'" r="8" '+W+'/>';}
- if(M.f=='BENGKOK'){if(v==0)g='<path d="M20 20 v100 h20" '+W+'/>';if(v==1)g='<path d="M40 20 v100 h-20" '+W+'/>';if(v==2)g='<path d="M20 20 v100 h20 M40 20 v60" '+W+'/>';}
- if(M.f=='TALI'){n=3-v;for(i=0;i<n;i++){var cy=30+i*(80/Math.max(n-1,1));g+='<circle cx="30" cy="'+cy+'" r="11" '+W+'/><circle cx="30" cy="'+cy+'" r="'+(3+v*2)+'" '+W+'/>'}}
- if(M.f=='PECAH'){n=4+v;for(i=0;i<n;i++)g+='<circle cx="'+(20+(i%2)*18)+'" cy="'+(24+Math.floor(i/2)*26)+'" r="6" '+W+'/>';}
- if(M.f=='BATUNG'){n=2+v;for(i=0;i<n;i++){g+='<circle cx="24" cy="'+(28+i*(84/Math.max(n-1,1)))+'" r="5" '+W+'/><circle cx="36" cy="'+(28+i*(84/Math.max(n-1,1)))+'" r="5" '+W+'/>'}}
- if(M.f=='SISIR'){n=3+v;for(i=0;i<n;i++)g+='<path d="M18 '+(26+i*(88/(n-1)))+' h24" '+W+'/>';}
- if(M.f=='BABI'){g='<circle cx="30" cy="32" r="12" '+W+'/>';for(i=0;i<v+1;i++)g+='<rect x="'+(19+(i%2)*13)+'" y="'+(56+Math.floor(i/2)*26)+'" width="11" height="18" '+W+'/>';}
- var band=M.red==1?'<rect x="10" y="52" width="40" height="34" fill="#a1171f"/>':'';
+function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#8B0000':'#0a0a0a';
+ var W='stroke="#f5f0e6" stroke-width="2.5" fill="none"',g='',i,n,cx,cy;
+ /* HIU — pola zigzag & kotak bertingkat */
+ if(M.f=='HIU'){
+  if(v==0){g='<path d="M16 24 h28 M16 32 h28 M16 40 h28 M16 100 h28 M16 108 h28 M16 116 h28" '+W+'/>'}
+  if(v==1){g='<path d="M20 28 l10 12 -10 12 M30 28 l-10 12 10 12 M20 100 l10 12 -10 12 M30 100 l-10 12 10 12" '+W+'/>'}
+  if(v==2){g='<circle cx="30" cy="34" r="8" '+W+'/><circle cx="30" cy="34" r="4" '+W+'/><circle cx="30" cy="106" r="8" '+W+'/><circle cx="30" cy="106" r="4" '+W+'/>'}
+  if(v==3){g='<path d="M22 26 v12 h16 v-12 M22 102 v12 h16 v-12" '+W+'/><path d="M24 30 h12 M24 106 h12" '+W+'/>'}
+  if(v==4){g='<rect x="22" y="26" width="16" height="16" '+W+'/><rect x="22" y="98" width="16" height="16" '+W+'/><path d="M26 30 h8 M26 102 h8" '+W+'/>'}
+  if(v==5){g='<path d="M20 24 h20 v8 h-20 M20 108 h20 v8 h-20" '+W+'/><path d="M24 28 v4 M36 28 v4 M24 112 v4 M36 112 v4" '+W+'/>'}
+ }
+ /* JARUM — wajik/berlian */
+ if(M.f=='JARUM'){
+  if(v==0){g='<path d="M30 22 l14 18 -14 18 -14 -18 z M30 100 l10 14 -10 14 -10 -14 z" '+W+'/>'}
+  if(v==1){g='<path d="M30 26 l10 14 -10 14 -10 -14 z M26 60 l4 6 -4 6 -4 -6 z M30 94 l10 14 -10 14 -10 -14 z" '+W+'/>'}
+  if(v==2){g='<path d="M30 30 l8 12 -8 12 -8 -12 z M22 66 l8 12 -8 12 -8 -12 z M30 102 l8 12 -8 12 -8 -12 z" '+W+'/>'}
+ }
+ /* SUDUNG — lingkaran konsentris */
+ if(M.f=='SUDUNG'){
+  if(v==0){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="10" '+W+'/><circle cx="30" cy="'+cy+'" r="5" '+W+'/>'}}
+  if(v==1){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="9" '+W+'/>'}}
+  if(v==2){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="8" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>'}}
+ }
+ /* BENGKOK — pola L/kait */
+ if(M.f=='BENGKOK'){
+  if(v==0){g='<path d="M20 22 v96 h20 M40 22 h-8 M20 118 h8" '+W+'/>'}
+  if(v==1){g='<path d="M40 22 v96 h-20 M20 22 h8 M40 118 h-8" '+W+'/>'}
+  if(v==2){g='<path d="M20 22 v96 h20 M40 22 v56 M20 118 h8" '+W+'/>'}
+ }
+ /* TALI — lingkaran bertumpuk */
+ if(M.f=='TALI'){
+  if(v==0){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="11" '+W+'/><circle cx="30" cy="'+cy+'" r="7" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>'}}
+  if(v==1){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="10" '+W+'/><circle cx="30" cy="'+cy+'" r="4" '+W+'/>'}}
+  if(v==2){for(i=0;i<3;i++){cy=30+i*40;g+='<circle cx="30" cy="'+cy+'" r="9" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>'}}
+ }
+ /* PECAH — lingkaran tersebar */
+ if(M.f=='PECAH'){
+  if(v==0){g+='<circle cx="22" cy="30" r="6" '+W+'/><circle cx="38" cy="30" r="6" '+W+'/>'
+    g+='<circle cx="22" cy="58" r="6" '+W+'/><circle cx="38" cy="58" r="6" '+W+'/>'
+    g+='<circle cx="22" cy="86" r="6" '+W+'/><circle cx="38" cy="86" r="6" '+W+'/>'
+    g+='<circle cx="30" cy="114" r="6" '+W+'/>'}
+  if(v==1){for(i=0;i<8;i++){cx=22+(i%2)*16;cy=26+Math.floor(i/2)*30;g+='<circle cx="'+cx+'" cy="'+cy+'" r="5" '+W+'/>'}}
+  if(v==2){for(i=0;i<12;i++){cx=20+(i%3)*10;cy=24+Math.floor(i/3)*24;g+='<circle cx="'+cx+'" cy="'+cy+'" r="4" '+W+'/>'}}
+ }
+ /* BATUNG — pasangan lingkaran */
+ if(M.f=='BATUNG'){
+  if(v==0){for(i=0;i<3;i++){cy=28+i*32;g+='<circle cx="24" cy="'+cy+'" r="6" '+W+'/><circle cx="36" cy="'+cy+'" r="6" '+W+'/>'}}
+  if(v==1){for(i=0;i<2;i++){cy=34+i*56;g+='<circle cx="24" cy="'+cy+'" r="7" '+W+'/><circle cx="36" cy="'+cy+'" r="7" '+W+'/>'}}
+  if(v==2){for(i=0;i<2;i++){cy=38+i*48;g+='<circle cx="24" cy="'+cy+'" r="8" '+W+'/><circle cx="36" cy="'+cy+'" r="8" '+W+'/>'}}
+ }
+ /* SISIR — garis horizontal */
+ if(M.f=='SISIR'){
+  if(v==0){for(i=0;i<8;i++){g+='<path d="M18 '+(22+i*14)+' h24" '+W+'/>'}}
+  if(v==1){for(i=0;i<6;i++){g+='<path d="M18 '+(28+i*16)+' h24" '+W+'/>'}}
+  if(v==2){for(i=0;i<5;i++){g+='<path d="M18 '+(30+i*20)+' h24" '+W+'/>'}}
+ }
+ /* BABI — kotak bertumpuk */
+ if(M.f=='BABI'){
+  if(v==0){g+='<circle cx="30" cy="32" r="10" '+W+'/>'
+    g+='<rect x="20" y="56" width="20" height="24" '+W+'/>'
+    g+='<rect x="20" y="84" width="20" height="24" '+W+'/>'}
+  if(v==1){g+='<rect x="20" y="28" width="20" height="24" '+W+'/>'
+    g+='<rect x="20" y="58" width="20" height="24" '+W+'/>'
+    g+='<rect x="20" y="88" width="20" height="24" '+W+'/>'}
+  if(v==2){g+='<rect x="20" y="34" width="20" height="20" '+W+'/>'
+    g+='<rect x="20" y="62" width="20" height="20" '+W+'/>'
+    g+='<rect x="20" y="90" width="20" height="20" '+W+'/>'}
+ }
+ var band=M.red==1?'<rect x="10" y="52" width="40" height="36" fill="#8B0000" opacity="0.7"/>':'';
  var lab='<text x="30" y="137" font-size="10" fill="#151515" text-anchor="middle" font-family="monospace">'+String(m+1).padStart(2,'0')+'</text>';
  return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+lab+'</svg>'}
 var hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
@@ -118,7 +175,7 @@ function endRound(w,why){over=true;rid++;if(mkT)clearTimeout(mkT);showMakan(fals
  var done=(w>=0&&wins[w]>=3);
  $('ovT').innerText=(w==MY)?('🟢 '+why+' KAMU SAMPAI!'):(w>=0)?(SEATS[w].n+' SAMPAI — Kamu Kalah :('):'🤝 SERI';
  var msg=(done?'🏆 JUARA MATCH (PUTUS!): '+SEATS[w].n+' • ':'')+'Skor ★: '+wins.join(' • ');
- if(w!=MY&&w>=0)msg+=' — Awak coki duluan, urang yang sampai 😭';
+ if(w!=MY&&w>=0)msg+=' — Awak coki duluan, urang yang sampai ';
  $('ovM').innerText=msg;$('ov').style.display='flex';render()}
 $('bCabut').onclick=function(){if(IS_HOST)doCabut(0);else send({act:'cabut',seat:MY})};
 $('bMakan').onclick=function(){if(IS_HOST)doMakan(0);else send({act:'makan',seat:MY})};
@@ -129,7 +186,7 @@ $('ovL').onclick=function(){if(IS_HOST){for(var i=0;i<4;i++)if(wins[i]>=3)wins=[
 $('ovWA').onclick=function(){var t=encodeURIComponent('KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\nMainkan: gloryverse.id/ceki');location.href='https://wa.me/?text='+t};
 function sendLobby(){if(IS_HOST)SEATS[0].sid=MYSID;send({ev:'lobby',seats:SEATS})}
 function drawLobby(){var h='';SEATS.forEach(function(s){h+='<span class="chip">'+(s.bot?'🤖':'🙂')+' '+(s.n||'kosong')+'</span> '});
- h+='<div class="dim" style="margin-top:6px">'+(IS_HOST?'🧑‍️ Kamu HOST — biarkan halaman TERBUKA.':'⏳ Tamu — menunggu host memulai...')+'</div>';
+ h+='<div class="dim" style="margin-top:6px">'+(IS_HOST?'🧑‍️ Kamu HOST — biarkan halaman TERBUKA.':' Tamu — menunggu host memulai...')+'</div>';
  $('seatList').innerHTML=h;$('bStart').style.display=IS_HOST?'block':'none'}
 function showRoom(code){$('roomBox').style.display='block';$('roomCode').innerText=code;
  $('roomLink').innerText='gloryverse.id/ceki?room='+code}
