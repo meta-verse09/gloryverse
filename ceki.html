@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="id"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse — Koa Ceki Lapau Solok</title>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<style>
+#table{position:relative;height:430px;border-radius:14px;border:1px solid var(--gold);overflow:hidden;
+ background:repeating-linear-gradient(0deg,#5a3a22 0 34px,#4a2f1b 34px 38px)}
+.seat{position:absolute;text-align:center;color:#fff;font-size:12px;font-weight:800;text-shadow:0 2px 4px #000}
+.seat .av{width:44px;height:44px;border-radius:50%;background:#7c3aed;border:2px solid var(--gold);
+ display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 2px}
+.coki{display:none;color:#fde047;font-weight:900;animation:ck 1s infinite}
+@keyframes ck{50%{opacity:.4}}
+.mini{width:16px;height:38px;background:#111;border:2px solid #f5f0e6;border-radius:3px;display:inline-block;margin:0 -4px}
+#pile{position:absolute;left:50%;top:47%;width:52px;height:34px;background:#f2b705;border-radius:4px;transform:translate(-50%,-50%);
+ color:#111;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
+#lastD{position:absolute;left:50%;top:62%;transform:translateX(-50%)}
+#hand{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+.cd{cursor:pointer;transition:transform .1s}
+.cd.sel{transform:translateY(-10px)}
+.cd svg{width:52px;height:120px;display:block}
+#ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:50}
+#ov .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:92%;text-align:center}
+.dim{color:var(--mut);font-size:12px}
+.btns{display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+</style>
+</head>
+<body data-img='reg_solok.jpeg' data-title="Lapau Solok">
+<header><b class="logo">⚔️ GloryVerse</b>
+ <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
+ <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
+ <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
+ <a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a></nav>
+<div class="grid">
+ <aside class="side" id="left"></aside>
+ <main>
+  <div class="card"><h3>🎴 Koa Ceki — Lapau Solok</h3>
+   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara.</div></div>
+  <div id="table">
+   <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
+   <div class="seat" style="left:8px;top:40%"><div class="av">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
+   <div class="seat" style="right:8px;top:40%"><div class="av">🤖</div><span id="n1">Kanan</span> <span id="s1"></span><div class="coki" id="c1">COKI</div><div id="d1"></div></div>
+   <div class="seat" style="bottom:6px;left:12px"><div class="av" style="background:#16a34a">🙂</div><span id="n0">Kamu</span> <span id="s0"></span><div class="coki" id="c0">COKI</div></div>
+   <div id="pile">-</div><div id="lastD"></div>
+   <div id="stat" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#fde047;font-weight:800;font-size:13px"></div>
+  </div>
+  <div id="hand"></div>
+  <div class="btns">
+   <button class="btn" id="bCabut">CABUT</button>
+   <button class="btn" id="bMakan" style="display:none">MAKAN!</button>
+   <button class="btn" id="bTurun" style="display:none">TURUN</button>
+   <button class="btn" id="bKoa" style="display:none;background:#16a34a">KOA! 🟢</button>
+  </div>
+  <div class="dim" id="info" style="text-align:center"></div>
+ </main>
+ <aside class="side" id="right"></aside>
+</div>
+<div id="ov"><div class="in"><h2 id="ovT">-</h2><p id="ovM" class="dim"></p>
+ <div class="btns"><button class="btn" id="ovWA">📲 Share WA</button><button class="btn" id="ovL">Lanjut</button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script><script src="layout.js"></script>
+<script>
+/* ===== KATALOG 30 MOTIF ===== */
+const FAM=['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'];
+const VAR={HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],JARUM:['Wajik','Besar','Kecil'],
+SUDUNG:['Putih','Hitam','Pinggang'],BENGKOK:['Hitam','Besar','Kecil'],TALI:['Merah','Bulat','Kecil'],
+PECAH:['Manik','Delapan','Halus'],BATUNG:['Manik','Enam','Kecil'],SISIR:['Besar','Kecil','Bendera'],BABI:['Pusat','Besar','Kecil']};
+const RED={'HIU/Penci':1,'HIU/Babak':2,'TALI/Merah':1};
+const MID=[];FAM.forEach(f=>VAR[f].forEach(n=>MID.push({f,n,red:RED[f+'/'+n]||0})));
+function svg(m){const M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#151515';
+ let g='';const W='stroke="#f5f0e6" stroke-width="3" fill="none"';
+ if(M.f=='HIU')g=`<rect x="18" y="${26+v*3}" width="24" height="24" ${W}/><rect x="18" y="86" width="24" height="24" ${W}/><path d="M14 62 h32 M14 70 h32" ${W}/>`;
+ if(M.f=='JARUM')g=`<path d="M30 ${22+v*4} l13 22 -13 22 -13 -22 z" ${W}/><path d="M30 84 l10 16 -10 16 -10 -16 z" ${W}/>`;
+ if(M.f=='SUDUNG')g=`<circle cx="30" cy="${30+v*3}" r="9" ${W}/><circle cx="30" cy="70" r="9" ${W}/><circle cx="30" cy="110" r="9" ${W}/>`;
+ if(M.f=='BENGKOK')g=`<path d="M20 ${18+v*4} v104 h20" ${W}/><circle cx="38" cy="40" r="8" ${W}/>`;
+ if(M.f=='TALI')g=`<circle cx="30" cy="32" r="11" ${W}/><circle cx="30" cy="32" r="4" ${W}/><circle cx="30" cy="70" r="11" ${W}/><circle cx="30" cy="70" r="4" ${W}/><circle cx="30" cy="108" r="11" ${W}/><circle cx="30" cy="108" r="4" ${W}/>`;
+ if(M.f=='PECAH')g=`<circle cx="22" cy="${30+v*4}" r="6" ${W}/><circle cx="38" cy="48" r="6" ${W}/><circle cx="22" cy="70" r="6" ${W}/><circle cx="38" cy="92" r="6" ${W}/><circle cx="26" cy="112" r="6" ${W}/>`;
+ if(M.f=='BATUNG')g=`<circle cx="24" cy="${28+v*3}" r="5" ${W}/><circle cx="36" cy="28" r="5" ${W}/><circle cx="24" cy="70" r="5" ${W}/><circle cx="36" cy="70" r="5" ${W}/><circle cx="24" cy="112" r="5" ${W}/><circle cx="36" cy="112" r="5" ${W}/>`;
+ if(M.f=='SISIR')g=`<path d="M18 ${30+v*4} h24 M18 55 h24 M18 80 h24 M18 105 h24 M22 30 v-8 M30 55 v-8 M38 80 v-8" ${W}/>`;
+ if(M.f=='BABI')g=`<circle cx="30" cy="${38+v*3}" r="12" ${W}/><rect x="20" y="78" width="20" height="34" ${W}/><path d="M20 95 h20 M30 78 v34" ${W}/>`;
+ const band=M.red==1?`<rect x="10" y="52" width="40" height="34" fill="#a1171f"/>`:'';
+ return `<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="${field}"/>${band}${g}</svg>`}
+/* ===== MESIN ===== */
+let deck=[],hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,phase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false;
+const NAMES=['Kamu','Uni Ros','Angku Mansur','Buya Datuk'];
+const cnt=h=>{const c=Array(30).fill(0);h.forEach(m=>c[m]++);return c};
+function win12(c){if(c.reduce((a,b)=>a+b,0)!=12)return false;
+ for(let p=0;p<30;p++){if(c[p]<2)continue;const t=[];for(let m=0;m<30;m++)if(c[m]- (m==p?2:0)>=3)t.push(m);
+  for(let a=0;a<t.length;a++)for(let b=a+1;b<t.length;b++)for(let d=b+1;d<t.length;d++){
+   const cc=c.slice();cc[p]-=2;cc[t[a]]-=3;cc[t[b]]-=3;cc[t[d]]-=3;
+   if(cc.every(x=>x>=0)&&cc.reduce((s,x)=>s+x,0)==1)return true}}return false}
+function cokiOf(h){const c=cnt(h);for(let m=0;m<30;m++){c[m]++;const w=win12(c);c[m]--;if(w)return m}return -1}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startRound(){rid++;deck=shuffle([...Array(30).keys()].flatMap(m=>Array(6).fill(m)));
+ hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck;last=null;over=false;sel=-1;
+ for(let i=0;i<11;i++)for(let p=0;p<4;p++)hands[p].push(pile.pop());
+ turn=0;phase='draw';$('ov').style.display='none';render();stat('Giliranmu: CABUT atau MAKAN')}
+function stat(t){$('stat').innerText=t}
+function render(){$('pile').innerText=pile.length;
+ $('lastD').innerHTML=last!=null?svg(last.card):'';
+ $('lastD').querySelector('svg')&&($('lastD').querySelector('svg').style.width='34px');
+ for(let p=0;p<4;p++){$('s'+p).innerText='★'.repeat(wins[p]);
+  $('c'+p).style.display=cokiOf(hands[p])>=0?'block':'none';
+  if(p>0)$('d'+p).innerHTML=disc[p].slice(-4).map(()=>'<span class="mini"></span>').join('')}
+ $('hand').innerHTML=hands[0].map((m,i)=>`<span class="cd ${i==sel?'sel':''}" data-i="${i}">${svg(m)}</span>`).join('');
+ document.querySelectorAll('.cd').forEach(el=>el.onclick=()=>{sel=+el.dataset.i;render()});
+ const my=turn==0&&!over;
+ $('bCabut').style.display=(my&&phase=='draw')?'inline-block':'none';
+ $('bTurun').style.display=(my&&phase=='discard'&&sel>=0)?'inline-block':'none';
+ $('bKoa').style.display=(my&&phase=='discard'&&win12(cnt(hands[0])))?'inline-block':'none';
+ const canMakan=last&&my&&phase=='draw'&&cnt(hands[0])[last.card]>=2;
+ $('bMakan').style.display=canMakan?'inline-block':'none';
+ $('info').innerText='Tangan: '+hands[0].length+' • '+MID.map((x,i)=>'').join('')}
+$('bCabut').onclick=()=>{hands[0].push(pile.pop());phase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
+$('bMakan').onclick=()=>{hands[0].push(last.card);disc[last.from].pop();last=null;phase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
+$('bTurun').onclick=()=>{const m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};phase='idle';render();afterMyDiscard()};
+$('bKoa').onclick=()=>endRound(0,'KOA!');
+function afterMyDiscard(){const r=rid;
+ for(let b=1;b<4;b++){if(cnt(hands[b])[last.card]>=2&&Math.random()<0.5){setTimeout(()=>{if(r!=rid)return;
+  hands[b].push(last.card);disc[last.from].pop();last=null;stat(NAMES[b]+' MAKAN kartumu! 😱');botFinish(b)},700);return}}
+ setTimeout(()=>{if(r==rid)next()},600)}
+function next(){turn=(turn+1)%4;if(turn==0){phase='draw';render();stat('Giliranmu: CABUT atau MAKAN')}else botTurn(turn)}
+function botTurn(i){const r=rid;setTimeout(()=>{if(r!=rid)return;
+ if(last&&cnt(hands[i])[last.card]>=2&&Math.random()<0.6){hands[i].push(last.card);disc[last.from].pop();last=null}
+ else{if(!pile.length)return endRound(-1,'Seri — tumpukan habis');hands[i].push(pile.pop())}
+ if(win12(cnt(hands[i])))return endRound(i,'KOA!');
+ botFinish(i)},900)}
+function botFinish(i){const r=rid;const c=cnt(hands[i]);let worst=0,wc=99;
+ for(let m=0;m<30;m++){const keep=c[m]>=2?c[m]:c[m]+2;if(c[m]>0&&c[m]<keep){} }
+ // buang motif paling "sendiri"
+ let best=null;for(let m=0;m<30;m++)if(hands[i].includes(m)){const v=c[m]+ (cokiOf(hands[i])>=0?0:0);if(best==null||c[m]<c[best])best=m}
+ const m=best==null?hands[i][0]:best;hands[i].splice(hands[i].indexOf(m),1);disc[i].push(m);last={card:m,from:i};render();
+ setTimeout(()=>{if(r!=rid)return;
+  if(cnt(hands[0])[m]>=2){$('bMakan').style.display='inline-block';stat(NAMES[i]+' buang '+MID[m].f+' '+MID[m].n+' — MAKAN?');
+   setTimeout(()=>{if(r==rid&&turn!=0){$('bMakan').style.display='none';next()}},2500);}
+  else next()},400)}
+function endRound(w,why){over=true;rid++;
+ if(w>=0)wins[w]++;
+ const done=w>=0&&wins[w]>=3;
+ $('ovT').innerText=w==0?('🟢 '+why+' KAMU SAMPAI!'):w>0?(NAMES[w]+' SAMPAI — Kamu Kalah :('):'🤝 SERI';
+ $('ovM').innerText=(done?' JUARA MATCH: '+NAMES[w]+' (PUTUS!) • ':'')+('Skor: '+wins.join(' • '))+(w==0&&cokiOf(hands[0])>=0?'':'')+(w>0?' — Awak coki duluan, urang yang sampai 😭':'');
+ $('ov').style.display='flex'}
+$('ovL').onclick=()=>{if(wins.some(w=>w>=3)){wins=[0,0,0,0]}startRound()};
+$('ovWA').onclick=()=>{const t=encodeURIComponent('🎴 KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\n👉 Mainkan: gloryverse.id/ceki');
+ location.href='https://wa.me/?text='+t};
+(async()=>{try{const {data:{session}}=await db.auth.getSession();
+ if(session){const p=await db.from('profiles').select('username').eq('id',session.user.id).single();
+  NAMES[0]=p.data?.username||'Kamu';$('n0').innerText=NAMES[0];}}catch(e){}})();
+startRound();
+</script>
+</body></html>
