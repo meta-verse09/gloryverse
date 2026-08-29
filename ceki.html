@@ -1,7 +1,11 @@
-<!DOCTYPE html><html lang="id"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GloryVerse — Koa Ceki Lapau Solok</title>
-<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="layout.css">
 <style>
 #table{position:relative;height:430px;border-radius:14px;border:1px solid var(--gold);overflow:hidden;
  background:url('lapau.jpeg') center/cover}
@@ -14,11 +18,11 @@
 #pile{position:absolute;left:50%;top:47%;width:52px;height:34px;background:#f2b705;border-radius:4px;transform:translate(-50%,-50%);
  color:#111;font-weight:900;font-size:12px;display:flex;align-items:center;justify-content:center}
 #lastD{position:absolute;left:50%;top:60%;transform:translateX(-50%)}
-#lastD svg{width:34px;height:80px}
+#lastD svg,#lastD img{width:34px;height:80px}
 #hand{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:8px 0}
 .cd{cursor:pointer}
 .cd.sel{transform:translateY(-10px);filter:drop-shadow(0 0 6px #fde047)}
-.cd svg{width:52px;height:120px;display:block}
+.cd svg,.cd img{width:52px;height:120px;display:block}
 #ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:50}
 #ov .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:92%;text-align:center}
 .dim{color:var(--mut);font-size:12px}
@@ -29,7 +33,7 @@ input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-ra
 <body data-img='reg_solok.jpeg' data-title="Lapau Solok">
 <header><b class="logo">⚔️ GloryVerse</b>
  <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
- <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
+ <span class="chip"> <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
  <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
 <nav class="main"><a href="home.html">HOME</a><a class="on" href="game.html">ACTIVITIES</a>
  <a href="market.html">MARKETS</a><a href="war.html">WAR</a>
@@ -39,22 +43,28 @@ input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-ra
  <main>
   <div class="pano" id="pano" style="height:120px"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
+  
+  <!-- LOBBY -->
   <div class="card" id="lobby">
    <h3>🎴 Meja Koa Ceki — Lapau Solok</h3>
    <div class="btns">
     <button class="btn" id="bSolo">▶ MAIN SOLO (vs 3 bot)</button>
     <button class="btn" id="bBuat">🌐 BUAT MEJA MABAR</button>
    </div>
-   <div id="roomBox" style="display:none">
+   <div id="roomBox" style="display:none;margin-top:12px">
     <div class="dim">Kode meja: <b id="roomCode" style="color:var(--gold);font-size:18px"></b></div>
     <div class="dim" id="roomLink"></div>
     <div id="seatList" style="margin:6px 0"></div>
-    <button class="btn" id="bStart" style="width:100%">MULAI (kursi kosong = bot)</button>
+    <button class="btn" id="bStart" style="width:100%;margin-top:8px">MULAI (kursi kosong = bot)</button>
    </div>
-   <div class="btns"><input id="joinCode" placeholder="kode meja...">
-    <button class="btn" id="bJoin">GABUNG</button></div>
-   <div class="dim">Kursi kosong diisi bot otomatis. Host wajib tetap membuka halaman.</div>
+   <div class="btns" style="margin-top:12px">
+    <input id="joinCode" placeholder="kode meja...">
+    <button class="btn" id="bJoin">GABUNG</button>
+   </div>
+   <div class="dim" style="margin-top:8px">Kursi kosong diisi bot otomatis. Host wajib tetap membuka halaman.</div>
   </div>
+  
+  <!-- GAME AREA -->
   <div id="gameArea" style="display:none">
   <div class="card"><h3>🎴 Koa Ceki — <span id="roomTitle">Lapau Solok</span></h3>
    <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Pertama PUTUS (3×) juara.</div></div>
@@ -81,236 +91,26 @@ input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-ra
 </div>
 <div id="ov"><div class="in"><h2 id="ovT">-</h2><p id="ovM" class="dim"></p>
  <div class="btns"><button class="btn" id="ovWA">📲 Share WA</button><button class="btn" id="ovL">Lanjut</button></div></div></div>
-<script>window.onerror=function(m,s,l){var e=document.getElementById('info');if(e)e.innerText='⚠️ ERR: '+m+' (baris '+l+')'}</script>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script><script src="layout.js"></script>
-<script src="lapau.js"></script><script>
-// Manual binding fallback
-document.addEventListener('DOMContentLoaded', function(){
-  var bBuat = document.getElementById('bBuat');
-  if(bBuat && !bBuat.onclick){
-    console.log('⚠️ bBuat onclick belum terpasang - lapau.js mungkin belum load');
-    // Fallback manual
-    bBuat.onclick = function(){
-      var code = Math.random().toString(36).slice(2,6).toUpperCase();
-      var roomBox = document.getElementById('roomBox');
-      var roomCode = document.getElementById('roomCode');
-      var roomLink = document.getElementById('roomLink');
-      
-      if(roomBox && roomCode){
-        roomBox.style.display = 'block';
-        roomCode.innerText = code;
-        if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
-        console.log('✅ Room dibuat:', code);
-      }
-    };
-  }
-});
+<script src="config.js"></script>
+<script src="layout.js"></script>
 <script src="lapau.js"></script>
 <script>
-// Fallback: pastikan tombol MABAR berfungsi
-setTimeout(function(){
-  var bBuat = document.getElementById('bBuat');
-  var bSolo = document.getElementById('bSolo');
-  var bJoin = document.getElementById('bJoin');
-  var bStart = document.getElementById('bStart');
-  
-  console.log(' Fallback check:', {
-    bBuat: !!bBuat,
-    bSolo: !!bSolo,
-    bJoin: !!bJoin,
-    bStart: !!bStart,
-    bBuat_onclick: !!bBuat.onclick
-  });
-  
-  // Force binding jika belum ada
-  if(bBuat && !bBuat.onclick){
-    console.log('️ bBuat onclick belum ada - force binding');
-    bBuat.onclick = function(){
-      try {
-        var code = Math.random().toString(36).slice(2,6).toUpperCase();
-        localStorage.setItem('gv_ceki_host', code);
-        
-        var roomBox = document.getElementById('roomBox');
-        var roomCode = document.getElementById('roomCode');
-        var roomLink = document.getElementById('roomLink');
-        var seatList = document.getElementById('seatList');
-        
-        if(roomBox) roomBox.style.display = 'block';
-        if(roomCode) roomCode.innerText = code;
-        if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
-        if(seatList) seatList.innerHTML = '<span class="chip">🙂 Kamu</span> <span class="chip">🤖 kosong</span> <span class="chip">🤖 kosong</span> <span class="chip">🤖 kosong</span>';
-        
-        console.log('✅ Room dibuat:', code);
-      } catch(e) {
-        console.error('❌ Error buat room:', e);
+// ===== FALLBACK BINDING =====
+window.addEventListener('load', function(){
+  setTimeout(function(){
+    console.log('🔧 Fallback binding...');
+    var btns = ['bSolo','bBuat','bJoin','bStart','bCabut','bMakan','bTurun','bKoa','bSusun'];
+    btns.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && !el.onclick){
+        console.log('⚠️ ' + id + ' belum ada onclick');
       }
-    };
-  }
-  
-  if(bSolo && !bSolo.onclick){
-    console.log('⚠️ bSolo onclick belum ada - force binding');
-    bSolo.onclick = function(){
-      console.log('Solo mode clicked');
-      // Panggil startRound jika ada
-      if(typeof startRound === 'function') startRound();
-    };
-  }
-  
-  console.log('✅ Fallback binding selesai');
-}, 1000);
-</script>
-<script>
-// ===== FALLBACK ROOM SYSTEM =====
-(function(){
-  console.log('🔧 Initializing fallback room system...');
-  
-  // Wait for DOM
-  if(document.readyState !== 'complete'){
-    window.addEventListener('load', initFallback, false);
-  } else {
-    initFallback();
-  }
-  
-  function initFallback(){
-    setTimeout(function(){
-      var bBuat = document.getElementById('bBuat');
-      var bSolo = document.getElementById('bSolo');
-      var bJoin = document.getElementById('bJoin');
-      var bStart = document.getElementById('bStart');
-      var roomBox = document.getElementById('roomBox');
-      
-      console.log('🎯 Elements:', {
-        bBuat: !!bBuat,
-        bSolo: !!bSolo,
-        bJoin: !!bJoin,
-        bStart: !!bStart,
-        roomBox: !!roomBox
-      });
-      
-      // Force bind BUAT MEJA
-      if(bBuat){
-        bBuat.onclick = function(e){
-          e.preventDefault();
-          console.log('🎲 BUAT MEJA clicked!');
-          createRoom();
-        };
-        console.log('✅ bBuat onclick bound');
-      }
-      
-      // Force bind MAIN SOLO
-      if(bSolo){
-        bSolo.onclick = function(e){
-          e.preventDefault();
-          console.log('▶️ MAIN SOLO clicked!');
-          if(typeof startRound === 'function'){
-            startRound();
-          } else {
-            alert('startRound function not found');
-          }
-        };
-        console.log('✅ bSolo onclick bound');
-      }
-      
-      // Force bind GABUNG
-      if(bJoin){
-        bJoin.onclick = function(e){
-          e.preventDefault();
-          console.log('🤝 GABUNG clicked!');
-          var code = document.getElementById('joinCode');
-          if(code && code.value.trim()){
-            if(typeof joinRoom === 'function'){
-              joinRoom(code.value.trim().toUpperCase());
-            } else {
-              alert('joinRoom function not found');
-            }
-          } else {
-            alert('Masukkan kode meja dulu!');
-          }
-        };
-        console.log('✅ bJoin onclick bound');
-      }
-      
-      // Force bind MULAI
-      if(bStart){
-        bStart.onclick = function(e){
-          e.preventDefault();
-          console.log('🚀 MULAI clicked!');
-          if(typeof startRound === 'function'){
-            startRound();
-          } else {
-            alert('startRound function not found');
-          }
-        };
-        console.log('✅ bStart onclick bound');
-      }
-      
-      console.log('✅ Fallback system ready!');
-    }, 500);
-  }
-  
-  function createRoom(){
-    try {
-      var code = Math.random().toString(36).slice(2,6).toUpperCase();
-      console.log(' Creating room:', code);
-      
-      // Save to localStorage
-      try {
-        localStorage.setItem('gv_ceki_host', code);
-        localStorage.setItem('gv_ceki_room_created', Date.now().toString());
-      } catch(e) {
-        console.warn('localStorage error:', e);
-      }
-      
-      // Show room box
-      var roomBox = document.getElementById('roomBox');
-      var roomCode = document.getElementById('roomCode');
-      var roomLink = document.getElementById('roomLink');
-      var seatList = document.getElementById('seatList');
-      
-      if(roomBox) roomBox.style.display = 'block';
-      if(roomCode) roomCode.innerText = code;
-      if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
-      
-      // Show seats
-      if(seatList){
-        var username = 'Kamu';
-        try {
-          if(window.db && db.auth){
-            db.auth.getSession().then(function(r){
-              if(r.data && r.data.session){
-                return db.from('profiles').select('username').eq('id', r.data.session.user.id).single();
-              }
-            }).then(function(p){
-              if(p && p.data && p.data.username){
-                username = p.data.username;
-              }
-            }).catch(function(){});
-          }
-        } catch(e){}
-        
-        seatList.innerHTML = '<div style="margin-bottom:8px"><span class="chip">🙂 ' + username + '</span> <span class="chip"> kosong</span> <span class="chip">🤖 kosong</span> <span class="chip">🤖 kosong</span></div><div class="dim" style="margin-top:6px">🧑‍🏫 Kamu HOST — biarkan halaman TERBUKA.</div>';
-      }
-      
-      console.log('✅ Room created successfully:', code);
-      
-      // Initialize room if functions exist
-      if(typeof initRoom === 'function'){
-        initRoom(code);
-      }
-      if(typeof sendLobby === 'function'){
-        sendLobby();
-      }
-      
-    } catch(e) {
-      console.error('❌ Error creating room:', e);
-      alert('Error membuat room: ' + e.message);
-    }
-  }
-  
-  // Expose to window for debugging
-  window.testCreateRoom = createRoom;
-})();
+    });
+    console.log('✅ Fallback ready');
+  }, 1000);
+});
 </script>
 </body>
-</body></html>
+</html>
