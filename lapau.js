@@ -670,4 +670,4 @@
     }
     msg += 'Skor: ' + wins.join(' - ');
     if(w !== MY && w >= 0){
-      msg += ' | Awak coki duluan, urang yang sa
+      msg += ' | Awak coki duluan, urang yang sampai';
