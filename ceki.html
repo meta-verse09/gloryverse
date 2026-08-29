@@ -17,7 +17,7 @@
 #lastD svg{width:34px;height:80px}
 #hand{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:8px 0}
 .cd{cursor:pointer}
-.cd.sel{transform:translateY(-10px)}
+.cd.sel{transform:translateY(-10px);filter:drop-shadow(0 0 6px #fde047)}
 .cd svg{width:52px;height:120px;display:block}
 #ov{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;z-index:50}
 #ov .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:92%;text-align:center}
@@ -39,7 +39,7 @@
   <div class="pano" id="pano" style="height:120px"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
   <div class="card"><h3>🎴 Koa Ceki — Lapau Solok</h3>
-   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara. Nomor motif 01–30 tercetak di kartu.</div></div>
+   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara.</div></div>
   <div id="table">
    <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
    <div class="seat" style="left:8px;top:40%"><div class="av">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
@@ -66,6 +66,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script>
 <script>
+if(typeof window.phase!=='function'&&typeof window.phaseOf==='function')window.phase=window.phaseOf;
 var FAM=['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'];
 var VAR={HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],JARUM:['Wajik','Besar','Kecil'],
 SUDUNG:['Putih','Hitam','Pinggang'],BENGKOK:['Hitam','Besar','Kecil'],TALI:['Merah','Bulat','Kecil'],
@@ -115,15 +116,16 @@ function render(){if(turn==0&&!over&&fase=='draw'&&hands[0].length>=12)fase='dis
  $('bKoa').style.display=(my&&fase=='discard'&&win12(cnt(hands[0])))?'inline-block':'none';
  $('bSusun').style.display=my?'inline-block':'none';
  if(my&&fase=='draw'&&last&&cnt(hands[0])[last.card]>=2)showMakan(true);
+ if(my){stat(fase=='draw'?'Giliranmu: CABUT (atau MAKAN jika ada)':'Tangan 12: KETUK kartu yang mau dibuang → TURUN');}
  $('info').innerText='Tangan: '+hands[0].length+' • Tumpukan: '+pile.length}
 function startRound(){rid++;if(mkT)clearTimeout(mkT);
  var all=[];for(var m=0;m<30;m++)for(var c=0;c<6;c++)all.push(m);
  deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
  for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
- turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false);stat('Giliranmu: CABUT')}
-$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());fase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
-$('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render();stat('Tangan tersusun — motif sama berkumpul')};
-$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
+ turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false)}
+$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());fase='discard';sel=-1;render()};
+$('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render()};
+$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render()};
 $('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};fase='idle';showMakan(false);render();afterMyDiscard()};
 $('bKoa').onclick=function(){endRound(0,'KOA!')};
 function afterMyDiscard(){var r=rid;
@@ -131,7 +133,7 @@ function afterMyDiscard(){var r=rid;
   hands[b].push(last.card);disc[last.from].pop();last=null;stat(NAMES[b]+' MAKAN kartumu!');botFinish(b)},700);return}}
  setTimeout(function(){if(r==rid)next()},600)}
 function next(){turn=(turn+1)%4;
- if(turn==0){fase='draw';render();stat('Giliranmu: CABUT')}else botTurn(turn)}
+ if(turn==0){fase='draw';render()}else botTurn(turn)}
 function botTurn(i){var r=rid;setTimeout(function(){if(r!=rid)return;
  if(last&&cnt(hands[i])[last.card]>=2&&Math.random()<0.6){hands[i].push(last.card);disc[last.from].pop();last=null}
  else{if(!pile.length){endRound(-1,'Seri');return}hands[i].push(pile.pop())}
