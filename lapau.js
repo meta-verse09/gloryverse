@@ -1,14 +1,12 @@
-/* lapau.js v6 — MINIMALIS (SOLO + UI MABAR) */
+/* lapau.js v7 — SOLO + MABAR REALTIME (REST polling) */
 (function(){
   'use strict';
-  console.log('lapau.js v6 loading...');
+  console.log('lapau.js v7 loading...');
   
-  // Shim phase
   if(typeof window.phase !== 'function' && typeof window.phaseOf === 'function'){
     window.phase = window.phaseOf;
   }
   
-  // Katalog motif
   var FAM = ['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'];
   var VAR = {
     HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],
@@ -29,7 +27,6 @@
     });
   });
   
-  // Fungsi SVG kartu
   window.svg = function(m){
     try {
       var M = MID[m];
@@ -148,7 +145,6 @@
     }
   };
   
-  // State game
   var hands = [[],[],[],[]];
   var disc = [[],[],[],[]];
   var pile = [];
@@ -171,8 +167,14 @@
   var IS_HOST = true;
   var MY = 0;
   var MYNAME = 'Kamu';
+  var MYSID = Math.random().toString(36).slice(2,8);
+  var ROOM = null;
+  var started = false;
+  var seated = false;
+  var knockT = null;
+  var pollT = null;
+  var lastMsgId = 0;
   
-  // Utils
   function $(id){ return document.getElementById(id); }
   
   function cnt(h){
@@ -244,7 +246,159 @@
     if(el) el.style.display = v ? 'inline-block' : 'none';
   }
   
-  // Render
+  // ===== NETWORK: REST POLLING =====
+  function send(o){
+    if(!ROOM || !window.db) return;
+    o.sid = MYSID;
+    try{
+      db.from('ceki_msg').insert({room:ROOM, kind:(o.ev||o.act)||'m', payload:o});
+    } catch(e){ console.warn('send err:', e); }
+  }
+  
+  function initRoom(code){
+    ROOM = code;
+    if(pollT) clearInterval(pollT);
+    if(!window.db) return;
+    db.from('ceki_msg').select('id').eq('room',code).order('id',{ascending:false}).limit(1).then(function(r){
+      lastMsgId = (r.data && r.data[0]) ? r.data[0].id : 0;
+    });
+    pollT = setInterval(function(){
+      if(!ROOM) return;
+      db.from('ceki_msg').select('*').eq('room',ROOM).gt('id',lastMsgId).order('id',{ascending:true}).limit(20).then(function(r){
+        (r.data||[]).forEach(function(row){
+          lastMsgId = row.id;
+          handle(row.payload);
+        });
+      });
+    }, 1500);
+  }
+  
+  function handle(p){
+    if(!p || p.sid === MYSID) return;
+    if(IS_HOST){
+      if(p.act === 'join'){
+        var got = -1;
+        for(var i=1;i<4;i++){
+          if(SEATS[i].sid === p.sid){ got = i; break; }
+        }
+        if(got < 0){
+          for(var i=1;i<4;i++){
+            if(SEATS[i].bot){
+              SEATS[i] = {n:p.name, bot:false, taken:true, sid:p.sid};
+              got = i;
+              break;
+            }
+          }
+        }
+        if(got >= 0) sendLobby();
+      }
+      if(p.act === 'cabut' && started && turn === p.seat) doCabut(p.seat);
+      if(p.act === 'makan' && started && turn === p.seat) doMakan(p.seat);
+      if(p.act === 'turun' && started && turn === p.seat) doTurun(p.seat, p.card);
+      if(p.act === 'koa' && started && turn === p.seat && win12(cnt(hands[p.seat]))) doKoa(p.seat);
+    } else {
+      if(p.ev === 'lobby'){
+        p.seats.forEach(function(s,i){
+          if(s && s.sid === MYSID){ MY = i; seated = true; if(knockT){ clearInterval(knockT); knockT = null; } }
+          if(s) SEATS[i] = s;
+        });
+        drawLobby();
+      }
+      if(p.ev === 'state'){
+        hands = p.hands;
+        disc = p.disc;
+        pile = Array(p.pile);
+        last = p.last;
+        turn = p.turn;
+        fase = p.fase;
+        wins = p.wins;
+        over = p.over;
+        p.names.forEach(function(n,i){ SEATS[i].n = n; });
+        started = true;
+        var lobby = $('lobby');
+        var game = $('gameArea');
+        if(lobby) lobby.style.display = 'none';
+        if(game) game.style.display = 'block';
+        if(over){
+          var ovT = $('ovT'), ovM = $('ovM'), ov = $('ov');
+          if(ovT) ovT.innerText = p.ovT;
+          if(ovM) ovM.innerText = p.ovM;
+          if(ov) ov.style.display = 'flex';
+        } else {
+          var ov = $('ov');
+          if(ov) ov.style.display = 'none';
+        }
+        render();
+      }
+    }
+  }
+  
+  function sendLobby(){
+    if(IS_HOST) SEATS[0].sid = MYSID;
+    send({ev:'lobby', seats:SEATS});
+  }
+  
+  function sendState(){
+    send({
+      ev:'state',
+      hands:hands, disc:disc, pile:pile.length, last:last,
+      turn:turn, fase:fase, wins:wins, over:over,
+      ovT: $('ovT') ? $('ovT').innerText : '',
+      ovM: $('ovM') ? $('ovM').innerText : '',
+      names: SEATS.map(function(s){ return s.n; })
+    });
+  }
+  
+  function drawLobby(){
+    var el = $('seatList');
+    if(!el) return;
+    var h = '';
+    SEATS.forEach(function(s){
+      h += '<span class="chip">' + (s.bot ? 'bot' : 'user') + ' ' + (s.n || 'kosong') + '</span> ';
+    });
+    h += '<div class="dim" style="margin-top:6px">';
+    h += IS_HOST ? 'HOST - biarkan halaman TERBUKA.' : 'Tamu - menunggu host memulai...';
+    h += '</div>';
+    el.innerHTML = h;
+    var bStart = $('bStart');
+    if(bStart) bStart.style.display = IS_HOST ? 'block' : 'none';
+  }
+  
+  function showRoom(code){
+    var roomBox = $('roomBox');
+    var roomCode = $('roomCode');
+    var roomLink = $('roomLink');
+    if(roomBox) roomBox.style.display = 'block';
+    if(roomCode) roomCode.innerText = code;
+    if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
+  }
+  
+  function joinRoom(c){
+    IS_HOST = false;
+    seated = false;
+    SEATS = [
+      {n:MYNAME, bot:false, sid:MYSID},
+      {n:'', bot:true},
+      {n:'', bot:true},
+      {n:'', bot:true}
+    ];
+    initRoom(c);
+    send({act:'join', name:MYNAME, sid:MYSID});
+    if(knockT) clearInterval(knockT);
+    knockT = setInterval(function(){
+      if(!seated) send({act:'join', name:MYNAME, sid:MYSID});
+    }, 3000);
+    showRoom(c);
+    drawLobby();
+    setTimeout(function(){
+      if(!seated && !started){
+        var rl = $('roomLink');
+        if(rl) rl.innerText = 'Host belum terdeteksi - pastikan host membuka halamannya (ketukan otomatis berlanjut).';
+      }
+    }, 8000);
+  }
+  
+  // ===== RENDER =====
   function render(){
     if(turn === MY && !over && fase === 'draw' && hands[MY].length >= 12){
       fase = 'discard';
@@ -265,7 +419,7 @@
       
       if(nEl) nEl.innerText = SEATS[p].n;
       if(sEl) sEl.innerText = '★'.repeat(wins[p]);
-      if(aEl) aEl.innerText = SEATS[p].bot ? '' : '';
+      if(aEl) aEl.innerText = SEATS[p].bot ? 'bot' : 'user';
       if(cEl) cEl.style.display = (cokiOf(hands[p]) >= 0) ? 'block' : 'none';
       if(p !== MY && dEl){
         dEl.innerHTML = disc[p].slice(-4).map(function(){
@@ -292,7 +446,7 @@
       })(els[k]);
     }
     
-    var my = (turn === MY) && !over;
+    var my = (turn === MY) && !over && started;
     var bCabut = $('bCabut');
     var bTurun = $('bTurun');
     var bKoa = $('bKoa');
@@ -313,9 +467,11 @@
     
     var info = $('info');
     if(info) info.innerText = 'Tangan: ' + hands[MY].length + ' | Tumpukan: ' + pile.length;
+    
+    if(IS_HOST && started) sendState();
   }
   
-  // Game logic
+  // ===== GAME LOGIC =====
   function startRound(){
     rid++;
     if(mkT) clearTimeout(mkT);
@@ -352,51 +508,52 @@
     if(lobby) lobby.style.display = 'none';
     if(game) game.style.display = 'block';
     
+    started = true;
     render();
     showMakan(false);
   }
   
-  function doCabut(){
+  function doCabut(s){
     showMakan(false);
     if(mkT) clearTimeout(mkT);
-    hands[MY].push(pile.pop());
+    hands[s].push(pile.pop());
     fase = 'discard';
-    sel = -1;
+    if(s === MY) sel = -1;
     render();
   }
   
-  function doMakan(){
+  function doMakan(s){
     if(!last) return;
     showMakan(false);
     if(mkT) clearTimeout(mkT);
-    hands[MY].push(last.card);
+    hands[s].push(last.card);
     disc[last.from].pop();
     last = null;
-    turn = MY;
+    turn = s;
     fase = 'discard';
     render();
   }
   
-  function doTurun(){
-    if(sel < 0) return;
-    var m = hands[MY].splice(sel, 1)[0];
-    sel = -1;
-    disc[MY].push(m);
-    last = {card: m, from: MY};
+  function doTurun(s, card){
+    var idx = hands[s].indexOf(card);
+    if(idx < 0) return;
+    var m = hands[s].splice(idx, 1)[0];
+    disc[s].push(m);
+    last = {card: m, from: s};
     fase = 'idle';
     showMakan(false);
     render();
-    setTimeout(afterMyDiscard, 600);
+    afterMyDiscard(s);
   }
   
-  function doKoa(){
-    endRound(MY, 'KOA!');
+  function doKoa(s){
+    endRound(s, 'KOA!');
   }
   
-  function afterMyDiscard(){
+  function afterMyDiscard(s){
     var r = rid;
     for(var b=0;b<4;b++){
-      if(b === MY) continue;
+      if(b === s) continue;
       if(SEATS[b].bot && cnt(hands[b])[last.card] >= 2 && Math.random() < 0.5){
         setTimeout(function(){
           if(r !== rid) return;
@@ -420,6 +577,7 @@
   }
   
   function route(){
+    if(!started) return;
     if(SEATS[turn].bot){
       botTurn(turn);
     } else if(turn === MY){
@@ -429,17 +587,13 @@
       fase = 'draw';
       render();
       stat('Giliran ' + SEATS[turn].n + '...');
-      setTimeout(function(){
-        if(SEATS[turn].bot) botTurn(turn);
-        else next();
-      }, 1000);
     }
   }
   
   function botTurn(i){
     var r = rid;
     setTimeout(function(){
-      if(r !== rid) return;
+      if(r !== rid || !started) return;
       if(last && cnt(hands[i])[last.card] >= 2 && Math.random() < 0.6){
         hands[i].push(last.card);
         disc[last.from].pop();
@@ -475,7 +629,7 @@
     render();
     setTimeout(function(){
       if(r !== rid) return;
-      if(cnt(hands[MY])[best] >= 2 && turn === MY){
+      if(!SEATS[MY].bot && cnt(hands[MY])[best] >= 2 && turn === MY){
         showMakan(true);
         stat(SEATS[i].n + ' buang ' + MID[best].f + ' - MAKAN?');
         mkT = setTimeout(function(){
@@ -502,7 +656,7 @@
     
     if(ovT){
       if(w === MY){
-        ovT.innerText = 'KAMU SAMPAI!';
+        ovT.innerText = why + ' KAMU SAMPAI!';
       } else if(w >= 0){
         ovT.innerText = SEATS[w].n + ' SAMPAI - Kamu Kalah';
       } else {
@@ -516,164 +670,4 @@
     }
     msg += 'Skor: ' + wins.join(' - ');
     if(w !== MY && w >= 0){
-      msg += ' | Awak coki duluan, urang yang sampai';
-    }
-    if(ovM) ovM.innerText = msg;
-    if(ov) ov.style.display = 'flex';
-    render();
-  }
-  
-  // Binding tombol
-  function bindButtons(){
-    console.log('Binding tombol...');
-    
-    try {
-      var bSolo = $('bSolo');
-      if(bSolo){
-        bSolo.onclick = function(){
-          console.log('SOLO clicked');
-          IS_HOST = true;
-          SEATS = [
-            {n: MYNAME, bot: false},
-            {n: 'Uni Ros', bot: true},
-            {n: 'Angku Mansur', bot: true},
-            {n: 'Buya Datuk', bot: true}
-          ];
-          startRound();
-        };
-        console.log('bSolo bound');
-      }
-    } catch(e){ console.error('bSolo error:', e); }
-    
-    try {
-      var bBuat = $('bBuat');
-      if(bBuat){
-        bBuat.onclick = function(){
-          console.log('BUAT MEJA clicked');
-          var code = Math.random().toString(36).slice(2,6).toUpperCase();
-          try { localStorage.setItem('gv_ceki_host', code); } catch(e){}
-          var roomBox = $('roomBox');
-          var roomCode = $('roomCode');
-          var roomLink = $('roomLink');
-          var seatList = $('seatList');
-          if(roomBox) roomBox.style.display = 'block';
-          if(roomCode) roomCode.innerText = code;
-          if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
-          if(seatList){
-            seatList.innerHTML = '<span class="chip">' + MYNAME + '</span> <span class="chip">kosong</span> <span class="chip">kosong</span> <span class="chip">kosong</span>';
-          }
-          console.log('Room created:', code);
-        };
-        console.log('bBuat bound');
-      }
-    } catch(e){ console.error('bBuat error:', e); }
-    
-    try {
-      var bStart = $('bStart');
-      if(bStart){
-        bStart.onclick = function(){
-          console.log('MULAI clicked');
-          startRound();
-        };
-        console.log('bStart bound');
-      }
-    } catch(e){ console.error('bStart error:', e); }
-    
-    try {
-      var bJoin = $('bJoin');
-      if(bJoin){
-        bJoin.onclick = function(){
-          var codeEl = $('joinCode');
-          if(!codeEl) return;
-          var c = codeEl.value.trim().toUpperCase();
-          if(!c){ alert('Masukkan kode meja!'); return; }
-          console.log('GABUNG:', c);
-          alert('Fitur mabar realtime akan segera hadir!');
-        };
-        console.log('bJoin bound');
-      }
-    } catch(e){ console.error('bJoin error:', e); }
-    
-    try {
-      var bCabut = $('bCabut');
-      if(bCabut) bCabut.onclick = doCabut;
-      var bMakan = $('bMakan');
-      if(bMakan) bMakan.onclick = doMakan;
-      var bTurun = $('bTurun');
-      if(bTurun) bTurun.onclick = doTurun;
-      var bKoa = $('bKoa');
-      if(bKoa) bKoa.onclick = doKoa;
-      var bSusun = $('bSusun');
-      if(bSusun) bSusun.onclick = function(){
-        hands[MY].sort(function(a,b){ return a-b; });
-        sel = -1;
-        render();
-      };
-      console.log('Game buttons bound');
-    } catch(e){ console.error('Game buttons error:', e); }
-    
-    try {
-      var ovL = $('ovL');
-      if(ovL){
-        ovL.onclick = function(){
-          if(wins.some(function(w){ return w >= 3; })){
-            wins = [0,0,0,0];
-          }
-          var ov = $('ov');
-          if(ov) ov.style.display = 'none';
-          var lobby = $('lobby');
-          var game = $('gameArea');
-          if(lobby) lobby.style.display = 'block';
-          if(game) game.style.display = 'none';
-        };
-      }
-      var ovWA = $('ovWA');
-      if(ovWA){
-        ovWA.onclick = function(){
-          var ovM = $('ovM');
-          var text = 'KOA CEKI - LAPAU SOLOK\n';
-          if(ovM) text += ovM.innerText;
-          text += '\nMainkan: gloryverse.id/ceki';
-          var t = encodeURIComponent(text);
-          location.href = 'https://wa.me/?text=' + t;
-        };
-      }
-      console.log('Overlay buttons bound');
-    } catch(e){ console.error('Overlay buttons error:', e); }
-    
-    console.log('Semua tombol terikat!');
-  }
-  
-  // Init
-  function init(){
-    console.log('lapau.js v6 init...');
-    
-    // Ambil nama user
-    try {
-      if(window.db && db.auth){
-        db.auth.getSession().then(function(r){
-          var s = r.data && r.data.session;
-          if(s){
-            return db.from('profiles').select('username').eq('id', s.user.id).single().then(function(p){
-              if(p.data){
-                MYNAME = p.data.username;
-                SEATS[0].n = MYNAME;
-                var n0 = $('n0');
-                if(n0) n0.innerText = MYNAME;
-              }
-            });
-          }
-        }).catch(function(){});
-      }
-    } catch(e){ console.warn('auth error:', e); }
-    
-    bindButtons();
-    console.log('lapau.js v6 ready!');
-  }
-  
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    setTimeout(init, 100);
-  }
-})();
+      msg += ' | Awak coki duluan, urang yang sa
