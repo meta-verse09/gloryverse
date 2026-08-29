@@ -103,7 +103,7 @@ $('bSusun').onclick=function(){hands[MY].sort(function(a,b){return a-b});sel=-1;
 $('ovL').onclick=function(){if(IS_HOST){for(var i=0;i<4;i++)if(wins[i]>=3)wins=[0,0,0,0];startRound()}else $('ov').style.display='none'};
 $('ovWA').onclick=function(){var t=encodeURIComponent('KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\nMainkan: gloryverse.id/ceki');location.href='https://wa.me/?text='+t};
 function openRoom(code,host){if(CH){try{db.removeChannel(CH)}catch(e){}}ROOM=code;
- CH=db.channel('ceki_'+code).on('broadcast',function(e){var p=e.payload;
+ CH=db.channel('ceki_'+code).on('broadcast',{event:'m'},function(e){var p=e.payload;
   if(IS_HOST){
    if(p.act=='join'){var got=-1;for(var i=1;i<4;i++){if(SEATS[i].sid==p.sid){got=i;break}}
     if(got<0){for(var i=1;i<4;i++){if(SEATS[i].bot){SEATS[i]={n:p.name,bot:false,taken:true,sid:p.sid};got=i;break}}}
