@@ -84,5 +84,28 @@ input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-ra
 <script>window.onerror=function(m,s,l){var e=document.getElementById('info');if(e)e.innerText='⚠️ ERR: '+m+' (baris '+l+')'}</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script><script src="layout.js"></script>
-<script src="lapau.js"></script>
+<script src="lapau.js"></script><script>
+// Manual binding fallback
+document.addEventListener('DOMContentLoaded', function(){
+  var bBuat = document.getElementById('bBuat');
+  if(bBuat && !bBuat.onclick){
+    console.log('⚠️ bBuat onclick belum terpasang - lapau.js mungkin belum load');
+    // Fallback manual
+    bBuat.onclick = function(){
+      var code = Math.random().toString(36).slice(2,6).toUpperCase();
+      var roomBox = document.getElementById('roomBox');
+      var roomCode = document.getElementById('roomCode');
+      var roomLink = document.getElementById('roomLink');
+      
+      if(roomBox && roomCode){
+        roomBox.style.display = 'block';
+        roomCode.innerText = code;
+        if(roomLink) roomLink.innerText = 'gloryverse.id/ceki?room=' + code;
+        console.log('✅ Room dibuat:', code);
+      }
+    };
+  }
+});
+</script>
+</body>
 </body></html>
