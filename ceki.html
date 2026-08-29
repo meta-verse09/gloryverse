@@ -99,7 +99,7 @@ function cokiOf(h){var c=cnt(h);for(var m=0;m<30;m++){c[m]++;var w=win12(c);c[m]
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function stat(t){$('stat').innerText=t}
 function showMakan(v){$('bMakan').style.display=v?'inline-block':'none'}
-function render(){$('pile').innerText=pile.length;
+function render(){if(turn==0&&!over&&fase=='draw'&&hands[0].length>=12)fase='discard';$('pile').innerText=pile.length;
  $('lastD').innerHTML=(last!=null)?svg(last.card):'';
  for(var p=0;p<4;p++){$('s'+p).innerText='★'.repeat(wins[p]);
   $('c'+p).style.display=(cokiOf(hands[p])>=0)?'block':'none';
@@ -119,9 +119,9 @@ function startRound(){rid++;if(mkT)clearTimeout(mkT);
  deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
  for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
  turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false);stat('Giliranmu: CABUT')}
-$('bCabut').onclick=function(){showMakan(false);hands[0].push(pile.pop());fase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
+$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());
 $('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render();stat('Tangan tersusun — motif sama berkumpul')};
-$('bMakan').onclick=function(){if(!last)return;showMakan(false);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
+$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);
 $('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};fase='idle';showMakan(false);render();afterMyDiscard()};
 $('bKoa').onclick=function(){endRound(0,'KOA!')};
 function afterMyDiscard(){var r=rid;
