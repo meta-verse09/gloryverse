@@ -33,5 +33,8 @@ Kode kamar 4 digit, spot sama, timer 60 dtk, 5 ronde, skor live via Supabase Rea
 - Inspirasi: Clash Royale versi 2D web
 - Engine: Phaser.js + Supabase Realtime
 - Mekanik: deploy kartu, unit auto-walk, hancurkan tower, 3 menit
+
+- | 29 Agu 2026 | Share WA pertama lahir — dan itu KARTU PATAH HATI.
+              Mesin cerita bekerja. Angku Mansur: pencuri kemenangan pertama. |
 - Kartu gating: unlock via pangkat militer GDD
 - Timeline: mulai bulan 3-4 setelah fondasi ekonomi stabil
