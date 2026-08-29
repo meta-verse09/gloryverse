@@ -84,6 +84,7 @@ function sendState(){send({ev:'state',hands:hands,disc:disc,pile:pile.length,las
 function startRound(){rid++;if(mkT)clearTimeout(mkT);
  var all=[];for(var m=0;m<30;m++)for(var c=0;c<6;c++)all.push(m);
  var deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
+ for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
  turn=0;fase='draw';$('ov').style.display='none';started=true;
  $('lobby').style.display='none';$('gameArea').style.display='block';render();showMakan(false)}
 function doCabut(s){showMakan(false);if(mkT)clearTimeout(mkT);hands[s].push(pile.pop());fase='discard';if(s==MY)sel=-1;render()}
