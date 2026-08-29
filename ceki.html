@@ -39,7 +39,7 @@
   <div class="pano" id="pano" style="height:120px"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
   <div class="card"><h3>🎴 Koa Ceki — Lapau Solok</h3>
-   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara.</div></div>
+   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara. Nomor motif 01–30 tercetak di kartu.</div></div>
   <div id="table">
    <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
    <div class="seat" style="left:8px;top:40%"><div class="av">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
@@ -73,18 +73,19 @@ PECAH:['Manik','Delapan','Halus'],BATUNG:['Manik','Enam','Kecil'],SISIR:['Besar'
 var RED={'HIU/Penci':1,'HIU/Babak':2,'TALI/Merah':1};
 var MID=[];FAM.forEach(function(f){VAR[f].forEach(function(n){MID.push({f:f,n:n,red:RED[f+'/'+n]||0})})});
 function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#151515';
- var W='stroke="#f5f0e6" stroke-width="3" fill="none"',g='';
- if(M.f=='HIU')g='<rect x="18" y="'+(26+v*3)+'" width="24" height="24" '+W+'/><rect x="18" y="86" width="24" height="24" '+W+'/><path d="M14 62 h32 M14 70 h32" '+W+'/>';
- if(M.f=='JARUM')g='<path d="M30 '+(22+v*4)+' l13 22 -13 22 -13 -22 z" '+W+'/><path d="M30 84 l10 16 -10 16 -10 -16 z" '+W+'/>';
- if(M.f=='SUDUNG')g='<circle cx="30" cy="'+(30+v*3)+'" r="9" '+W+'/><circle cx="30" cy="70" r="9" '+W+'/><circle cx="30" cy="110" r="9" '+W+'/>';
- if(M.f=='BENGKOK')g='<path d="M20 '+(18+v*4)+' v104 h20" '+W+'/><circle cx="38" cy="40" r="8" '+W+'/>';
- if(M.f=='TALI')g='<circle cx="30" cy="32" r="11" '+W+'/><circle cx="30" cy="32" r="4" '+W+'/><circle cx="30" cy="70" r="11" '+W+'/><circle cx="30" cy="70" r="4" '+W+'/><circle cx="30" cy="108" r="11" '+W+'/><circle cx="30" cy="108" r="4" '+W+'/>';
- if(M.f=='PECAH')g='<circle cx="22" cy="'+(30+v*4)+'" r="6" '+W+'/><circle cx="38" cy="48" r="6" '+W+'/><circle cx="22" cy="70" r="6" '+W+'/><circle cx="38" cy="92" r="6" '+W+'/><circle cx="26" cy="112" r="6" '+W+'/>';
- if(M.f=='BATUNG')g='<circle cx="24" cy="'+(28+v*3)+'" r="5" '+W+'/><circle cx="36" cy="28" r="5" '+W+'/><circle cx="24" cy="70" r="5" '+W+'/><circle cx="36" cy="70" r="5" '+W+'/><circle cx="24" cy="112" r="5" '+W+'/><circle cx="36" cy="112" r="5" '+W+'/>';
- if(M.f=='SISIR')g='<path d="M18 '+(30+v*4)+' h24 M18 55 h24 M18 80 h24 M18 105 h24" '+W+'/>';
- if(M.f=='BABI')g='<circle cx="30" cy="'+(38+v*3)+'" r="12" '+W+'/><rect x="20" y="78" width="20" height="34" '+W+'/><path d="M20 95 h20 M30 78 v34" '+W+'/>';
+ var W='stroke="#f5f0e6" stroke-width="3" fill="none"',g='',i,n;
+ if(M.f=='HIU'){n=v+1;g='<path d="M14 20 h32" '+W+'/>';for(i=0;i<n;i++)g+='<rect x="18" y="'+(30+i*28)+'" width="24" height="20" '+W+'/>';}
+ if(M.f=='JARUM'){n=v+1;for(i=0;i<n;i++)g+='<path d="M30 '+(18+i*34)+' l12 14 -12 14 -12 -14 z" '+W+'/>';}
+ if(M.f=='SUDUNG'){n=v+2;for(i=0;i<n;i++)g+='<circle cx="30" cy="'+(26+i*(88/(n-1)))+'" r="8" '+W+'/>';}
+ if(M.f=='BENGKOK'){if(v==0)g='<path d="M20 20 v100 h20" '+W+'/>';if(v==1)g='<path d="M40 20 v100 h-20" '+W+'/>';if(v==2)g='<path d="M20 20 v100 h20 M40 20 v60" '+W+'/>';}
+ if(M.f=='TALI'){n=3-v;for(i=0;i<n;i++){var cy=30+i*(80/Math.max(n-1,1));g+='<circle cx="30" cy="'+cy+'" r="11" '+W+'/><circle cx="30" cy="'+cy+'" r="'+(3+v*2)+'" '+W+'/>'}}
+ if(M.f=='PECAH'){n=4+v;for(i=0;i<n;i++)g+='<circle cx="'+(20+(i%2)*18)+'" cy="'+(24+Math.floor(i/2)*26)+'" r="6" '+W+'/>';}
+ if(M.f=='BATUNG'){n=2+v;for(i=0;i<n;i++){g+='<circle cx="24" cy="'+(28+i*(84/Math.max(n-1,1)))+'" r="5" '+W+'/><circle cx="36" cy="'+(28+i*(84/Math.max(n-1,1)))+'" r="5" '+W+'/>'}}
+ if(M.f=='SISIR'){n=3+v;for(i=0;i<n;i++)g+='<path d="M18 '+(26+i*(88/(n-1)))+' h24" '+W+'/>';}
+ if(M.f=='BABI'){g='<circle cx="30" cy="32" r="12" '+W+'/>';for(i=0;i<v+1;i++)g+='<rect x="'+(19+(i%2)*13)+'" y="'+(56+Math.floor(i/2)*26)+'" width="11" height="18" '+W+'/>';}
  var band=M.red==1?'<rect x="10" y="52" width="40" height="34" fill="#a1171f"/>':'';
- return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+'</svg>'}
+ var lab='<text x="30" y="137" font-size="10" fill="#151515" text-anchor="middle" font-family="monospace">'+String(m+1).padStart(2,'0')+'</text>';
+ return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+lab+'</svg>'}
 var deck=[],hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
 var NAMES=['Kamu','Uni Ros','Angku Mansur','Buya Datuk'];
 function cnt(h){var c=[];for(var i=0;i<30;i++)c[i]=0;h.forEach(function(m){c[m]++});return c}
@@ -99,7 +100,8 @@ function cokiOf(h){var c=cnt(h);for(var m=0;m<30;m++){c[m]++;var w=win12(c);c[m]
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function stat(t){$('stat').innerText=t}
 function showMakan(v){$('bMakan').style.display=v?'inline-block':'none'}
-function render(){if(turn==0&&!over&&fase=='draw'&&hands[0].length>=12)fase='discard';$('pile').innerText=pile.length;
+function render(){if(turn==0&&!over&&fase=='draw'&&hands[0].length>=12)fase='discard';
+ $('pile').innerText=pile.length;
  $('lastD').innerHTML=(last!=null)?svg(last.card):'';
  for(var p=0;p<4;p++){$('s'+p).innerText='★'.repeat(wins[p]);
   $('c'+p).style.display=(cokiOf(hands[p])>=0)?'block':'none';
@@ -119,9 +121,9 @@ function startRound(){rid++;if(mkT)clearTimeout(mkT);
  deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
  for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
  turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false);stat('Giliranmu: CABUT')}
-$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());
+$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());fase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
 $('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render();stat('Tangan tersusun — motif sama berkumpul')};
-$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);
+$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
 $('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};fase='idle';showMakan(false);render();afterMyDiscard()};
 $('bKoa').onclick=function(){endRound(0,'KOA!')};
 function afterMyDiscard(){var r=rid;
