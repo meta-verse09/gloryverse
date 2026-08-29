@@ -38,3 +38,5 @@ Kode kamar 4 digit, spot sama, timer 60 dtk, 5 ronde, skor live via Supabase Rea
               Mesin cerita bekerja. Angku Mansur: pencuri kemenangan pertama. |
 - Kartu gating: unlock via pangkat militer GDD
 - Timeline: mulai bulan 3-4 setelah fondasi ekonomi stabil
+| 29 Agu 2026 | Share WA pertama lahir — dan itu KARTU PATAH HATI.
+              Mesin cerita bekerja. Angku Mansur: pencuri kemenangan pertama. |
