@@ -1,4 +1,4 @@
-/* lapau.js v2 — WASIT MEJA KOA CEKI (solo + mabar realtime) */
+/* lapau.js v3 — WASIT KOA CEKI, transport KURIR REST (polling) */
 if(typeof window.phase!=='function'&&typeof window.phaseOf==='function')window.phase=window.phaseOf;
 var FAM=['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'];
 var VAR={HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],JARUM:['Wajik','Besar','Kecil'],
@@ -22,7 +22,7 @@ function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#
  return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+lab+'</svg>'}
 var hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
 var SEATS=[{n:'Kamu',bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];
-var IS_HOST=true,MY=0,ROOM=null,CH=null,started=false,seated=false,knockT=null;
+var IS_HOST=true,MY=0,ROOM=null,started=false,seated=false,knockT=null,pollT=null,lastMsgId=0;
 var MYNAME='Kamu',MYSID=Math.random().toString(36).slice(2,8);
 function cnt(h){var c=[];for(var i=0;i<30;i++)c[i]=0;h.forEach(function(m){c[m]++});return c}
 function win12(c){var t=0,i;for(i=0;i<30;i++)t+=c[i];if(t!=12)return false;
@@ -36,7 +36,31 @@ function cokiOf(h){var c=cnt(h);for(var m=0;m<30;m++){c[m]++;var w=win12(c);c[m]
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function stat(t){$('stat').innerText=t}
 function showMakan(v){$('bMakan').style.display=v?'inline-block':'none'}
-function send(o){if(CH)CH.send({type:'broadcast',event:'m',payload:o})}
+function send(o){if(!ROOM)return;o.sid=MYSID;
+ try{db.from('ceki_msg').insert({room:ROOM,kind:(o.ev||o.act)||'m',payload:o})}catch(e){}}
+function initRoom(code){ROOM=code;if(pollT)clearInterval(pollT);
+ db.from('ceki_msg').select('id').eq('room',code).order('id',{ascending:false}).limit(1).then(function(r){
+  lastMsgId=(r.data&&r.data[0])?r.data[0].id:0;});
+ pollT=setInterval(function(){if(!ROOM)return;
+  db.from('ceki_msg').select('*').eq('room',ROOM).gt('id',lastMsgId).order('id',{ascending:true}).limit(20).then(function(r){
+   (r.data||[]).forEach(function(row){lastMsgId=row.id;handle(row.payload)})})},1500)}
+function handle(p){if(!p||p.sid==MYSID)return;
+ if(IS_HOST){
+  if(p.act=='join'){var got=-1;for(var i=1;i<4;i++){if(SEATS[i].sid==p.sid){got=i;break}}
+   if(got<0){for(var i=1;i<4;i++){if(SEATS[i].bot){SEATS[i]={n:p.name,bot:false,taken:true,sid:p.sid};got=i;break}}}
+   if(got>=0)sendLobby()}
+  if(p.act=='cabut'&&started&&turn==p.seat)doCabut(p.seat);
+  if(p.act=='makan'&&started&&turn==p.seat)doMakan(p.seat);
+  if(p.act=='turun'&&started&&turn==p.seat)doTurun(p.seat,p.card);
+  if(p.act=='koa'&&started&&turn==p.seat&&win12(cnt(hands[p.seat])))doKoa(p.seat);
+ } else {
+  if(p.ev=='lobby'){p.seats.forEach(function(s,i){if(s&&s.sid==MYSID){MY=i;seated=true;if(knockT){clearInterval(knockT);knockT=null}}if(s)SEATS[i]=s});drawLobby()}
+  if(p.ev=='state'){hands=p.hands;disc=p.disc;pile=Array(p.pile);last=p.last;turn=p.turn;fase=p.fase;wins=p.wins;over=p.over;
+   p.names.forEach(function(n,i){SEATS[i].n=n});
+   started=true;$('lobby').style.display='none';$('gameArea').style.display='block';
+   if(over){$('ovT').innerText=p.ovT;$('ovM').innerText=p.ovM;$('ov').style.display='flex'}else $('ov').style.display='none';
+   render()}
+ }}
 function render(){if(turn==MY&&!over&&fase=='draw'&&hands[MY].length>=12)fase='discard';
  $('pile').innerText=pile.length;
  $('lastD').innerHTML=(last!=null)?svg(last.card):'';
@@ -102,25 +126,6 @@ $('bKoa').onclick=function(){if(IS_HOST)doKoa(0);else send({act:'koa',seat:MY})}
 $('bSusun').onclick=function(){hands[MY].sort(function(a,b){return a-b});sel=-1;render()};
 $('ovL').onclick=function(){if(IS_HOST){for(var i=0;i<4;i++)if(wins[i]>=3)wins=[0,0,0,0];startRound()}else $('ov').style.display='none'};
 $('ovWA').onclick=function(){var t=encodeURIComponent('KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\nMainkan: gloryverse.id/ceki');location.href='https://wa.me/?text='+t};
-function openRoom(code,host){if(CH){try{db.removeChannel(CH)}catch(e){}}ROOM=code;
- CH=db.channel('ceki_'+code).on('broadcast',{event:'m'},function(e){var p=e.payload;
-  if(IS_HOST){
-   if(p.act=='join'){var got=-1;for(var i=1;i<4;i++){if(SEATS[i].sid==p.sid){got=i;break}}
-    if(got<0){for(var i=1;i<4;i++){if(SEATS[i].bot){SEATS[i]={n:p.name,bot:false,taken:true,sid:p.sid};got=i;break}}}
-    if(got>=0)sendLobby()}
-   if(p.act=='cabut'&&started&&turn==p.seat)doCabut(p.seat);
-   if(p.act=='makan'&&started&&turn==p.seat)doMakan(p.seat);
-   if(p.act=='turun'&&started&&turn==p.seat)doTurun(p.seat,p.card);
-   if(p.act=='koa'&&started&&turn==p.seat&&win12(cnt(hands[p.seat])))doKoa(p.seat);
-  } else {
-   if(p.ev=='lobby'){p.seats.forEach(function(s,i){if(s&&s.sid==MYSID){MY=i;seated=true;if(knockT){clearInterval(knockT);knockT=null}}if(s)SEATS[i]=s});drawLobby()}
-   if(p.ev=='state'){hands=p.hands;disc=p.disc;pile=Array(p.pile);last=p.last;turn=p.turn;fase=p.fase;wins=p.wins;over=p.over;
-    p.names.forEach(function(n,i){SEATS[i].n=n});
-    started=true;$('lobby').style.display='none';$('gameArea').style.display='block';
-    if(over){$('ovT').innerText=p.ovT;$('ovM').innerText=p.ovM;$('ov').style.display='flex'}else $('ov').style.display='none';
-    render()}
-  }}).subscribe();
- if(host){IS_HOST=true;sendLobby()}}
 function sendLobby(){if(IS_HOST)SEATS[0].sid=MYSID;send({ev:'lobby',seats:SEATS})}
 function drawLobby(){var h='';SEATS.forEach(function(s){h+='<span class="chip">'+(s.bot?'🤖':'🙂')+' '+(s.n||'kosong')+'</span> '});
  h+='<div class="dim" style="margin-top:6px">'+(IS_HOST?'🧑‍️ Kamu HOST — biarkan halaman TERBUKA.':'⏳ Tamu — menunggu host memulai...')+'</div>';
@@ -131,16 +136,16 @@ $('bSolo').onclick=function(){IS_HOST=true;SEATS=[{n:MYNAME,bot:false},{n:'Uni R
 $('bBuat').onclick=function(){var code=Math.random().toString(36).slice(2,6).toUpperCase();
  try{localStorage.setItem('gv_ceki_host',code)}catch(e){}
  SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
- IS_HOST=true;openRoom(code,true);showRoom(code);$('joinCode').value='';drawLobby()};
+ IS_HOST=true;initRoom(code);sendLobby();showRoom(code);$('joinCode').value='';drawLobby()};
 $('bStart').onclick=function(){for(var i=1;i<4;i++){if(!SEATS[i].n)SEATS[i]={n:['','Uni Ros','Angku Mansur','Buya Datuk'][i],bot:true}}
  startRound()};
 function joinRoom(c){IS_HOST=false;seated=false;
  SEATS=[{n:MYNAME,bot:false,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
- openRoom(c,false);send({act:'join',name:MYNAME,sid:MYSID});
+ initRoom(c);send({act:'join',name:MYNAME,sid:MYSID});
  if(knockT)clearInterval(knockT);
  knockT=setInterval(function(){if(!seated)send({act:'join',name:MYNAME,sid:MYSID})},3000);
  showRoom(c);drawLobby();
- setTimeout(function(){if(!seated&&!started)$('roomLink').innerText='⚠️ Host belum terdeteksi — pastikan host membuka halamannya (ketukan otomatis berlanjut).'},6000)}
+ setTimeout(function(){if(!seated&&!started)$('roomLink').innerText='⚠️ Host belum terdeteksi — pastikan host membuka halamannya (ketukan otomatis berlanjut).'},8000)}
 $('bJoin').onclick=function(){var c=($('joinCode').value||'').trim().toUpperCase();if(c)joinRoom(c)};
 (function(){try{db.auth.getSession().then(function(r){var s=r.data&&r.data.session;
  if(s)return db.from('profiles').select('username').eq('id',s.user.id).single().then(function(p){
@@ -149,5 +154,5 @@ $('bJoin').onclick=function(){var c=($('joinCode').value||'').trim().toUpperCase
  var q=new URLSearchParams(location.search).get('room');
  if(q){q=q.toUpperCase();var isHost=false;try{isHost=localStorage.getItem('gv_ceki_host')==q}catch(e){}
   if(isHost){SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
-   IS_HOST=true;openRoom(q,true);showRoom(q);drawLobby()}
+   IS_HOST=true;initRoom(q);sendLobby();showRoom(q);drawLobby()}
   else{$('joinCode').value=q;setTimeout(function(){joinRoom(q)},600)}}})();
