@@ -21,3 +21,13 @@ box-shadow:0 4px 0 #b45309;cursor:pointer;transition:.08s}
 table{width:100%;border-collapse:collapse;font-size:13px}
 td,th{padding:7px 8px;border-bottom:1px solid var(--line)}
 th{color:var(--mut);text-align:left;font-size:11px;text-transform:uppercase}
+/* ===== TOMBOL TIMBUL (3D) ===== */
+.btn{background:linear-gradient(180deg,#ffd75e 0%,#f2b705 55%,#d99a00 100%);
+ color:#241a00;border:1px solid #8a6400;border-radius:12px;
+ box-shadow:0 4px 0 #8a6400,0 7px 14px #0009,inset 0 1px 0 #ffffff88;
+ text-shadow:0 1px 0 #ffec8a;font-weight:900;letter-spacing:.5px;
+ transition:transform .06s,box-shadow .06s}
+.btn:active{transform:translateY(3px);
+ box-shadow:0 1px 0 #8a6400,0 3px 6px #0007,inset 0 1px 0 #ffffff66}
+nav.main a{border-radius:10px;box-shadow:0 3px 0 #0007,inset 0 1px 0 #ffffff22}
+nav.main a.on{box-shadow:0 3px 0 #8a6400,inset 0 1px 0 #ffffff33}
