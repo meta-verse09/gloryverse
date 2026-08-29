@@ -23,6 +23,7 @@
 #ov .in{background:#0b1020f2;border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:92%;text-align:center}
 .dim{color:var(--mut);font-size:12px}
 .btns{display:flex;gap:6px;justify-content:center;margin:8px 0;flex-wrap:wrap}
+input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px}
 </style>
 </head>
 <body data-img='reg_solok.jpeg' data-title="Lapau Solok">
@@ -38,13 +39,30 @@
  <main>
   <div class="pano" id="pano" style="height:120px"><div id="sky"></div><div id="fx"></div><div id="markers"></div>
    <div class="panoHint">↔ 360° • <span id="locName"></span></div></div>
-  <div class="card"><h3>🎴 Koa Ceki — Lapau Solok</h3>
-   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Cabut 1 buang 1 • Pertama PUTUS (3×) juara.</div></div>
+  <div class="card" id="lobby">
+   <h3>🎴 Meja Koa Ceki — Lapau Solok</h3>
+   <div class="btns">
+    <button class="btn" id="bSolo">▶ MAIN SOLO (vs 3 bot)</button>
+    <button class="btn" id="bBuat">🌐 BUAT MEJA MABAR</button>
+   </div>
+   <div id="roomBox" style="display:none">
+    <div class="dim">Kode meja: <b id="roomCode" style="color:var(--gold);font-size:18px"></b></div>
+    <div class="dim" id="roomLink"></div>
+    <div id="seatList" style="margin:6px 0"></div>
+    <button class="btn" id="bStart" style="width:100%">MULAI (kursi kosong = bot)</button>
+   </div>
+   <div class="btns"><input id="joinCode" placeholder="kode meja...">
+    <button class="btn" id="bJoin">GABUNG</button></div>
+   <div class="dim">Avatarmu nanti ikut foto profil (fase berikutnya). Kursi kosong diisi bot otomatis.</div>
+  </div>
+  <div id="gameArea" style="display:none">
+  <div class="card"><h3>🎴 Koa Ceki — <span id="roomTitle">Lapau Solok</span></h3>
+   <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri • Tangan 11 • Pertama PUTUS (3×) juara.</div></div>
   <div id="table">
-   <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
-   <div class="seat" style="left:8px;top:40%"><div class="av">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
-   <div class="seat" style="right:8px;top:40%"><div class="av">🤖</div><span id="n1">Kanan</span> <span id="s1"></span><div class="coki" id="c1">COKI</div><div id="d1"></div></div>
-   <div class="seat" style="bottom:6px;left:12px"><div class="av" style="background:#16a34a">🙂</div><span id="n0">Kamu</span> <span id="s0"></span><div class="coki" id="c0">COKI</div></div>
+   <div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av" id="a2">🤖</div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
+   <div class="seat" style="left:8px;top:40%"><div class="av" id="a3">🤖</div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
+   <div class="seat" style="right:8px;top:40%"><div class="av" id="a1">🤖</div><span id="n1">Kanan</span> <span id="s1"></span><div class="coki" id="c1">COKI</div><div id="d1"></div></div>
+   <div class="seat" style="bottom:6px;left:12px"><div class="av" id="a0" style="background:#16a34a">🙂</div><span id="n0">Kamu</span> <span id="s0"></span><div class="coki" id="c0">COKI</div></div>
    <div id="pile">-</div><div id="lastD"></div>
    <div id="stat" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#fde047;font-weight:800;font-size:13px"></div>
   </div>
@@ -57,6 +75,7 @@
    <button class="btn" id="bSusun" style="display:none">SUSUN</button>
   </div>
   <div class="dim" id="info" style="text-align:center"></div>
+  </div>
  </main>
  <aside class="side" id="right"></aside>
 </div>
@@ -87,8 +106,10 @@ function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#
  var band=M.red==1?'<rect x="10" y="52" width="40" height="34" fill="#a1171f"/>':'';
  var lab='<text x="30" y="137" font-size="10" fill="#151515" text-anchor="middle" font-family="monospace">'+String(m+1).padStart(2,'0')+'</text>';
  return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+lab+'</svg>'}
-var deck=[],hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
-var NAMES=['Kamu','Uni Ros','Angku Mansur','Buya Datuk'];
+/* ===== STATE ===== */
+var hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
+var SEATS=[{n:'Kamu',bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];
+var IS_HOST=true,MY=0,ROOM=null,CH=null,started=false,MYNAME='Kamu',MYSID=Math.random().toString(36).slice(2,8);
 function cnt(h){var c=[];for(var i=0;i<30;i++)c[i]=0;h.forEach(function(m){c[m]++});return c}
 function win12(c){var t=0,i;for(i=0;i<30;i++)t+=c[i];if(t!=12)return false;
  for(var p=0;p<30;p++){if(c[p]<2)continue;var tr=[];for(var m=0;m<30;m++){if(c[m]-(m==p?2:0)>=3)tr.push(m)}
@@ -101,40 +122,50 @@ function cokiOf(h){var c=cnt(h);for(var m=0;m<30;m++){c[m]++;var w=win12(c);c[m]
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function stat(t){$('stat').innerText=t}
 function showMakan(v){$('bMakan').style.display=v?'inline-block':'none'}
-function render(){if(turn==0&&!over&&fase=='draw'&&hands[0].length>=12)fase='discard';
+function send(o){if(CH)CH.send({type:'broadcast',event:'m',payload:o})}
+/* ===== RENDER ===== */
+function render(){if(turn==MY&&!over&&fase=='draw'&&hands[MY].length>=12)fase='discard';
  $('pile').innerText=pile.length;
  $('lastD').innerHTML=(last!=null)?svg(last.card):'';
- for(var p=0;p<4;p++){$('s'+p).innerText='★'.repeat(wins[p]);
+ for(var p=0;p<4;p++){$('n'+p).innerText=SEATS[p].n;$('s'+p).innerText='★'.repeat(wins[p]);
+  $('a'+p).innerText=SEATS[p].bot?'🤖':'🙂';
   $('c'+p).style.display=(cokiOf(hands[p])>=0)?'block':'none';
-  if(p>0)$('d'+p).innerHTML=disc[p].slice(-4).map(function(){return '<span class="mini"></span>'}).join('')}
- var hh='';hands[0].forEach(function(m,i){hh+='<span class="cd'+(i==sel?' sel':'')+'" data-i="'+i+'">'+svg(m)+'</span>'});
+  if(p!=MY)$('d'+p).innerHTML=disc[p].slice(-4).map(function(){return '<span class="mini"></span>'}).join('')}
+ var hh='';hands[MY].forEach(function(m,i){hh+='<span class="cd'+(i==sel?' sel':'')+'" data-i="'+i+'">'+svg(m)+'</span>'});
  $('hand').innerHTML=hh;
  var els=document.querySelectorAll('.cd');for(var k=0;k<els.length;k++){els[k].onclick=function(){sel=+this.dataset.i;render()}}
- var my=(turn==0)&&!over;
+ var my=(turn==MY)&&!over&&started;
  $('bCabut').style.display=(my&&fase=='draw')?'inline-block':'none';
  $('bTurun').style.display=(my&&fase=='discard'&&sel>=0)?'inline-block':'none';
- $('bKoa').style.display=(my&&fase=='discard'&&win12(cnt(hands[0])))?'inline-block':'none';
+ $('bKoa').style.display=(my&&fase=='discard'&&win12(cnt(hands[MY])))?'inline-block':'none';
  $('bSusun').style.display=my?'inline-block':'none';
- if(my&&fase=='draw'&&last&&cnt(hands[0])[last.card]>=2)showMakan(true);
- if(my){stat(fase=='draw'?'Giliranmu: CABUT (atau MAKAN jika ada)':'Tangan 12: KETUK kartu yang mau dibuang → TURUN');}
- $('info').innerText='Tangan: '+hands[0].length+' • Tumpukan: '+pile.length}
+ if(my&&fase=='draw'&&last&&cnt(hands[MY])[last.card]>=2)showMakan(true);
+ if(my){stat(fase=='draw'?'Giliranmu: CABUT (atau MAKAN)':'Tangan 12: KETUK kartu → TURUN')}
+ $('info').innerText='Tangan: '+hands[MY].length+' • Tumpukan: '+pile.length;
+ if(IS_HOST&&started)sendState()}
+function sendState(){send({ev:'state',hands:hands,disc:disc,pile:pile.length,last:last,turn:turn,fase:fase,wins:wins,over:over,ovT:$('ovT').innerText,ovM:$('ovM').innerText,names:SEATS.map(function(s){return s.n})})}
+/* ===== MESIN (HOST) ===== */
 function startRound(){rid++;if(mkT)clearTimeout(mkT);
  var all=[];for(var m=0;m<30;m++)for(var c=0;c<6;c++)all.push(m);
- deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
+ var deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
  for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
- turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false)}
-$('bCabut').onclick=function(){showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(pile.pop());fase='discard';sel=-1;render()};
-$('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render()};
-$('bMakan').onclick=function(){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render()};
-$('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};fase='idle';showMakan(false);render();afterMyDiscard()};
-$('bKoa').onclick=function(){endRound(0,'KOA!')};
-function afterMyDiscard(){var r=rid;
- for(var b=1;b<4;b++){if(cnt(hands[b])[last.card]>=2&&Math.random()<0.5){setTimeout(function(){if(r!=rid)return;
-  hands[b].push(last.card);disc[last.from].pop();last=null;stat(NAMES[b]+' MAKAN kartumu!');botFinish(b)},700);return}}
+ turn=0;fase='draw';$('ov').style.display='none';started=true;
+ $('lobby').style.display='none';$('gameArea').style.display='block';render();showMakan(false)}
+function doCabut(s){showMakan(false);if(mkT)clearTimeout(mkT);hands[s].push(pile.pop());fase='discard';if(s==MY)sel=-1;render();if(s!=MY)afterDiscardWait(s)}
+function doMakan(s){if(!last)return;showMakan(false);if(mkT)clearTimeout(mkT);hands[s].push(last.card);disc[last.from].pop();last=null;turn=s;fase='discard';render();if(s!=MY)afterDiscardWait(s)}
+function doTurun(s,card){var idx=hands[s].indexOf(card);if(idx<0)return;var m=hands[s].splice(idx,1)[0];disc[s].push(m);last={card:m,from:s};fase='idle';showMakan(false);render();afterMyDiscard(s)}
+function doKoa(s){endRound(s,'KOA!')}
+function afterDiscardWait(s){/* guest habis aksi ambil: tunggu buang */}
+function afterMyDiscard(s){var r=rid;
+ for(var b=0;b<4;b++){if(b==s)continue;if(SEATS[b].bot&&cnt(hands[b])[last.card]>=2&&Math.random()<0.5){setTimeout(function(){if(r!=rid)return;
+  hands[b].push(last.card);disc[last.from].pop();last=null;stat(SEATS[b].n+' MAKAN kartu!');botFinish(b)},700);return}}
  setTimeout(function(){if(r==rid)next()},600)}
-function next(){turn=(turn+1)%4;
- if(turn==0){fase='draw';render()}else botTurn(turn)}
-function botTurn(i){var r=rid;setTimeout(function(){if(r!=rid)return;
+function next(){turn=(turn+1)%4;route()}
+function route(){if(!started)return;
+ if(SEATS[turn].bot){botTurn(turn)}
+ else if(turn==MY){fase='draw';render()}
+ else {fase='draw';render();stat('Giliran '+SEATS[turn].n+'...')}}
+function botTurn(i){var r=rid;setTimeout(function(){if(r!=rid||!started)return;
  if(last&&cnt(hands[i])[last.card]>=2&&Math.random()<0.6){hands[i].push(last.card);disc[last.from].pop();last=null}
  else{if(!pile.length){endRound(-1,'Seri');return}hands[i].push(pile.pop())}
  if(win12(cnt(hands[i]))){endRound(i,'KOA!');return}
@@ -144,21 +175,61 @@ function botFinish(i){var r=rid,c=cnt(hands[i]),best=null;
  if(best==null)best=hands[i][0];
  hands[i].splice(hands[i].indexOf(best),1);disc[i].push(best);last={card:best,from:i};render();
  setTimeout(function(){if(r!=rid)return;
-  if(cnt(hands[0])[best]>=2){showMakan(true);stat(NAMES[i]+' buang '+MID[best].f+' '+MID[best].n+' — MAKAN?');
+  if(!SEATS[MY].bot&&cnt(hands[MY])[best]>=2&&turn==MY){showMakan(true);stat(SEATS[i].n+' buang '+MID[best].f+' — MAKAN?');
    mkT=setTimeout(function(){showMakan(false);next()},2500)}
   else next()},400)}
 function endRound(w,why){over=true;rid++;if(mkT)clearTimeout(mkT);showMakan(false);
  if(w>=0)wins[w]++;
  var done=(w>=0&&wins[w]>=3);
- $('ovT').innerText=(w==0)?('🟢 '+why+' KAMU SAMPAI!'):(w>0)?(NAMES[w]+' SAMPAI — Kamu Kalah :('):'🤝 SERI';
- var msg=(done?'🏆 JUARA MATCH (PUTUS!): '+NAMES[w]+' • ':'')+'Skor ★: '+wins.join(' • ');
- if(w>0)msg+=' — Awak coki duluan, urang yang sampai 😭';
+ $('ovT').innerText=(w==MY&&IS_HOST||w==MY)?('🟢 '+why+' KAMU SAMPAI!'):(w>0)?(SEATS[w].n+' SAMPAI — Kamu Kalah :('):'🤝 SERI';
+ var msg=(done?'🏆 JUARA MATCH (PUTUS!): '+SEATS[w].n+' • ':'')+'Skor ★: '+wins.join(' • ');
+ if(w!=MY&&w>=0)msg+=' — Awak coki duluan, urang yang sampai 😭';
  $('ovM').innerText=msg;$('ov').style.display='flex';render()}
-$('ovL').onclick=function(){for(var i=0;i<4;i++)if(wins[i]>=3)wins=[0,0,0,0];startRound()};
-$('ovWA').onclick=function(){var t=encodeURIComponent('🎴 KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\n👉 Mainkan: gloryverse.id/ceki');location.href='https://wa.me/?text='+t};
-(function(){try{db.auth.getSession().then(function(r){var s=r.data.session;if(!s)return;
- return db.from('profiles').select('username').eq('id',s.user.id).single().then(function(p){
-  if(p.data){NAMES[0]=p.data.username;$('n0').innerText=NAMES[0]}})});}catch(e){}})();
-startRound();
+/* ===== TOMBOL (dispatch host/guest) ===== */
+function act(fn,card){if(IS_HOST){fn(MY,card)}else send({act:fn==doCabut?'cabut':fn==doMakan?'makan':fn==doTurun?'turun':'koa',seat:MY,card:card})}
+$('bCabut').onclick=function(){act(doCabut)};
+$('bMakan').onclick=function(){act(doMakan)};
+$('bTurun').onclick=function(){var card=hands[MY][sel];sel=-1;act(doTurun,card)};
+$('bKoa').onclick=function(){act(doKoa)};
+$('bSusun').onclick=function(){hands[MY].sort(function(a,b){return a-b});sel=-1;render()};
+$('ovL').onclick=function(){if(IS_HOST){for(var i=0;i<4;i++)if(wins[i]>=3)wins=[0,0,0,0];startRound()}else $('ov').style.display='none'};
+$('ovWA').onclick=function(){var t=encodeURIComponent('KOA CEKI — LAPAU SOLOK\n'+$('ovM').innerText+'\nMainkan: gloryverse.id/ceki');location.href='https://wa.me/?text='+t};
+/* ===== LOBBY & REALTIME ===== */
+function openRoom(code,host){ROOM=code;
+ CH=db.channel('ceki_'+code).on('broadcast',function(e){var p=e.payload;
+  if(host){ /* host terima aksi & join */
+   if(p.act=='join'){for(var i=1;i<4;i++){if(!SEATS[i].taken&&!SEATS[i].bot){SEATS[i]={n:p.name,bot:false,taken:true,sid:p.sid};sendLobby();break}}
+     for(var i=1;i<4;i++){if(SEATS[i].bot&&!SEATS[i].filled){SEATS[i]={n:p.name,bot:false,taken:true};sendLobby();break}}}
+   if(p.act=='cabut'&&started&&turn==p.seat)doCabut(p.seat);
+   if(p.act=='makan'&&started&&turn==p.seat)doMakan(p.seat);
+   if(p.act=='turun'&&started&&turn==p.seat)doTurun(p.seat,p.card);
+   if(p.act=='koa'&&started&&turn==p.seat&&win12(cnt(hands[p.seat])))doKoa(p.seat);
+  } else { /* guest terima lobby & state */
+   if(p.ev=='lobby'){p.seats.forEach(function(s,i){if(s&&s.sid==MYSID)MY=i;SEATS[i]=s||SEATS[i]});drawLobby()}
+   if(p.ev=='state'){hands=p.hands;disc=p.disc;pile=Array(p.pile);last=p.last;turn=p.turn;fase=p.fase;wins=p.wins;over=p.over;
+    p.names.forEach(function(n,i){SEATS[i].n=n});
+    if(started||p.turn>=0){started=true;$('lobby').style.display='none';$('gameArea').style.display='block'}
+    if(over){$('ovT').innerText=p.ovT;$('ovM').innerText=p.ovM;$('ov').style.display='flex'}else $('ov').style.display='none';
+    render()}
+  }}).subscribe();
+ if(host){IS_HOST=true;sendLobby()}}
+function sendLobby(){send({ev:'lobby',seats:SEATS})}
+function drawLobby(){$('seatList').innerHTML=SEATS.map(function(s,i){return '<span class="chip">'+(s.bot?'🤖':'🙂')+' '+s.n+'</span>'}).join(' ')}
+$('bSolo').onclick=function(){IS_HOST=true;SEATS=[{n:MYNAME,bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];startRound()};
+$('bBuat').onclick=function(){var code=Math.random().toString(36).slice(2,6).toUpperCase();
+ SEATS=[{n:MYNAME,bot:false,taken:true},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
+ openRoom(code,true);$('roomBox').style.display='block';$('roomCode').innerText=code;
+ $('roomLink').innerText='gloryverse.id/ceki?room='+code;drawLobby()};
+$('bStart').onclick=function(){for(var i=1;i<4;i++){if(!SEATS[i].n)SEATS[i]={n:['','Uni Ros','Angku Mansur','Buya Datuk'][i],bot:true}}
+ IS_HOST=true;startRound()};
+$('bJoin').onclick=function(){var c=($('joinCode').value||'').trim().toUpperCase();if(!c)return;
+ IS_HOST=false;openRoom(c,false);send({act:'join',name:MYNAME,sid:MYSID});
+ $('roomBox').style.display='block';$('roomCode').innerText=c;drawLobby()};
+(function(){try{db.auth.getSession().then(function(r){var s=r.data&&r.data.session;
+ if(s)return db.from('profiles').select('username').eq('id',s.user.id).single().then(function(p){
+  if(p.data){MYNAME=p.data.username;SEATS[0].n=MYNAME}});
+ }).catch(function(){});}catch(e){}
+ var q=new URLSearchParams(location.search).get('room');
+ if(q){IS_HOST=false;$('joinCode').value=q;setTimeout(function(){$('bJoin').onclick()},500)}})();
 </script>
 </body></html>
