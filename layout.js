@@ -71,7 +71,7 @@ function paint(){pano.style.backgroundPositionX=pos+'px';
 (function loop(){if(auto){t+=.004;pos=Math.sin(t)*tileW*.3;paint()}requestAnimationFrame(loop)})();
 
 /* Jam + siang/malam real-time */
-function phase(h){
+function phaseOf(h){
  if(h>=5&&h<8)return{i:'🌅',f:'sepia(.35) saturate(1.2) brightness(.95)',c:'#ff9a3c44'};
  if(h>=8&&h<16)return{i:'☀️',f:'none',c:'transparent'};
  if(h>=16&&h<19)return{i:'🌇',f:'sepia(.45) hue-rotate(-25deg) brightness(.88)',c:'#ff6a0055'};
