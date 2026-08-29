@@ -54,6 +54,7 @@
    <button class="btn" id="bMakan" style="display:none">MAKAN!</button>
    <button class="btn" id="bTurun" style="display:none">TURUN</button>
    <button class="btn" id="bKoa" style="display:none;background:#16a34a">KOA! 🟢</button>
+   <button class="btn" id="bSusun" style="display:none">SUSUN</button>
   </div>
   <div class="dim" id="info" style="text-align:center"></div>
  </main>
@@ -84,7 +85,7 @@ function svg(m){var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#a1171f':'#
  if(M.f=='BABI')g='<circle cx="30" cy="'+(38+v*3)+'" r="12" '+W+'/><rect x="20" y="78" width="20" height="34" '+W+'/><path d="M20 95 h20 M30 78 v34" '+W+'/>';
  var band=M.red==1?'<rect x="10" y="52" width="40" height="34" fill="#a1171f"/>':'';
  return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+band+g+'</svg>'}
-var deck=[],hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,phase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
+var deck=[],hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
 var NAMES=['Kamu','Uni Ros','Angku Mansur','Buya Datuk'];
 function cnt(h){var c=[];for(var i=0;i<30;i++)c[i]=0;h.forEach(function(m){c[m]++});return c}
 function win12(c){var t=0,i;for(i=0;i<30;i++)t+=c[i];if(t!=12)return false;
@@ -107,26 +108,28 @@ function render(){$('pile').innerText=pile.length;
  $('hand').innerHTML=hh;
  var els=document.querySelectorAll('.cd');for(var k=0;k<els.length;k++){els[k].onclick=function(){sel=+this.dataset.i;render()}}
  var my=(turn==0)&&!over;
- $('bCabut').style.display=(my&&phase=='draw')?'inline-block':'none';
- $('bTurun').style.display=(my&&phase=='discard'&&sel>=0)?'inline-block':'none';
- $('bKoa').style.display=(my&&phase=='discard'&&win12(cnt(hands[0])))?'inline-block':'none';
- if(my&&phase=='draw'&&last&&cnt(hands[0])[last.card]>=2)showMakan(true);
+ $('bCabut').style.display=(my&&fase=='draw')?'inline-block':'none';
+ $('bTurun').style.display=(my&&fase=='discard'&&sel>=0)?'inline-block':'none';
+ $('bKoa').style.display=(my&&fase=='discard'&&win12(cnt(hands[0])))?'inline-block':'none';
+ $('bSusun').style.display=my?'inline-block':'none';
+ if(my&&fase=='draw'&&last&&cnt(hands[0])[last.card]>=2)showMakan(true);
  $('info').innerText='Tangan: '+hands[0].length+' • Tumpukan: '+pile.length}
 function startRound(){rid++;if(mkT)clearTimeout(mkT);
  var all=[];for(var m=0;m<30;m++)for(var c=0;c<6;c++)all.push(m);
  deck=shuffle(all);hands=[[],[],[],[]];disc=[[],[],[],[]];pile=deck.slice();last=null;over=false;sel=-1;
  for(var i=0;i<11;i++)for(var p=0;p<4;p++)hands[p].push(pile.pop());
- turn=0;phase='draw';$('ov').style.display='none';render();showMakan(false);stat('Giliranmu: CABUT')}
-$('bCabut').onclick=function(){showMakan(false);hands[0].push(pile.pop());phase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
-$('bMakan').onclick=function(){if(!last)return;showMakan(false);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;phase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
-$('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};phase='idle';showMakan(false);render();afterMyDiscard()};
+ turn=0;fase='draw';$('ov').style.display='none';render();showMakan(false);stat('Giliranmu: CABUT')}
+$('bCabut').onclick=function(){showMakan(false);hands[0].push(pile.pop());fase='discard';sel=-1;render();stat('Pilih kartu → TURUN (atau KOA!)')};
+$('bSusun').onclick=function(){hands[0].sort(function(a,b){return a-b});sel=-1;render();stat('Tangan tersusun — motif sama berkumpul')};
+$('bMakan').onclick=function(){if(!last)return;showMakan(false);hands[0].push(last.card);disc[last.from].pop();last=null;turn=0;fase='discard';sel=-1;render();stat('MAKAN! Buang 1 kartu')};
+$('bTurun').onclick=function(){var m=hands[0].splice(sel,1)[0];sel=-1;disc[0].push(m);last={card:m,from:0};fase='idle';showMakan(false);render();afterMyDiscard()};
 $('bKoa').onclick=function(){endRound(0,'KOA!')};
 function afterMyDiscard(){var r=rid;
  for(var b=1;b<4;b++){if(cnt(hands[b])[last.card]>=2&&Math.random()<0.5){setTimeout(function(){if(r!=rid)return;
   hands[b].push(last.card);disc[last.from].pop();last=null;stat(NAMES[b]+' MAKAN kartumu!');botFinish(b)},700);return}}
  setTimeout(function(){if(r==rid)next()},600)}
 function next(){turn=(turn+1)%4;
- if(turn==0){phase='draw';render();stat('Giliranmu: CABUT')}else botTurn(turn)}
+ if(turn==0){fase='draw';render();stat('Giliranmu: CABUT')}else botTurn(turn)}
 function botTurn(i){var r=rid;setTimeout(function(){if(r!=rid)return;
  if(last&&cnt(hands[i])[last.card]>=2&&Math.random()<0.6){hands[i].push(last.card);disc[last.from].pop();last=null}
  else{if(!pile.length){endRound(-1,'Seri');return}hands[i].push(pile.pop())}
