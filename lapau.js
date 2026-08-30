@@ -250,7 +250,17 @@
       var bSolo=$('bSolo');
       if(bSolo){bSolo.onclick=function(){console.log('SOLO');IS_HOST=true;SEATS=[{n:MYNAME,bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];startRound();};console.log('bSolo ok');}
     } catch(e){console.error('bSolo',e);}
-    
+    try {
+  var bRefresh=$('bRefresh');
+  if(bRefresh){
+    bRefresh.onclick=function(){
+      console.log('🔄 Force send lobby...');
+      sendLobby();
+      alert('Lobby dikirim ulang! Refresh halaman tamu.');
+    };
+    console.log('bRefresh ok');
+  }
+} catch(e){console.error('bRefresh',e);}
     try {
       var bBuat=$('bBuat');
       if(bBuat){bBuat.onclick=function(){
