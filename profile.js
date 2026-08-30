@@ -3,60 +3,20 @@
   console.log('Profile page loaded');
 
   var currentUser = null;
-  var selectedAvatar = null;
-  var avatars = [
-    {id:'default',url:'avatars/default.png',name:'Default'},
-    {id:'warrior',url:'avatars/warrior.png',name:'Warrior'},
-    {id:'mage',url:'avatars/mage.png',name:'Mage'},
-    {id:'archer',url:'avatars/archer.png',name:'Archer'},
-    {id:'ninja',url:'avatars/ninja.png',name:'Ninja'},
-    {id:'knight',url:'avatars/knight.png',name:'Knight'},
-    {id:'pirate',url:'avatars/pirate.png',name:'Pirate'},
-    {id:'samurai',url:'avatars/samurai.png',name:'Samurai'},
-    {id:'viking',url:'avatars/viking.png',name:'Viking'},
-    {id:'pharaoh',url:'avatars/pharaoh.png',name:'Pharaoh'},
-    {id:'dragon',url:'avatars/dragon.png',name:'Dragon'},
-    {id:'demon',url:'avatars/demon.png',name:'Demon'}
-  ];
+  var currentAvatar = null;
+  var selectedFile = null;
+  var uploadPreviewUrl = null;
 
   function $(id){return document.getElementById(id);}
 
   function init(){
     console.log('Profile init...');
-    loadAvatars();
     loadUserData();
     
+    $('uploadArea').onclick = function(){$('fileInput').click();};
+    $('fileInput').onchange = handleFileSelect;
     $('btnSave').onclick = saveAvatar;
-  }
-
-  function loadAvatars(){
-    var grid = $('avatarGrid');
-    grid.innerHTML = '';
-    
-    avatars.forEach(function(av){
-      var div = document.createElement('div');
-      div.className = 'avatar-item';
-      div.dataset.id = av.id;
-      div.innerHTML = '<img src="'+av.url+'" alt="'+av.name+'">';
-      div.onclick = function(){selectAvatar(av.id);};
-      grid.appendChild(div);
-    });
-  }
-
-  function selectAvatar(id){
-    selectedAvatar = id;
-    
-    // Update visual
-    document.querySelectorAll('.avatar-item').forEach(function(el){
-      el.classList.remove('active');
-    });
-    document.querySelector('[data-id="'+id+'"]').classList.add('active');
-    
-    // Update preview
-    var av = avatars.find(function(a){return a.id===id;});
-    if(av){
-      $('previewImg').src = av.url;
-    }
+    $('btnRemove').onclick = removeAvatar;
   }
 
   function loadUserData(){
@@ -68,7 +28,8 @@
     db.auth.getSession().then(function(r){
       var session = r.data.session;
       if(!session){
-        console.error('No session');
+        alert('Silakan login terlebih dahulu');
+        window.location.href = 'login.html';
         return;
       }
       
@@ -77,43 +38,77 @@
       // Load profile data
       db.from('profiles').select('*').eq('id', currentUser.id).single().then(function(p){
         if(p.data){
-          $('displayUsername').innerText = p.data.username || 'Player';
+          var username = p.data.username || 'Player';
+          $('displayUsername').innerText = username;
           $('userLevel').innerText = p.data.level || 1;
           $('userCoin').innerText = p.data.coins || 0;
           $('userEnergy').innerText = p.data.energy || 100;
-          $('memberSince').innerText = p.data.created_at ? new Date(p.data.created_at).toLocaleDateString('id-ID') : '-';
           
-          // Load current avatar
-          if(p.data.avatar_url){
-            selectAvatar(p.data.avatar_url);
+          // Set default avatar (initials)
+          var initials = username.split(' ').map(function(n){return n[0];}).join('').toUpperCase().slice(0,2);
+          $('defaultAvatar').innerText = initials;
+          
+          // Check if has custom avatar
+          if(p.data.avatar_url && p.data.avatar_url !== 'default'){
+            currentAvatar = p.data.avatar_url;
+            showCustomAvatar(p.data.avatar_url);
           } else {
-            selectAvatar('default');
+            currentAvatar = 'default';
+            showDefaultAvatar();
           }
         }
+      }).catch(function(e){
+        console.error('Load profile error:', e);
       });
-      
-      // Load stats from other tables if exist
-      db.from('player_stats').select('*').eq('user_id', currentUser.id).single().then(function(s){
-        if(s.data){
-          if(s.data.level) $('userLevel').innerText = s.data.level;
-          if(s.data.coins) $('userCoin').innerText = s.data.coins;
-          if(s.data.energy) $('userEnergy').innerText = s.data.energy;
-        }
-      }).catch(function(){});
       
     }).catch(function(e){
       console.error('Auth error:', e);
     });
   }
 
-  function saveAvatar(){
-    if(!currentUser){
-      alert('Please login first');
+  function handleFileSelect(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    
+    // Validate
+    if(file.size > 2 * 1024 * 1024){
+      alert('File terlalu besar! Max 2MB');
+      return;
+    }
+    if(file.type !== 'image/jpeg' && file.type !== 'image/png'){
+      alert('Format file harus JPG atau PNG');
       return;
     }
     
-    if(!selectedAvatar){
-      alert('Pilih avatar dulu!');
+    selectedFile = file;
+    
+    // Show preview
+    var reader = new FileReader();
+    reader.onload = function(e){
+      $('uploadPreview').src = e.target.result;
+      $('previewContainer').style.display = 'block';
+      $('uploadArea').classList.add('has-file');
+      $('uploadArea').querySelector('.upload-text').innerText = 'File: ' + file.name;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function showDefaultAvatar(){
+    $('defaultAvatar').style.display = 'flex';
+    $('previewImg').style.display = 'none';
+    $('btnRemove').style.display = 'none';
+  }
+
+  function showCustomAvatar(url){
+    $('defaultAvatar').style.display = 'none';
+    $('previewImg').style.display = 'block';
+    $('previewImg').src = url;
+    $('btnRemove').style.display = 'block';
+  }
+
+  async function saveAvatar(){
+    if(!currentUser){
+      alert('Session expired. Silakan login ulang.');
       return;
     }
     
@@ -121,34 +116,122 @@
     btn.disabled = true;
     btn.innerText = 'Menyimpan...';
     
-    // Update profiles table
-    db.from('profiles').update({
-      avatar_url: selectedAvatar,
-      updated_at: new Date().toISOString()
-    }).eq('id', currentUser.id).then(function(r){
-      if(r.error){
-        console.error('Update error:', r.error);
-        alert('Gagal menyimpan: ' + r.error.message);
-      } else {
-        // Save to avatar history
-        db.from('player_avatars').insert({
-          user_id: currentUser.id,
-          avatar_url: selectedAvatar,
-          is_active: true
-        }).then(function(){
-          alert('Avatar berhasil disimpan!');
-          console.log('Avatar saved:', selectedAvatar);
-        }).catch(function(e){
-          console.warn('Avatar history error:', e);
-        });
+    try {
+      var avatarUrl = 'default';
+      
+      if(selectedFile){
+        // Upload to Supabase Storage
+        var fileExt = selectedFile.name.split('.').pop();
+        var fileName = currentUser.id + '_' + Date.now() + '.' + fileExt;
+        var filePath = fileName;
+        
+        console.log('Uploading:', fileName);
+        
+        var {data, error} = await db.storage
+          .from('avatars')
+          .upload(filePath, selectedFile, {
+            cacheControl: '3600',
+            upsert: true
+          });
+        
+        if(error){
+          console.error('Upload error:', error);
+          throw new Error('Upload gagal: ' + error.message);
+        }
+        
+        // Get public URL
+        var {data:{publicUrl}} = db.storage
+          .from('avatars')
+          .getPublicUrl(filePath);
+        
+        avatarUrl = publicUrl;
+        console.log('Uploaded to:', avatarUrl);
       }
-    }).catch(function(e){
-      console.error('Error:', e);
-      alert('Terjadi kesalahan');
-    }).finally(function(){
+      
+      // Update profile
+      var {error: updateError} = await db
+        .from('profiles')
+        .update({
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', currentUser.id);
+      
+      if(updateError){
+        throw new Error('Update profile gagal: ' + updateError.message);
+      }
+      
+      currentAvatar = avatarUrl;
+      alert('Avatar berhasil disimpan!');
+      
+      // Update display
+      if(avatarUrl === 'default'){
+        showDefaultAvatar();
+      } else {
+        showCustomAvatar(avatarUrl);
+      }
+      
+      // Reset upload
+      selectedFile = null;
+      $('fileInput').value = '';
+      $('previewContainer').style.display = 'none';
+      $('uploadArea').classList.remove('has-file');
+      $('uploadArea').querySelector('.upload-text').innerText = 'Klik untuk upload avatar';
+      
+    } catch(err){
+      console.error('Save error:', err);
+      alert('Error: ' + err.message);
+    } finally {
       btn.disabled = false;
       btn.innerText = 'SIMPAN AVATAR';
-    });
+    }
+  }
+
+  async function removeAvatar(){
+    if(!confirm('Hapus avatar custom? Avatar akan kembali ke default.')) return;
+    
+    var btn = $('btnRemove');
+    btn.disabled = true;
+    btn.innerText = 'Menghapus...';
+    
+    try {
+      // Delete from storage if exists
+      if(currentAvatar && currentAvatar !== 'default'){
+        // Extract file path from URL
+        var urlParts = currentAvatar.split('/');
+        var fileName = urlParts[urlParts.length - 1];
+        
+        var {error} = await db.storage
+          .from('avatars')
+          .remove([fileName]);
+        
+        if(error){
+          console.warn('Delete file error:', error);
+        }
+      }
+      
+      // Update profile to default
+      var {error: updateError} = await db
+        .from('profiles')
+        .update({
+          avatar_url: 'default',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', currentUser.id);
+      
+      if(updateError) throw updateError;
+      
+      currentAvatar = 'default';
+      showDefaultAvatar();
+      alert('Avatar custom dihapus. Kembali ke avatar default.');
+      
+    } catch(err){
+      console.error('Remove error:', err);
+      alert('Gagal menghapus avatar: ' + err.message);
+    } finally {
+      btn.disabled = false;
+      btn.innerText = 'HAPUS AVATAR CUSTOM';
+    }
   }
 
   if(document.readyState === 'loading'){
