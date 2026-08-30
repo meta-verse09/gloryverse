@@ -97,20 +97,24 @@
     try{db.from('ceki_msg').insert({room:ROOM,kind:(o.ev||o.act)||'m',payload:o});}catch(e){console.warn('send',e);}
   }
   function initRoom(code){
-    ROOM=code;
-    if(pollT)clearInterval(pollT);
-    if(window.db){
-      db.from('ceki_msg').select('id').eq('room',code).order('id',{ascending:false}).limit(1).then(function(r){
-        lastMsgId=(r.data&&r.data[0])?r.data[0].id:0;
-      });
-      pollT=setInterval(function(){
-        if(!ROOM)return;
-        db.from('ceki_msg').select('*').eq('room',ROOM).gt('id',lastMsgId).order('id',{ascending:true}).limit(30).then(function(r){
-          (r.data||[]).forEach(function(row){lastMsgId=row.id;handle(row.payload);});
-        });
-      },1200);
-    }
+  ROOM=code;
+  console.log('🏠 Init room:', code);
+  if(pollT)clearInterval(pollT);
+  if(window.db){
+    db.from('ceki_msg').select('id').eq('room',code).order('id',{ascending:false}).limit(1).then(function(r){
+      lastMsgId=(r.data&&r.data[0])?r.data[0].id:0;
+      console.log('📮 Last msg ID:', lastMsgId);
+    });
+    pollT=setInterval(function(){
+      if(!ROOM)return;
+      console.log('🔄 Polling...', lastMsgId);
+      db.from('ceki_msg').select('*').eq('room',ROOM).gt('id',lastMsgId).order('id',{ascending:true}).limit(30).then(function(r){
+        console.log(' Received:', r.data?r.data.length:0, 'messages');
+        (r.data||[]).forEach(function(row){lastMsgId=row.id;handle(row.payload);});
+      }).catch(function(e){console.error('Poll error:',e);});
+    },1000); // Lebih cepat: 1 detik
   }
+}
   function handle(p){
     if(!p||p.sid===MYSID)return;
     if(IS_HOST){
@@ -250,21 +254,26 @@
     try {
       var bBuat=$('bBuat');
       if(bBuat){bBuat.onclick=function(){
-        console.log('BUAT MEJA');
-        var code=Math.random().toString(36).slice(2,6).toUpperCase();
-        try{localStorage.setItem('gv_ceki_host',code);}catch(e){}
-        SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
-        IS_HOST=true;initRoom(code);sendLobby();
-        var roomBox=$('roomBox'),roomCode=$('roomCode'),roomLink=$('roomLink'),joinCode=$('joinCode');
-        if(roomBox)roomBox.style.display='block';
-        if(roomCode)roomCode.innerText=code;
-        if(roomLink)roomLink.innerText='gloryverse.id/ceki?room='+code;
-        if(joinCode)joinCode.value='';
-        drawLobby();
-        console.log('Room:',code);
-      };console.log('bBuat ok');}
-    } catch(e){console.error('bBuat',e);}
-    
+  console.log('BUAT MEJA');
+  var code=Math.random().toString(36).slice(2,6).toUpperCase();
+  try{localStorage.setItem('gv_ceki_host',code);}catch(e){}
+  SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
+  IS_HOST=true;initRoom(code);
+  
+  // Tunggu 2 detik sebelum kirim lobby
+  setTimeout(function(){
+    sendLobby();
+    console.log('Lobby sent!');
+  }, 2000);
+  
+  var roomBox=$('roomBox'),roomCode=$('roomCode'),roomLink=$('roomLink'),joinCode=$('joinCode');
+  if(roomBox)roomBox.style.display='block';
+  if(roomCode)roomCode.innerText=code;
+  if(roomLink)roomLink.innerText='gloryverse.id/ceki?room='+code;
+  if(joinCode)joinCode.value='';
+  drawLobby();
+  console.log('Room:',code);
+};console.log('bBuat ok');}
     try {
       var bStart=$('bStart');
       if(bStart){bStart.onclick=function(){console.log('MULAI');for(var i=1;i<4;i++){if(!SEATS[i].n)SEATS[i]={n:['','Uni Ros','Angku Mansur','Buya Datuk'][i],bot:true};}startRound();};console.log('bStart ok');}
