@@ -31,10 +31,48 @@ function cokiOf(h){var c=cnt(h);for(var m=0;m<30;m++){c[m]++;var w=win12(c);c[m]
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function stat(t){var el=$('stat');if(el)el.innerText=t;}
 function showMakan(v){var el=$('bMakan');if(el)el.style.display=v?'inline-block':'none';}
-function send(o){if(!ROOM||!window.db)return;o.sid=MYSID;try{db.from('ceki_msg').insert({room:ROOM,kind:(o.ev||o.act)||'m',payload:o});console.log('SEND:',o.ev||o.act);}catch(e){console.error('send err',e);}}
+function send(o){
+  if(!ROOM||!window.db){
+    console.error('send fail: no room or db');
+    return;
+  }
+  o.sid=MYSID;
+  console.log('Sending to DB:', o);
+  
+  db.from('ceki_msg').insert({
+    room: ROOM,
+    kind: (o.ev||o.act)||'m',
+    payload: o
+  }).then(function(r){
+    console.log('DB response:', r);
+  }).catch(function(e){
+    console.error('DB error:', e);
+  });
+}
 function initRoom(code){ROOM=code;console.log('initRoom:',code);if(pollT)clearInterval(pollT);if(window.db){db.from('ceki_msg').select('id').eq('room',code).order('id',{ascending:false}).limit(1).then(function(r){lastMsgId=(r.data&&r.data[0])?r.data[0].id:0;console.log('lastMsgId:',lastMsgId);});pollT=setInterval(function(){if(!ROOM)return;db.from('ceki_msg').select('*').eq('room',ROOM).gt('id',lastMsgId).order('id',{ascending:true}).limit(30).then(function(r){console.log('poll:',r.data?r.data.length:0);(r.data||[]).forEach(function(row){lastMsgId=row.id;handle(row.payload);});}).catch(function(e){console.error('poll err',e);});},1000);}}
 function handle(p){if(!p||p.sid===MYSID)return;console.log('handle:',p.ev||p.act);if(IS_HOST){if(p.act==='join'){var got=-1;for(var i=1;i<4;i++){if(SEATS[i].sid===p.sid){got=i;break;}}if(got<0){for(var i=1;i<4;i++){if(SEATS[i].bot){SEATS[i]={n:p.name,bot:false,taken:true,sid:p.sid};got=i;break;}}}if(got>=0){console.log('join seat:',got);sendLobby();}}if(p.act==='cabut'&&started&&turn===p.seat)doCabut(p.seat);if(p.act==='makan'&&started&&turn===p.seat)doMakan(p.seat);if(p.act==='turun'&&started&&turn===p.seat)doTurun(p.seat,p.card);if(p.act==='koa'&&started&&turn===p.seat&&win12(cnt(hands[p.seat])))doKoa(p.seat);}else{if(p.ev==='lobby'){p.seats.forEach(function(s,i){if(s&&s.sid===MYSID){MY=i;seated=true;if(knockT){clearInterval(knockT);knockT=null;console.log('seated at',i);}}if(s)SEATS[i]=s;});drawLobby();}if(p.ev==='state'){hands=p.hands;disc=p.disc;pile=Array(p.pile);last=p.last;turn=p.turn;fase=p.fase;wins=p.wins;over=p.over;p.names.forEach(function(n,i){SEATS[i].n=n;});started=true;var lobby=$('lobby'),game=$('gameArea');if(lobby)lobby.style.display='none';if(game)game.style.display='block';if(over){var ovT=$('ovT'),ovM=$('ovM'),ov=$('ov');if(ovT)ovT.innerText=p.ovT;if(ovM)ovM.innerText=p.ovM;if(ov)ov.style.display='flex';}else{var ov=$('ov');if(ov)ov.style.display='none';}render();}}}
-function sendLobby(){if(IS_HOST)SEATS[0].sid=MYSID;console.log('sendLobby');send({ev:'lobby',seats:SEATS});}
+function sendLobby(){
+  if(IS_HOST)SEATS[0].sid=MYSID;
+  console.log('sendLobby seats:', SEATS);
+  
+  // Sederhanakan format seats
+  var simpleSeats = SEATS.map(function(s){
+    return {
+      n: s.n || '',
+      bot: s.bot || false,
+      taken: s.taken || false,
+      sid: s.sid || ''
+    };
+  });
+  
+  var payload = {
+    ev: 'lobby',
+    seats: simpleSeats
+  };
+  
+  console.log('Sending payload:', payload);
+  send(payload);
+}
 function drawLobby(){var el=$('seatList');if(!el)return;var h='';SEATS.forEach(function(s){h+='<span class="chip">'+(s.bot?'BOT:':'')+' '+(s.n||'kosong')+'</span> ';});h+='<div class="dim" style="margin-top:6px">'+(IS_HOST?'Kamu HOST - biarkan halaman TERBUKA.':'Tamu - menunggu host memulai...')+'</div>';el.innerHTML=h;var bStart=$('bStart');if(bStart)bStart.style.display=IS_HOST?'block':'none';}
 function render(){if(turn===MY&&!over&&fase==='draw'&&hands[MY].length>=12)fase='discard';var pileEl=$('pile');if(pileEl)pileEl.innerText=pile.length;var lastEl=$('lastD');if(lastEl)lastEl.innerHTML=(last!==null)?svg(last.card):'';for(var p=0;p<4;p++){var nEl=$('n'+p),sEl=$('s'+p),aEl=$('a'+p),cEl=$('c'+p),dEl=$('d'+p);if(nEl)nEl.innerText=SEATS[p].n;if(sEl)sEl.innerText=String.fromCharCode(9733).repeat(wins[p]);if(aEl)aEl.innerText=SEATS[p].bot?'BOT':'';if(cEl)cEl.style.display=(cokiOf(hands[p])>=0)?'block':'none';if(p!==MY&&dEl)dEl.innerHTML=disc[p].slice(-4).map(function(){return '<span class="mini"></span>';}).join('');}var hh='';hands[MY].forEach(function(m,i){hh+='<span class="cd'+(i===sel?' sel':'')+'" data-i="'+i+'">'+svg(m)+'</span>';});var handEl=$('hand');if(handEl)handEl.innerHTML=hh;var els=document.querySelectorAll('.cd');for(var k=0;k<els.length;k++){(function(el){el.onclick=function(){sel=+el.dataset.i;render();};})(els[k]);}var my=(turn===MY)&&!over;var bCabut=$('bCabut'),bTurun=$('bTurun'),bKoa=$('bKoa'),bSusun=$('bSusun');if(bCabut)bCabut.style.display=(my&&fase==='draw')?'inline-block':'none';if(bTurun)bTurun.style.display=(my&&fase==='discard'&&sel>=0)?'inline-block':'none';if(bKoa)bKoa.style.display=(my&&fase==='discard'&&win12(cnt(hands[MY])))?'inline-block':'none';if(bSusun)bSusun.style.display=my?'inline-block':'none';if(my&&fase==='draw'&&last&&cnt(hands[MY])[last.card]>=2)showMakan(true);if(my)stat(fase==='draw'?'Giliranmu: CABUT (atau MAKAN)':'Tangan 12: KETUK kartu lalu TURUN');var info=$('info');if(info)info.innerText='Tangan: '+hands[MY].length+' | Tumpukan: '+pile.length;if(IS_HOST&&started)sendState();}
 function sendState(){send({ev:'state',hands:hands,disc:disc,pile:pile.length,last:last,turn:turn,fase:fase,wins:wins,over:over,ovT:$('ovT')?$('ovT').innerText:'',ovM:$('ovM')?$('ovM').innerText:'',names:SEATS.map(function(s){return s.n;})});}
