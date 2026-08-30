@@ -1,4 +1,13 @@
-const SUPABASE_URL = "https://gfhcqbosxtcuvxttmzsm.supabase.co";
-const SUPABASE_ANON = "sb_publishable_yFwUs9GLJb8PvnB5Qj8rAA_vLF32P6l";
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+// config.js
+window.SUPABASE_URL = "https://gfhcqbosxtcuvxttmzsm.supabase.co";
+window.SUPABASE_ANON = "sb_publishable_yFwUs9GLJb8PvnB5Qj8rAA_vLF32P61";
+
+function initDb(){
+  if(typeof supabase === 'undefined'){
+    setTimeout(initDb, 100);
+    return;
+  }
+  window.db = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON);
+  console.log('Supabase connected');
+}
+initDb();
