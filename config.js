@@ -1,5 +1,5 @@
 window.SUPABASE_URL = "https://gfhcqbosxtcuvxttmzsm.supabase.co";
-window.SUPABASE_ANON = "sb_publishable_yFwUs9GLJb8PvnB5Qj8rAA_vLF32P61";
+window.SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg";
 
 function initDb(){
   if(typeof supabase === 'undefined'){
