@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GloryVerse - Profile</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="layout.css">
+<style>
+.profile-container{max-width:600px;margin:20px auto;padding:20px}
+.profile-header{text-align:center;margin-bottom:30px}
+.avatar-preview{width:120px;height:120px;border-radius:50%;border:4px solid var(--gold);margin:0 auto 15px;overflow:hidden;background:var(--bg2)}
+.avatar-preview img{width:100%;height:100%;object-fit:cover}
+.username{font-size:24px;font-weight:bold;color:var(--gold);margin:10px 0}
+.username-label{color:var(--mut);font-size:12px}
+.section-title{font-size:18px;font-weight:bold;margin:25px 0 15px;color:var(--gold);border-bottom:1px solid var(--line);padding-bottom:8px}
+.avatar-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:12px;margin-bottom:20px}
+.avatar-item{aspect-ratio:1;border-radius:12px;border:3px solid var(--line);cursor:pointer;transition:all 0.2s;overflow:hidden;background:var(--bg2)}
+.avatar-item:hover{transform:scale(1.05);border-color:var(--gold)}
+.avatar-item.active{border-color:var(--gold);box-shadow:0 0 15px var(--gold)}
+.avatar-item img{width:100%;height:100%;object-fit:cover}
+.btn-save{width:100%;padding:14px;font-size:16px;margin-top:20px}
+.current-info{background:var(--bg2);padding:15px;border-radius:10px;margin-bottom:20px}
+.info-row{display:flex;justify-content:space-between;margin:8px 0}
+.info-label{color:var(--mut)}
+.info-value{font-weight:bold}
+</style>
+</head>
+<body data-img='reg_solok.jpeg' data-title="Profile">
+<header><b class="logo">GloryVerse</b>
+<span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr"></span>
+<span class="chip"><b id="coin">0</b></span><span class="chip"><b id="en">100</b></span>
+<span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
+<nav class="main"><a href="home.html">HOME</a><a href="game.html">ACTIVITIES</a>
+<a href="market.html">MARKETS</a><a href="war.html">WAR</a>
+<a href="org.html">ORGANIZATIONS</a><a href="mapverse.html">MAPVERSE</a><a href="rank.html">RANKINGS</a>
+<a class="on" href="profile.html">PROFILE</a></nav>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="avatar-preview" id="currentAvatar">
+      <img src="" alt="Avatar" id="previewImg">
+    </div>
+    <div class="username" id="displayUsername">Loading...</div>
+    <div class="username-label">Username (tidak dapat diubah)</div>
+  </div>
+
+  <div class="current-info">
+    <div class="info-row">
+      <span class="info-label">Level</span>
+      <span class="info-value" id="userLevel">1</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Coin</span>
+      <span class="info-value" id="userCoin">0</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Energy</span>
+      <span class="info-value" id="userEnergy">100</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Member Since</span>
+      <span class="info-value" id="memberSince">-</span>
+    </div>
+  </div>
+
+  <div class="section-title">Pilih Avatar Baru</div>
+  <div class="avatar-grid" id="avatarGrid">
+    <!-- Avatar items will be loaded here -->
+  </div>
+
+  <button class="btn btn-save" id="btnSave">SIMPAN AVATAR</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="profile.js"></script>
+</body>
+</html>
