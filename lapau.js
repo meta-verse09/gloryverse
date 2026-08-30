@@ -1,7 +1,7 @@
-/* lapau.js v7.1 - SOLO + MABAR REALTIME (NO EMOJI) */
+/* lapau.js v7.2 - SOLO + MABAR REALTIME - VALIDATED */
 (function(){
   'use strict';
-  console.log('lapau.js v7.1 loading...');
+  console.log('lapau.js v7.2 loading...');
   
   if(typeof window.phase !== 'function' && typeof window.phaseOf === 'function'){
     window.phase = window.phaseOf;
@@ -240,7 +240,6 @@
     if(w!==MY&&w>=0)msg+=' | Awak coki duluan, urang yang sampai';
     if(ovM)ovM.innerText=msg;if(ov)ov.style.display='flex';render();
   }
-  
   function bindButtons(){
     console.log('Binding tombol...');
     try {
@@ -312,7 +311,7 @@
   }
   
   function init(){
-    console.log('lapau.js v7.1 init...');
+    console.log('lapau.js v7.2 init...');
     try {
       if(window.db&&db.auth){
         db.auth.getSession().then(function(r){var s=r.data&&r.data.session;if(s)return db.from('profiles').select('username').eq('id',s.user.id).single().then(function(p){if(p.data){MYNAME=p.data.username;SEATS[0].n=MYNAME;var n0=$('n0');if(n0)n0.innerText=MYNAME;}});}).catch(function(){});
@@ -321,6 +320,30 @@
     
     try {
       var q=new URLSearchParams(location.search).get('room');
-      if(q){q=q.toUpperCase();var isHost=false;try{isHost=localStorage.getItem('gv_ceki_host')===q;}catch(e){}
-        if(isHost){SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];IS_HOST=true;initRoom(q);sendLobby();var roomBox=$('roomBox'),roomCode=$('roomCode'),roomLink=$('roomLink');if(roomBox)roomBox.style.display='block';if(roomCode)roomCode.innerText=q;if(roomLink)roomLink.innerText='gloryverse.id/ceki?room='+q;drawLobby();}
-        else{var joinCode=$('joinCode');if(joinCode)joinCode.value=q;setTimeout(function(){var bJoin=$('bJoin')
+      if(q){
+        q=q.toUpperCase();
+        var isHost=false;
+        try{isHost=localStorage.getItem('gv_ceki_host')===q;}catch(e){}
+        if(isHost){
+          SEATS=[{n:MYNAME,bot:false,taken:true,sid:MYSID},{n:'',bot:true},{n:'',bot:true},{n:'',bot:true}];
+          IS_HOST=true;initRoom(q);sendLobby();
+          var roomBox=$('roomBox'),roomCode=$('roomCode'),roomLink=$('roomLink');
+          if(roomBox)roomBox.style.display='block';
+          if(roomCode)roomCode.innerText=q;
+          if(roomLink)roomLink.innerText='gloryverse.id/ceki?room='+q;
+          drawLobby();
+        } else {
+          var joinCode=$('joinCode');
+          if(joinCode)joinCode.value=q;
+          setTimeout(function(){var bJoin=$('bJoin');if(bJoin)bJoin.onclick();},600);
+        }
+      }
+    } catch(e){console.warn('URL',e);}
+    
+    bindButtons();
+    console.log('lapau.js v7.2 ready!');
+  }
+  
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
+  else {setTimeout(init,100);}
+})();
