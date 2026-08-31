@@ -202,4 +202,11 @@ console.log('v7.3 ready');
 
 if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}
 else{setTimeout(init,100);}
+// Toggle chat untuk mobile
+window.toggleChat = function(){
+  var side = document.getElementById('right');
+  if(side){
+    side.classList.toggle('show');
+  }
+};  
 })();
