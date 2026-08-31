@@ -133,3 +133,35 @@
     display: none !important;
   }
 }
+/* Sembunyikan sidebar menu layout.js di halaman ceki */
+nav.main,
+.main-nav,
+.sidebar,
+#sidebar,
+.side-menu,
+.nav-menu {
+  display: none !important;
+}
+
+/* Sembunyikan juga overlay/blur dari layout */
+.overlay,
+.menu-overlay {
+  display: none !important;
+}
+
+/* Pastikan game area tidak terhalang */
+#gameArea,
+main,
+.grid {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Chat box di laptop: posisi lebih ke kanan */
+@media (min-width: 769px) {
+  .side#right {
+    right: 5px !important;
+    top: 70px !important;
+    width: 220px !important;
+  }
+}
