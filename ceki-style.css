@@ -1,167 +1,17 @@
-/* Chat Box - Fixed Position */
-.side#right {
-  position: fixed !important;
-  right: 10px !important;
-  top: 80px !important;
-  width: 280px !important;
-  height: calc(100vh - 100px) !important;
-  z-index: 1000 !important;
-  background: transparent !important;
+/* Hanya untuk ukuran kartu */
+.cd svg, .cd img {
+  width: 32px !important;
+  height: 75px !important;
 }
 
-.chat-box {
-  background: rgba(11, 16, 32, 0.95) !important;
-  border: 2px solid #facc15 !important;
-  border-radius: 12px !important;
-  height: 100% !important;
+#hand {
   display: flex !important;
-  flex-direction: column !important;
-  overflow: hidden !important;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  max-width: 95vw !important;
+  margin: 0 auto !important;
 }
 
-.chat-header {
-  background: #facc15 !important;
-  color: #0b1020 !important;
-  padding: 12px !important;
-  font-weight: bold !important;
-  text-align: center !important;
-  font-size: 14px !important;
-}
-
-.chat-messages {
-  flex: 1 !important;
-  overflow-y: auto !important;
-  padding: 10px !important;
-  font-size: 12px !important;
-}
-
-.chat-message {
-  margin-bottom: 8px !important;
-  padding: 6px 10px !important;
-  background: rgba(255,255,255,0.05) !important;
-  border-radius: 6px !important;
-  word-wrap: break-word !important;
-}
-
-.chat-message .sender {
-  color: #facc15 !important;
-  font-weight: bold !important;
-  margin-right: 5px !important;
-}
-
-.chat-message .time {
-  color: #93c5fd !important;
-  font-size: 10px !important;
-  margin-left: 5px !important;
-}
-
-.chat-message .text {
-  color: #e2e8f0 !important;
-}
-
-.chat-input-area {
-  display: flex !important;
-  padding: 10px !important;
-  border-top: 1px solid rgba(255,255,255,0.1) !important;
-  gap: 5px !important;
-}
-
-.chat-input-area input {
-  flex: 1 !important;
-  padding: 8px !important;
-  border: 1px solid #24324f !important;
-  border-radius: 6px !important;
-  background: #0b1020 !important;
-  color: #fff !important;
-  font-size: 12px !important;
-}
-
-.btn-chat {
-  padding: 8px 12px !important;
-  background: #facc15 !important;
-  border: none !important;
-  border-radius: 6px !important;
-  color: #0b1020 !important;
-  font-weight: bold !important;
-  cursor: pointer !important;
-}
-
-.btn-chat:hover {
-  background: #fbbf24 !important;
-}
-
-/* Mobile: Chat box hidden by default dengan toggle button */
-@media (max-width: 768px) {
-  .side#right {
-    display: none !important;
-    position: fixed !important;
-    right: 10px !important;
-    left: 10px !important;
-    bottom: 80px !important;
-    top: auto !important;
-    width: auto !important;
-    height: 250px !important;
-    z-index: 1000 !important;
-  }
-  
-  .side#right.show {
-    display: block !important;
-  }
-  
-  /* Tombol toggle chat untuk mobile */
-  .chat-toggle-btn {
-    display: block !important;
-    position: fixed !important;
-    right: 15px !important;
-    bottom: 80px !important;
-    width: 50px !important;
-    height: 50px !important;
-    background: #facc15 !important;
-    border: none !important;
-    border-radius: 50% !important;
-    font-size: 24px !important;
-    cursor: pointer !important;
-    z-index: 999 !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
-  }
-}
-
-/* Desktop: chat box selalu tampil */
-@media (min-width: 769px) {
-  .chat-toggle-btn {
-    display: none !important;
-  }
-}
-/* Sembunyikan sidebar menu layout.js di halaman ceki */
-nav.main,
-.main-nav,
-.sidebar,
-#sidebar,
-.side-menu,
-.nav-menu {
-  display: none !important;
-}
-
-/* Sembunyikan juga overlay/blur dari layout */
-.overlay,
-.menu-overlay {
-  display: none !important;
-}
-
-/* Pastikan game area tidak terhalang */
-#gameArea,
-main,
-.grid {
-  position: relative !important;
-  z-index: 1 !important;
-}
-
-/* Chat box di laptop: posisi lebih ke kanan */
-@media (min-width: 769px) {
-  .side#right {
-    right: 5px !important;
-    top: 70px !important;
-    width: 220px !important;
-  }
+#hand > div {
+  flex-shrink: 0 !important;
 }
