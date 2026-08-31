@@ -1,4 +1,24 @@
-/* Hanya untuk ukuran kartu */
+/* Sembunyikan sidebar menu dari layout.js di halaman ceki */
+nav.main,
+.main-nav,
+.sidebar,
+#sidebar,
+.side-menu,
+.nav-menu,
+.menu-toggle,
+.hamburger {
+  display: none !important;
+}
+
+/* Pastikan game area full width */
+.grid,
+main {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 10px !important;
+}
+
+/* Ukuran kartu */
 .cd svg, .cd img {
   width: 32px !important;
   height: 75px !important;
