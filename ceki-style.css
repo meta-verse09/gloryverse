@@ -91,16 +91,45 @@
   background: #fbbf24 !important;
 }
 
-/* Mobile: Chat box sebagai floating button */
+/* Mobile: Chat box hidden by default dengan toggle button */
 @media (max-width: 768px) {
   .side#right {
-    display: block !important;
+    display: none !important;
     position: fixed !important;
     right: 10px !important;
-    bottom: 10px !important;
+    left: 10px !important;
+    bottom: 80px !important;
     top: auto !important;
-    width: 280px !important;
-    height: 300px !important;
+    width: auto !important;
+    height: 250px !important;
     z-index: 1000 !important;
+  }
+  
+  .side#right.show {
+    display: block !important;
+  }
+  
+  /* Tombol toggle chat untuk mobile */
+  .chat-toggle-btn {
+    display: block !important;
+    position: fixed !important;
+    right: 15px !important;
+    bottom: 80px !important;
+    width: 50px !important;
+    height: 50px !important;
+    background: #facc15 !important;
+    border: none !important;
+    border-radius: 50% !important;
+    font-size: 24px !important;
+    cursor: pointer !important;
+    z-index: 999 !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+  }
+}
+
+/* Desktop: chat box selalu tampil */
+@media (min-width: 769px) {
+  .chat-toggle-btn {
+    display: none !important;
   }
 }
