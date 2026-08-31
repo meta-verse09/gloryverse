@@ -6,7 +6,49 @@
 <title>GloryVerse - Owner Dashboard</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="layout.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">// Cek apakah user adalah owner
+(function(){
+  'use strict';
+  
+  // Tunggu Supabase load
+  if(typeof window.db === 'undefined'){
+    setTimeout(arguments.callee, 100);
+    return;
+  }
+  
+  // Daftar email owner yang diizinkan
+  var OWNER_EMAILS = [
+    'm.gazali1975@gmail.com',
+    'angriyani1977@gmail.com'
+  ];
+  
+  // Cek user yang login
+  db.auth.getUser().then(function(result){
+    var user = result.data.user;
+    
+    // Kalau tidak ada user yang login, tendang ke home
+    if(!user){
+      alert('Akses ditolak! Silakan login terlebih dahulu.');
+      window.location.href = '/';
+      return;
+    }
+    
+    // Cek apakah email user ada di daftar owner
+    var isOwner = OWNER_EMAILS.indexOf(user.email) !== -1;
+    
+    if(!isOwner){
+      alert('Akses ditolak! Halaman ini hanya untuk owner.');
+      window.location.href = '/';
+      return;
+    }
+    
+    // Kalau sudah lolos, biarkan halaman load
+    console.log('Owner verified:', user.email);
+  }).catch(function(err){
+    console.error('Auth error:', err);
+    window.location.href = '/';
+  });
+})();</script>
 <style>
 .owner-container{max-width:1400px;margin:20px auto;padding:20px}
 .owner-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding:15px;background:var(--bg2);border-radius:12px;border:1px solid var(--line)}
