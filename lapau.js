@@ -23,12 +23,12 @@ window.svg=function(m){
   try{
     var file = CARD_FILES[m] || 'babi-aluih.png';
     var num = String(m+1).padStart(2,'0');
-    return '<div style="width:60px;height:140px;position:relative;display:inline-block;margin:2px;">' +
+    return '<div style="width:40px;height:95px;position:relative;display:inline-block;margin:2px;">' +
       '<img src="' + file + '" style="width:100%;height:100%;border-radius:6px;" onerror="this.style.display=\'none\'">' +
-      '<span style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:9px;color:#151515;font-family:monospace;">' + num + '</span>' +
+      '<span style="position:absolute;bottom:1px;left:0;right:0;text-align:center;font-size:9px;color:#151515;font-family:monospace;">' + num + '</span>' +
       '</div>';
   }catch(e){
-    return '<div style="width:60px;height:140px;background:#f5f0e6;border-radius:6px;"></div>';
+    return '<div style="width:40px;height:95px;background:#f5f0e6;border-radius:6px;"></div>';
   }
 };
 var SEATS=[{n:'Kamu',bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];
