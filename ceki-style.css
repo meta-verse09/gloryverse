@@ -1,50 +1,11 @@
-.discard-pile {
-  position: absolute;
-  width: 60px;
-  height: 80px;
-  border: 2px dashed rgba(255,255,255,0.3);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 5px;
-}
-
-#discard0 { bottom: -90px; left: 0; }
-#discard1 { right: -70px; top: 0; }
-#discard2 { top: -90px; left: 50%; transform: translateX(-50%); }
-#discard3 { left: -70px; top: 0; }
-#table {
-  width: 95vw !important;
-  max-width: 700px !important;
-  height: 350px !important;
-  margin: 0 auto !important;
-  position: relative !important;
-}
-
-#gameArea .card {
-  width: 95vw !important;
-  max-width: 700px !important;
-  margin: 0 auto !important;
-}
-
-#hand {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  max-width: 95vw !important;
-  margin: 0 auto !important;
-}
-
-#hand > div {
-  flex-shrink: 0 !important;
-}
+/* Chat Box Styling */
 .side {
-  width: 280px;
-  position: absolute;
+  position: fixed;
   right: 10px;
-  top: 10px;
-  bottom: 10px;
+  top: 80px;
+  width: 250px;
+  height: calc(100vh - 100px);
+  z-index: 100;
 }
 
 .chat-box {
@@ -128,9 +89,16 @@
   background: #fbbf24;
 }
 
-/* Mobile responsive */
+/* Mobile: Chat box di bawah */
 @media (max-width: 768px) {
   .side {
-    display: none;
+    display: block !important;
+    position: fixed;
+    right: 10px;
+    left: 10px;
+    top: auto;
+    bottom: 10px;
+    width: auto;
+    height: 200px;
   }
 }
