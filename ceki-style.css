@@ -1,0 +1,16 @@
+.discard-pile {
+  position: absolute;
+  width: 60px;
+  height: 80px;
+  border: 2px dashed rgba(255,255,255,0.3);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+#discard0 { bottom: -90px; left: 0; }
+#discard1 { right: -70px; top: 0; }
+#discard2 { top: -90px; left: 50%; transform: translateX(-50%); }
+#discard3 { left: -70px; top: 0; }
