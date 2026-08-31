@@ -31,6 +31,9 @@ window.svg=function(m){
     return '<div style="width:60px;height:140px;background:#f5f0e6;border-radius:6px;"></div>';
   }
 };
+
+var SEATS=[{n:'Kamu',bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];
+var hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
 var IS_HOST=true,MY=0,ROOM=null,started=false,seated=false,knockT=null,pollT=null,lastMsgId=0;
 var MYNAME='Kamu',MYSID=Math.random().toString(36).slice(2,8);
 function $(id){return document.getElementById(id);}
