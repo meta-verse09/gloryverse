@@ -62,11 +62,25 @@ input{background:#0b1020;color:var(--txt);border:1px solid var(--line);border-ra
 <div class="card"><h3>Koa Ceki - <span id="roomTitle">Lapau Solok</span></h3>
 <div class="dim">Tim: Kamu+Atas vs Kanan+Kiri - Tangan 11 - Pertama PUTUS (3x) juara.</div></div>
 <div id="table">
-<div class="seat" style="top:6px;left:50%;transform:translateX(-50%)"><div class="av" id="a2"></div><span id="n2">Atas</span> <span id="s2"></span><div class="coki" id="c2">COKI</div><div id="d2"></div></div>
-<div class="seat" style="left:8px;top:40%"><div class="av" id="a3"></div><span id="n3">Kiri</span> <span id="s3"></span><div class="coki" id="c3">COKI</div><div id="d3"></div></div>
-<div class="seat" style="right:8px;top:40%"><div class="av" id="a1"></div><span id="n1">Kanan</span> <span id="s1"></span><div class="coki" id="c1">COKI</div><div id="d1"></div></div>
-<div class="seat" style="bottom:6px;left:12px"><div class="av" id="a0" style="background:#16a34a"></div><span id="n0">Kamu</span> <span id="s0"></span><div class="coki" id="c0">COKI</div></div>
-<div id="pile">-</div><div id="lastD"></div>
+<div class="seat" style="top:6px;left:50%;transform:translateX(-50%)">
+  <div class="av" id="a2"></div><span id="n2">Atas</span> <span id="s2"></span>
+  <div class="discard-pile" id="discard2"></div>
+</div>
+<div class="seat" style="left:8px;top:40%">
+  <div class="av" id="a3"></div><span id="n3">Kiri</span> <span id="s3"></span>
+  <div class="coki" id="c3"></div>
+  <div class="discard-pile" id="discard3"></div>
+</div>
+<div class="seat" style="right:8px;top:40%">
+  <div class="av" id="a1"></div><span id="n1">Kanan</span> <span id="s1"></span>
+  <div class="coki" id="c1"></div>
+  <div class="discard-pile" id="discard1"></div>
+</div>
+<div class="seat" style="bottom:6px;left:12px">
+  <div class="av" id="a0" style="background:#16a34a"></div><span id="n0">Kamu</span> <span id="s0"></span>
+  <div class="discard-pile" id="discard0"></div>
+</div>
+<div id="pile"></div><div id="lastD"></div>
 <div id="stat" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);color:#fde047;font-weight:800;font-size:13px"></div>
 </div>
 <div id="hand"></div>
