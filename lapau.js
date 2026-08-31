@@ -24,7 +24,7 @@ window.svg=function(m){
     var file = CARD_FILES[m] || 'babi-aluih.png';
     var num = String(m+1).padStart(2,'0');
     return '<div style="width:60px;height:140px;position:relative;display:inline-block;margin:2px;">' +
-      '<img src="cards/' + file + '" style="width:100%;height:100%;border-radius:6px;" onerror="this.style.display=\'none\'">' +
+      '<img src="' + file + '" style="width:100%;height:100%;border-radius:6px;" onerror="this.style.display=\'none\'">' +
       '<span style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:9px;color:#151515;font-family:monospace;">' + num + '</span>' +
       '</div>';
   }catch(e){
