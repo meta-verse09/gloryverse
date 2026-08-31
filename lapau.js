@@ -6,22 +6,31 @@ var FAM=['HIU','JARUM','SUDUNG','BENGKOK','TALI','PECAH','BATUNG','SISIR','BABI'
 var VAR={HIU:['Babak','Kucing','Penci','Bunga','Kasut','Panjang'],JARUM:['Wajik','Besar','Kecil'],SUDUNG:['Putih','Hitam','Pinggang'],BENGKOK:['Hitam','Besar','Kecil'],TALI:['Merah','Bulat','Kecil'],PECAH:['Manik','Delapan','Halus'],BATUNG:['Manik','Enam','Kecil'],SISIR:['Besar','Kecil','Bendera'],BABI:['Pusat','Besar','Kecil']};
 var RED={'HIU/Penci':1,'HIU/Babak':2,'TALI/Merah':1};
 var MID=[];FAM.forEach(function(f){VAR[f].forEach(function(n){MID.push({f:f,n:n,red:RED[f+'/'+n]||0})})});
+// Mapping kartu ke file PNG (index 0-29)
+var CARD_FILES = [
+  'hiu-babak.png','hiu-kuciang.png','hiu-aluih.png','hiu-merah.png','hiu-hitam.png','hiu-gadang.png',
+  'jarum-wajik.png','jarum-gadang.png','jarum-aluih.png',
+  'suduang-putiah.png','suduang-wajik.png','pinggang.png',
+  'bengkok-aluih.png','bengkok-gadang.png','bengkok-wajik.png',
+  'tali-sirah.png','tali-bulek.png','tali-aluih.png',
+  'pacah-manih.png','pacah-lapan.png','pacah-aluih.png',
+  'kapik-manih.png','kapik-anam.png','sisia-aluih.png',
+  'sisia-gadang.png','bendera.png','batuang-anam.png',
+  'babi-pusek.png','babi-gadang.png','babi-aluih.png'
+];
+
 window.svg=function(m){
-try{var M=MID[m],v=VAR[M.f].indexOf(M.n),field=M.red==2?'#8B0000':'#0a0a0a';
-var W='stroke="#f5f0e6" stroke-width="2.5" fill="none"',g='',i,n,cy,cx;
-if(M.f=='HIU'){if(v===0)g='<path d="M16 24 h28 M16 32 h28 M16 40 h28 M16 100 h28 M16 108 h28 M16 116 h28" '+W+'/>';if(v===1)g='<path d="M20 28 l10 12 -10 12 M30 28 l-10 12 10 12 M20 100 l10 12 -10 12 M30 100 l-10 12 10 12" '+W+'/>';if(v===2)g='<circle cx="30" cy="34" r="8" '+W+'/><circle cx="30" cy="34" r="4" '+W+'/><circle cx="30" cy="106" r="8" '+W+'/><circle cx="30" cy="106" r="4" '+W+'/>';if(v===3)g='<path d="M22 26 v12 h16 v-12 M22 102 v12 h16 v-12" '+W+'/>';if(v===4)g='<rect x="22" y="26" width="16" height="16" '+W+'/><rect x="22" y="98" width="16" height="16" '+W+'/>';if(v===5)g='<path d="M20 24 h20 v8 h-20 M20 108 h20 v8 h-20" '+W+'/>';}
-if(M.f=='JARUM'){if(v===0)g='<path d="M30 22 l14 18 -14 18 -14 -18 z M30 100 l10 14 -10 14 -10 -14 z" '+W+'/>';if(v===1)g='<path d="M30 26 l10 14 -10 14 -10 -14 z M26 60 l4 6 -4 6 -4 -6 z M30 94 l10 14 -10 14 -10 -14 z" '+W+'/>';if(v===2)g='<path d="M30 30 l8 12 -8 12 -8 -12 z M22 66 l8 12 -8 12 -8 -12 z M30 102 l8 12 -8 12 -8 -12 z" '+W+'/>';}
-if(M.f=='SUDUNG'){for(i=0;i<3;i++){cy=30+i*40;if(v===0)g+='<circle cx="30" cy="'+cy+'" r="10" '+W+'/><circle cx="30" cy="'+cy+'" r="5" '+W+'/>';if(v===1)g+='<circle cx="30" cy="'+cy+'" r="9" '+W+'/>';if(v===2)g+='<circle cx="30" cy="'+cy+'" r="8" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>';}}
-if(M.f=='BENGKOK'){if(v===0)g='<path d="M20 22 v96 h20" '+W+'/>';if(v===1)g='<path d="M40 22 v96 h-20" '+W+'/>';if(v===2)g='<path d="M20 22 v96 h20 M40 22 v56" '+W+'/>';}
-if(M.f=='TALI'){for(i=0;i<3;i++){cy=30+i*40;if(v===0)g+='<circle cx="30" cy="'+cy+'" r="11" '+W+'/><circle cx="30" cy="'+cy+'" r="7" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>';if(v===1)g+='<circle cx="30" cy="'+cy+'" r="10" '+W+'/><circle cx="30" cy="'+cy+'" r="4" '+W+'/>';if(v===2)g+='<circle cx="30" cy="'+cy+'" r="9" '+W+'/><circle cx="30" cy="'+cy+'" r="3" '+W+'/>';}}
-if(M.f=='PECAH'){if(v===0){g+='<circle cx="22" cy="30" r="6" '+W+'/><circle cx="38" cy="30" r="6" '+W+'/>';g+='<circle cx="22" cy="58" r="6" '+W+'/><circle cx="38" cy="58" r="6" '+W+'/>';g+='<circle cx="22" cy="86" r="6" '+W+'/><circle cx="38" cy="86" r="6" '+W+'/>';g+='<circle cx="30" cy="114" r="6" '+W+'/>';}if(v===1){for(i=0;i<8;i++){cx=22+(i%2)*16;cy=26+Math.floor(i/2)*30;g+='<circle cx="'+cx+'" cy="'+cy+'" r="5" '+W+'/>';}}if(v===2){for(i=0;i<12;i++){cx=20+(i%3)*10;cy=24+Math.floor(i/3)*24;g+='<circle cx="'+cx+'" cy="'+cy+'" r="4" '+W+'/>';}}}
-if(M.f=='BATUNG'){if(v===0){for(i=0;i<3;i++){cy=28+i*32;g+='<circle cx="24" cy="'+cy+'" r="6" '+W+'/><circle cx="36" cy="'+cy+'" r="6" '+W+'/>';}}if(v===1){for(i=0;i<2;i++){cy=34+i*56;g+='<circle cx="24" cy="'+cy+'" r="7" '+W+'/><circle cx="36" cy="'+cy+'" r="7" '+W+'/>';}}if(v===2){for(i=0;i<2;i++){cy=38+i*48;g+='<circle cx="24" cy="'+cy+'" r="8" '+W+'/><circle cx="36" cy="'+cy+'" r="8" '+W+'/>';}}}
-if(M.f=='SISIR'){n=v===0?8:v===1?6:5;for(i=0;i<n;i++){var y=v===0?22+i*14:v===1?28+i*16:30+i*20;g+='<path d="M18 '+y+' h24" '+W+'/>';}}
-if(M.f=='BABI'){if(v===0){g+='<circle cx="30" cy="32" r="10" '+W+'/>';g+='<rect x="20" y="56" width="20" height="24" '+W+'/>';g+='<rect x="20" y="84" width="20" height="24" '+W+'/>';}if(v===1){g+='<rect x="20" y="28" width="20" height="24" '+W+'/>';g+='<rect x="20" y="58" width="20" height="24" '+W+'/>';g+='<rect x="20" y="88" width="20" height="24" '+W+'/>';}if(v===2){g+='<rect x="20" y="34" width="20" height="20" '+W+'/>';g+='<rect x="20" y="62" width="20" height="20" '+W+'/>';g+='<rect x="20" y="90" width="20" height="20" '+W+'/>';}}
-var lab='<text x="30" y="137" font-size="10" fill="#151515" text-anchor="middle" font-family="monospace">'+String(m+1).padStart(2,'0')+'</text>';
-return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/><rect x="8" y="8" width="44" height="124" fill="'+field+'"/>'+g+lab+'</svg>';}catch(e){return '<svg viewBox="0 0 60 140"><rect x="1" y="1" width="58" height="138" rx="6" fill="#f5f0e6"/></svg>';}};
-var hands=[[],[],[],[]],disc=[[],[],[],[]],pile=[],turn=0,fase='idle',sel=-1,wins=[0,0,0,0],rid=0,last=null,over=false,mkT=null;
-var SEATS=[{n:'Kamu',bot:false},{n:'Uni Ros',bot:true},{n:'Angku Mansur',bot:true},{n:'Buya Datuk',bot:true}];
+  try{
+    var file = CARD_FILES[m] || 'babi-aluih.png';
+    var num = String(m+1).padStart(2,'0');
+    return '<div style="width:60px;height:140px;position:relative;display:inline-block;margin:2px;">' +
+      '<img src="cards/' + file + '" style="width:100%;height:100%;border-radius:6px;" onerror="this.style.display=\'none\'">' +
+      '<span style="position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:9px;color:#151515;font-family:monospace;">' + num + '</span>' +
+      '</div>';
+  }catch(e){
+    return '<div style="width:60px;height:140px;background:#f5f0e6;border-radius:6px;"></div>';
+  }
+};
 var IS_HOST=true,MY=0,ROOM=null,started=false,seated=false,knockT=null,pollT=null,lastMsgId=0;
 var MYNAME='Kamu',MYSID=Math.random().toString(36).slice(2,8);
 function $(id){return document.getElementById(id);}
