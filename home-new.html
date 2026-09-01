@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GloryVerse - Home New</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="layout.css">
+  <style>
+    body { margin: 0; padding: 0; background: #0a0e27; }
+    #nav-container { width: 100%; }
+    #main-wrapper { display: flex; min-height: calc(100vh - 80px); }
+    #sidebar-container { width: 250px; flex-shrink: 0; }
+    #content-container { flex: 1; padding: 20px; }
+  </style>
+</head>
+<body>
+  <!-- Container Navbar -->
+  <div id="nav-container"></div>
+  
+  <!-- Wrapper untuk Sidebar + Konten -->
+  <div id="main-wrapper">
+    <!-- Container Sidebar -->
+    <div id="sidebar-container"></div>
+    
+    <!-- Container Konten Utama -->
+    <div id="content-container">
+      <h2 style="color: #f0c040;">Konten Home Baru Akan Muncul Di Sini</h2>
+      <p style="color: #fff;">Ini adalah versi modular. Navbar dan Sidebar di-load dari file terpisah.</p>
+    </div>
+  </div>
+  
+  <script>
+    // Function $ global
+    window.$ = id => document.getElementById(id);
+    
+    // Load Navbar
+    fetch('navbar.html')
+      .then(r => r.text())
+      .then(h => { $('nav-container').innerHTML = h; })
+      .catch(e => console.error('Navbar error:', e));
+    
+    // Load Sidebar
+    fetch('sidebar.html')
+      .then(r => r.text())
+      .then(h => { $('sidebar-container').innerHTML = h; })
+      .catch(e => console.error('Sidebar error:', e));
+  </script>
+</body>
+</html>
