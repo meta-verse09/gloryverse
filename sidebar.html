@@ -1,4 +1,4 @@
-<!-- SIDEBAR GLORYVERSE -->
+<!-- SIDEBAR GLORYVERSE - Clean Version -->
 <style>
   .gv-sidebar {
     background: linear-gradient(180deg, #1a1a2e 0%, #0f1629 100%);
@@ -6,9 +6,6 @@
     padding: 15px;
     min-height: 100vh;
     width: 250px;
-    position: sticky;
-    top: 0;
-    overflow-y: auto;
   }
   
   .gv-sidebar-profile {
@@ -18,7 +15,21 @@
     border-bottom: 1px solid rgba(255,255,255,0.1);
   }
   
- <img src="avatar.png" alt="Avatar" class="gv-sidebar-avatar" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23f0c040%22/><text x=%2250%22 y=%2265%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%231a1a2e%22>P</text></svg>'">
+  .gv-sidebar-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #f0c040;
+    margin-bottom: 10px;
+    /* SVG fallback jika avatar.png tidak ada */
+    background: #f0c040;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #1a1a2e;
+    font-weight: 900;
+  }
   
   .gv-sidebar-username {
     color: #fff;
@@ -61,7 +72,6 @@
   .gv-stat-bar-fill {
     height: 100%;
     border-radius: 10px;
-    transition: width 0.5s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -124,28 +134,23 @@
     font-weight: 600;
     cursor: pointer;
     text-align: left;
-    transition: all 0.3s;
     display: flex;
     align-items: center;
     gap: 8px;
   }
   
-  .gv-menu-btn:hover, .gv-menu-btn.active {
+  .gv-menu-btn:hover {
     background: #f0c040;
     color: #1a1a2e;
-    border-color: #f0c040;
-  }
-  
-  .gv-menu-icon {
-    font-size: 16px;
   }
 </style>
 
 <aside class="gv-sidebar">
   <div class="gv-sidebar-profile">
-    <img src="https://gloryverse.id/avatar.png" alt="Avatar" class="gv-sidebar-avatar" id="gv-sidebar-avatar" onerror="this.src='https://via.placeholder.com/80x80/f0c040/1a1a2e?text=GV'">
-    <div class="gv-sidebar-username" id="gv-sidebar-username">Player</div>
-    <div class="gv-sidebar-rank" id="gv-sidebar-rank">ID • Kadet</div>
+    <!-- Avatar dengan SVG fallback, TIDAK ADA placeholder -->
+    <div class="gv-sidebar-avatar" id="gv-avatar">P</div>
+    <div class="gv-sidebar-username" id="gv-username">Player</div>
+    <div class="gv-sidebar-rank" id="gv-rank">ID • Kadet</div>
   </div>
   
   <div class="gv-sidebar-stats">
@@ -197,7 +202,7 @@
     </div>
     <div class="gv-currency-item">
       <div class="gv-currency-label">
-        <span></span>
+        <span>🇮🇩</span>
         <span>Currency</span>
       </div>
       <div class="gv-currency-value" id="gv-currency">0</div>
@@ -205,84 +210,17 @@
   </div>
   
   <div class="gv-sidebar-menu">
-    <button class="gv-menu-btn" onclick="navigateTo('business')">
-      <span class="gv-menu-icon">💼</span> Business
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('collection')">
-      <span class="gv-menu-icon">📦</span> Collection
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('assistant')">
-      <span class="gv-menu-icon">🤖</span> Assistant
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('garage')">
-      <span class="gv-menu-icon">🚗</span> Garage
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('wallet')">
-      <span class="gv-menu-icon">💰</span> Wallet
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('armory')">
-      <span class="gv-menu-icon">⚔️</span> Armory
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('cosmetics')">
-      <span class="gv-menu-icon">🎨</span> Cosmetics
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('housing')">
-      <span class="gv-menu-icon">🏠</span> Housing
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('squad')">
-      <span class="gv-menu-icon">👥</span> Squad
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('badges')">
-      <span class="gv-menu-icon">🏅</span> Badges
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('news')">
-      <span class="gv-menu-icon">📰</span> News
-    </button>
-    <button class="gv-menu-btn" onclick="navigateTo('area')">
-      <span class="gv-menu-icon">🗺️</span> Area
-    </button>
+    <button class="gv-menu-btn">💼 Business</button>
+    <button class="gv-menu-btn">📦 Collection</button>
+    <button class="gv-menu-btn">🤖 Assistant</button>
+    <button class="gv-menu-btn">🚗 Garage</button>
+    <button class="gv-menu-btn"> Wallet</button>
+    <button class="gv-menu-btn">⚔️ Armory</button>
+    <button class="gv-menu-btn">🎨 Cosmetics</button>
+    <button class="gv-menu-btn">🏠 Housing</button>
+    <button class="gv-menu-btn"> Squad</button>
+    <button class="gv-menu-btn">🏅 Badges</button>
+    <button class="gv-menu-btn"> News</button>
+    <button class="gv-menu-btn">🗺️ Area</button>
   </div>
 </aside>
-
-<script>
-  // Load data user ke sidebar
-  if (window.db) {
-    window.db.auth.getSession().then(function(result) {
-      const session = result.data.session;
-      if (session) {
-        window.db.from('profiles').select('*').eq('id', session.user.id).single().then(function(res) {
-          if (res.data) {
-            const profile = res.data;
-            document.getElementById('gv-sidebar-username').textContent = profile.username || 'Player';
-            document.getElementById('gv-sidebar-rank').textContent = (profile.country_code || 'ID') + ' • ' + (profile.rank || 'Kadet');
-            document.getElementById('gv-euro').textContent = profile.euro || 0;
-            document.getElementById('gv-sidebar-gold').textContent = profile.gold || 0;
-            document.getElementById('gv-currency').textContent = profile.currency || 0;
-            
-            // Update bars
-            const energy = profile.energy || 100;
-            const health = profile.health || 100;
-            const xp = profile.xp || 10;
-            
-            document.getElementById('gv-energy-bar').style.width = energy + '%';
-            document.getElementById('gv-energy-bar').textContent = energy + '%';
-            document.getElementById('gv-energy-text').textContent = energy + '%';
-            
-            document.getElementById('gv-health-bar').style.width = health + '%';
-            document.getElementById('gv-health-bar').textContent = health + '%';
-            document.getElementById('gv-health-text').textContent = health + '%';
-            
-            document.getElementById('gv-xp-bar').style.width = xp + '%';
-            document.getElementById('gv-xp-bar').textContent = xp + '%';
-            document.getElementById('gv-xp-text').textContent = 'Level ' + (profile.level || 1);
-            
-            // Avatar
-            if (profile.avatar_url) {
-              document.getElementById('gv-sidebar-avatar').src = profile.avatar_url;
-            }
-          }
-        });
-      }
-    });
-  }
-</script>
