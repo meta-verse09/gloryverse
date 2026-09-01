@@ -1,4 +1,4 @@
-<!-- NAVBAR GLORYVERSE - Fresh Version -->
+<!-- NAVBAR GLORYVERSE - Clean Version -->
 <style>
   .gv-navbar {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
@@ -23,6 +23,8 @@
     width: 50px;
     height: 50px;
     border-radius: 8px;
+    /* Mencegah error/ping jika logo.png belum ada */
+    onerror: this.style.display='none'; 
   }
   
   .gv-navbar-brand h1 {
@@ -103,7 +105,8 @@
 
 <nav class="gv-navbar">
   <div class="gv-navbar-brand">
-    <img src="logo.png" alt="GV">
+    <!-- onerror mencegah browser mencari placeholder jika logo.png tidak ditemukan -->
+    <img src="logo.png" alt="GloryVerse" onerror="this.style.display='none'">
     <h1>GLORYVERSE.ID</h1>
   </div>
   
@@ -142,19 +145,23 @@
 </nav>
 
 <script>
-// Jam real-time
+// Jam real-time (dijalankan setiap 1 detik)
 function updateClock() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, '0');
   const m = String(now.getMinutes()).padStart(2, '0');
   const s = String(now.getSeconds()).padStart(2, '0');
   const el = document.getElementById('gv-clock');
-  if (el) el.textContent = h + ':' + m + ':' + s;
+  if (el) {
+    el.textContent = h + ':' + m + ':' + s;
+  }
 }
-setInterval(updateClock, 1000);
-updateClock();
 
-// Toggle mode
+// Jalankan sekali saat load, lalu set interval
+updateClock();
+setInterval(updateClock, 1000);
+
+// Toggle mode online/offline
 function toggleMode() {
   const btn = event.target;
   if (btn.textContent.includes('ONLINE')) {
