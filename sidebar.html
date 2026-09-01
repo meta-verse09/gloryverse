@@ -1,160 +1,14 @@
-<!-- SIDEBAR GLORYVERSE - Clean Version -->
-<style>
-  .gv-sidebar {
-    background: linear-gradient(180deg, #1a1a2e 0%, #0f1629 100%);
-    border-right: 2px solid #f0c040;
-    padding: 15px;
-    min-height: 100vh;
-    width: 250px;
-  }
-  
-  .gv-sidebar-profile {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  
-  .gv-sidebar-avatar {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid #f0c040;
-    margin-bottom: 10px;
-    /* SVG fallback jika avatar.png tidak ada */
-    background: #f0c040;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 40px;
-    color: #1a1a2e;
-    font-weight: 900;
-  }
-  
-  .gv-sidebar-username {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 800;
-    margin: 5px 0;
-  }
-  
-  .gv-sidebar-rank {
-    color: #f0c040;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  
-  .gv-sidebar-stats {
-    margin-bottom: 20px;
-  }
-  
-  .gv-stat-bar {
-    margin-bottom: 12px;
-  }
-  
-  .gv-stat-label {
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .gv-stat-bar-container {
-    background: rgba(0,0,0,0.5);
-    border-radius: 10px;
-    height: 20px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  
-  .gv-stat-bar-fill {
-    height: 100%;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 800;
-  }
-  
-  .gv-energy-bar { background: linear-gradient(90deg, #28a745, #20c997); }
-  .gv-health-bar { background: linear-gradient(90deg, #dc3545, #ff6b6b); }
-  .gv-xp-bar { background: linear-gradient(90deg, #007bff, #00d4ff); }
-  
-  .gv-currency-section {
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    padding: 12px;
-    margin-bottom: 20px;
-  }
-  
-  .gv-currency-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  
-  .gv-currency-item:last-child {
-    border-bottom: none;
-  }
-  
-  .gv-currency-label {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .gv-currency-value {
-    color: #f0c040;
-    font-size: 14px;
-    font-weight: 800;
-  }
-  
-  .gv-sidebar-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  .gv-menu-btn {
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .gv-menu-btn:hover {
-    background: #f0c040;
-    color: #1a1a2e;
-  }
-</style>
-
+<!-- SIDEBAR GLORYVERSE - Pure HTML -->
 <aside class="gv-sidebar">
   <div class="gv-sidebar-profile">
     <div class="gv-sidebar-avatar" id="gv-avatar">P</div>
     <div class="gv-sidebar-username" id="gv-username">Player</div>
     <div class="gv-sidebar-rank" id="gv-rank">ID • Kadet</div>
     
-    <!-- BARU: Citizenship & Region Info -->
+    <!-- Citizenship & Region Info -->
     <div class="gv-citizenship-info">
       <div class="gv-info-row">
-        <span class="gv-info-icon">🏳️</span>
+        <span class="gv-info-icon">️</span>
         <span class="gv-info-label">Warga:</span>
         <span class="gv-info-value" id="gv-citizenship">Indonesia</span>
       </div>
@@ -164,28 +18,6 @@
         <span class="gv-info-value" id="gv-region">Betawi</span>
       </div>
     </div>
-  </div>
-  
-  <!-- Stats & Currency tetap ada -->
-  <div class="gv-sidebar-stats">
-    <!-- ... stats bars ... -->
-  </div>
-  
-  <div class="gv-currency-section">
-    <!-- ... currency items ... -->
-  </div>
-  
-  <div class="gv-sidebar-menu">
-    <!-- Menu buttons -->
-  </div>
-</aside>
-
-<aside class="gv-sidebar">
-  <div class="gv-sidebar-profile">
-    <!-- Avatar dengan SVG fallback, TIDAK ADA placeholder -->
-    <div class="gv-sidebar-avatar" id="gv-avatar">P</div>
-    <div class="gv-sidebar-username" id="gv-username">Player</div>
-    <div class="gv-sidebar-rank" id="gv-rank">ID • Kadet</div>
   </div>
   
   <div class="gv-sidebar-stats">
@@ -245,7 +77,7 @@
   </div>
   
   <div class="gv-sidebar-menu">
-    <button class="gv-menu-btn">💼 Business</button>
+    <button class="gv-menu-btn"> Business</button>
     <button class="gv-menu-btn">📦 Collection</button>
     <button class="gv-menu-btn">🤖 Assistant</button>
     <button class="gv-menu-btn">🚗 Garage</button>
