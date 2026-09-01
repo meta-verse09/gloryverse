@@ -300,17 +300,19 @@
   <button class="gv-popup-close" onclick="closeActivitiesPopup()">✕ Tutup</button>
 </div>
 
+<!-- ... kode HTML sebelumnya ... -->
+
 <script>
-// DAFTARKAN SEMUA FUNCTION KE WINDOW (biar global)
+// JANGAN SAMPAI ADA KARAKTER YANG BOCOR!
 window.showActivitiesPopup = function() {
   document.getElementById('activity-popup-overlay').style.display = 'block';
   document.getElementById('activity-popup').style.display = 'block';
-}
+};
 
 window.closeActivitiesPopup = function() {
   document.getElementById('activity-popup-overlay').style.display = 'none';
   document.getElementById('activity-popup').style.display = 'none';
-}
+};
 
 window.goToActivity = function(type) {
   const activityPages = {
@@ -327,7 +329,7 @@ window.goToActivity = function(type) {
     window.closeActivitiesPopup();
     window.location.href = targetPage;
   }
-}
+};
 
 window.toggleMode = function() {
   const btn = event.target;
@@ -338,7 +340,7 @@ window.toggleMode = function() {
     btn.textContent = '🟢 MODE ONLINE';
     btn.style.background = '#28a745';
   }
-}
+};
 
 window.updateClock = function() {
   const now = new Date();
@@ -349,31 +351,14 @@ window.updateClock = function() {
   if (el) {
     el.textContent = h + ':' + m + ':' + s;
   }
-}
+};
 
 window.updateClock();
-setInterval(window.updateClock, 1000);
+window.setInterval(window.updateClock, 1000);
 
-// ESC key untuk tutup popup
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     window.closeActivitiesPopup();
-  }
-});
-</script>
-  
-  const targetPage = activityPages[type];
-  if (targetPage) {
-    closeActivitiesPopup();
-    // Cek apakah file sudah ada, jika belum tampilkan alert
-    window.location.href = targetPage;
-  }
-}
-
-// Close popup dengan ESC key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    closeActivitiesPopup();
   }
 });
 </script>
