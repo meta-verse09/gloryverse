@@ -102,20 +102,37 @@
 
   </div>
   
+ <!-- Load Navbar HTML -->
   <script>
-    // Function $ global
     window.$ = id => document.getElementById(id);
     
-   // Load Navbar HTML
-loadComponent('navbar.html', 'nav-container');
-
-// Load Navbar JS (logic)
-const navbarScript = document.createElement('script');
-navbarScript.src = 'navbar.js';
-document.body.appendChild(navbarScript);
-
-// Load Sidebar
-loadComponent('sidebar.html', 'sidebar-container');
+    function loadComponent(url, containerId) {
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          const container = $(containerId);
+          container.innerHTML = html;
+          
+          // Eksekusi script di dalam HTML yang di-load
+          const scripts = container.querySelectorAll('script');
+          scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => {
+              newScript.setAttribute(attr.name, attr.value);
+            });
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+          });
+        })
+        .catch(e => console.error('Gagal load ' + url + ':', e));
+    }
+    
+    // Load Navbar & Sidebar
+    loadComponent('navbar.html', 'nav-container');
+    loadComponent('sidebar.html', 'sidebar-container');
   </script>
+  
+  <!-- Load Navbar JS (Logic Popup) -->
+  <script src="navbar.js"></script>
 </body>
 </html>
