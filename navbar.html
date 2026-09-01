@@ -1,5 +1,17 @@
 <!-- NAVBAR GLORYVERSE - Clean Version -->
 <style>
+  .gv-popup-divider {
+  background: rgba(240,192,64,0.2);
+  color: #f0c040;
+  padding: 10px 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
   .gv-navbar {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
     border-bottom: 2px solid #f0c040;
@@ -233,7 +245,7 @@
   <div class="gv-nav-menu">
     <button class="gv-nav-btn active" onclick="location.href='home-new.html'">HOME</button>
     <button class="gv-nav-btn" onclick="showActivitiesPopup()"> ACTIVITIES</button>
-    <button class="gv-nav-btn" onclick="location.href='markets.html'"> MARKETS</button>
+    <button class="gv-nav-btn" onclick="showMarketsPopup()"> MARKETS</button>
     <button class="gv-nav-btn">⚔️ WAR</button>
     <button class="gv-nav-btn"> ORGANIZATIONS</button>
     <button class="gv-nav-btn" onclick="location.href='mapverse.html'">🗺️ MAPVERSE</button>
@@ -242,6 +254,92 @@
     <button class="gv-nav-btn"> COMMUNITY</button>
     <button class="gv-account-btn">👤 AKUN</button>
   </div>
+  <!-- Markets Popup -->
+<div class="gv-popup-overlay" id="markets-popup-overlay" onclick="closeMarketsPopup()"></div>
+<div class="gv-popup" id="markets-popup" style="display:none;">
+  <div class="gv-popup-header">🏪 Pasar Global</div>
+  
+  <!-- Section 1: Main Markets -->
+  <div class="gv-popup-item" onclick="goToMarket('local')">
+    <span class="gv-popup-icon">🏪</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Local Market</div>
+      <div class="gv-popup-desc">Pasar regional kamu</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('world')">
+    <span class="gv-popup-icon"></span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">World Market</div>
+      <div class="gv-popup-desc">Pasar global semua negara</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-divider">KATEGORI PASAR</div>
+  
+  <!-- Section 2: Specialized Markets -->
+  <div class="gv-popup-item" onclick="goToMarket('financial')">
+    <span class="gv-popup-icon"></span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Financial Market</div>
+      <div class="gv-popup-desc">Saham & investasi</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('recruit')">
+    <span class="gv-popup-icon"></span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Recruit Auction</div>
+      <div class="gv-popup-desc">Lelang pekerja</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('realestate')">
+    <span class="gv-popup-icon">🏠</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Real Estate Market</div>
+      <div class="gv-popup-desc">Jual beli properti</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('company')">
+    <span class="gv-popup-icon"></span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Company Auction</div>
+      <div class="gv-popup-desc">Lelang perusahaan</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('medal')">
+    <span class="gv-popup-icon">🏅</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Medal Market</div>
+      <div class="gv-popup-desc">Jual beli medali</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToMarket('region')">
+    <span class="gv-popup-icon">️</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Region Market</div>
+      <div class="gv-popup-desc">Pasar regional khusus</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-divider">TOKO</div>
+  
+  <!-- Section 3: Shop -->
+  <div class="gv-popup-item" onclick="goToMarket('medalshop')">
+    <span class="gv-popup-icon">🛍️</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Medal Shop</div>
+      <div class="gv-popup-desc">Beli medali dengan gold</div>
+    </div>
+  </div>
+  
+  <button class="gv-popup-close" onclick="closeMarketsPopup()">✕ Tutup</button>
+</div>
 </nav>
 
 <!-- Activity Popup -->
