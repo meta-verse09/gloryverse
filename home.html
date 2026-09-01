@@ -1,23 +1,4 @@
 <!DOCTYPE html><html lang="id"><head>
- <script>
-  // Load navbar dan sidebar
-  async function loadComponents() {
-    try {
-      const navbarRes = await fetch('/navbar.html');
-      const navbarHtml = await navbarRes.text();
-      document.getElementById('navbar-container').innerHTML = navbarHtml;
-      
-      const sidebarRes = await fetch('/sidebar.html');
-      const sidebarHtml = await sidebarRes.text();
-      document.getElementById('sidebar-container').innerHTML = sidebarHtml;
-    } catch (error) {
-      console.error('Error loading components:', error);
-    }
-  }
-  
-  // Panggil saat halaman load
-  window.addEventListener('DOMContentLoaded', loadComponents);
-</script>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>GloryVerse — Markas Negara</title>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206" crossorigin="anonymous"></script>
@@ -42,10 +23,6 @@
 <body data-img='region1.jpeg' data-title="Markas Utama" data-lat="-6.2" data-lon="106.8">
 <div id="topBanner"><img src="logo.png" alt="GloryVerse"></div>
 <header><b class="logo">⚔️ GloryVerse</b>
- <div id="navbar-container"></div>
-<div style="display: flex;">
-  <div id="sidebar-container"></div>
-  <div style="flex: 1;">
  <span class="chip" id="clock">--:--:--</span><span class="chip" id="wthr">🌤️</span>
  <span class="chip">🪙 <b id="coin">0</b></span><span class="chip">⚡ <b id="en">100</b></span>
  <span class="chip" style="margin-left:auto;background:#14532d;color:#bbf7d0" id="mode">...</span></header>
@@ -204,24 +181,5 @@ $('left').innerHTML=`
  $('newsList').innerHTML=(data&&data.length)?data.map(x=>`<div class="row"><span>📰 ${x.title}</span><small class="dim">${ago(x.created_at)}</small></div>`).join('')
  :'Belum ada kabar resmi.';}catch(e){$('newsList').innerText='Kabar segera.'}})();
 if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
- // Load navbar dan sidebar
-async function loadComponents() {
-  try {
-    const navbarRes = await fetch('/navbar.html');
-    const navbarHtml = await navbarRes.text();
-    document.getElementById('navbar-container').innerHTML = navbarHtml;
-    
-    const sidebarRes = await fetch('/sidebar.html');
-    const sidebarHtml = await sidebarRes.text();
-    document.getElementById('sidebar-container').innerHTML = sidebarHtml;
-  } catch (error) {
-    console.error('Error loading components:', error);
-  }
-}
-
-// Panggil saat halaman load
-window.addEventListener('DOMContentLoaded', loadComponents);
 </script>
- </div>
-</div>
 </body></html>
