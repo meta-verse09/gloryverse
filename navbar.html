@@ -301,8 +301,46 @@
 </div>
 
 <script>
-// Jam real-time
-function updateClock() {
+// DAFTARKAN SEMUA FUNCTION KE WINDOW (biar global)
+window.showActivitiesPopup = function() {
+  document.getElementById('activity-popup-overlay').style.display = 'block';
+  document.getElementById('activity-popup').style.display = 'block';
+}
+
+window.closeActivitiesPopup = function() {
+  document.getElementById('activity-popup-overlay').style.display = 'none';
+  document.getElementById('activity-popup').style.display = 'none';
+}
+
+window.goToActivity = function(type) {
+  const activityPages = {
+    'work': 'activity-work.html',
+    'lookout': 'activity-lookout.html',
+    'newspaper': 'activity-newspaper.html',
+    'bar': 'activity-bar.html',
+    'offer': 'activity-offer.html',
+    'contest': 'activity-contest.html'
+  };
+  
+  const targetPage = activityPages[type];
+  if (targetPage) {
+    window.closeActivitiesPopup();
+    window.location.href = targetPage;
+  }
+}
+
+window.toggleMode = function() {
+  const btn = event.target;
+  if (btn.textContent.includes('ONLINE')) {
+    btn.textContent = '🔴 MODE OFFLINE';
+    btn.style.background = '#dc3545';
+  } else {
+    btn.textContent = '🟢 MODE ONLINE';
+    btn.style.background = '#28a745';
+  }
+}
+
+window.updateClock = function() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, '0');
   const m = String(now.getMinutes()).padStart(2, '0');
@@ -313,42 +351,16 @@ function updateClock() {
   }
 }
 
-updateClock();
-setInterval(updateClock, 1000);
+window.updateClock();
+setInterval(window.updateClock, 1000);
 
-// Toggle mode
-function toggleMode() {
-  const btn = event.target;
-  if (btn.textContent.includes('ONLINE')) {
-    btn.textContent = '🔴 MODE OFFLINE';
-    btn.style.background = '#dc3545';
-  } else {
-    btn.textContent = ' MODE ONLINE';
-    btn.style.background = '#28a745';
+// ESC key untuk tutup popup
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    window.closeActivitiesPopup();
   }
-}
-
-// Activity Popup Functions
-function showActivitiesPopup() {
-  document.getElementById('activity-popup-overlay').style.display = 'block';
-  document.getElementById('activity-popup').style.display = 'block';
-}
-
-function closeActivitiesPopup() {
-  document.getElementById('activity-popup-overlay').style.display = 'none';
-  document.getElementById('activity-popup').style.display = 'none';
-}
-
-function goToActivity(type) {
-  // Mapping ke file container
-  const activityPages = {
-    'work': 'activity-work.html',
-    'lookout': 'activity-lookout.html',
-    'newspaper': 'activity-newspaper.html',
-    'bar': 'activity-bar.html',
-    'offer': 'activity-offer.html',
-    'contest': 'activity-contest.html'
-  };
+});
+</script>
   
   const targetPage = activityPages[type];
   if (targetPage) {
