@@ -23,8 +23,6 @@
     width: 50px;
     height: 50px;
     border-radius: 8px;
-    /* Mencegah error/ping jika logo.png belum ada */
-    onerror: this.style.display='none'; 
   }
   
   .gv-navbar-brand h1 {
@@ -101,11 +99,113 @@
     font-weight: 700;
     cursor: pointer;
   }
+
+  /* Activity Popup Styles */
+  .gv-popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+  }
+
+  .gv-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #1a1a2e;
+    border: 2px solid #f0c040;
+    border-radius: 12px;
+    min-width: 320px;
+    max-width: 90%;
+    z-index: 2001;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+    animation: popupSlideIn 0.3s ease;
+  }
+
+  @keyframes popupSlideIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .gv-popup-header {
+    background: linear-gradient(135deg, #f0c040, #d4a017);
+    color: #1a1a2e;
+    padding: 15px 20px;
+    font-weight: 900;
+    font-size: 16px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+  }
+
+  .gv-popup-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s;
+  }
+
+  .gv-popup-item:hover {
+    background: rgba(240,192,64,0.2);
+    padding-left: 25px;
+  }
+
+  .gv-popup-icon {
+    font-size: 28px;
+    width: 40px;
+    text-align: center;
+  }
+
+  .gv-popup-content {
+    flex: 1;
+  }
+
+  .gv-popup-title {
+    color: #fff;
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 3px;
+  }
+
+  .gv-popup-desc {
+    color: rgba(255,255,255,0.6);
+    font-size: 12px;
+  }
+
+  .gv-popup-close {
+    width: 100%;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 0 0 10px 10px;
+    transition: all 0.3s;
+  }
+
+  .gv-popup-close:hover {
+    background: #dc3545;
+  }
 </style>
 
 <nav class="gv-navbar">
   <div class="gv-navbar-brand">
-    <!-- onerror mencegah browser mencari placeholder jika logo.png tidak ditemukan -->
     <img src="logo.png" alt="GloryVerse" onerror="this.style.display='none'">
     <h1>GLORYVERSE.ID</h1>
   </div>
@@ -132,20 +232,76 @@
   
   <div class="gv-nav-menu">
     <button class="gv-nav-btn active" onclick="location.href='home-new.html'">HOME</button>
-    <button class="gv-nav-btn" onclick="location.href='activities.html'">ACTIVITIES</button>
-    <button class="gv-nav-btn" onclick="location.href='markets.html'">MARKETS</button>
+    <button class="gv-nav-btn" onclick="showActivitiesPopup()"> ACTIVITIES</button>
+    <button class="gv-nav-btn" onclick="location.href='markets.html'"> MARKETS</button>
     <button class="gv-nav-btn">⚔️ WAR</button>
-    <button class="gv-nav-btn">🏢 ORGANIZATIONS</button>
+    <button class="gv-nav-btn"> ORGANIZATIONS</button>
     <button class="gv-nav-btn" onclick="location.href='mapverse.html'">🗺️ MAPVERSE</button>
-    <button class="gv-nav-btn" onclick="location.href='ceki.html'">CEKI</button>
+    <button class="gv-nav-btn" onclick="location.href='ceki.html'"> CEKI</button>
     <button class="gv-nav-btn">🏆 RANKINGS</button>
-    <button class="gv-nav-btn">👥 COMMUNITY</button>
+    <button class="gv-nav-btn"> COMMUNITY</button>
     <button class="gv-account-btn">👤 AKUN</button>
   </div>
 </nav>
 
+<!-- Activity Popup -->
+<div class="gv-popup-overlay" id="activity-popup-overlay" onclick="closeActivitiesPopup()"></div>
+<div class="gv-popup" id="activity-popup" style="display:none;">
+  <div class="gv-popup-header">📋 Pilih Aktivitas</div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('work')">
+    <span class="gv-popup-icon">💼</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Work</div>
+      <div class="gv-popup-desc">Kerja untuk mendapatkan uang</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('lookout')">
+    <span class="gv-popup-icon">🗼</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Lookout Post</div>
+      <div class="gv-popup-desc">Pantau wilayah & musuh</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('newspaper')">
+    <span class="gv-popup-icon">📰</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Newspaper</div>
+      <div class="gv-popup-desc">Baca & tulis berita</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('bar')">
+    <span class="gv-popup-icon"></span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Local Bar</div>
+      <div class="gv-popup-desc">Nongkrong & bersosialisasi</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('offer')">
+    <span class="gv-popup-icon">💰</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Offer</div>
+      <div class="gv-popup-desc">Penawaran khusus & deal</div>
+    </div>
+  </div>
+  
+  <div class="gv-popup-item" onclick="goToActivity('contest')">
+    <span class="gv-popup-icon">🏆</span>
+    <div class="gv-popup-content">
+      <div class="gv-popup-title">Offer Contest</div>
+      <div class="gv-popup-desc">Kompetisi & turnamen</div>
+    </div>
+  </div>
+  
+  <button class="gv-popup-close" onclick="closeActivitiesPopup()">✕ Tutup</button>
+</div>
+
 <script>
-// Jam real-time (dijalankan setiap 1 detik)
+// Jam real-time
 function updateClock() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, '0');
@@ -157,19 +313,55 @@ function updateClock() {
   }
 }
 
-// Jalankan sekali saat load, lalu set interval
 updateClock();
 setInterval(updateClock, 1000);
 
-// Toggle mode online/offline
+// Toggle mode
 function toggleMode() {
   const btn = event.target;
   if (btn.textContent.includes('ONLINE')) {
     btn.textContent = '🔴 MODE OFFLINE';
     btn.style.background = '#dc3545';
   } else {
-    btn.textContent = '🟢 MODE ONLINE';
+    btn.textContent = ' MODE ONLINE';
     btn.style.background = '#28a745';
   }
 }
+
+// Activity Popup Functions
+function showActivitiesPopup() {
+  document.getElementById('activity-popup-overlay').style.display = 'block';
+  document.getElementById('activity-popup').style.display = 'block';
+}
+
+function closeActivitiesPopup() {
+  document.getElementById('activity-popup-overlay').style.display = 'none';
+  document.getElementById('activity-popup').style.display = 'none';
+}
+
+function goToActivity(type) {
+  // Mapping ke file container
+  const activityPages = {
+    'work': 'activity-work.html',
+    'lookout': 'activity-lookout.html',
+    'newspaper': 'activity-newspaper.html',
+    'bar': 'activity-bar.html',
+    'offer': 'activity-offer.html',
+    'contest': 'activity-contest.html'
+  };
+  
+  const targetPage = activityPages[type];
+  if (targetPage) {
+    closeActivitiesPopup();
+    // Cek apakah file sudah ada, jika belum tampilkan alert
+    window.location.href = targetPage;
+  }
+}
+
+// Close popup dengan ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeActivitiesPopup();
+  }
+});
 </script>
