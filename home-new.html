@@ -25,26 +25,80 @@
     
     <!-- Container Konten Utama -->
     <div id="content-container">
-    
-    <!-- 1. AREA STAGE (Gambar/Video Utama) -->
-    <div class="main-stage" style="background:#000; border-radius:12px; overflow:hidden; margin-bottom:20px; border:2px solid #f0c040;">
-      <!-- Nanti ini bisa diganti <video> untuk iklan -->
-      <img src="region1.jpeg" alt="Pemandangan Utama" style="width:100%; height:400px; object-fit:cover; display:block;">
-    </div>
+  
+  <!-- STAGE: Gambar Region -->
+  <div class="main-stage" style="background:#000; border-radius:12px; overflow:hidden; margin-bottom:20px; border:2px solid #f0c040; position:relative;">
+    <img id="region-image" src="region1.jpeg" alt="Region" style="width:100%; height:400px; object-fit:cover; display:block; transition:opacity 0.5s;">
+    <div id="region-label" style="position:absolute; bottom:15px; left:15px; background:rgba(0,0,0,0.7); color:#f0c040; padding:8px 16px; border-radius:8px; font-weight:bold;">📍 Markas Utama</div>
+  </div>
 
-    <!-- 2. AREA INFO (Keterangan di bawah gambar) -->
-    <div class="stage-info" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid #f0c040;">
-      <h2 style="color:#f0c040; margin-top:0;">Markas Utama - Region 1</h2>
-      <p style="color:#fff; line-height:1.6;">
-        Ini adalah area deskripsi. Di halaman Ceki, nanti isinya tentang Juara/Liga. 
-        Di halaman War, nanti isinya tentang History Battle/Damage.
-      </p>
+  <!-- INFO: Keterangan Region -->
+  <div class="stage-info" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid #f0c040; margin-bottom:20px;">
+    <h2 id="region-title" style="color:#f0c040; margin-top:0;">🏠 Markas Utama - Region 1</h2>
+    <p id="region-desc" style="color:#fff; line-height:1.6;">Selamat datang di Markas Utama. Pilih region di bawah untuk melihat wilayah tersebut.</p>
+  </div>
+
+  <!-- TOMBOL REGION -->
+  <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+    <button class="region-btn" onclick="switchRegion('region1.jpeg', 'Markas Utama', 'Pusat kendali utama player. Dari sini kamu bisa memulai petualangan.')">🏠 Markas</button>
+    <button class="region-btn" onclick="switchRegion('reg_solok.jpeg', 'Solok', 'Ibukota Negara. Region utama dengan produktivitas tinggi.')">👑 Solok</button>
+    <button class="region-btn" onclick="switchRegion('reg_betawi.jpeg', 'Betawi', 'Region metropolitan dengan pasar terbesar.')">🏙️ Betawi</button>
+    <button class="region-btn" onclick="switchRegion('reg_priangan.jpeg', 'Priangan', 'Region pegunungan dengan hasil pertanian melimpah.')">⛰️ Priangan</button>
+    <button class="region-btn" onclick="switchRegion('reg_banten.jpeg', 'Banten', 'Region pesisir dengan jalur perdagangan ramai.')">⚓ Banten</button>
+    <button class="region-btn" onclick="switchRegion('reg_mataram.jpeg', 'Mataram', 'Region bersejarah dengan budaya kuat.')">️ Mataram</button>
+    <button class="region-btn" onclick="switchRegion('reg_arek.jpeg', 'Arek', 'Region industri dengan teknologi maju.')">⚙️ Arek</button>
+    <button class="region-btn" onclick="switchRegion('reg_bali.jpeg', 'Bali', 'Region pariwisata dengan pendapatan turis tinggi.')"> Bali</button>
+    <button class="region-btn" onclick="switchRegion('reg_medan.jpeg', 'Medan', 'Region Sumatera dengan sumber daya alam kaya.')">🌿 Medan</button>
+    <button class="region-btn" onclick="switchRegion('reg_borneo.jpeg', 'Borneo', 'Region Kalimantan dengan hutan dan tambang.')">🌳 Borneo</button>
+    <button class="region-btn" onclick="switchRegion('reg_makassar.jpeg', 'Makassar', 'Region Sulawesi dengan pelabuhan strategis.')"> Makassar</button>
+  </div>
+
+  <!-- STYLE TOMBOL REGION -->
+  <style>
+    .region-btn {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .region-btn:hover, .region-btn.active {
+      background: #f0c040;
+      color: #1a1a2e;
+      border-color: #f0c040;
+    }
+  </style>
+
+  <!-- SCRIPT SWITCH REGION -->
+  <script>
+    function switchRegion(imgSrc, name, desc) {
+      const img = document.getElementById('region-image');
+      const label = document.getElementById('region-label');
+      const title = document.getElementById('region-title');
+      const descEl = document.getElementById('region-desc');
       
-      <!-- Contoh tombol aksi -->
-      <button style="background:#f0c040; color:#000; border:none; padding:10px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">
-        MULAI AKTIVITAS
-      </button>
-    </div>
+      // Fade effect
+      img.style.opacity = '0.3';
+      
+      setTimeout(() => {
+        img.src = imgSrc;
+        label.textContent = '📍 ' + name;
+        title.textContent = '🗺️ Region ' + name;
+        descEl.textContent = desc;
+        img.style.opacity = '1';
+      }, 300);
+      
+      // Highlight tombol aktif
+      document.querySelectorAll('.region-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+
+</div>
 
   </div>
   
