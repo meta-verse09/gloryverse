@@ -175,10 +175,10 @@ $('left').innerHTML=`
  :'Belum ada kabar resmi.';}catch(e){$('newsList').innerText='Kabar segera.'}})();
 if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
 <script> // Load navbar dan sidebar
-fetch('/navbar.html').then(r=>r.text()).then(h=>{
+fetch('navbar.html').then(r=>r.text()).then(h=>{
   document.getElementById('nav-container').innerHTML=h;
 });
-fetch('/sidebar.html').then(r=>r.text()).then(h=>{
+fetch('sidebar.html').then(r=>r.text()).then(h=>{
   document.getElementById('sidebar-container').innerHTML=h;
 });
 </script>
