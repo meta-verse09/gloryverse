@@ -106,17 +106,16 @@
     // Function $ global
     window.$ = id => document.getElementById(id);
     
-    // Load Navbar
-    fetch('navbar.html')
-      .then(r => r.text())
-      .then(h => { $('nav-container').innerHTML = h; })
-      .catch(e => console.error('Navbar error:', e));
-    
-    // Load Sidebar
-    fetch('sidebar.html')
-      .then(r => r.text())
-      .then(h => { $('sidebar-container').innerHTML = h; })
-      .catch(e => console.error('Sidebar error:', e));
+   // Load Navbar HTML
+loadComponent('navbar.html', 'nav-container');
+
+// Load Navbar JS (logic)
+const navbarScript = document.createElement('script');
+navbarScript.src = 'navbar.js';
+document.body.appendChild(navbarScript);
+
+// Load Sidebar
+loadComponent('sidebar.html', 'sidebar-container');
   </script>
 </body>
 </html>
