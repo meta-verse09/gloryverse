@@ -57,4 +57,34 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     window.closeActivitiesPopup();
   }
+  // Markets Popup Functions
+window.showMarketsPopup = function() {
+  document.getElementById('markets-popup-overlay').style.display = 'block';
+  document.getElementById('markets-popup').style.display = 'block';
+};
+
+window.closeMarketsPopup = function() {
+  document.getElementById('markets-popup-overlay').style.display = 'none';
+  document.getElementById('markets-popup').style.display = 'none';
+};
+
+window.goToMarket = function(type) {
+  const marketPages = {
+    'local': 'market-local.html',
+    'world': 'market-world.html',
+    'financial': 'market-financial.html',
+    'recruit': 'market-recruit.html',
+    'realestate': 'market-realestate.html',
+    'company': 'market-company.html',
+    'medal': 'market-medal.html',
+    'region': 'market-region.html',
+    'medalshop': 'market-medalshop.html'
+  };
+  
+  const targetPage = marketPages[type];
+  if (targetPage) {
+    window.closeMarketsPopup();
+    window.location.href = targetPage;
+  }
+};
 });
