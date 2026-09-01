@@ -200,15 +200,15 @@
 </nav>
 
 <script>
-  // Update jam real-time
-  function updateClock() {
-    const now = new Date();
-    const time = now.toLocaleTimeString('id-ID', { hour12: false });
-    const clockEl = document.getElementById('gv-clock');
-    if (clockEl) clockEl.textContent = time;
-  }
-  setInterval(updateClock, 1000);
-  updateClock();
+// Update jam real-time
+function updateClock() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('id-ID', { hour12: false });
+  const clockEl = document.getElementById('gv-clock');
+  if (clockEl) clockEl.textContent = time;
+}
+setInterval(updateClock, 1000);
+updateClock();
   
   // Toggle mode online/offline
   function toggleMode() {
