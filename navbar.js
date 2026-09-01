@@ -1,6 +1,9 @@
 // NAVBAR LOGIC - GloryVerse
 // Function global untuk navbar
 
+// ==========================================
+// 1. ACTIVITIES POPUP
+// ==========================================
 window.showActivitiesPopup = function() {
   document.getElementById('activity-popup-overlay').style.display = 'block';
   document.getElementById('activity-popup').style.display = 'block';
@@ -28,36 +31,9 @@ window.goToActivity = function(type) {
   }
 };
 
-window.toggleMode = function() {
-  const btn = event.target;
-  if (btn.textContent.includes('ONLINE')) {
-    btn.textContent = '🔴 MODE OFFLINE';
-    btn.style.background = '#dc3545';
-  } else {
-    btn.textContent = '🟢 MODE ONLINE';
-    btn.style.background = '#28a745';
-  }
-};
-
-window.updateClock = function() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const s = String(now.getSeconds()).padStart(2, '0');
-  const el = document.getElementById('gv-clock');
-  if (el) {
-    el.textContent = h + ':' + m + ':' + s;
-  }
-};
-
-window.updateClock();
-window.setInterval(window.updateClock, 1000);
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    window.closeActivitiesPopup();
-  }
-  // Markets Popup Functions
+// ==========================================
+// 2. MARKETS POPUP
+// ==========================================
 window.showMarketsPopup = function() {
   document.getElementById('markets-popup-overlay').style.display = 'block';
   document.getElementById('markets-popup').style.display = 'block';
@@ -87,4 +63,40 @@ window.goToMarket = function(type) {
     window.location.href = targetPage;
   }
 };
+
+// ==========================================
+// 3. GLOBAL UTILITIES (Clock, Mode, ESC Key)
+// ==========================================
+window.toggleMode = function() {
+  const btn = event.target;
+  if (btn.textContent.includes('ONLINE')) {
+    btn.textContent = '🔴 MODE OFFLINE';
+    btn.style.background = '#dc3545';
+  } else {
+    btn.textContent = '🟢 MODE ONLINE';
+    btn.style.background = '#28a745';
+  }
+};
+
+window.updateClock = function() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2, '0');
+  const m = String(now.getMinutes()).padStart(2, '0');
+  const s = String(now.getSeconds()).padStart(2, '0');
+  const el = document.getElementById('gv-clock');
+  if (el) {
+    el.textContent = h + ':' + m + ':' + s;
+  }
+};
+
+// Jalankan jam
+window.updateClock();
+window.setInterval(window.updateClock, 1000);
+
+// Tutup popup dengan tombol ESC
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    window.closeActivitiesPopup();
+    window.closeMarketsPopup(); // Tambahkan ini biar Markets juga bisa ditutup pakai ESC
+  }
 });
