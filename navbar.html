@@ -1,220 +1,5 @@
-<!-- NAVBAR GLORYVERSE - Clean Version -->
-<style>
-  .gv-popup-divider {
-  background: rgba(240,192,64,0.2);
-  color: #f0c040;
-  padding: 10px 20px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center;
-  border-top: 1px solid rgba(255,255,255,0.1);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-  .gv-navbar {
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-    border-bottom: 2px solid #f0c040;
-    padding: 10px 15px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
-  
-  .gv-navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .gv-navbar-brand img {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-  }
-  
-  .gv-navbar-brand h1 {
-    color: #f0c040;
-    font-size: 18px;
-    margin: 0;
-    font-weight: 900;
-  }
-  
-  .gv-navbar-stats {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-  }
-  
-  .gv-stat-item {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  
-  .gv-stat-item .value {
-    color: #f0c040;
-    font-weight: 800;
-  }
-  
-  .gv-mode-btn {
-    background: #28a745;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-  .gv-nav-menu {
-    width: 100%;
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  
-  .gv-nav-btn {
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-  
-  .gv-nav-btn:hover, .gv-nav-btn.active {
-    background: #f0c040;
-    color: #1a1a2e;
-  }
-  
-  .gv-account-btn {
-    background: #f0c040;
-    color: #1a1a2e;
-    border: none;
-    padding: 8px 14px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-  }
-
-  /* Activity Popup Styles */
-  .gv-popup-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.7);
-    z-index: 2000;
-    backdrop-filter: blur(4px);
-  }
-
-  .gv-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #1a1a2e;
-    border: 2px solid #f0c040;
-    border-radius: 12px;
-    min-width: 320px;
-    max-width: 90%;
-    z-index: 2001;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-    animation: popupSlideIn 0.3s ease;
-  }
-
-  @keyframes popupSlideIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -60%);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-    }
-  }
-
-  .gv-popup-header {
-    background: linear-gradient(135deg, #f0c040, #d4a017);
-    color: #1a1a2e;
-    padding: 15px 20px;
-    font-weight: 900;
-    font-size: 16px;
-    border-radius: 10px 10px 0 0;
-    text-align: center;
-  }
-
-  .gv-popup-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s;
-  }
-
-  .gv-popup-item:hover {
-    background: rgba(240,192,64,0.2);
-    padding-left: 25px;
-  }
-
-  .gv-popup-icon {
-    font-size: 28px;
-    width: 40px;
-    text-align: center;
-  }
-
-  .gv-popup-content {
-    flex: 1;
-  }
-
-  .gv-popup-title {
-    color: #fff;
-    font-weight: 800;
-    font-size: 15px;
-    margin-bottom: 3px;
-  }
-
-  .gv-popup-desc {
-    color: rgba(255,255,255,0.6);
-    font-size: 12px;
-  }
-
-  .gv-popup-close {
-    width: 100%;
-    background: rgba(255,255,255,0.1);
-    color: #fff;
-    border: none;
-    padding: 12px;
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 13px;
-    border-radius: 0 0 10px 10px;
-    transition: all 0.3s;
-  }
-
-  .gv-popup-close:hover {
-    background: #dc3545;
-  }
-</style>
+<!-- NAVBAR GLORYVERSE - Pure HTML Version -->
+<!-- Style dihandle oleh navbar.css, Logic dihandle oleh navbar.js -->
 
 <nav class="gv-navbar">
   <div class="gv-navbar-brand">
@@ -254,12 +39,13 @@
     <button class="gv-nav-btn"> COMMUNITY</button>
     <button class="gv-account-btn">👤 AKUN</button>
   </div>
-  <!-- Markets Popup -->
+</nav>
+
+<!-- Markets Popup -->
 <div class="gv-popup-overlay" id="markets-popup-overlay" onclick="closeMarketsPopup()"></div>
 <div class="gv-popup" id="markets-popup" style="display:none;">
   <div class="gv-popup-header">🏪 Pasar Global</div>
   
-  <!-- Section 1: Main Markets -->
   <div class="gv-popup-item" onclick="goToMarket('local')">
     <span class="gv-popup-icon">🏪</span>
     <div class="gv-popup-content">
@@ -278,7 +64,6 @@
   
   <div class="gv-popup-divider">KATEGORI PASAR</div>
   
-  <!-- Section 2: Specialized Markets -->
   <div class="gv-popup-item" onclick="goToMarket('financial')">
     <span class="gv-popup-icon"></span>
     <div class="gv-popup-content">
@@ -329,7 +114,6 @@
   
   <div class="gv-popup-divider">TOKO</div>
   
-  <!-- Section 3: Shop -->
   <div class="gv-popup-item" onclick="goToMarket('medalshop')">
     <span class="gv-popup-icon">🛍️</span>
     <div class="gv-popup-content">
@@ -340,7 +124,6 @@
   
   <button class="gv-popup-close" onclick="closeMarketsPopup()">✕ Tutup</button>
 </div>
-</nav>
 
 <!-- Activity Popup -->
 <div class="gv-popup-overlay" id="activity-popup-overlay" onclick="closeActivitiesPopup()"></div>
@@ -397,66 +180,3 @@
   
   <button class="gv-popup-close" onclick="closeActivitiesPopup()">✕ Tutup</button>
 </div>
-
-<!-- ... kode HTML sebelumnya ... -->
-
-<script>
-// JANGAN SAMPAI ADA KARAKTER YANG BOCOR!
-window.showActivitiesPopup = function() {
-  document.getElementById('activity-popup-overlay').style.display = 'block';
-  document.getElementById('activity-popup').style.display = 'block';
-};
-
-window.closeActivitiesPopup = function() {
-  document.getElementById('activity-popup-overlay').style.display = 'none';
-  document.getElementById('activity-popup').style.display = 'none';
-};
-
-window.goToActivity = function(type) {
-  const activityPages = {
-    'work': 'activity-work.html',
-    'lookout': 'activity-lookout.html',
-    'newspaper': 'activity-newspaper.html',
-    'bar': 'activity-bar.html',
-    'offer': 'activity-offer.html',
-    'contest': 'activity-contest.html'
-  };
-  
-  const targetPage = activityPages[type];
-  if (targetPage) {
-    window.closeActivitiesPopup();
-    window.location.href = targetPage;
-  }
-};
-
-window.toggleMode = function() {
-  const btn = event.target;
-  if (btn.textContent.includes('ONLINE')) {
-    btn.textContent = '🔴 MODE OFFLINE';
-    btn.style.background = '#dc3545';
-  } else {
-    btn.textContent = '🟢 MODE ONLINE';
-    btn.style.background = '#28a745';
-  }
-};
-
-window.updateClock = function() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, '0');
-  const m = String(now.getMinutes()).padStart(2, '0');
-  const s = String(now.getSeconds()).padStart(2, '0');
-  const el = document.getElementById('gv-clock');
-  if (el) {
-    el.textContent = h + ':' + m + ':' + s;
-  }
-};
-
-window.updateClock();
-window.setInterval(window.updateClock, 1000);
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    window.closeActivitiesPopup();
-  }
-});
-</script>
