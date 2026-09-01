@@ -137,5 +137,40 @@
   
   <!-- Load Navbar JS (Logic Popup) -->
   <script src="navbar.js"></script>
+ <!-- Load Components -->
+  <script>
+    window.$ = id => document.getElementById(id);
+    
+    function loadComponent(url, containerId) {
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          const container = $(containerId);
+          container.innerHTML = html;
+          
+          const scripts = container.querySelectorAll('script');
+          scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            Array.from(oldScript.attributes).forEach(attr => {
+              newScript.setAttribute(attr.name, attr.value);
+            });
+            newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+          });
+        })
+        .catch(e => console.error('Gagal load ' + url + ':', e));
+    }
+    
+    loadComponent('navbar.html', 'nav-container');
+    loadComponent('sidebar.html', 'sidebar-container');
+  </script>
+  
+  <!-- Load CSS Files -->
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="sidebar.css">
+  
+  <!-- Load JS Files -->
+  <script src="navbar.js"></script>
+  <script src="sidebar.js"></script>
 </body>
 </html>
