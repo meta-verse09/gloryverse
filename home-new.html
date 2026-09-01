@@ -25,9 +25,27 @@
     
     <!-- Container Konten Utama -->
     <div id="content-container">
-      <h2 style="color: #f0c040;">Konten Home Baru Akan Muncul Di Sini</h2>
-      <p style="color: #fff;">Ini adalah versi modular. Navbar dan Sidebar di-load dari file terpisah.</p>
+    
+    <!-- 1. AREA STAGE (Gambar/Video Utama) -->
+    <div class="main-stage" style="background:#000; border-radius:12px; overflow:hidden; margin-bottom:20px; border:2px solid #f0c040;">
+      <!-- Nanti ini bisa diganti <video> untuk iklan -->
+      <img src="region1.jpeg" alt="Pemandangan Utama" style="width:100%; height:400px; object-fit:cover; display:block;">
     </div>
+
+    <!-- 2. AREA INFO (Keterangan di bawah gambar) -->
+    <div class="stage-info" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:12px; border:1px solid #f0c040;">
+      <h2 style="color:#f0c040; margin-top:0;">Markas Utama - Region 1</h2>
+      <p style="color:#fff; line-height:1.6;">
+        Ini adalah area deskripsi. Di halaman Ceki, nanti isinya tentang Juara/Liga. 
+        Di halaman War, nanti isinya tentang History Battle/Damage.
+      </p>
+      
+      <!-- Contoh tombol aksi -->
+      <button style="background:#f0c040; color:#000; border:none; padding:10px 20px; border-radius:6px; font-weight:bold; cursor:pointer;">
+        MULAI AKTIVITAS
+      </button>
+    </div>
+
   </div>
   
   <script>
