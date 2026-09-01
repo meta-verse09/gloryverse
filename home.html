@@ -4,6 +4,9 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3008754794200206" crossorigin="anonymous">const $ = id => document.getElementById(id);</script>
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
 <style>
+<script>
+const $ = id => document.getElementById(id);
+</script>
 #topBanner{height:96px;background:url('banner.jpeg') center/cover;border-bottom:2px solid var(--gold);display:flex;align-items:center;padding:0 10px}
 #topBanner img{height:70px;border-radius:12px;background:#fff;padding:3px;box-shadow:0 2px 10px #000a}
 .row{display:flex;justify-content:space-between;margin:4px 0;font-size:14px;align-items:center}
@@ -174,7 +177,6 @@ $('left').innerHTML=`
  $('newsList').innerHTML=(data&&data.length)?data.map(x=>`<div class="row"><span>📰 ${x.title}</span><small class="dim">${ago(x.created_at)}</small></div>`).join('')
  :'Belum ada kabar resmi.';}catch(e){$('newsList').innerText='Kabar segera.'}})();
 if(localStorage.getItem('gv_m1')){const m=document.getElementById('m1');if(m)m.style.display='none';}
-const $ = id => document.getElementById(id); 
 // Load navbar dan sidebar
 fetch('navbar.html')
   .then(r => {
