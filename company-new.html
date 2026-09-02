@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <link rel="stylesheet" href="company-management.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GloryVerse - My Business</title>
@@ -23,7 +24,15 @@
     
     <!-- Content Area -->
     <div id="content-container">
-      
+      <!-- Load Management Popup -->
+<div id="mgmt-container"></div>
+<script>
+  fetch('company-management.html')
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('mgmt-container').innerHTML = html;
+    });
+</script>
       <!-- STAGE: Gambar Region -->
       <div class="company-stage">
         <img id="company-region-image" src="reg_markas.jpeg" alt="Region" onerror="this.style.display='none'">
@@ -140,6 +149,6 @@
     loadComponent('navbar.html', 'nav-container');
     loadComponent('sidebar.html', 'sidebar-container');
   </script>
-  
+  <script src="company-management.js"></script>
 </body>
 </html>
