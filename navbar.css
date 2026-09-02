@@ -1,5 +1,5 @@
 /* ============================================
-   NAVBAR GLORYVERSE - Dropdown Version
+   NAVBAR GLORYVERSE - Dropdown Version (FIXED)
    ============================================ */
 
 .gv-navbar {
@@ -13,6 +13,7 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  overflow: visible !important;
 }
 
 /* Brand / Logo */
@@ -77,6 +78,7 @@
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid rgba(255,255,255,0.1);
+  overflow: visible !important;
 }
 
 .gv-nav-btn {
@@ -109,13 +111,13 @@
 }
 
 /* ============================================
-   DROPDOWN STYLES
+   DROPDOWN STYLES - FIXED POSITION
    ============================================ */
 
 .gv-dropdown {
   position: relative;
   display: inline-block;
-  overflow: visible !important;  /* ← TAMBAH INI */
+  overflow: visible !important;
 }
 
 .gv-dropdown-btn {
@@ -123,38 +125,34 @@
 }
 
 .gv-dropdown-menu {
-  display: none !important;  /* TAMBAH !important */
-  position: absolute;
-  top: 100%;
-  left: 0;
+  display: none !important;
+  position: fixed !important;  /* ← GANTI dari absolute ke fixed */
+  top: 120px !important;  /* ← Fixed position dari atas */
+  left: 50% !important;  /* ← Center horizontal */
+  transform: translateX(-50%) !important;  /* ← Center exact */
   background: #1a1a2e;
   border: 2px solid #f0c040;
   border-radius: 8px;
   min-width: 280px;
-  z-index: 1001;
+  max-width: 90vw;
+  z-index: 99999 !important;  /* ← PALING TINGGI */
   box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-  margin-top: 5px;
   overflow: hidden;
-}
-
-.gv-dropdown-menu.show {
-  display: block !important;  /* TAMBAH !important */
   animation: dropdownSlideIn 0.2s ease;
 }
 
 .gv-dropdown-menu.show {
-  display: block;
-  animation: dropdownSlideIn 0.2s ease;
+  display: block !important;
 }
 
 @keyframes dropdownSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateX(-50%) translateY(-10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -209,17 +207,4 @@
 .gv-dropdown-desc {
   color: rgba(255,255,255,0.6);
   font-size: 11px;
-}
-/* Force dropdown visibility on mobile */
-@media (max-width: 1280px) {
-  .gv-dropdown-menu.show {
-    display: block !important;
-    position: fixed !important;  /* ← GANTI dari absolute ke fixed */
-    top: auto !important;
-    left: 10px !important;
-    right: 10px !important;
-    min-width: auto !important;
-    max-width: calc(100vw - 20px) !important;
-    z-index: 99999 !important;  /* ← PALING TINGGI */
-  }
 }
