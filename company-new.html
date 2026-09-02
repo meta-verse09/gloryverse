@@ -149,6 +149,13 @@
     loadComponent('navbar.html', 'nav-container');
     loadComponent('sidebar.html', 'sidebar-container');
   </script>
+  <script>
+  fetch('company-management.html')
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('mgmt-container').innerHTML = html;
+    });
+</script>
   <script src="company-management.js"></script>
 </body>
 </html>
