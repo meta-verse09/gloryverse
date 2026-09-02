@@ -1,0 +1,76 @@
+/* ============================================
+   GLOBAL STYLES - Force Desktop Layout
+   GloryVerse - Desktop-First Design
+   ============================================ */
+
+/* Force minimum width agar selalu tampilan desktop */
+html, body {
+  min-width: 1280px;
+  overflow-x: auto;
+  margin: 0;
+  padding: 0;
+}
+
+/* Pastikan container utama tidak mengecil */
+#main-wrapper {
+  min-width: 1280px;
+}
+
+/* Styling scrollbar biar keren */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0e27;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #f0c040, #d4a017);
+  border-radius: 10px;
+  border: 2px solid #0a0e27;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffd700, #f0c040);
+}
+
+/* Matikan semua media query responsive */
+/* (Tidak ada @media rule di file ini) */
+
+/* Pastikan font tetap terbaca di layar kecil */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a0e27;
+  color: #fff;
+}
+
+/* Hint untuk user HP (opsional, bisa dihapus) */
+.mobile-hint {
+  display: none;
+}
+
+@media (max-width: 1280px) {
+  .mobile-hint {
+    display: block;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(240,192,64,0.9);
+    color: #1a1a2e;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 9999;
+    pointer-events: none;
+    animation: fadeInOut 5s ease;
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  20%, 80% { opacity: 1; }
+}
