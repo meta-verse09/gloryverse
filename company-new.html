@@ -1,158 +1,154 @@
-<!-- COMPANY MANAGEMENT POPUP -->
-<div class="mgmt-overlay" id="mgmt-overlay" onclick="closeManagement()"></div>
-<div class="mgmt-popup" id="mgmt-popup">
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <link rel="stylesheet" href="company-management.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GloryVerse - My Business</title>
   
-  <!-- Header -->
-  <div class="mgmt-header">
-    <div class="mgmt-header-icon" id="mgmt-icon">☀️</div>
-    <div class="mgmt-header-info">
-      <h3 class="mgmt-header-title" id="mgmt-title">Company Name</h3>
-      <div class="mgmt-header-balance" id="mgmt-balance">0 Gold | 0 LEU</div>
-    </div>
-    <button class="mgmt-close" onclick="closeManagement()">✕</button>
-  </div>
+  <!-- Load CSS -->
+  <link rel="stylesheet" href="global.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="company.css">
+</head>
+<body>
   
-  <!-- Tabs -->
-  <div class="mgmt-tabs">
-    <button class="mgmt-tab active" onclick="switchMgmtTab('finance')">💰 Finance</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('alerts')"> Alerts</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('managers')">👥 Managers</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('settings')">⚙️ Settings</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('inventory')">📦 Inventory</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('workplaces')">🏭 Workplaces</button>
-    <button class="mgmt-tab" onclick="switchMgmtTab('branches')"> Branches</button>
-  </div>
+  <!-- Navbar Container -->
+  <div id="nav-container"></div>
   
-  <!-- Content -->
-  <div class="mgmt-content">
+  <!-- Main Layout -->
+  <div id="main-wrapper">
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
     
-    <!-- Tab 1: Finance -->
-    <div class="mgmt-tab-content active" id="tab-finance">
-      <div class="finance-grid">
-        <div class="finance-card">
-          <div class="finance-card-title">Company Balance</div>
-          <div class="finance-card-value" id="finance-balance">0 Gold</div>
+    <!-- Content Area -->
+    <div id="content-container">
+      <!-- Load Management Popup -->
+<div id="mgmt-container"></div>
+<script>
+  fetch('company-management.html')
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById('mgmt-container').innerHTML = html;
+    });
+</script>
+      <!-- STAGE: Gambar Region -->
+      <div class="company-stage">
+        <img id="company-region-image" src="reg_markas.jpeg" alt="Region" onerror="this.style.display='none'">
+        <div class="company-stage-label">📍 Region: <span id="company-region-name">Markas Utama</span></div>
+      </div>
+      
+      <!-- INFO: Deskripsi -->
+      <div class="company-info">
+        <h2>🏢 My Companies</h2>
+        <p>
+          Di sini kamu bisa melihat daftar perusahaan yang kamu miliki. Untuk mengelola perusahaan, 
+          tekan tombol Management. Untuk memproduksi barang, kamu perlu memiliki bahan baku dan 
+          lisensi produksi yang aktif. Setelah lisensi habis, kamu perlu memperpanjangnya dengan 
+          membayar biaya ke pemerintah region.
+        </p>
+      </div>
+      
+      <!-- MAIN TABS -->
+      <div class="company-main-tabs">
+        <button class="company-main-tab active" onclick="switchMainTab('my-companies')"> My Companies</button>
+        <button class="company-main-tab" onclick="switchMainTab('start-new')">➕ Start New Company</button>
+      </div>
+      
+      <!-- TAB 1: My Companies -->
+      <div id="tab-my-companies" class="company-tab-content">
+        <div class="search-box">
+          <input type="text" id="search-company" placeholder="Cari perusahaan berdasarkan nama..." onkeyup="searchCompany()">
         </div>
-        <div class="finance-card">
-          <div class="finance-card-title">Company Worth</div>
-          <div class="finance-card-value" id="finance-worth">0 Euro</div>
+        
+        <div class="company-grid" id="my-company-grid">
+          <!-- Data akan di-render oleh JavaScript -->
+        </div>
+        
+        <div class="managing-section">
+          <h3>📋 Managing Companies</h3>
+          <p>Perusahaan yang kamu kelola milik player lain:</p>
+          <div class="company-grid" id="managing-company-grid">
+            <!-- Data akan di-render -->
+          </div>
         </div>
       </div>
       
-      <h4 class="mgmt-section-title">Invest / Withdraw</h4>
-      <p class="mgmt-section-desc">Invest atau withdraw Gold dari company kamu.</p>
-      <div style="display:flex; gap:10px; margin-bottom:20px;">
-        <input type="number" class="mgmt-input" placeholder="Amount" style="flex:1;">
-        <button class="mgmt-btn-green" style="flex:1;">Invest Gold</button>
-        <button class="mgmt-btn-gray" style="flex:1;">Withdraw Gold</button>
+      <!-- TAB 2: Start New Company -->
+      <div id="tab-start-new" class="company-tab-content" style="display:none;">
+        <div class="company-sub-tabs">
+          <button class="company-sub-tab active" onclick="switchSubTab('utilities')">⚡ Utilities</button>
+          <button class="company-sub-tab" onclick="switchSubTab('services')">️ Services</button>
+          <button class="company-sub-tab" onclick="switchSubTab('consumer')">🛒 Consumer</button>
+          <button class="company-sub-tab" onclick="switchSubTab('gathering')">⛏️ Gathering</button>
+        </div>
+        
+        <div class="company-grid" id="new-company-grid">
+          <!-- Data akan di-render oleh JavaScript -->
+        </div>
       </div>
       
-      <h4 class="mgmt-section-title">Transactions</h4>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Curr.</th><th>Description</th><th>Time Ago</th><th>Value</th></tr>
-        </thead>
-        <tbody id="transactions-body"></tbody>
-      </table>
     </div>
-    
-    <!-- Tab 2: Alerts -->
-    <div class="mgmt-tab-content" id="tab-alerts">
-      <h4 class="mgmt-section-title">Alerts</h4>
-      <p class="mgmt-section-desc">Notifikasi terkait company kamu.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Message</th><th>Time Ago</th></tr>
-        </thead>
-        <tbody id="alerts-body"></tbody>
-      </table>
-    </div>
-    
-    <!-- Tab 3: Managers -->
-    <div class="mgmt-tab-content" id="tab-managers">
-      <h4 class="mgmt-section-title">Company Managers</h4>
-      <p class="mgmt-section-desc">Kelola manager yang membantu menjalankan company.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Manager</th><th>Wage</th><th>Permissions</th></tr>
-        </thead>
-        <tbody id="managers-body"></tbody>
-      </table>
-      
-      <h4 class="mgmt-section-title">Add New Manager</h4>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;">
-        <input type="text" class="mgmt-input" placeholder="Username" style="flex:1; min-width:150px;">
-        <input type="number" class="mgmt-input" placeholder="Daily Wage" style="width:120px;">
-        <button class="mgmt-btn-green">Add Manager</button>
-      </div>
-    </div>
-    
-    <!-- Tab 4: Settings -->
-    <div class="mgmt-tab-content" id="tab-settings">
-      <h4 class="mgmt-section-title">Company Upgrades</h4>
-      <p class="mgmt-section-desc">Upgrade produktivitas company.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Level</th><th>Description</th><th>Price</th><th>Action</th></tr>
-        </thead>
-        <tbody id="upgrades-body"></tbody>
-      </table>
-      
-      <h4 class="mgmt-section-title">Company Information</h4>
-      <div style="display:flex; gap:10px; margin-bottom:20px;">
-        <input type="text" class="mgmt-input" id="company-name-input" style="flex:1;">
-        <button class="mgmt-btn-green">Save</button>
-      </div>
-      
-      <h4 class="mgmt-section-title" style="color:#dc3545;">Danger Zone</h4>
-      <p class="mgmt-section-desc">Hancurkan company ini. Semua stok & upgrade akan hilang.</p>
-      <button class="mgmt-btn-red">️ Demolish Company</button>
-    </div>
-    
-    <!-- Tab 5: Inventory -->
-    <div class="mgmt-tab-content" id="tab-inventory">
-      <h4 class="mgmt-section-title">Materials</h4>
-      <p class="mgmt-section-desc">Bahan baku untuk produksi.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Material</th><th>Stock</th><th>~Cost</th><th>Action</th></tr>
-        </thead>
-        <tbody id="materials-body"></tbody>
-      </table>
-      
-      <h4 class="mgmt-section-title">Products</h4>
-      <p class="mgmt-section-desc">Produk yang bisa dijual ke market.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Product</th><th>Stock</th><th>~Cost / Sell</th><th>Action</th></tr>
-        </thead>
-        <tbody id="products-body"></tbody>
-      </table>
-    </div>
-    
-    <!-- Tab 6: Workplaces -->
-    <div class="mgmt-tab-content" id="tab-workplaces">
-      <h4 class="mgmt-section-title">Active Workplaces</h4>
-      <p class="mgmt-section-desc">Worker yang sedang bekerja di company ini.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Worker</th><th>Job</th><th>Productivity</th><th>Time Left</th></tr>
-        </thead>
-        <tbody id="workplaces-body"></tbody>
-      </table>
-    </div>
-    
-    <!-- Tab 7: Branches -->
-    <div class="mgmt-tab-content" id="tab-branches">
-      <h4 class="mgmt-section-title">Branches</h4>
-      <p class="mgmt-section-desc">Cabang company di region lain.</p>
-      <table class="mgmt-table">
-        <thead>
-          <tr><th>Region</th><th>Resources</th><th>Action</th></tr>
-        </thead>
-        <tbody id="branches-body"></tbody>
-      </table>
-    </div>
-    
   </div>
-</div>
+  
+  <!-- POPUP: Buka Company -->
+  <div class="company-popup-overlay" id="company-popup-overlay" onclick="closeCompanyPopup()"></div>
+  <div class="company-popup" id="company-popup">
+    <div class="company-popup-header">
+      <h3 id="popup-company-title">Buka Perusahaan</h3>
+      <button class="company-popup-close" onclick="closeCompanyPopup()">✕</button>
+    </div>
+    <div class="company-popup-body">
+      <div class="popup-company-preview">
+        <div class="popup-company-icon" id="popup-company-icon">🏭</div>
+        <div class="popup-company-details">
+          <h4 id="popup-company-name">-</h4>
+          <p id="popup-company-desc">-</p>
+        </div>
+      </div>
+      <div class="popup-cost-info">
+        <div class="cost-item">
+          <span class="cost-label">💰 Biaya Lisensi:</span>
+          <span class="cost-value" id="popup-cost">0 Euro</span>
+        </div>
+        <div class="cost-item">
+          <span class="cost-label">📋 Lisensi Termasuk:</span>
+          <span class="cost-value" id="popup-license">1 Production License</span>
+        </div>
+      </div>
+      <div class="popup-warning">
+        ⚠️ Setelah lisensi habis, kamu perlu memperpanjangnya dengan membayar biaya ke pemerintah region.
+      </div>
+      <div class="popup-actions">
+        <button class="btn-open-company" onclick="confirmOpenCompany()">Buka Perusahaan</button>
+        <button class="btn-cancel-company" onclick="closeCompanyPopup()">Batal</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Load JS -->
+  <script src="navbar.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="company.js"></script>
+  
+  <!-- Load Components -->
+  <script>
+    window.$ = id => document.getElementById(id);
+    
+    function loadComponent(url, containerId) {
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          const container = $(containerId);
+          container.innerHTML = html;
+        })
+        .catch(e => console.error('Gagal load ' + url + ':', e));
+    }
+    
+    loadComponent('navbar.html', 'nav-container');
+    loadComponent('sidebar.html', 'sidebar-container');
+  </script>
+  <script src="company-management.js"></script>
+</body>
+</html>
