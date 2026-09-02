@@ -1,19 +1,35 @@
-// NAVBAR LOGIC - GloryVerse
-// Function global untuk navbar
+/* ============================================
+   NAVBAR GLORYVERSE - Dropdown Logic
+   ============================================ */
 
-// ==========================================
-// 1. ACTIVITIES POPUP
-// ==========================================
-window.showActivitiesPopup = function() {
-  document.getElementById('activity-popup-overlay').style.display = 'block';
-  document.getElementById('activity-popup').style.display = 'block';
+// Toggle Dropdown
+window.toggleDropdown = function(dropdownId) {
+  // Close all other dropdowns
+  const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
+  allDropdowns.forEach(dropdown => {
+    if (dropdown.id !== dropdownId) {
+      dropdown.classList.remove('show');
+    }
+  });
+  
+  // Toggle current dropdown
+  const dropdown = document.getElementById(dropdownId);
+  if (dropdown) {
+    dropdown.classList.toggle('show');
+  }
 };
 
-window.closeActivitiesPopup = function() {
-  document.getElementById('activity-popup-overlay').style.display = 'none';
-  document.getElementById('activity-popup').style.display = 'none';
-};
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.gv-dropdown')) {
+    const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
+    allDropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
+  }
+});
 
+// Activity Navigation
 window.goToActivity = function(type) {
   const activityPages = {
     'work': 'activity-work.html',
@@ -26,24 +42,11 @@ window.goToActivity = function(type) {
   
   const targetPage = activityPages[type];
   if (targetPage) {
-    window.closeActivitiesPopup();
     window.location.href = targetPage;
   }
 };
 
-// ==========================================
-// 2. MARKETS POPUP
-// ==========================================
-window.showMarketsPopup = function() {
-  document.getElementById('markets-popup-overlay').style.display = 'block';
-  document.getElementById('markets-popup').style.display = 'block';
-};
-
-window.closeMarketsPopup = function() {
-  document.getElementById('markets-popup-overlay').style.display = 'none';
-  document.getElementById('markets-popup').style.display = 'none';
-};
-
+// Market Navigation
 window.goToMarket = function(type) {
   const marketPages = {
     'local': 'market-local.html',
@@ -59,14 +62,67 @@ window.goToMarket = function(type) {
   
   const targetPage = marketPages[type];
   if (targetPage) {
-    window.closeMarketsPopup();
     window.location.href = targetPage;
   }
 };
 
-// ==========================================
-// 3. GLOBAL UTILITIES (Clock, Mode, ESC Key)
-// ==========================================
+// War Navigation
+window.goToWar = function(type) {
+  const warPages = {
+    'battle': 'war-battle.html',
+    'campaign': 'war-campaign.html',
+    'ranking': 'war-ranking.html'
+  };
+  
+  const targetPage = warPages[type];
+  if (targetPage) {
+    window.location.href = targetPage;
+  }
+};
+
+// Organization Navigation
+window.goToOrganization = function(type) {
+  const orgPages = {
+    'guild': 'org-guild.html',
+    'alliance': 'org-alliance.html',
+    'party': 'org-party.html'
+  };
+  
+  const targetPage = orgPages[type];
+  if (targetPage) {
+    window.location.href = targetPage;
+  }
+};
+
+// Ranking Navigation
+window.goToRanking = function(type) {
+  const rankingPages = {
+    'player': 'ranking-player.html',
+    'region': 'ranking-region.html',
+    'guild': 'ranking-guild.html'
+  };
+  
+  const targetPage = rankingPages[type];
+  if (targetPage) {
+    window.location.href = targetPage;
+  }
+};
+
+// Community Navigation
+window.goToCommunity = function(type) {
+  const communityPages = {
+    'forum': 'community-forum.html',
+    'chat': 'community-chat.html',
+    'news': 'community-news.html'
+  };
+  
+  const targetPage = communityPages[type];
+  if (targetPage) {
+    window.location.href = targetPage;
+  }
+};
+
+// Mode Toggle
 window.toggleMode = function() {
   const btn = event.target;
   if (btn.textContent.includes('ONLINE')) {
@@ -78,6 +134,7 @@ window.toggleMode = function() {
   }
 };
 
+// Clock
 window.updateClock = function() {
   const now = new Date();
   const h = String(now.getHours()).padStart(2, '0');
@@ -89,14 +146,15 @@ window.updateClock = function() {
   }
 };
 
-// Jalankan jam
 window.updateClock();
 window.setInterval(window.updateClock, 1000);
 
-// Tutup popup dengan tombol ESC
+// ESC key to close dropdowns
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
-    window.closeActivitiesPopup();
-    window.closeMarketsPopup(); // Tambahkan ini biar Markets juga bisa ditutup pakai ESC
+    const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
+    allDropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+    });
   }
 });
