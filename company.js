@@ -138,7 +138,7 @@ function renderMyCompanies() {
         </div>
         <div class="company-card-desc">${type.desc}</div>
         <div class="company-card-actions">
-          <button class="btn-management">Management</button>
+          <button class="btn-management" onclick="openManagement(${company.id})">Management</button>
           <button class="btn-workplace">🏭</button>
           <button class="btn-edit">✏️</button>
         </div>
