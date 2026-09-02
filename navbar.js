@@ -161,4 +161,13 @@ document.addEventListener('keydown', function(e) {
       dropdown.classList.remove('show');
     });
   }
+   // Mobile touch support
+document.addEventListener('touchstart', function(e) {
+  if (!e.target.closest('.gv-dropdown')) {
+    const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
+    allDropdowns.forEach(dropdown => {
+      dropdown.classList.remove('show');
+      dropdown.style.display = 'none';
+    });
+  }
 });
