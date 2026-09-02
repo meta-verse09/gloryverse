@@ -2,20 +2,24 @@
    NAVBAR GLORYVERSE - Dropdown Logic
    ============================================ */
 
-// Toggle Dropdown
+// Toggle Dropdown - Versi Mobile-Friendly
 window.toggleDropdown = function(dropdownId) {
-  // Close all other dropdowns
+  // Close SEMUA dropdown dulu
   const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
   allDropdowns.forEach(dropdown => {
-    if (dropdown.id !== dropdownId) {
-      dropdown.classList.remove('show');
-    }
+    dropdown.classList.remove('show');
+    dropdown.style.display = 'none';  // Force hide
   });
   
   // Toggle current dropdown
   const dropdown = document.getElementById(dropdownId);
   if (dropdown) {
-    dropdown.classList.toggle('show');
+    const isShowing = dropdown.classList.contains('show');
+    
+    if (!isShowing) {
+      dropdown.classList.add('show');
+      dropdown.style.display = 'block';  // Force show
+    }
   }
 };
 
