@@ -1,6 +1,4 @@
-<!-- NAVBAR GLORYVERSE - Pure HTML Version -->
-<!-- Style dihandle oleh navbar.css, Logic dihandle oleh navbar.js -->
-
+<!-- NAVBAR GLORYVERSE - Dropdown Version -->
 <nav class="gv-navbar">
   <div class="gv-navbar-brand">
     <img src="logo.png" alt="GloryVerse" onerror="this.style.display='none'">
@@ -29,154 +27,244 @@
   
   <div class="gv-nav-menu">
     <button class="gv-nav-btn active" onclick="location.href='home-new.html'">HOME</button>
-    <button class="gv-nav-btn" onclick="showActivitiesPopup()"> ACTIVITIES</button>
-    <button class="gv-nav-btn" onclick="showMarketsPopup()"> MARKETS</button>
-    <button class="gv-nav-btn">⚔️ WAR</button>
-    <button class="gv-nav-btn"> ORGANIZATIONS</button>
+    
+    <!-- ACTIVITIES Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('activities-dropdown')"> ACTIVITIES ▾</button>
+      <div id="activities-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-item" onclick="goToActivity('work')">
+          <span class="gv-dropdown-icon">💼</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Work</div>
+            <div class="gv-dropdown-desc">Kerja untuk mendapatkan uang</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToActivity('lookout')">
+          <span class="gv-dropdown-icon">🗼</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Lookout Post</div>
+            <div class="gv-dropdown-desc">Pantau wilayah & musuh</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToActivity('newspaper')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Newspaper</div>
+            <div class="gv-dropdown-desc">Baca & tulis berita</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToActivity('bar')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Local Bar</div>
+            <div class="gv-dropdown-desc">Nongkrong & bersosialisasi</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToActivity('offer')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Offer</div>
+            <div class="gv-dropdown-desc">Penawaran khusus & deal</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToActivity('contest')">
+          <span class="gv-dropdown-icon">🏆</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Offer Contest</div>
+            <div class="gv-dropdown-desc">Kompetisi & turnamen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MARKETS Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('markets-dropdown')"> MARKETS ▾</button>
+      <div id="markets-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-section">MAIN MARKETS</div>
+        <div class="gv-dropdown-item" onclick="goToMarket('local')">
+          <span class="gv-dropdown-icon">🏪</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Local Market</div>
+            <div class="gv-dropdown-desc">Pasar regional kamu</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('world')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">World Market</div>
+            <div class="gv-dropdown-desc">Pasar global semua negara</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-section">SPECIALIZED</div>
+        <div class="gv-dropdown-item" onclick="goToMarket('financial')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Financial Market</div>
+            <div class="gv-dropdown-desc">Saham & investasi</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('recruit')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Recruit Auction</div>
+            <div class="gv-dropdown-desc">Lelang pekerja</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('realestate')">
+          <span class="gv-dropdown-icon">🏠</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Real Estate Market</div>
+            <div class="gv-dropdown-desc">Jual beli properti</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('company')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Company Auction</div>
+            <div class="gv-dropdown-desc">Lelang perusahaan</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('medal')">
+          <span class="gv-dropdown-icon">🏅</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Medal Market</div>
+            <div class="gv-dropdown-desc">Jual beli medali</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToMarket('region')">
+          <span class="gv-dropdown-icon">️</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Region Market</div>
+            <div class="gv-dropdown-desc">Pasar regional khusus</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-section">SHOP</div>
+        <div class="gv-dropdown-item" onclick="goToMarket('medalshop')">
+          <span class="gv-dropdown-icon">🛍️</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Medal Shop</div>
+            <div class="gv-dropdown-desc">Beli medali dengan gold</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- WAR Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('war-dropdown')">⚔️ WAR </button>
+      <div id="war-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-item" onclick="goToWar('battle')">
+          <span class="gv-dropdown-icon">🗡️</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Battle</div>
+            <div class="gv-dropdown-desc">Pertarungan langsung</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToWar('campaign')">
+          <span class="gv-dropdown-icon">🏹</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Campaign</div>
+            <div class="gv-dropdown-desc">Kampanye perang</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToWar('ranking')">
+          <span class="gv-dropdown-icon">🏆</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">War Ranking</div>
+            <div class="gv-dropdown-desc">Peringkat perang</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ORGANIZATIONS Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('org-dropdown')"> ORGANIZATIONS </button>
+      <div id="org-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-item" onclick="goToOrganization('guild')">
+          <span class="gv-dropdown-icon">🛡️</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Guild</div>
+            <div class="gv-dropdown-desc">Kelompok perang</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToOrganization('alliance')">
+          <span class="gv-dropdown-icon">🤝</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Alliance</div>
+            <div class="gv-dropdown-desc">Aliansi antar guild</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToOrganization('party')">
+          <span class="gv-dropdown-icon">👥</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Party</div>
+            <div class="gv-dropdown-desc">Grup kecil</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <button class="gv-nav-btn" onclick="location.href='mapverse.html'">🗺️ MAPVERSE</button>
     <button class="gv-nav-btn" onclick="location.href='ceki.html'"> CEKI</button>
-    <button class="gv-nav-btn">🏆 RANKINGS</button>
-    <button class="gv-nav-btn"> COMMUNITY</button>
+    
+    <!-- RANKINGS Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('ranking-dropdown')">🏆 RANKINGS ▾</button>
+      <div id="ranking-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-item" onclick="goToRanking('player')">
+          <span class="gv-dropdown-icon">👤</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Player Ranking</div>
+            <div class="gv-dropdown-desc">Peringkat pemain</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToRanking('region')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Region Ranking</div>
+            <div class="gv-dropdown-desc">Peringkat region</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToRanking('guild')">
+          <span class="gv-dropdown-icon">🛡️</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Guild Ranking</div>
+            <div class="gv-dropdown-desc">Peringkat guild</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- COMMUNITY Dropdown -->
+    <div class="gv-dropdown">
+      <button class="gv-nav-btn gv-dropdown-btn" onclick="toggleDropdown('community-dropdown')"> COMMUNITY </button>
+      <div id="community-dropdown" class="gv-dropdown-menu">
+        <div class="gv-dropdown-item" onclick="goToCommunity('forum')">
+          <span class="gv-dropdown-icon">💬</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Forum</div>
+            <div class="gv-dropdown-desc">Diskusi komunitas</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToCommunity('chat')">
+          <span class="gv-dropdown-icon">💭</span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">Chat</div>
+            <div class="gv-dropdown-desc">Obrolan real-time</div>
+          </div>
+        </div>
+        <div class="gv-dropdown-item" onclick="goToCommunity('news')">
+          <span class="gv-dropdown-icon"></span>
+          <div class="gv-dropdown-content">
+            <div class="gv-dropdown-title">News</div>
+            <div class="gv-dropdown-desc">Berita game</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <button class="gv-account-btn">👤 AKUN</button>
   </div>
 </nav>
-
-<!-- Markets Popup -->
-<div class="gv-popup-overlay" id="markets-popup-overlay" onclick="closeMarketsPopup()"></div>
-<div class="gv-popup" id="markets-popup" style="display:none;">
-  <div class="gv-popup-header">🏪 Pasar Global</div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('local')">
-    <span class="gv-popup-icon">🏪</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Local Market</div>
-      <div class="gv-popup-desc">Pasar regional kamu</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('world')">
-    <span class="gv-popup-icon"></span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">World Market</div>
-      <div class="gv-popup-desc">Pasar global semua negara</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-divider">KATEGORI PASAR</div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('financial')">
-    <span class="gv-popup-icon"></span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Financial Market</div>
-      <div class="gv-popup-desc">Saham & investasi</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('recruit')">
-    <span class="gv-popup-icon"></span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Recruit Auction</div>
-      <div class="gv-popup-desc">Lelang pekerja</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('realestate')">
-    <span class="gv-popup-icon">🏠</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Real Estate Market</div>
-      <div class="gv-popup-desc">Jual beli properti</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('company')">
-    <span class="gv-popup-icon"></span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Company Auction</div>
-      <div class="gv-popup-desc">Lelang perusahaan</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('medal')">
-    <span class="gv-popup-icon">🏅</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Medal Market</div>
-      <div class="gv-popup-desc">Jual beli medali</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('region')">
-    <span class="gv-popup-icon">️</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Region Market</div>
-      <div class="gv-popup-desc">Pasar regional khusus</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-divider">TOKO</div>
-  
-  <div class="gv-popup-item" onclick="goToMarket('medalshop')">
-    <span class="gv-popup-icon">🛍️</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Medal Shop</div>
-      <div class="gv-popup-desc">Beli medali dengan gold</div>
-    </div>
-  </div>
-  
-  <button class="gv-popup-close" onclick="closeMarketsPopup()">✕ Tutup</button>
-</div>
-
-<!-- Activity Popup -->
-<div class="gv-popup-overlay" id="activity-popup-overlay" onclick="closeActivitiesPopup()"></div>
-<div class="gv-popup" id="activity-popup" style="display:none;">
-  <div class="gv-popup-header">📋 Pilih Aktivitas</div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('work')">
-    <span class="gv-popup-icon">💼</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Work</div>
-      <div class="gv-popup-desc">Kerja untuk mendapatkan uang</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('lookout')">
-    <span class="gv-popup-icon">🗼</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Lookout Post</div>
-      <div class="gv-popup-desc">Pantau wilayah & musuh</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('newspaper')">
-    <span class="gv-popup-icon">📰</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Newspaper</div>
-      <div class="gv-popup-desc">Baca & tulis berita</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('bar')">
-    <span class="gv-popup-icon"></span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Local Bar</div>
-      <div class="gv-popup-desc">Nongkrong & bersosialisasi</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('offer')">
-    <span class="gv-popup-icon">💰</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Offer</div>
-      <div class="gv-popup-desc">Penawaran khusus & deal</div>
-    </div>
-  </div>
-  
-  <div class="gv-popup-item" onclick="goToActivity('contest')">
-    <span class="gv-popup-icon">🏆</span>
-    <div class="gv-popup-content">
-      <div class="gv-popup-title">Offer Contest</div>
-      <div class="gv-popup-desc">Kompetisi & turnamen</div>
-    </div>
-  </div>
-  
-  <button class="gv-popup-close" onclick="closeActivitiesPopup()">✕ Tutup</button>
-</div>
