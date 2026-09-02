@@ -1,0 +1,159 @@
+<!-- COMPANY MANAGEMENT POPUP - Template Universal -->
+
+<div class="mgmt-overlay" id="mgmt-overlay"></div>
+<div class="mgmt-popup" id="mgmt-popup">
+  
+  <!-- Header -->
+  <div class="mgmt-header">
+    <div class="mgmt-header-icon" id="mgmt-icon">☀️</div>
+    <div class="mgmt-header-info">
+      <h3 class="mgmt-header-title" id="mgmt-title">Company Name</h3>
+      <div class="mgmt-header-balance" id="mgmt-balance">0 Gold | 0 LEU</div>
+    </div>
+    <button class="mgmt-close" onclick="closeManagement()">✕</button>
+  </div>
+  
+  <!-- Tabs -->
+  <div class="mgmt-tabs">
+    <button class="mgmt-tab active" id="tab-btn-finance" onclick="switchMgmtTab('finance')">💰 Finance</button>
+    <button class="mgmt-tab" id="tab-btn-alerts" onclick="switchMgmtTab('alerts')"> Alerts</button>
+    <button class="mgmt-tab" id="tab-btn-managers" onclick="switchMgmtTab('managers')">👥 Managers</button>
+    <button class="mgmt-tab" id="tab-btn-settings" onclick="switchMgmtTab('settings')">⚙️ Settings</button>
+    <button class="mgmt-tab" id="tab-btn-inventory" onclick="switchMgmtTab('inventory')">📦 Inventory</button>
+    <button class="mgmt-tab" id="tab-btn-workplaces" onclick="switchMgmtTab('workplaces')">🏭 Workplaces</button>
+    <button class="mgmt-tab" id="tab-btn-branches" onclick="switchMgmtTab('branches')"> Branches</button>
+  </div>
+  
+  <!-- Content -->
+  <div class="mgmt-content">
+    
+    <!-- Tab 1: Finance -->
+    <div class="mgmt-tab-content active" id="tab-content-finance">
+      <div class="finance-grid">
+        <div class="finance-card">
+          <div class="finance-card-title">Company Balance</div>
+          <div class="finance-card-value" id="finance-balance">0 Gold</div>
+        </div>
+        <div class="finance-card">
+          <div class="finance-card-title">Company Worth</div>
+          <div class="finance-card-value" id="finance-worth">0 Euro</div>
+        </div>
+      </div>
+      
+      <h4 class="mgmt-section-title">Invest / Withdraw</h4>
+      <p class="mgmt-section-desc">Invest atau withdraw Gold dari company kamu.</p>
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input type="number" class="mgmt-input" placeholder="Amount" style="flex:1;">
+        <button class="mgmt-btn" style="flex:1;">Invest Gold</button>
+        <button class="mgmt-btn mgmt-btn-secondary" style="flex:1;">Withdraw Gold</button>
+      </div>
+      
+      <h4 class="mgmt-section-title">Transactions</h4>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Curr.</th><th>Description</th><th>Time Ago</th><th>Value</th></tr>
+        </thead>
+        <tbody id="transactions-body"></tbody>
+      </table>
+    </div>
+    
+    <!-- Tab 2: Alerts -->
+    <div class="mgmt-tab-content" id="tab-content-alerts">
+      <h4 class="mgmt-section-title">Alerts</h4>
+      <p class="mgmt-section-desc">Notifikasi terkait company kamu.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Message</th><th>Time Ago</th></tr>
+        </thead>
+        <tbody id="alerts-body"></tbody>
+      </table>
+    </div>
+    
+    <!-- Tab 3: Managers -->
+    <div class="mgmt-tab-content" id="tab-content-managers">
+      <h4 class="mgmt-section-title">Company Managers</h4>
+      <p class="mgmt-section-desc">Kelola manager yang membantu menjalankan company.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Manager</th><th>Wage</th><th>Permissions</th></tr>
+        </thead>
+        <tbody id="managers-body"></tbody>
+      </table>
+      
+      <h4 class="mgmt-section-title">Add New Manager</h4>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="text" class="mgmt-input" placeholder="Username" style="flex:1; min-width:150px;">
+        <input type="number" class="mgmt-input" placeholder="Daily Wage" style="width:120px;">
+        <button class="mgmt-btn">Add Manager</button>
+      </div>
+    </div>
+    
+    <!-- Tab 4: Settings -->
+    <div class="mgmt-tab-content" id="tab-content-settings">
+      <h4 class="mgmt-section-title">Company Upgrades</h4>
+      <p class="mgmt-section-desc">Upgrade produktivitas company.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Level</th><th>Description</th><th>Price</th><th>Action</th></tr>
+        </thead>
+        <tbody id="upgrades-body"></tbody>
+      </table>
+      
+      <h4 class="mgmt-section-title">Company Information</h4>
+      <div style="display:flex; gap:10px; margin-bottom:20px;">
+        <input type="text" class="mgmt-input" id="company-name-input" style="flex:1;">
+        <button class="mgmt-btn">Save</button>
+      </div>
+      
+      <h4 class="mgmt-section-title" style="color:#dc3545;">Danger Zone</h4>
+      <p class="mgmt-section-desc">Hancurkan company ini. Semua stok & upgrade akan hilang.</p>
+      <button class="mgmt-btn mgmt-btn-warning">🗑️ Demolish Company</button>
+    </div>
+    
+    <!-- Tab 5: Inventory -->
+    <div class="mgmt-tab-content" id="tab-content-inventory">
+      <h4 class="mgmt-section-title">Materials</h4>
+      <p class="mgmt-section-desc">Bahan baku untuk produksi.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Material</th><th>Stock</th><th>~Cost</th><th>Action</th></tr>
+        </thead>
+        <tbody id="materials-body"></tbody>
+      </table>
+      
+      <h4 class="mgmt-section-title">Products</h4>
+      <p class="mgmt-section-desc">Produk yang bisa dijual ke market.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Product</th><th>Stock</th><th>~Cost / Sell</th><th>Action</th></tr>
+        </thead>
+        <tbody id="products-body"></tbody>
+      </table>
+    </div>
+    
+    <!-- Tab 6: Workplaces -->
+    <div class="mgmt-tab-content" id="tab-content-workplaces">
+      <h4 class="mgmt-section-title">Active Workplaces</h4>
+      <p class="mgmt-section-desc">Worker yang sedang bekerja di company ini.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Worker</th><th>Job</th><th>Productivity</th><th>Time Left</th></tr>
+        </thead>
+        <tbody id="workplaces-body"></tbody>
+      </table>
+    </div>
+    
+    <!-- Tab 7: Branches -->
+    <div class="mgmt-tab-content" id="tab-content-branches">
+      <h4 class="mgmt-section-title">Branches</h4>
+      <p class="mgmt-section-desc">Cabang company di region lain.</p>
+      <table class="mgmt-table">
+        <thead>
+          <tr><th>Region</th><th>Resources</th><th>Action</th></tr>
+        </thead>
+        <tbody id="branches-body"></tbody>
+      </table>
+    </div>
+    
+  </div>
+</div>
