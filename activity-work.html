@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GloryVerse - Work Activity</title>
+  
+  <!-- Load CSS -->
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="activity-work.css">
+</head>
+<body>
+  
+  <!-- Navbar Container -->
+  <div id="nav-container"></div>
+  
+  <!-- Main Layout -->
+  <div id="main-wrapper">
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
+    
+    <!-- Content Area -->
+    <div id="content-container">
+      
+      <!-- STAGE: Gambar Region (untuk video tron iklan) -->
+      <div class="work-stage">
+        <img id="work-region-image" src="reg_markas.jpeg" alt="Region Workplace" onerror="this.style.display='none'">
+        <div class="work-stage-label"> Region: <span id="work-region-name">Markas Utama</span></div>
+      </div>
+      
+      <!-- INFO: Deskripsi Work -->
+      <div class="work-info">
+        <h2>💼 Work in <span id="work-region-title">Markas Utama</span></h2>
+        <p id="work-description">
+          Di sini kamu bisa melihat daftar pekerjaan yang tersedia di region ini, 
+          diurutkan berdasarkan upah yang ditawarkan. Kamu hanya bisa bekerja di 
+          perusahaan yang menawarkan upah tertinggi. Satu shift kerja berlangsung 
+          selama 4 jam. Kamu hanya bisa bekerja 2 kali sehari (tidak termasuk lembur).
+        </p>
+        <div class="work-stats">
+          <div class="work-stat-item">
+            <span class="stat-label">⏱️ Durasi Shift:</span>
+            <span class="stat-value">4 Jam</span>
+          </div>
+          <div class="work-stat-item">
+            <span class="stat-label"> Maks per Hari:</span>
+            <span class="stat-value">2 Kali</span>
+          </div>
+          <div class="work-stat-item">
+            <span class="stat-label">⚡ Min. Energy:</span>
+            <span class="stat-value">41%</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- TABS: Kategori Work -->
+      <div class="work-tabs">
+        <button class="work-tab active" onclick="switchWorkTab('gathering')"> Gathering (<span id="count-gathering">0</span>)</button>
+        <button class="work-tab" onclick="switchWorkTab('hand')"> Hand Working (<span id="count-hand">0</span>)</button>
+        <button class="work-tab" onclick="switchWorkTab('service')">️ Guest Service (<span id="count-service">0</span>)</button>
+        <button class="work-tab" onclick="switchWorkTab('engineering')">️ Engineering (<span id="count-engineering">0</span>)</button>
+        <button class="work-tab" onclick="switchWorkTab('writing')">✍️ Writing (<span id="count-writing">0</span>)</button>
+        <button class="work-tab" onclick="switchWorkTab('extraction')">⛏️ Extraction (<span id="count-extraction">0</span>)</button>
+      </div>
+      
+      <!-- PRODUCTIVITY INFO -->
+      <div class="productivity-info">
+        <div class="productivity-text">
+          Your Productivity: <strong id="productivity-value">82.18%</strong>
+        </div>
+        <div class="productivity-note">
+          Kamu butuh minimal 41% energy untuk bekerja di Gathering jobs.
+        </div>
+      </div>
+      
+      <!-- TABLE: Daftar Company -->
+      <div class="work-table-container">
+        <table class="work-table">
+          <thead>
+            <tr>
+              <th>Employer</th>
+              <th>Company</th>
+              <th>Wage</th>
+              <th>Work</th>
+            </tr>
+          </thead>
+          <tbody id="work-table-body">
+            <!-- Data akan di-render oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Link Work History -->
+      <div class="work-history-link">
+        <a href="#" onclick="showWorkHistory()">📋 Work History</a>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- POPUP: Konfirmasi Kerja -->
+  <div class="work-popup-overlay" id="work-popup-overlay" onclick="closeWorkPopup()"></div>
+  <div class="work-popup" id="work-popup">
+    <div class="work-popup-header">
+      <h3>Start Working for <span id="popup-company-name">-</span></h3>
+      <button class="work-popup-close" onclick="closeWorkPopup()">✕</button>
+    </div>
+    
+    <div class="work-popup-body">
+      <p class="popup-info">
+        You are about to work for <strong id="popup-company-full">-</strong>, 
+        the wages are <strong id="popup-wage">-</strong> MFR/Hour. 
+        This shift will last 4 hours, your activity will be limited during this time.
+      </p>
+      
+      <p class="popup-skill-req">
+        This job requires the <strong id="popup-skill-name">-</strong> skill.
+      </p>
+      
+      <div class="popup-skill-bar">
+        <div class="skill-label">
+          <span id="popup-skill-label">Gathering</span>
+          <span id="popup-skill-value">100/100</span>
+        </div>
+        <div class="skill-bar-container">
+          <div class="skill-bar-fill" id="popup-skill-bar" style="width: 100%;"></div>
+        </div>
+      </div>
+      
+      <div class="popup-captcha">
+        <p>To confirm, type only the numbers you see and click Start Working.</p>
+        <div class="captcha-box">
+          <span class="captcha-code" id="captcha-code">----</span>
+          <input type="text" id="captcha-input" placeholder="Ketik kode di atas" maxlength="4">
+        </div>
+      </div>
+      
+      <div class="popup-actions">
+        <button class="btn-start-work" onclick="confirmWork()">Start Working</button>
+        <button class="btn-cancel-work" onclick="closeWorkPopup()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Load JS -->
+  <script src="navbar.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="activity-work.js"></script>
+  
+  <!-- Load Components -->
+  <script>
+    window.$ = id => document.getElementById(id);
+    
+    function loadComponent(url, containerId) {
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          const container = $(containerId);
+          container.innerHTML = html;
+        })
+        .catch(e => console.error('Gagal load ' + url + ':', e));
+    }
+    
+    loadComponent('navbar.html', 'nav-container');
+    loadComponent('sidebar.html', 'sidebar-container');
+  </script>
+  
+</body>
+</html>
