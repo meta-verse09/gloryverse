@@ -122,7 +122,7 @@
 }
 
 .gv-dropdown-menu {
-  display: none;
+  display: none !important;  /* TAMBAH !important */
   position: absolute;
   top: 100%;
   left: 0;
@@ -134,6 +134,11 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.6);
   margin-top: 5px;
   overflow: hidden;
+}
+
+.gv-dropdown-menu.show {
+  display: block !important;  /* TAMBAH !important */
+  animation: dropdownSlideIn 0.2s ease;
 }
 
 .gv-dropdown-menu.show {
