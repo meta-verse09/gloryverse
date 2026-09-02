@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GloryVerse - My Companies</title>
+  
+  <!-- Load CSS -->
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="sidebar.css">
+  <link rel="stylesheet" href="company.css">
+</head>
+<body>
+  
+  <!-- Navbar Container -->
+  <div id="nav-container"></div>
+  
+  <!-- Main Layout -->
+  <div id="main-wrapper">
+    <!-- Sidebar Container -->
+    <div id="sidebar-container"></div>
+    
+    <!-- Content Area -->
+    <div id="content-container">
+      
+      <!-- STAGE: Gambar Region -->
+      <div class="company-stage">
+        <img id="company-region-image" src="reg_markas.jpeg" alt="Region" onerror="this.style.display='none'">
+        <div class="company-stage-label">📍 Region: <span id="company-region-name">Markas Utama</span></div>
+      </div>
+      
+      <!-- INFO: Deskripsi -->
+      <div class="company-info">
+        <h2>🏢 My Companies</h2>
+        <p>
+          Di sini kamu bisa melihat daftar perusahaan yang kamu miliki. Untuk mengelola perusahaan, 
+          tekan tombol Management. Untuk memproduksi barang, kamu perlu memiliki bahan baku dan 
+          lisensi produksi yang aktif. Setelah lisensi habis, kamu perlu memperpanjangnya dengan 
+          membayar biaya ke pemerintah region.
+        </p>
+      </div>
+      
+      <!-- MAIN TABS -->
+      <div class="company-main-tabs">
+        <button class="company-main-tab active" onclick="switchMainTab('my-companies')"> My Companies</button>
+        <button class="company-main-tab" onclick="switchMainTab('start-new')">➕ Start New Company</button>
+      </div>
+      
+      <!-- TAB 1: My Companies -->
+      <div id="tab-my-companies" class="company-tab-content">
+        <div class="search-box">
+          <input type="text" id="search-company" placeholder="Cari perusahaan berdasarkan nama..." onkeyup="searchCompany()">
+        </div>
+        
+        <div class="company-grid" id="my-company-grid">
+          <!-- Data akan di-render oleh JavaScript -->
+        </div>
+        
+        <div class="managing-section">
+          <h3>📋 Managing Companies</h3>
+          <p>Perusahaan yang kamu kelola milik player lain:</p>
+          <div class="company-grid" id="managing-company-grid">
+            <!-- Data akan di-render -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- TAB 2: Start New Company -->
+      <div id="tab-start-new" class="company-tab-content" style="display:none;">
+        <div class="company-sub-tabs">
+          <button class="company-sub-tab active" onclick="switchSubTab('utilities')">⚡ Utilities</button>
+          <button class="company-sub-tab" onclick="switchSubTab('services')">️ Services</button>
+          <button class="company-sub-tab" onclick="switchSubTab('consumer')">🛒 Consumer</button>
+          <button class="company-sub-tab" onclick="switchSubTab('gathering')">⛏️ Gathering</button>
+        </div>
+        
+        <div class="company-grid" id="new-company-grid">
+          <!-- Data akan di-render oleh JavaScript -->
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- POPUP: Buka Company -->
+  <div class="company-popup-overlay" id="company-popup-overlay" onclick="closeCompanyPopup()"></div>
+  <div class="company-popup" id="company-popup">
+    <div class="company-popup-header">
+      <h3 id="popup-company-title">Buka Perusahaan</h3>
+      <button class="company-popup-close" onclick="closeCompanyPopup()">✕</button>
+    </div>
+    <div class="company-popup-body">
+      <div class="popup-company-preview">
+        <div class="popup-company-icon" id="popup-company-icon">🏭</div>
+        <div class="popup-company-details">
+          <h4 id="popup-company-name">-</h4>
+          <p id="popup-company-desc">-</p>
+        </div>
+      </div>
+      <div class="popup-cost-info">
+        <div class="cost-item">
+          <span class="cost-label">💰 Biaya Lisensi:</span>
+          <span class="cost-value" id="popup-cost">0 Euro</span>
+        </div>
+        <div class="cost-item">
+          <span class="cost-label">📋 Lisensi Termasuk:</span>
+          <span class="cost-value" id="popup-license">1 Production License</span>
+        </div>
+      </div>
+      <div class="popup-warning">
+        ⚠️ Setelah lisensi habis, kamu perlu memperpanjangnya dengan membayar biaya ke pemerintah region.
+      </div>
+      <div class="popup-actions">
+        <button class="btn-open-company" onclick="confirmOpenCompany()">Buka Perusahaan</button>
+        <button class="btn-cancel-company" onclick="closeCompanyPopup()">Batal</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Load JS -->
+  <script src="navbar.js"></script>
+  <script src="sidebar.js"></script>
+  <script src="company.js"></script>
+  
+  <!-- Load Components -->
+  <script>
+    window.$ = id => document.getElementById(id);
+    
+    function loadComponent(url, containerId) {
+      fetch(url)
+        .then(r => r.text())
+        .then(html => {
+          const container = $(containerId);
+          container.innerHTML = html;
+        })
+        .catch(e => console.error('Gagal load ' + url + ':', e));
+    }
+    
+    loadComponent('navbar.html', 'nav-container');
+    loadComponent('sidebar.html', 'sidebar-container');
+  </script>
+  
+</body>
+</html>
