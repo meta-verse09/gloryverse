@@ -115,6 +115,7 @@
 .gv-dropdown {
   position: relative;
   display: inline-block;
+  overflow: visible !important;  /* ← TAMBAH INI */
 }
 
 .gv-dropdown-btn {
@@ -208,4 +209,17 @@
 .gv-dropdown-desc {
   color: rgba(255,255,255,0.6);
   font-size: 11px;
+}
+/* Force dropdown visibility on mobile */
+@media (max-width: 1280px) {
+  .gv-dropdown-menu.show {
+    display: block !important;
+    position: fixed !important;  /* ← GANTI dari absolute ke fixed */
+    top: auto !important;
+    left: 10px !important;
+    right: 10px !important;
+    min-width: auto !important;
+    max-width: calc(100vw - 20px) !important;
+    z-index: 99999 !important;  /* ← PALING TINGGI */
+  }
 }
