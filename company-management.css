@@ -1,8 +1,5 @@
-/* ============================================
-   COMPANY MANAGEMENT POPUP - Styles
-   ============================================ */
+/* COMPANY MANAGEMENT POPUP - Styles */
 
-/* Overlay */
 .mgmt-overlay {
   display: none;
   position: fixed;
@@ -13,7 +10,6 @@
   backdrop-filter: blur(4px);
 }
 
-/* Popup Container */
 .mgmt-popup {
   display: none;
   position: fixed;
@@ -35,7 +31,6 @@
   display: flex;
 }
 
-/* Header */
 .mgmt-header {
   background: linear-gradient(135deg, #f0c040, #d4a017);
   padding: 15px 20px;
@@ -84,7 +79,6 @@
   padding: 5px 10px;
 }
 
-/* Tabs */
 .mgmt-tabs {
   display: flex;
   gap: 5px;
@@ -116,7 +110,6 @@
   border-color: #f0c040;
 }
 
-/* Content */
 .mgmt-content {
   flex: 1;
   overflow-y: auto;
@@ -131,7 +124,6 @@
   display: block;
 }
 
-/* Section Title */
 .mgmt-section-title {
   color: #f0c040;
   font-size: 16px;
@@ -148,7 +140,6 @@
   margin-bottom: 15px;
 }
 
-/* Table */
 .mgmt-table {
   width: 100%;
   border-collapse: collapse;
@@ -176,36 +167,51 @@
   background: rgba(240,192,64,0.05);
 }
 
-/* Buttons */
-.mgmt-btn {
+.mgmt-btn-green {
   background: #28a745;
   color: #fff;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 11px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
 }
 
-.mgmt-btn:hover {
+.mgmt-btn-green:hover {
   background: #20c997;
 }
 
-.mgmt-btn-warning {
+.mgmt-btn-red {
   background: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.mgmt-btn-warning:hover {
+.mgmt-btn-red:hover {
   background: #c82333;
 }
 
-.mgmt-btn-secondary {
+.mgmt-btn-gray {
   background: rgba(255,255,255,0.1);
+  color: #fff;
   border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-/* Finance Section */
+.mgmt-btn-gray:hover {
+  background: rgba(255,255,255,0.2);
+}
+
 .finance-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -232,7 +238,6 @@
   font-weight: 900;
 }
 
-/* Input & Form */
 .mgmt-input {
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(255,255,255,0.2);
@@ -249,7 +254,6 @@
   border-color: #f0c040;
 }
 
-/* Stock Bar */
 .stock-bar-container {
   display: flex;
   align-items: center;
@@ -278,7 +282,6 @@
   text-align: right;
 }
 
-/* Status Badge */
 .status-badge {
   display: inline-block;
   padding: 3px 8px;
@@ -295,20 +298,4 @@
 .status-stopped {
   background: #dc3545;
   color: #fff;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .finance-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .mgmt-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-  }
-  
-  .mgmt-tab {
-    white-space: nowrap;
-  }
 }
