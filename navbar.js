@@ -2,33 +2,32 @@
    NAVBAR GLORYVERSE - Dropdown Logic
    ============================================ */
 
-// Toggle Dropdown - Versi Mobile-Friendly
+// Toggle Dropdown - PAKAI INLINE STYLE (paling reliable)
 window.toggleDropdown = function(dropdownId) {
-  // Close SEMUA dropdown dulu
+  const dropdown = document.getElementById(dropdownId);
+  if (!dropdown) return;
+  
+  // Cek apakah sedang terbuka
+  const isOpen = dropdown.style.display === 'block';
+  
+  // TUTUP SEMUA dropdown dulu
   const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
-  allDropdowns.forEach(dropdown => {
-    dropdown.classList.remove('show');
-    dropdown.style.display = 'none';  // Force hide
+  allDropdowns.forEach(d => {
+    d.style.display = 'none';
   });
   
-  // Toggle current dropdown
-  const dropdown = document.getElementById(dropdownId);
-  if (dropdown) {
-    const isShowing = dropdown.classList.contains('show');
-    
-    if (!isShowing) {
-      dropdown.classList.add('show');
-      dropdown.style.display = 'block';  // Force show
-    }
+  // Jika tadi tertutup, sekarang buka
+  if (!isOpen) {
+    dropdown.style.display = 'block';
   }
 };
 
-// Close dropdowns when clicking outside
+// Tutup dropdown saat klik di luar
 document.addEventListener('click', function(e) {
   if (!e.target.closest('.gv-dropdown')) {
     const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
-    allDropdowns.forEach(dropdown => {
-      dropdown.classList.remove('show');
+    allDropdowns.forEach(d => {
+      d.style.display = 'none';
     });
   }
 });
@@ -43,7 +42,6 @@ window.goToActivity = function(type) {
     'offer': 'activity-offer.html',
     'contest': 'activity-contest.html'
   };
-  
   const targetPage = activityPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -63,7 +61,6 @@ window.goToMarket = function(type) {
     'region': 'market-region.html',
     'medalshop': 'market-medalshop.html'
   };
-  
   const targetPage = marketPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -77,7 +74,6 @@ window.goToWar = function(type) {
     'campaign': 'war-campaign.html',
     'ranking': 'war-ranking.html'
   };
-  
   const targetPage = warPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -91,7 +87,6 @@ window.goToOrganization = function(type) {
     'alliance': 'org-alliance.html',
     'party': 'org-party.html'
   };
-  
   const targetPage = orgPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -105,7 +100,6 @@ window.goToRanking = function(type) {
     'region': 'ranking-region.html',
     'guild': 'ranking-guild.html'
   };
-  
   const targetPage = rankingPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -119,7 +113,6 @@ window.goToCommunity = function(type) {
     'chat': 'community-chat.html',
     'news': 'community-news.html'
   };
-  
   const targetPage = communityPages[type];
   if (targetPage) {
     window.location.href = targetPage;
@@ -157,17 +150,8 @@ window.setInterval(window.updateClock, 1000);
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
-    allDropdowns.forEach(dropdown => {
-      dropdown.classList.remove('show');
-    });
-  }
-   // Mobile touch support
-document.addEventListener('touchstart', function(e) {
-  if (!e.target.closest('.gv-dropdown')) {
-    const allDropdowns = document.querySelectorAll('.gv-dropdown-menu');
-    allDropdowns.forEach(dropdown => {
-      dropdown.classList.remove('show');
-      dropdown.style.display = 'none';
+    allDropdowns.forEach(d => {
+      d.style.display = 'none';
     });
   }
 });
