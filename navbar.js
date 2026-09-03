@@ -52,7 +52,7 @@ window.goToActivity = function(type) {
 window.goToMarket = function(type) {
   const marketPages = {
     'local': 'market-local.html',
-    'world': 'market-world.html',
+    'global': 'market-global.html',
     'financial': 'market-financial.html',
     'recruit': 'market-recruit.html',
     'realestate': 'market-realestate.html',
