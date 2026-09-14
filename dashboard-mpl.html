@@ -176,111 +176,44 @@ div[class*="box"] {
   background: linear-gradient(to bottom, #5a3a1a, #3e2711) !important;
   border-bottom: 4px solid #8b5a2b !important;
 }
-		/* FIX TENGAH MAKAN SIDEBAR - NGECILIN LEBAR */
-* { box-sizing: border-box !important; }
-
+		/* FIX 3 KOLOM BIAR GAK TERJUN BEBAS */
 #main-container, .container, .wrapper {
-  max-width: 1100px !important;
-  width: 92% !important;
-  margin: 0 auto !important;
-  padding: 10px !important;
-}
-
-.main, #content {
-  width: 68% !important;
-  max-width: 68% !important;
-  display: inline-block !important;
-  vertical-align: top !important;
-  float: left !important;
-}
-
-/* SIDEBAR BIAR GAK KEMAKAN */
-.sidebar, #sidebar, .side-panel,
-div[class*="sidebar"], aside {
-  width: 30% !important;
-  max-width: 30% !important;
-  display: inline-block !important;
-  vertical-align: top !important;
-  float: right !important;
-}
-
-/* KHUSUS HP - BIAR GAK NUMPUK */
-@media (max-width: 768px) {
-  .main, #content, .sidebar, #sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-    float: none !important;
-    display: block !important;
-  }
-  #main-container, .container {
-    width: 98% !important;
-    border-width: 5px !important;
-  }
-}
-		/* ===== FIX FINAL GLORY VERSE BRAY ===== */
-
-/* 2. TENGAH KECILIN & CENTER - BIAR GAK MAKAN SIDEBAR */
-#main-container, .container, .wrapper {
-  width: 95% !important;
-  max-width: 1280px !important;
-  margin: 0 auto !important;
   display: flex !important;
-  flex-wrap: wrap !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   justify-content: space-between !important;
-  gap: 10px !important;
-}
-
-.main, #content, .center-panel {
-  width: 58% !important;
-  max-width: 58% !important;
+  align-items: flex-start !important;
+  width: 98% !important;
+  max-width: 1400px !important;
   margin: 0 auto !important;
-  flex: 0 0 58% !important;
-  order: 2 !important;
+  gap: 10px !important;
+  box-sizing: border-box !important;
 }
 
-.sidebar, #sidebar, .left-sidebar {
+/* KIRI - My Companies */
+div:has(> div:contains("My Companies")), 
+#sidebar, .sidebar, aside:first-of-type {
   width: 19% !important;
-  max-width: 19% !important;
-  flex: 0 0 19% !important;
+  min-width: 19% !important;
   order: 1 !important;
 }
 
-.right-sidebar, #right-sidebar, 
-div[class*="My Friends"],
-aside:last-child {
-  width: 19% !important;
-  max-width: 19% !important;
-  flex: 0 0 19% !important;
-  order: 3 !important;
-}
-
-/* 3. HEADER LOGO BIAR KELIATAN FULL */
-#header, .header, div:has(> img[alt*="GLORY"]) {
-  width: 100% !important;
-  max-width: 100% !important;
-  z-index: 10 !important;
-  position: relative !important;
-  margin-bottom: 10px !important;
-}
-
-/* 4. HP - SEMUA JADI 100% */
-@media (max-width: 768px) {
-  #main-container { flex-direction: column !important; }
-  .main, #content, .sidebar, #sidebar, .right-sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-    flex: 0 0 100% !important;
-  }
-}
-		/* CENTER TENGAH BIAR CANTIK */
-#main-container, .container, .wrapper, .main, #content {
-  margin-left: auto !important;
-  margin-right: auto !important;
+/* TENGAH - Wars Maldives (yang Bray bilang udah pas ukurannya) */
+.main, #content, .center-panel {
+  width: 58% !important;
+  min-width: 58% !important;
+  order: 2 !important;
+  margin: 0 !important;
   float: none !important;
-  display: block !important;
-  left: auto !important;
-  right: auto !important;
-  transform: none !important;
+}
+
+/* KANAN - My Friends biar gak terjun */
+div:has(> div:contains("My Friends")),
+.right-sidebar, #right-sidebar, 
+aside:last-of-type {
+  width: 19% !important;
+  min-width: 19% !important;
+  order: 3 !important;
 }
 </style>
 </head>
