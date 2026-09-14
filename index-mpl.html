@@ -1,0 +1,606 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Glory Verse - Online Strategy Browser Game</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="Glory Verse - Online Strategy Browser Game" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://myprofitland.com/favicon.ico">
+<link rel="apple-touch-icon" href="https://myprofitland.com/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://myprofitland.com/css-site/base.css?t=1493636609">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://myprofitland.com/js/base.js"></script>
+<script src="https://myprofitland.com/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script type="text/javascript">
+	var newwindow;
+	var intId;
+	function login(url){
+		var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+			 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+			 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
+			 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
+			 width    = 500,
+			 height   = 270,
+			 left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
+			 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
+			 features = (
+				'width=' + width +
+				',height=' + height +
+				',left=' + left +
+				',top=' + top
+			  );
+
+		newwindow=window.open(url,'Login_by_facebook',features);
+
+	   if (window.focus) {newwindow.focus()}
+	  return false;
+	}
+</script>
+
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			success: function(output){
+				$(my_div).html(output);
+			}
+		});
+	};
+
+</script>
+
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-5136240-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-5136240-6');
+</script>
+
+
+
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+			
+			<div class="contents">
+				<!-- TOPNAV --------------------------------
+---------------------------------------- -->
+<nav class="topnav">
+	
+	<div class="topnav-inner">
+		<div class="container">
+			<div class="topnav-header">
+
+				<a class="brand" href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">
+					<img alt="myprofitland.com" src="https://myprofitland.com/img/logo-site.png">
+				</a>
+
+				<button type="button" class="topnav-toggle" data-toggle="collapse" data-target="#topnav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse topnav-collapse" id="topnav-collapse">
+				<ul class="nav topnav-nav">
+					
+					<li>
+						<a href="https://myprofitland.com">Home</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/register.php">Register</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/account_recovery.php">Lost Password</a>
+					</li>
+					
+					<li>
+						<a href="https://myprofitland.com/documentation.php">Documentation</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/contact.php">Contact</a>
+					</li>
+											<li>
+							<a href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="blue"><i class="icon-login"></i>&nbsp;&nbsp;Back to game</span></a>
+						</li>
+						
+				</ul>
+			</div><!-- end .topnav-collapse -->
+		</div><!-- end .container -->
+	</div><!-- end .topnav-inner -->
+	
+</nav>
+<!-- end topnav ----------------------------
+---------------------------------------- -->
+
+				<!-- HEADER AREA ---------------------------
+				---------------------------------------- -->
+				<div class="header banner large">
+					<div class="banner-inner" style="background-image: url(https://mplstatic.com/img/banner-home.jpg)">
+					
+						<div class="container">
+						
+														
+							<br>
+							<br>
+							<br>
+							<br>
+							<h1 class="hidden-xs">
+								<small>A new world order is forming.</small><br>
+								<big><b>What will be your role?</b></big>
+							</h1>
+							
+							<!-- LOGIN --------------------------------
+							---------------------------------------- -->
+														
+							<div class="login-box">
+																	<div><b>ADVAN</b>, you are already logged in. <a href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Go back to game.</a></div>
+																</div><!-- end .login-box -->
+							<!-- end login ----------------------------
+							---------------------------------------- -->
+							
+						</div><!-- end .container -->
+					
+					</div>
+				</div><!-- end .header -->
+				<!-- end header area -----------------------
+				---------------------------------------- -->
+				
+
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				
+				<!-- INTRO ------------------------------------
+				------------------------------------------- -->
+				<div class="section-w">
+					<div class="container">
+						<div class="row">
+						
+							<div class="col-sm-12">
+								
+								<p>My Profit Land is a strategy game. It is an online browser game, therefore you do not need any other programs installed in order to play. It is one of the few business games where you are rewarded for your daily activity. As a simulation game, it offers you the possibility to fight, work, open companies, start wars. It is a very complex game, and the more you play it, the more options you will find for your own development.</p>
+								<br>
+				
+								<div class="text-center"><a class="btn btn-warning-bvl btn-lg" href="https://myprofitland.com/register.php">Register now. It's free</a></div>
+								
+
+							</div><!-- end .col-* -->
+							
+						</div><!-- end .row -->
+					</div><!-- end .container -->
+				</div><!-- end .section -->
+				
+
+				<!-- RATINGS + LAST PAYMENT -------------------
+				------------------------------------------- -->
+				<div class="section-w">
+					<div class="container">
+						<div class="row">
+						
+							<div class="col-xs-12 col-md-6">
+								<h4>Countries Ranking</h4>
+								
+								<table class="table table-condensed table-hover">
+									<thead>
+										<th width="50"></th>
+										<th width="50"></th>
+										<th>Country</th>
+										<th class="text-right">Work Bonus</th>
+										<th width="60" class="text-right">Jobs</th>
+										<th width="90" class="text-right">Citizens</th>
+									</thead>
+																			<tr>
+											<td>1º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/id.png" title="Indonesia"></td>
+											<td><a href="#">Indonesia</a></td>
+											<td class="text-right">
+																									2.13 Gold
+																								</td>
+											<td class="text-right">
+																									79																								</td>
+											<td class="text-right">271</td>
+										</tr>
+																				<tr>
+											<td>2º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/us.png" title="United States"></td>
+											<td><a href="#">United States</a></td>
+											<td class="text-right">
+																									4.45 Gold
+																								</td>
+											<td class="text-right">
+																									185																								</td>
+											<td class="text-right">143</td>
+										</tr>
+																				<tr>
+											<td>3º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/ve.png" title="Venezuela"></td>
+											<td><a href="#">Venezuela</a></td>
+											<td class="text-right">
+																									0.15 Gold
+																								</td>
+											<td class="text-right">
+																									64																								</td>
+											<td class="text-right">116</td>
+										</tr>
+																				<tr>
+											<td>4º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/mk.png" title="Macedonia"></td>
+											<td><a href="#">Macedonia</a></td>
+											<td class="text-right">
+																									1.52 Gold
+																								</td>
+											<td class="text-right">
+																									52																								</td>
+											<td class="text-right">85</td>
+										</tr>
+																				<tr>
+											<td>5º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/sv.png" title="El Salvador"></td>
+											<td><a href="#">El Salvador</a></td>
+											<td class="text-right">
+																									0.71 Gold
+																								</td>
+											<td class="text-right">
+																									82																								</td>
+											<td class="text-right">84</td>
+										</tr>
+																				<tr>
+											<td>6º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/mv.png" title="Maldives"></td>
+											<td><a href="#">Maldives</a></td>
+											<td class="text-right">
+																									5.16 Gold
+																								</td>
+											<td class="text-right">
+																									98																								</td>
+											<td class="text-right">76</td>
+										</tr>
+																				<tr>
+											<td>7º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/qa.png" title="Qatar"></td>
+											<td><a href="#">Qatar</a></td>
+											<td class="text-right">
+																									4.11 Gold
+																								</td>
+											<td class="text-right">
+																									124																								</td>
+											<td class="text-right">73</td>
+										</tr>
+																				<tr>
+											<td>8º</td>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/al.png" title="Albania"></td>
+											<td><a href="#">Albania</a></td>
+											<td class="text-right">
+																									4.01 Gold
+																								</td>
+											<td class="text-right">
+																									35																								</td>
+											<td class="text-right">66</td>
+										</tr>
+																		</table>
+
+
+							</div><!-- end .col-* -->
+						
+							<div class="col-xs-12 col-md-6">
+								<h4>Latest Withdrawals</h4>
+
+								<table class="table table-condensed table-hover">
+									<thead>
+										<th width="50"></th>
+										<th>Citizen</th>
+										<th>When</th>
+										<th width="150" class="text-right">Amount</th>
+									</thead>
+																			<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/qa.png" title="Qatar"></td>
+											<td><a href="#">ncc1980</a></td>
+											<td>13 hours ago</td>
+											<td class="text-right">30.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/sg.png" title="Singapore"></td>
+											<td><a href="#">David</a></td>
+											<td>13 hours ago</td>
+											<td class="text-right">20.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/br.png" title="Brazil"></td>
+											<td><a href="#">ChooseAnotherNickname</a></td>
+											<td>2 days ago</td>
+											<td class="text-right">24.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/sm.png" title="San Marino"></td>
+											<td><a href="#">martinalex</a></td>
+											<td>2 days ago</td>
+											<td class="text-right">50.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/br.png" title="Brazil"></td>
+											<td><a href="#">ChillingPug</a></td>
+											<td>2 days ago</td>
+											<td class="text-right">20.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/id.png" title="Indonesia"></td>
+											<td><a href="#">Vebby</a></td>
+											<td>13 hours ago</td>
+											<td class="text-right">27.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/sv.png" title="El Salvador"></td>
+											<td><a href="#">grubas</a></td>
+											<td>2 days ago</td>
+											<td class="text-right">20.00 Euro</td>
+										</tr>
+																				<tr>
+											<td><img width="20" height="20" src="https://myprofitland.com/img/country_flags/24/ae.png" title="United Arab Emirates"></td>
+											<td><a href="#">cHaeMLanK</a></td>
+											<td>2 days ago</td>
+											<td class="text-right">22.00 Euro</td>
+										</tr>
+																		</table>
+							</div><!-- end .col-* -->
+							
+						</div><!-- end .row -->
+
+
+
+
+						<div class="row">
+						
+							<div class="col-xs-12 col-md-6">
+								<h4>Euro/Gold Exchange Rate</h4>
+								
+								<br>
+								
+								
+								<canvas id="myChart" height="150"></canvas>
+								<script>
+									var ctx = document.getElementById('myChart').getContext('2d');
+									var myChart = new Chart(ctx, {
+									  type: 'line',
+									  data: {
+									    labels: ['14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', ],
+									    datasets: [{
+									      label: 'Exchange rate',
+									      data: [24.2150000000, 24.2130000000, 24.2110000000, 24.2090000000, 24.2070000000, 24.2050000000, 24.2030000000, 24.2010000000, 24.1990000000, 24.1970000000, 24.1950000000, 24.1930000000, 24.1910000000, 24.1890000000, 24.1870000000, 24.1830000000, 24.1730000000, 24.1630000000, 24.1530000000, 24.1470000000, 24.1490000000, 24.1450000000, 24.1470000000, 24.1490000000, 24.1290000000, 24.1310000000, 24.1290000000, 24.1310000000, 24.1250000000, 24.1270000000, ],
+									      fill: false
+									    }]
+									  },
+									  options: {
+								         legend: {
+								            display: false
+								         }
+								    	}
+									});
+
+								</script>
+								
+								1 Euro is currently worth 24.127 Gold
+
+							</div>
+
+
+							<div class="col-xs-12 col-md-6">
+								<h4>Active Wars</h4>
+
+								
+																	<table class="table table-condensed table-hover">
+										<thead>
+											<th>Region</th>
+											<th width="88" class="text-center">Attackers</th>
+											<th width="42" class="text-right"></th>
+											<th width="80"></th>
+											<th width="42" class="text-right"></th>
+											<th width="88" class="text-center">Defenders</th>
+										</thead>
+										
+																					<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Edinburgh</a></b></span></td>
+												<td class="text-center"><a href="#" title="Macedonia" data-toggle="tooltip">MK</a></td>
+												<td class="text-right"><small>0%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 0%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="Maldives" data-toggle="tooltip">MV</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Peshkopi</a></b></span></td>
+												<td class="text-center"><a href="#" title="Philippines" data-toggle="tooltip">PH</a></td>
+												<td class="text-right"><small>100%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="El Salvador" data-toggle="tooltip">SV</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Sendai</a></b></span></td>
+												<td class="text-center"><a href="#" title="United States" data-toggle="tooltip">US</a></td>
+												<td class="text-right"><small>100%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="Andorra" data-toggle="tooltip">AD</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Ghent</a></b></span></td>
+												<td class="text-center"><a href="#" title="El Salvador" data-toggle="tooltip">SV</a></td>
+												<td class="text-right"><small>100%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="Philippines" data-toggle="tooltip">PH</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Gdansk</a></b></span></td>
+												<td class="text-center"><a href="#" title="Qatar" data-toggle="tooltip">QA</a></td>
+												<td class="text-right"><small>20%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 20%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 80%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>80%</small></td>
+												<td class="text-center"><a href="#" title="Singapore" data-toggle="tooltip">SG</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Rodos</a></b></span></td>
+												<td class="text-center"><a href="#" title="Singapore" data-toggle="tooltip">SG</a></td>
+												<td class="text-right"><small>100%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="Albania" data-toggle="tooltip">AL</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Tarfaya</a></b></span></td>
+												<td class="text-center"><a href="#" title="Singapore" data-toggle="tooltip">SG</a></td>
+												<td class="text-right"><small>0%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 0%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>0%</small></td>
+												<td class="text-center"><a href="#" title="Libya" data-toggle="tooltip">LY</a></td>
+											</tr>
+																						<tr>
+												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Krsko</a></b></span></td>
+												<td class="text-center"><a href="#" title="Monaco" data-toggle="tooltip">MC</a></td>
+												<td class="text-right"><small>93%</small></td>
+												<td>
+													<div class="progress progress-xs">
+														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 93%"></div>
+														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 7%"></div>
+													</div>
+												</td>
+												<td class="text-right"><small>7%</small></td>
+												<td class="text-center"><a href="#" title="Maldives" data-toggle="tooltip">MV</a></td>
+											</tr>
+											
+									</table>
+									
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+
+
+
+
+
+
+
+
+
+
+				
+
+					
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+				<div class="copyright">
+					Copyright 2026 &copy; myprofitland.com. All rights reserved. <a href="https://myprofitland.com/privacy_policy.php">Privacy policy</a> | <a href="https://myprofitland.com/tos.php">Terms and conditions</a> <small>(6) 0.019s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://myprofitland.com/tos.php">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+			
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
