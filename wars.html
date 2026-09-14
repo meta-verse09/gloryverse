@@ -1,0 +1,1820 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>My Profit Land - Online Strategy Browser Game - My Country</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="My Profit Land - Online Strategy Browser Game - My Country" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://myprofitland.com/favicon.ico">
+<link rel="apple-touch-icon" href="https://myprofitland.com/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://myprofitland.com/css-game/base.css?2">
+<link rel="stylesheet" href="https://myprofitland.com/css-game/fa6.5.1/css/all.min.css?1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://myprofitland.com/js/base.js"></script>
+<script src="https://myprofitland.com/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			headers: {'X-Requested-With': 'XMLHttpRequest'},
+			beforeSend: function() {
+			    $('*').css('cursor', 'progress');
+			},
+			error: function (request, error) {
+		        console.log(arguments);
+		        //alert("Error: " + error);
+		        $('*').css('cursor', '');
+		    },
+			success: function(output){
+				$(my_div).html(output);
+				$('*').css('cursor', '');
+			}
+		});
+	};
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+			
+			<div class="contents">
+				
+	<!-- PRE-HEADER ----------------------------
+	---------------------------------------- -->
+	<!-- For server-wide and account related alerts (non-game alerts) -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container --> 
+	<!-- end pre-header ------------------------
+	---------------------------------------- --> 
+	
+	<!-- HEADER --------------------------------
+	---------------------------------------- --> 
+	<!-- For Logo, search, languague selection and account related information -->
+		<div class="game-head" style="background-image: url(https://mplstatic.com/img/game-head.jpg)">
+		<div class="container">
+		
+			
+			<a class="brand" href="https://myprofitland.com/dashboard.php?key=29983796e6efc1760b87ec986359093d122665">
+				<img alt="myprofitland.com" src="https://mplstatic.com/img/logo-site.png">
+			</a>
+		
+			<div class="pull-right">
+				<div class="pull-left" style="margin-right: 8px">
+					<a class="label label-info" href="https://myprofitland.com/map/" target="_blank" rel="noopener" data-toggle="tooltip" title="Live World Map" aria-label="Open live world map">
+						<span class="icon-globe" aria-hidden="true"></span>
+					</a>
+				</div>
+				<div class="pull-left" style="margin-right: 16px">
+					<script type="text/javascript">
+
+						var currenttime = 'September 14, 2026 07:52:54' 
+
+						var serverdate=new Date(currenttime)
+
+						function padlength(what){
+							var output=(what.toString().length==1)? "0"+what : what
+							return output
+						}
+
+						function displaytime(){
+							serverdate.setSeconds(serverdate.getSeconds()+1)
+
+							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
+							document.getElementById("server_time").innerHTML=timestring
+						}
+
+						setInterval("displaytime()", 1000);
+						
+						$( document ).ready(function() {
+							$('#topnav-transactions-alert').on('click', function(){
+							    $('#topnav-transactions-alert').removeClass('label-success');
+							    $(this).addClass('label-light');
+							});
+
+							$('#topnav-alerts-alert').on('click', function(){
+							    $('#topnav-alerts-alert').removeClass('label-warning');
+							    $(this).addClass('label-light');
+							});
+						});
+
+
+					</script>
+
+											<a href="https://myprofitland.com/my_medals.php?key=29983796e6efc1760b87ec986359093d122665" data-toggle="tooltip" title="Next Medal Session: 100% (2030 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
+							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">07:52:54</b></span>
+							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+								<div style="height: 100%; width: 100%; border-radius: 1px; background: #5cb85c;"></div>
+							</div>
+						</a>
+						
+				</div><!-- end .col -->
+				
+				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
+					<form method="post" action="https://myprofitland.com/search.php?key=29983796e6efc1760b87ec986359093d122665">
+						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
+					</form>
+				</div><!-- end .col -->
+				
+				<div class="pull-left">
+					<div class="text-right">
+						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_transactions.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'>Income (20235)</a>
+						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_alerts.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'>Alerts (9570)</a>
+						<a class="label label-light" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665">Messages (0)</a>&nbsp;&nbsp;  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/notepad.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://myprofitland.com/my_settings.php?key=29983796e6efc1760b87ec986359093d122665"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://myprofitland.com/logout.php"><i class="icon icon-logout"></i></a> <br>
+						<small></small>
+					</div>
+				</div><!-- end .col -->
+			</div><!-- end .row -->
+		</div><!-- end .container -->
+	</div><!-- end .game-head --> 
+	
+	<!-- end header ----------------------------
+	---------------------------------------- --> 
+	
+	<!-- TOPNAV --------------------------------
+	---------------------------------------- -->
+	<nav class="topnav">
+		<div class="topnav-inner">
+			<div class="container">
+								
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				
+				<div class="topnav-collapse" id="topnav-collapse">
+					<ul class="nav topnav-nav">
+											<li> <a href="https://myprofitland.com/dashboard.php?key=29983796e6efc1760b87ec986359093d122665">Home</a> </li>
+
+						<li class="active" > <a data-toggle="dropdown"> Activities
+														<span class="icon-stopwatch blue"></span>
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/workplaces.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
+																		<span class="icon-stopwatch blue"></span>
+																		</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/dailyhero.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/northkorea.php?key=29983796e6efc1760b87ec986359093d122665"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/lookouts.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/newspapers.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/local_bar.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/fund_offers.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/offers_contest.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/market_local.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_global.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_financial.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_recruits.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
+								<li><a tabindex="-1" href="https://myprofitland.com/market_real_estate.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_companies.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_medals.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_regions.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/medals_shop.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_vct.php?key=29983796e6efc1760b87ec986359093d122665"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Monaco <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/country_accountancy.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_statistics.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_regions.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_resources.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_storage.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_taxes.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_govmembers.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_lawproposals.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_elections.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_patriots.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_army.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_companies.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
+															</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_local.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_global.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
+																<li class="divider" ></li>
+								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/organization_manage.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
+															</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Partners 
+															<span class="icon-pie-chart blue" data-toggle="tooltip" title="Shares dividends is tonight"></span>
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_fund.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_market.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
+																	<span class="icon-pie-chart blue" data-toggle="tooltip" title="Shares dividends is tonight" ></span>
+																</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_shareholders.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_myshares.php?key=29983796e6efc1760b87ec986359093d122665"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
+							</ul>
+						</li>
+						
+						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_playerlevel.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_networth.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_euro.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_gold.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_energy.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_economic_score.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wardamage.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wars.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruits.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruit_income.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_top_offers.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_offers_euro.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_vctholders.php"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_damage.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_countrydamage.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_kills.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_killstreak.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_country.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countrymilitary.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryregions.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryactives.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryinfrastructures.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
+							</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/forum.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/code_of_conduct.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/documentation.php"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/arena_fund.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/globalmarket_fund.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/warfund.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
+								<li class="divider" ></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/private_countries.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/referral_rights.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
+								<li class="divider" ></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/alliances.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/latest_citizens.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/citizenship_changes.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/abandoned_recruits.php?key=29983796e6efc1760b87ec986359093d122665"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
+							</ul>
+						</li>
+
+					</ul>
+				</div><!-- end .topnav-collapse -->
+				
+			</div><!-- end .container -->
+		</div><!-- end .topnav-inner -->
+	</nav>
+	
+	<!-- end topnav ----------------------------
+	---------------------------------------- -->
+	
+	
+
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				<div class="container">
+					<div class="clearfix">
+					
+						<div class="leftbar">
+		
+	
+	
+		<div style="position:relative; padding-left:85px; height:78px">
+			<div style="position:absolute; left:0; top:0; ">
+				<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=ADVAN">
+											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
+										</a>
+			</div>
+	
+			<p class="nw">
+				<b><a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=ADVAN">ADVAN</a></b>
+				<br>
+				<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <span class="small"><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a>
+				<br>
+				<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=295">Krsko</a></span><a data-toggle="tooltip" title="Active War" href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98189" class="icon icon-crosshairs red icon-big"></a>			</p>
+		</div>
+	
+		<div class="text-center small">
+			<b>Energy:</b> 88.19% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_energy_breakdown.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'></a> 		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="88.19" aria-valuemin="0" aria-valuemax="100" style="width: 88.19%;">
+			</div>
+		</div>
+		
+			
+		<div class="text-center small">
+			<b>Health:</b> 96.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_health_breakdown.php?key=29983796e6efc1760b87ec986359093d122665", "#modal_ajax")'></a>
+		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="96.0" aria-valuemin="0" aria-valuemax="100" style="width: 96.0%;">
+			</div>
+		</div>
+
+
+
+		        <div class="text-center small">
+			<b>XP Level:</b> 29		</div>
+
+		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 11845/16091&nbsp;&nbsp;&nbsp;73%">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 73%;"></div>
+        </div>
+
+		
+		<div class="text-center">
+											</div>
+	
+
+		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="106.95">106.950</span> sVCT <a href="https://myprofitland.com/my_vct.php"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/euro_icon.png"> Euro: 0.03</p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/gold_icon.png"> Gold: 360.22 <a class="icon icon-line-chart" href="https://myprofitland.com/market_financial.php?key=29983796e6efc1760b87ec986359093d122665"></a></p>
+		<p><img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mv.png"> RUF: 0.00</p>
+		
+
+
+				
+
+
+		<ul class="list-group">
+			
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companies.php?key=29983796e6efc1760b87ec986359093d122665">My Companies</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_inventory.php?key=29983796e6efc1760b87ec986359093d122665">My Inventory</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companion.php?key=29983796e6efc1760b87ec986359093d122665">My Companion</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_vehicles.php?key=29983796e6efc1760b87ec986359093d122665">My Vehicles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_financials.php?key=29983796e6efc1760b87ec986359093d122665">My Finances</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_weapons.php?key=29983796e6efc1760b87ec986359093d122665">My Weapons & Info</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_clothing.php?key=29983796e6efc1760b87ec986359093d122665">My Clothing</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_real_estate.php?key=29983796e6efc1760b87ec986359093d122665">My Real Estate</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_recruits.php?key=29983796e6efc1760b87ec986359093d122665">My Recruits</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_medals.php?key=29983796e6efc1760b87ec986359093d122665">My Medals</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_newspapers.php?key=29983796e6efc1760b87ec986359093d122665">My Newspaper Articles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_regions.php?key=29983796e6efc1760b87ec986359093d122665">My Regions</a></li>
+					</ul>
+		
+		<p class="text-center"><a class="btn btn-success btn-sm" href="https://myprofitland.com/fund.php?key=29983796e6efc1760b87ec986359093d122665">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://myprofitland.com/withdraw_resellers.php?key=29983796e6efc1760b87ec986359093d122665">Withdraw <i class="icon icon-upload"></i></a></p>
+		
+					<style>
+				.kob-glow {
+					position: relative;
+					display: inline-block;
+					padding: 3px;
+					border-radius: 5px;
+					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
+					animation: kob-spin 6s linear infinite;
+					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
+				}
+				.kob-glow img {
+					display: block;
+					border-radius: 4px;
+				}
+				@property --kob-angle {
+					syntax: '<angle>';
+					initial-value: 0deg;
+					inherits: false;
+				}
+				@keyframes kob-spin {
+					to { --kob-angle: 360deg; }
+				}
+				@supports not (background: conic-gradient(from 0deg, red, blue)) {
+					.kob-glow { background: #00ff88; }
+				}
+			</style>
+			<p class="text-center" style="margin-top: 50px;">
+				<a class="kob-glow" href="https://kickoffboss.com/?recruitedme=nicmo&utm_source=mpl&utm_medium=leftbar&utm_campaign=cross_promo" target="_blank" rel="noopener noreferrer" title="Play KickOffBoss - our football manager game"><img width="170" height="61" alt="KickOffBoss - our football manager game" src="https://myprofitland.com/img/kob-banner.jpg"></a>
+			</p>
+			
+		<br>
+
+					<div id="google_translate_element"></div>
+			<script type="text/javascript">
+				function googleTranslateElementInit() {
+				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+				}
+			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+			
+		<br>
+
+
+		</div><!-- end .leftbar -->					
+						<div class="main">
+							
+
+														
+							<h4>Wars Worldwide</h4>
+								
+							<p>This is the war log from the entire world, you can inspect both active and finished wars. Only organizations can open wars.</p>
+
+						
+							<form action="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&acn=filter" class="form-horizontal" method="post">
+                                
+                                
+								<table class="table table-condensed table-hover">
+									<thead>
+										<th width="170">Region</th>
+										<th>Attackers</th>
+										<th>Defenders</th>
+										<th width="100">Started</th>
+										<th width="80"></th>
+									</thead>
+									
+									<tr>
+										<td>
+											<select name="region_id" id="region_id" class="form-control" placeholder="Select region...">
+                                                <option value="">Select region...</option>
+                                                                                                    <option  value="301">Aalborg</option>
+                                                                                                        <option  value="302">Aarhus</option>
+                                                                                                        <option  value="281">Aba</option>
+                                                                                                        <option  value="62">Aberdeen</option>
+                                                                                                        <option  value="421">Abha</option>
+                                                                                                        <option  value="52">Adana</option>
+                                                                                                        <option  value="231">Adelaide</option>
+                                                                                                        <option  value="510">Agadir</option>
+                                                                                                        <option  value="161">Ahmedabad</option>
+                                                                                                        <option  value="467">Akita</option>
+                                                                                                        <option  value="594">Akureyri</option>
+                                                                                                        <option  value="371">Alesung</option>
+                                                                                                        <option  value="521">Alexandria</option>
+                                                                                                        <option  value="221">Alexandroupollis</option>
+                                                                                                        <option  value="232">Alice Springs</option>
+                                                                                                        <option  value="191">Almere</option>
+                                                                                                        <option  value="32">Ambon</option>
+                                                                                                        <option  value="162">Amritsar</option>
+                                                                                                        <option  value="341">Antofagasta</option>
+                                                                                                        <option  value="489">Antwerp</option>
+                                                                                                        <option  value="12">Arad</option>
+                                                                                                        <option  value="342">Arica</option>
+                                                                                                        <option  value="193">Arnhem</option>
+                                                                                                        <option  value="331">Artigas</option>
+                                                                                                        <option  value="522">Aswan</option>
+                                                                                                        <option  value="523">Asyut</option>
+                                                                                                        <option  value="361">Auckland</option>
+                                                                                                        <option  value="10">Aveiro</option>
+                                                                                                        <option  value="531">Babruysk</option>
+                                                                                                        <option  value="23">Badajoz</option>
+                                                                                                        <option  value="431">Baguio</option>
+                                                                                                        <option  value="524">Baharyia</option>
+                                                                                                        <option  value="33">Bandung</option>
+                                                                                                        <option  value="163">Bangalore</option>
+                                                                                                        <option  value="34">Banjarmasin</option>
+                                                                                                        <option  value="391">Banska Bystrica</option>
+                                                                                                        <option  value="569">Bar</option>
+                                                                                                        <option  value="532">Baranavichy</option>
+                                                                                                        <option  value="24">Barcelona (SP)</option>
+                                                                                                        <option  value="111">Barcelona (VE)</option>
+                                                                                                        <option  value="112">Barquisimeto</option>
+                                                                                                        <option  value="381">Barranquilla</option>
+                                                                                                        <option  value="251">Basel</option>
+                                                                                                        <option  value="501">Bechar</option>
+                                                                                                        <option  value="5">Beja</option>
+                                                                                                        <option  value="72">Belem</option>
+                                                                                                        <option  value="63">Belfast</option>
+                                                                                                        <option  value="282">Benin-City</option>
+                                                                                                        <option  value="572">Berane</option>
+                                                                                                        <option  value="372">Bergen</option>
+                                                                                                        <option  value="351">Bialystok</option>
+                                                                                                        <option  value="570">Bijelo Polje</option>
+                                                                                                        <option  value="25">Bilbao</option>
+                                                                                                        <option  value="64">Birmingham</option>
+                                                                                                        <option  value="502">Biskra</option>
+                                                                                                        <option  value="271">Bloemfontein</option>
+                                                                                                        <option  value="373">Bodo</option>
+                                                                                                        <option  value="181">Bologna</option>
+                                                                                                        <option  value="91">Bordeaux</option>
+                                                                                                        <option  value="511">Bou Arfa</option>
+                                                                                                        <option  value="6">Bragança</option>
+                                                                                                        <option  value="13">Brasov</option>
+                                                                                                        <option  value="142">Bremen</option>
+                                                                                                        <option  value="533">Brest</option>
+                                                                                                        <option  value="233">Brisbane</option>
+                                                                                                        <option  value="65">Bristol</option>
+                                                                                                        <option  value="211">Brno</option>
+                                                                                                        <option  value="490">Bruges</option>
+                                                                                                        <option  value="383">Bucaramanga</option>
+                                                                                                        <option  value="568">Budva</option>
+                                                                                                        <option  value="212">Budweis</option>
+                                                                                                        <option  value="542">Buon Me Thuot</option>
+                                                                                                        <option  value="422">Buraydah</option>
+                                                                                                        <option  value="321">Burgas</option>
+                                                                                                        <option  value="53">Bursa</option>
+                                                                                                        <option  value="261">Busan</option>
+                                                                                                        <option  value="352">Bydgoszcz</option>
+                                                                                                        <option  value="432">Cabanatuan</option>
+                                                                                                        <option  value="122">Cacak</option>
+                                                                                                        <option  value="182">Cagliari</option>
+                                                                                                        <option  value="119">Calabozo</option>
+                                                                                                        <option  value="164">Calcutta</option>
+                                                                                                        <option  value="201">Calgary</option>
+                                                                                                        <option  value="384">Cali</option>
+                                                                                                        <option  value="580">Camaguey</option>
+                                                                                                        <option  value="543">Can Tho</option>
+                                                                                                        <option  value="339">Canelones</option>
+                                                                                                        <option  value="544">Cao Bang</option>
+                                                                                                        <option  value="272">Cape Town</option>
+                                                                                                        <option  value="512">Casablanca</option>
+                                                                                                        <option  value="447">Castlebar</option>
+                                                                                                        <option  value="433">Cebu</option>
+                                                                                                        <option  value="291">Celje</option>
+                                                                                                        <option  value="571">Cetinje</option>
+                                                                                                        <option  value="553">Changuinola</option>
+                                                                                                        <option  value="492">Charleroi</option>
+                                                                                                        <option  value="165">Chennai</option>
+                                                                                                        <option  value="554">Chepo</option>
+                                                                                                        <option  value="102">Chiang Mai</option>
+                                                                                                        <option  value="42">Chicago</option>
+                                                                                                        <option  value="151">Chihuahua</option>
+                                                                                                        <option  value="412">Chongqing</option>
+                                                                                                        <option  value="362">Christchurch</option>
+                                                                                                        <option  value="606">Chuquisaca</option>
+                                                                                                        <option  value="257">Chur</option>
+                                                                                                        <option  value="577">Cienfuegos</option>
+                                                                                                        <option  value="115">Ciudad Guayana</option>
+                                                                                                        <option  value="152">Ciudad Juarez</option>
+                                                                                                        <option  value="14">Cluj</option>
+                                                                                                        <option  value="601">Cochabamba</option>
+                                                                                                        <option  value="8">Coimbra</option>
+                                                                                                        <option  value="555">Colon</option>
+                                                                                                        <option  value="172">Comodoro Rivadavia</option>
+                                                                                                        <option  value="343">Concepción</option>
+                                                                                                        <option  value="15">Constanta</option>
+                                                                                                        <option  value="503">Constantine</option>
+                                                                                                        <option  value="173">Cordoba</option>
+                                                                                                        <option  value="223">Corfu</option>
+                                                                                                        <option  value="448">Cork</option>
+                                                                                                        <option  value="174">Corrientes</option>
+                                                                                                        <option  value="434">Cotabato</option>
+                                                                                                        <option  value="16">Craiova</option>
+                                                                                                        <option  value="73">Cuiaba</option>
+                                                                                                        <option  value="153">Culiacan</option>
+                                                                                                        <option  value="74">Curitiba</option>
+                                                                                                        <option  value="262">Daegu</option>
+                                                                                                        <option  value="423">Dammam</option>
+                                                                                                        <option  value="545">Danang</option>
+                                                                                                        <option  value="234">Darwin</option>
+                                                                                                        <option  value="435">Davao</option>
+                                                                                                        <option  value="556">David</option>
+                                                                                                        <option  value="479">Debrecen</option>
+                                                                                                        <option  value="43">Denver</option>
+                                                                                                        <option  value="54">Diyarbakir</option>
+                                                                                                        <option  value="593">Djúpivogur</option>
+                                                                                                        <option  value="81">Dornbirn</option>
+                                                                                                        <option  value="374">Drammen</option>
+                                                                                                        <option  value="449">Drogheda</option>
+                                                                                                        <option  value="436">Dumaran</option>
+                                                                                                        <option  value="363">Dunedin</option>
+                                                                                                        <option  value="332">Durazno</option>
+                                                                                                        <option  value="273">Durban</option>
+                                                                                                        <option  value="459">Durrës</option>
+                                                                                                        <option  value="274">East London</option>
+                                                                                                        <option  value="66">Edinburgh</option>
+                                                                                                        <option  value="595">Egilsstadir</option>
+                                                                                                        <option  value="194">Eindhoven</option>
+                                                                                                        <option  value="599">El Beni</option>
+                                                                                                        <option  value="460">Elbasan</option>
+                                                                                                        <option  value="55">Erzurum</option>
+                                                                                                        <option  value="305">Esbjerg</option>
+                                                                                                        <option  value="7">Évora</option>
+                                                                                                        <option  value="3">Faro</option>
+                                                                                                        <option  value="513">Fez</option>
+                                                                                                        <option  value="462">Fier</option>
+                                                                                                        <option  value="183">Firenze</option>
+                                                                                                        <option  value="385">Florencia</option>
+                                                                                                        <option  value="75">Fortaleza</option>
+                                                                                                        <option  value="143">Frankfurt</option>
+                                                                                                        <option  value="375">Fredrikstad</option>
+                                                                                                        <option  value="468">Fukuoka</option>
+                                                                                                        <option  value="17">Galati</option>
+                                                                                                        <option  value="451">Galway</option>
+                                                                                                        <option  value="263">Gangneung</option>
+                                                                                                        <option  value="587">Garoabaer</option>
+                                                                                                        <option  value="401">Gavle</option>
+                                                                                                        <option  value="56">Gaziantep</option>
+                                                                                                        <option  value="353">Gdansk</option>
+                                                                                                        <option  value="253">Geneva</option>
+                                                                                                        <option  value="184">Genova</option>
+                                                                                                        <option  value="131">George Town (M)</option>
+                                                                                                        <option  value="504">Ghardaia</option>
+                                                                                                        <option  value="493">Ghent</option>
+                                                                                                        <option  value="26">Gijon</option>
+                                                                                                        <option  value="67">Glasgow</option>
+                                                                                                        <option  value="534">Gomel</option>
+                                                                                                        <option  value="402">Gothenburg</option>
+                                                                                                        <option  value="82">Graz</option>
+                                                                                                        <option  value="590">Grindavik</option>
+                                                                                                        <option  value="195">Groningen</option>
+                                                                                                        <option  value="154">Guadalajara</option>
+                                                                                                        <option  value="584">Guantanamo</option>
+                                                                                                        <option  value="4">Guarda</option>
+                                                                                                        <option  value="264">Gunsan</option>
+                                                                                                        <option  value="265">Gwangju</option>
+                                                                                                        <option  value="266">Gyeongju</option>
+                                                                                                        <option  value="480">Gyor</option>
+                                                                                                        <option  value="609">Haapsalu</option>
+                                                                                                        <option  value="425">Hail</option>
+                                                                                                        <option  value="202">Halifax</option>
+                                                                                                        <option  value="144">Hamburg</option>
+                                                                                                        <option  value="145">Hannover</option>
+                                                                                                        <option  value="413">Harbin</option>
+                                                                                                        <option  value="103">Hat Yai</option>
+                                                                                                        <option  value="566">Herceg-Novi</option>
+                                                                                                        <option  value="155">Hermosillo</option>
+                                                                                                        <option  value="469">Hiroshima</option>
+                                                                                                        <option  value="306">Hjorring</option>
+                                                                                                        <option  value="550">Ho Chi Minh</option>
+                                                                                                        <option  value="235">Hobart</option>
+                                                                                                        <option  value="592">Hofn</option>
+                                                                                                        <option  value="414">Hong Kong</option>
+                                                                                                        <option  value="44">Houston</option>
+                                                                                                        <option  value="213">Hradec Kralove</option>
+                                                                                                        <option  value="535">Hrodna</option>
+                                                                                                        <option  value="344">Huasco</option>
+                                                                                                        <option  value="547">Hue</option>
+                                                                                                        <option  value="167">Hyderabad</option>
+                                                                                                        <option  value="18">Iasi</option>
+                                                                                                        <option  value="437">Iloilo</option>
+                                                                                                        <option  value="283">Ilorin</option>
+                                                                                                        <option  value="83">Innsbruck</option>
+                                                                                                        <option  value="364">Invercargill</option>
+                                                                                                        <option  value="224">Ioannina</option>
+                                                                                                        <option  value="132">Ipoh</option>
+                                                                                                        <option  value="345">Iquique</option>
+                                                                                                        <option  value="225">Iraklion</option>
+                                                                                                        <option  value="583">Isla de la Juventud</option>
+                                                                                                        <option  value="57">Istanbul</option>
+                                                                                                        <option  value="58">Izmir</option>
+                                                                                                        <option  value="168">Jaipur</option>
+                                                                                                        <option  value="267">Janggok</option>
+                                                                                                        <option  value="430">Jazan</option>
+                                                                                                        <option  value="426">Jeddah</option>
+                                                                                                        <option  value="292">Jesenice</option>
+                                                                                                        <option  value="133">Johor Bahru</option>
+                                                                                                        <option  value="403">Jonkoping</option>
+                                                                                                        <option  value="284">Jos</option>
+                                                                                                        <option  value="285">Kaduna</option>
+                                                                                                        <option  value="286">Kano</option>
+                                                                                                        <option  value="169">Kanpur</option>
+                                                                                                        <option  value="49">Kansas City</option>
+                                                                                                        <option  value="415">Karamay</option>
+                                                                                                        <option  value="610">Kardla</option>
+                                                                                                        <option  value="311">Karlovac</option>
+                                                                                                        <option  value="404">Karlstad</option>
+                                                                                                        <option  value="416">Kashgar</option>
+                                                                                                        <option  value="226">Katerini</option>
+                                                                                                        <option  value="59">Kayseri</option>
+                                                                                                        <option  value="241">Kazan</option>
+                                                                                                        <option  value="481">Kecskemet</option>
+                                                                                                        <option  value="589">Keflavik</option>
+                                                                                                        <option  value="242">Khabarovsk</option>
+                                                                                                        <option  value="104">Khon Kaen</option>
+                                                                                                        <option  value="452">Kilkenny</option>
+                                                                                                        <option  value="276">Kimberley</option>
+                                                                                                        <option  value="470">Kitakyushu</option>
+                                                                                                        <option  value="84">Klagenfurt</option>
+                                                                                                        <option  value="471">Kobe</option>
+                                                                                                        <option  value="307">Kolding</option>
+                                                                                                        <option  value="146">Koln</option>
+                                                                                                        <option  value="60">Konya</option>
+                                                                                                        <option  value="293">Koper</option>
+                                                                                                        <option  value="463">Korçë</option>
+                                                                                                        <option  value="494">Kortrijk</option>
+                                                                                                        <option  value="393">Kosice</option>
+                                                                                                        <option  value="134">Kota Bharu</option>
+                                                                                                        <option  value="135">Kota Kinabalu</option>
+                                                                                                        <option  value="123">Kragujevac</option>
+                                                                                                        <option  value="354">Krakow</option>
+                                                                                                        <option  value="294">Kranj</option>
+                                                                                                        <option  value="243">Krasnoyarsk</option>
+                                                                                                        <option  value="376">Kristiansand</option>
+                                                                                                        <option  value="295">Krsko</option>
+                                                                                                        <option  value="124">Krusevac</option>
+                                                                                                        <option  value="137">Kuala Terengganu</option>
+                                                                                                        <option  value="138">Kuching</option>
+                                                                                                        <option  value="465">Kukës</option>
+                                                                                                        <option  value="611">Kuressaare</option>
+                                                                                                        <option  value="557">La Palma</option>
+                                                                                                        <option  value="600">La Paz</option>
+                                                                                                        <option  value="230">Lamia</option>
+                                                                                                        <option  value="548">Lao Cai</option>
+                                                                                                        <option  value="227">Larissa</option>
+                                                                                                        <option  value="558">Las Tablas</option>
+                                                                                                        <option  value="581">Las Tunas</option>
+                                                                                                        <option  value="254">Lausanne</option>
+                                                                                                        <option  value="92">Le Havre</option>
+                                                                                                        <option  value="68">Leeds</option>
+                                                                                                        <option  value="196">Leeuwarden</option>
+                                                                                                        <option  value="147">Leipzig</option>
+                                                                                                        <option  value="156">Leon</option>
+                                                                                                        <option  value="125">Leskovac</option>
+                                                                                                        <option  value="386">Leticia</option>
+                                                                                                        <option  value="495">Leuven</option>
+                                                                                                        <option  value="417">Lhasa</option>
+                                                                                                        <option  value="214">Liberec</option>
+                                                                                                        <option  value="496">Liege</option>
+                                                                                                        <option  value="90">Lienz</option>
+                                                                                                        <option  value="453">Limerick</option>
+                                                                                                        <option  value="85">Linz</option>
+                                                                                                        <option  value="355">Lodz</option>
+                                                                                                        <option  value="45">Los Angeles</option>
+                                                                                                        <option  value="356">Lublin</option>
+                                                                                                        <option  value="255">Lucerne</option>
+                                                                                                        <option  value="256">Lugano</option>
+                                                                                                        <option  value="405">Lulea</option>
+                                                                                                        <option  value="526">Luxor</option>
+                                                                                                        <option  value="93">Lyon</option>
+                                                                                                        <option  value="288">Maiduguri</option>
+                                                                                                        <option  value="35">Makassar</option>
+                                                                                                        <option  value="248">Makhachkala</option>
+                                                                                                        <option  value="333">Maldonado</option>
+                                                                                                        <option  value="139">Mallaca Town</option>
+                                                                                                        <option  value="406">Malmo</option>
+                                                                                                        <option  value="76">Manaus</option>
+                                                                                                        <option  value="69">Manchester</option>
+                                                                                                        <option  value="175">Mar del Plata</option>
+                                                                                                        <option  value="116">Maracaibo</option>
+                                                                                                        <option  value="297">Maribor</option>
+                                                                                                        <option  value="514">Marrakech</option>
+                                                                                                        <option  value="94">Marseille</option>
+                                                                                                        <option  value="394">Martin</option>
+                                                                                                        <option  value="114">Maturin</option>
+                                                                                                        <option  value="536">Mazyr</option>
+                                                                                                        <option  value="36">Medan</option>
+                                                                                                        <option  value="387">Medellin</option>
+                                                                                                        <option  value="427">Medina</option>
+                                                                                                        <option  value="236">Melbourne</option>
+                                                                                                        <option  value="334">Melo</option>
+                                                                                                        <option  value="176">Mendoza</option>
+                                                                                                        <option  value="157">Merida</option>
+                                                                                                        <option  value="48">Miami</option>
+                                                                                                        <option  value="199">Middelburg</option>
+                                                                                                        <option  value="185">Milano</option>
+                                                                                                        <option  value="50">Minneapolis</option>
+                                                                                                        <option  value="140">Miri</option>
+                                                                                                        <option  value="482">Miskolc</option>
+                                                                                                        <option  value="388">Mitu</option>
+                                                                                                        <option  value="497">Mons</option>
+                                                                                                        <option  value="159">Monterrey</option>
+                                                                                                        <option  value="203">Montreal</option>
+                                                                                                        <option  value="170">Mumbai</option>
+                                                                                                        <option  value="148">Munich</option>
+                                                                                                        <option  value="439">Naga</option>
+                                                                                                        <option  value="472">Nagoya</option>
+                                                                                                        <option  value="105">Nakhon Sawan</option>
+                                                                                                        <option  value="106">Nakhon Si Thammarat</option>
+                                                                                                        <option  value="498">Namur</option>
+                                                                                                        <option  value="95">Nantes</option>
+                                                                                                        <option  value="365">Napier Hastings</option>
+                                                                                                        <option  value="186">Napoli</option>
+                                                                                                        <option  value="613">Narva</option>
+                                                                                                        <option  value="366">Nelson</option>
+                                                                                                        <option  value="277">Nelspruit</option>
+                                                                                                        <option  value="177">Neuquen</option>
+                                                                                                        <option  value="367">New Plymouth</option>
+                                                                                                        <option  value="46">New York</option>
+                                                                                                        <option  value="549">Nha Trang</option>
+                                                                                                        <option  value="96">Nice</option>
+                                                                                                        <option  value="565">Niksic</option>
+                                                                                                        <option  value="126">Nis</option>
+                                                                                                        <option  value="395">Nitra</option>
+                                                                                                        <option  value="407">Norrkoping</option>
+                                                                                                        <option  value="278">Northern Cape</option>
+                                                                                                        <option  value="128">Novi Pazar</option>
+                                                                                                        <option  value="127">Novi Sad</option>
+                                                                                                        <option  value="298">Novo Mesto</option>
+                                                                                                        <option  value="245">Novosibirsk</option>
+                                                                                                        <option  value="89">Oberwart</option>
+                                                                                                        <option  value="308">Odense</option>
+                                                                                                        <option  value="215">Olomouc</option>
+                                                                                                        <option  value="246">Omsk</option>
+                                                                                                        <option  value="505">Oran</option>
+                                                                                                        <option  value="538">Orsa</option>
+                                                                                                        <option  value="603">Oruro</option>
+                                                                                                        <option  value="473">Osaka</option>
+                                                                                                        <option  value="312">Osijek</option>
+                                                                                                        <option  value="216">Ostrava</option>
+                                                                                                        <option  value="515">Ouarzazate</option>
+                                                                                                        <option  value="516">Oujda</option>
+                                                                                                        <option  value="37">Padang</option>
+                                                                                                        <option  value="38">Palembang</option>
+                                                                                                        <option  value="187">Palermo</option>
+                                                                                                        <option  value="77">Palmas</option>
+                                                                                                        <option  value="598">Pando</option>
+                                                                                                        <option  value="217">Pardubice</option>
+                                                                                                        <option  value="612">Parnu</option>
+                                                                                                        <option  value="228">Patras</option>
+                                                                                                        <option  value="107">Pattaya</option>
+                                                                                                        <option  value="336">Paysandu</option>
+                                                                                                        <option  value="483">Pecs</option>
+                                                                                                        <option  value="560">Penonome</option>
+                                                                                                        <option  value="389">Pereira</option>
+                                                                                                        <option  value="237">Perth</option>
+                                                                                                        <option  value="466">Peshkopi</option>
+                                                                                                        <option  value="47">Phoenix</option>
+                                                                                                        <option  value="279">Pietersburg</option>
+                                                                                                        <option  value="218">Pilsen</option>
+                                                                                                        <option  value="576">Pinar del Río</option>
+                                                                                                        <option  value="539">Pinsk</option>
+                                                                                                        <option  value="322">Pleven</option>
+                                                                                                        <option  value="567">Pljevlja</option>
+                                                                                                        <option  value="323">Plovdiv</option>
+                                                                                                        <option  value="70">Plymouth</option>
+                                                                                                        <option  value="396">Poprad</option>
+                                                                                                        <option  value="280">Port Elizabeth</option>
+                                                                                                        <option  value="289">Port Harcourt</option>
+                                                                                                        <option  value="527">Port Said</option>
+                                                                                                        <option  value="2">Porto</option>
+                                                                                                        <option  value="299">Postojna</option>
+                                                                                                        <option  value="604">Potosi</option>
+                                                                                                        <option  value="357">Poznan</option>
+                                                                                                        <option  value="108">Prachuap Port</option>
+                                                                                                        <option  value="397">Presov</option>
+                                                                                                        <option  value="561">Puerto Armuelles</option>
+                                                                                                        <option  value="117">Puerto Ayacucho</option>
+                                                                                                        <option  value="390">Puerto Inirida</option>
+                                                                                                        <option  value="346">Puerto Montt</option>
+                                                                                                        <option  value="313">Pula</option>
+                                                                                                        <option  value="347">Punta Arenas</option>
+                                                                                                        <option  value="368">Queenstown</option>
+                                                                                                        <option  value="615">Rakvere</option>
+                                                                                                        <option  value="309">Randers</option>
+                                                                                                        <option  value="98">Rennes</option>
+                                                                                                        <option  value="314">Rijeka</option>
+                                                                                                        <option  value="78">Rio de Janeiro</option>
+                                                                                                        <option  value="337">Rivera</option>
+                                                                                                        <option  value="229">Rodos</option>
+                                                                                                        <option  value="310">Ronne</option>
+                                                                                                        <option  value="178">Rosario</option>
+                                                                                                        <option  value="304">Roskilde</option>
+                                                                                                        <option  value="149">Rostock</option>
+                                                                                                        <option  value="198">Rotterdam</option>
+                                                                                                        <option  value="324">Ruse</option>
+                                                                                                        <option  value="506">Sahara</option>
+                                                                                                        <option  value="247">Saint Petersburg</option>
+                                                                                                        <option  value="424">Sakaka</option>
+                                                                                                        <option  value="179">Salta</option>
+                                                                                                        <option  value="338">Salto</option>
+                                                                                                        <option  value="79">Salvador</option>
+                                                                                                        <option  value="86">Salzburg</option>
+                                                                                                        <option  value="39">Samarinda</option>
+                                                                                                        <option  value="118">San Cristobal</option>
+                                                                                                        <option  value="87">Sankt Polten</option>
+                                                                                                        <option  value="578">Santa Clara</option>
+                                                                                                        <option  value="602">Santa Cruz</option>
+                                                                                                        <option  value="562">Santiago (SG)</option>
+                                                                                                        <option  value="582">Santiago de Cuba</option>
+                                                                                                        <option  value="80">Sao Paulo</option>
+                                                                                                        <option  value="474">Sapporo</option>
+                                                                                                        <option  value="464">Sarandë</option>
+                                                                                                        <option  value="631">Seletar</option>
+                                                                                                        <option  value="591">Selfoss</option>
+                                                                                                        <option  value="475">Sendai</option>
+                                                                                                        <option  value="625">Sentosa</option>
+                                                                                                        <option  value="9">Setubal</option>
+                                                                                                        <option  value="22">Sevilla</option>
+                                                                                                        <option  value="418">Shanghai</option>
+                                                                                                        <option  value="419">Shenyang</option>
+                                                                                                        <option  value="458">Shkodër</option>
+                                                                                                        <option  value="325">Shumen</option>
+                                                                                                        <option  value="19">Sibiu</option>
+                                                                                                        <option  value="259">Sion</option>
+                                                                                                        <option  value="315">Sisak</option>
+                                                                                                        <option  value="528">Siwa</option>
+                                                                                                        <option  value="530">Siwa Oasis</option>
+                                                                                                        <option  value="316">Slavonski Brod</option>
+                                                                                                        <option  value="454">Sligo</option>
+                                                                                                        <option  value="326">Sliven</option>
+                                                                                                        <option  value="129">Smederevo</option>
+                                                                                                        <option  value="290">Sokoto</option>
+                                                                                                        <option  value="317">Split</option>
+                                                                                                        <option  value="258">St. Gallen</option>
+                                                                                                        <option  value="205">St. John</option>
+                                                                                                        <option  value="328">Stara Zagora</option>
+                                                                                                        <option  value="378">Stavanger</option>
+                                                                                                        <option  value="99">Strasbourg</option>
+                                                                                                        <option  value="150">Stuttgart</option>
+                                                                                                        <option  value="130">Subotica</option>
+                                                                                                        <option  value="529">Suez</option>
+                                                                                                        <option  value="409">Sundsvall</option>
+                                                                                                        <option  value="40">Surabaya</option>
+                                                                                                        <option  value="238">Sydney</option>
+                                                                                                        <option  value="358">Szczecin</option>
+                                                                                                        <option  value="484">Szeged</option>
+                                                                                                        <option  value="487">Székesfehérvár</option>
+                                                                                                        <option  value="485">Szolnok</option>
+                                                                                                        <option  value="486">Szombathely</option>
+                                                                                                        <option  value="429">Tabuk</option>
+                                                                                                        <option  value="340">Tacuarembo</option>
+                                                                                                        <option  value="269">Taejon</option>
+                                                                                                        <option  value="507">Tamanrasset</option>
+                                                                                                        <option  value="518">Tangiers</option>
+                                                                                                        <option  value="519">Tarfaya</option>
+                                                                                                        <option  value="605">Tarija</option>
+                                                                                                        <option  value="614">Tartu</option>
+                                                                                                        <option  value="369">Tauranga</option>
+                                                                                                        <option  value="349">Temuco</option>
+                                                                                                        <option  value="508">Tiemcen</option>
+                                                                                                        <option  value="160">Tijuana</option>
+                                                                                                        <option  value="20">Timisoara</option>
+                                                                                                        <option  value="509">Tindouf</option>
+                                                                                                        <option  value="189">Torino</option>
+                                                                                                        <option  value="204">Toronto</option>
+                                                                                                        <option  value="100">Toulouse</option>
+                                                                                                        <option  value="398">Trencin</option>
+                                                                                                        <option  value="579">Trinidad</option>
+                                                                                                        <option  value="399">Trnava</option>
+                                                                                                        <option  value="379">Tromso</option>
+                                                                                                        <option  value="380">Trondheim</option>
+                                                                                                        <option  value="180">Tucuman</option>
+                                                                                                        <option  value="455">Tullamore</option>
+                                                                                                        <option  value="109">Ubon Ratchathani</option>
+                                                                                                        <option  value="110">Udon Thani</option>
+                                                                                                        <option  value="573">Ulcinj</option>
+                                                                                                        <option  value="410">Umea</option>
+                                                                                                        <option  value="220">Usti nad Labem</option>
+                                                                                                        <option  value="200">Utrecht</option>
+                                                                                                        <option  value="27">Valencia (SP)</option>
+                                                                                                        <option  value="120">Valencia (VE)</option>
+                                                                                                        <option  value="28">Valladolid</option>
+                                                                                                        <option  value="350">Valparaiso</option>
+                                                                                                        <option  value="207">Vancouver</option>
+                                                                                                        <option  value="318">Varazdin</option>
+                                                                                                        <option  value="329">Varna</option>
+                                                                                                        <option  value="300">Velenje</option>
+                                                                                                        <option  value="190">Venezia</option>
+                                                                                                        <option  value="29">Vigo</option>
+                                                                                                        <option  value="616">Viljandi</option>
+                                                                                                        <option  value="551">Vinh</option>
+                                                                                                        <option  value="629">Viqueque</option>
+                                                                                                        <option  value="540">Vitebsk</option>
+                                                                                                        <option  value="461">Vlorë</option>
+                                                                                                        <option  value="588">Vogar</option>
+                                                                                                        <option  value="249">Volgograd</option>
+                                                                                                        <option  value="617">Voru</option>
+                                                                                                        <option  value="330">Vratsa</option>
+                                                                                                        <option  value="456">Waterford</option>
+                                                                                                        <option  value="240">Western Australia</option>
+                                                                                                        <option  value="208">Whitehorse</option>
+                                                                                                        <option  value="209">Winnipeg</option>
+                                                                                                        <option  value="360">Wroclaw</option>
+                                                                                                        <option  value="420">Xian</option>
+                                                                                                        <option  value="250">Yekaterinburg</option>
+                                                                                                        <option  value="210">Yellowknife</option>
+                                                                                                        <option  value="270">Yeongdeok</option>
+                                                                                                        <option  value="319">Zadar</option>
+                                                                                                        <option  value="440">Zamboanga</option>
+                                                                                                        <option  value="30">Zaragoza</option>
+                                                                                                        <option  value="400">Zilina</option>
+                                                                                                        <option  value="260">Zurich</option>
+                                                                                                        <option  value="197">Zwolle</option>
+                                                                                                </select>
+										</td>
+										<td>
+                                            <select name="attacking_id" id="attacking_id" class="form-control" placeholder="Select country...">
+                                                <option value="">Select country...</option>
+                                                                                                    <option  value="2">Aland Islands</option>
+                                                                                                        <option  value="3">Albania</option>
+                                                                                                        <option  value="4">Algeria</option>
+                                                                                                        <option  value="6">Andorra</option>
+                                                                                                        <option  value="10">Antigua and Barbuda</option>
+                                                                                                        <option  value="11">Argentina</option>
+                                                                                                        <option  value="12">Armenia</option>
+                                                                                                        <option  value="14">Australia</option>
+                                                                                                        <option  value="15">Austria</option>
+                                                                                                        <option  value="17">Bahamas</option>
+                                                                                                        <option  value="20">Barbados</option>
+                                                                                                        <option  value="21">Belarus</option>
+                                                                                                        <option  value="22">Belgium</option>
+                                                                                                        <option  value="23">Belize</option>
+                                                                                                        <option  value="27">Bolivia</option>
+                                                                                                        <option  value="29">Bosnia and Herzegovina</option>
+                                                                                                        <option  value="32">Brazil</option>
+                                                                                                        <option  value="34">Brunei</option>
+                                                                                                        <option  value="35">Bulgaria</option>
+                                                                                                        <option  value="40">Canada</option>
+                                                                                                        <option  value="41">Cape Verde</option>
+                                                                                                        <option  value="42">Cayman Islands</option>
+                                                                                                        <option  value="45">Chile</option>
+                                                                                                        <option  value="46">China</option>
+                                                                                                        <option  value="49">Colombia</option>
+                                                                                                        <option  value="53">Costa Rica</option>
+                                                                                                        <option  value="55">Croatia</option>
+                                                                                                        <option  value="56">Cuba</option>
+                                                                                                        <option  value="58">Cyprus</option>
+                                                                                                        <option  value="59">Czech Republic</option>
+                                                                                                        <option  value="61">Denmark</option>
+                                                                                                        <option  value="64">Dominican Republic</option>
+                                                                                                        <option  value="65">Ecuador</option>
+                                                                                                        <option  value="66">Egypt</option>
+                                                                                                        <option  value="67">El Salvador</option>
+                                                                                                        <option  value="70">Estonia</option>
+                                                                                                        <option  value="73">Faroe Islands</option>
+                                                                                                        <option  value="76">France</option>
+                                                                                                        <option  value="82">Georgia</option>
+                                                                                                        <option  value="83">Germany</option>
+                                                                                                        <option  value="85">Gibraltar</option>
+                                                                                                        <option  value="86">Greece</option>
+                                                                                                        <option  value="87">Greenland</option>
+                                                                                                        <option  value="88">Grenada</option>
+                                                                                                        <option  value="92">Guernsey</option>
+                                                                                                        <option  value="95">Guyana</option>
+                                                                                                        <option  value="100">Hungary</option>
+                                                                                                        <option  value="101">Iceland</option>
+                                                                                                        <option  value="102">India</option>
+                                                                                                        <option  value="103">Indonesia</option>
+                                                                                                        <option  value="106">Ireland</option>
+                                                                                                        <option  value="107">Isle of Man</option>
+                                                                                                        <option  value="108">Israel</option>
+                                                                                                        <option  value="109">Italy</option>
+                                                                                                        <option  value="111">Japan</option>
+                                                                                                        <option  value="112">Jersey</option>
+                                                                                                        <option  value="117">Kosovo</option>
+                                                                                                        <option  value="122">Lebanon</option>
+                                                                                                        <option  value="125">Libya</option>
+                                                                                                        <option  value="126">Liechtenstein</option>
+                                                                                                        <option  value="128">Luxembourg</option>
+                                                                                                        <option  value="130">Macedonia</option>
+                                                                                                        <option  value="131">Madagascar</option>
+                                                                                                        <option  value="251">Madeira</option>
+                                                                                                        <option  value="133">Malaysia</option>
+                                                                                                        <option  value="134">Maldives</option>
+                                                                                                        <option  value="136">Malta</option>
+                                                                                                        <option  value="142">Mexico</option>
+                                                                                                        <option  value="144">Moldova</option>
+                                                                                                        <option  value="145">Monaco</option>
+                                                                                                        <option  value="147">Montenegro</option>
+                                                                                                        <option  value="149">Morocco</option>
+                                                                                                        <option  value="155">Netherlands</option>
+                                                                                                        <option  value="157">New Zealand</option>
+                                                                                                        <option  value="160">Nigeria</option>
+                                                                                                        <option  value="163">North Korea</option>
+                                                                                                        <option  value="165">Norway</option>
+                                                                                                        <option  value="169">Palestine</option>
+                                                                                                        <option  value="170">Panama</option>
+                                                                                                        <option  value="174">Philippines</option>
+                                                                                                        <option  value="176">Poland</option>
+                                                                                                        <option  value="177">Portugal</option>
+                                                                                                        <option  value="178">Puerto Rico</option>
+                                                                                                        <option  value="179">Qatar</option>
+                                                                                                        <option  value="181">Romania</option>
+                                                                                                        <option  value="182">Russia</option>
+                                                                                                        <option  value="192">San Marino</option>
+                                                                                                        <option  value="194">Saudi Arabia</option>
+                                                                                                        <option  value="196">Serbia</option>
+                                                                                                        <option  value="199">Singapore</option>
+                                                                                                        <option  value="201">Slovakia</option>
+                                                                                                        <option  value="202">Slovenia</option>
+                                                                                                        <option  value="205">South Africa</option>
+                                                                                                        <option  value="207">South Korea</option>
+                                                                                                        <option  value="209">Spain</option>
+                                                                                                        <option  value="215">Sweden</option>
+                                                                                                        <option  value="216">Switzerland</option>
+                                                                                                        <option  value="217">Syria</option>
+                                                                                                        <option  value="218">Taiwan</option>
+                                                                                                        <option  value="221">Thailand</option>
+                                                                                                        <option  value="222">Timor-Leste</option>
+                                                                                                        <option  value="227">Tunisia</option>
+                                                                                                        <option  value="228">Turkey</option>
+                                                                                                        <option  value="234">United Arab Emirates</option>
+                                                                                                        <option  value="235">United Kingdom</option>
+                                                                                                        <option  value="236">United States</option>
+                                                                                                        <option  value="238">Uruguay</option>
+                                                                                                        <option  value="241">Vatican City</option>
+                                                                                                        <option  value="242">Venezuela</option>
+                                                                                                        <option  value="243">Vietnam</option>
+                                                                                                        <option  value="245">Virgin Islands, US</option>
+                                                                                                        <option  value="247">Western Sahara</option>
+                                                                                                </select>
+										</td>
+										<td>
+                                            <select name="defending_id" id="defending_id" class="form-control" placeholder="Select country...">
+                                                <option value="">Select country...</option>
+                                                                                                    <option  value="2">Aland Islands</option>
+                                                                                                        <option  value="3">Albania</option>
+                                                                                                        <option  value="4">Algeria</option>
+                                                                                                        <option  value="6">Andorra</option>
+                                                                                                        <option  value="10">Antigua and Barbuda</option>
+                                                                                                        <option  value="11">Argentina</option>
+                                                                                                        <option  value="12">Armenia</option>
+                                                                                                        <option  value="14">Australia</option>
+                                                                                                        <option  value="15">Austria</option>
+                                                                                                        <option  value="17">Bahamas</option>
+                                                                                                        <option  value="20">Barbados</option>
+                                                                                                        <option  value="21">Belarus</option>
+                                                                                                        <option  value="22">Belgium</option>
+                                                                                                        <option  value="23">Belize</option>
+                                                                                                        <option  value="27">Bolivia</option>
+                                                                                                        <option  value="29">Bosnia and Herzegovina</option>
+                                                                                                        <option  value="32">Brazil</option>
+                                                                                                        <option  value="34">Brunei</option>
+                                                                                                        <option  value="35">Bulgaria</option>
+                                                                                                        <option  value="40">Canada</option>
+                                                                                                        <option  value="41">Cape Verde</option>
+                                                                                                        <option  value="42">Cayman Islands</option>
+                                                                                                        <option  value="45">Chile</option>
+                                                                                                        <option  value="46">China</option>
+                                                                                                        <option  value="49">Colombia</option>
+                                                                                                        <option  value="53">Costa Rica</option>
+                                                                                                        <option  value="55">Croatia</option>
+                                                                                                        <option  value="56">Cuba</option>
+                                                                                                        <option  value="58">Cyprus</option>
+                                                                                                        <option  value="59">Czech Republic</option>
+                                                                                                        <option  value="61">Denmark</option>
+                                                                                                        <option  value="64">Dominican Republic</option>
+                                                                                                        <option  value="65">Ecuador</option>
+                                                                                                        <option  value="66">Egypt</option>
+                                                                                                        <option  value="67">El Salvador</option>
+                                                                                                        <option  value="70">Estonia</option>
+                                                                                                        <option  value="73">Faroe Islands</option>
+                                                                                                        <option  value="76">France</option>
+                                                                                                        <option  value="82">Georgia</option>
+                                                                                                        <option  value="83">Germany</option>
+                                                                                                        <option  value="85">Gibraltar</option>
+                                                                                                        <option  value="86">Greece</option>
+                                                                                                        <option  value="87">Greenland</option>
+                                                                                                        <option  value="88">Grenada</option>
+                                                                                                        <option  value="92">Guernsey</option>
+                                                                                                        <option  value="95">Guyana</option>
+                                                                                                        <option  value="100">Hungary</option>
+                                                                                                        <option  value="101">Iceland</option>
+                                                                                                        <option  value="102">India</option>
+                                                                                                        <option  value="103">Indonesia</option>
+                                                                                                        <option  value="106">Ireland</option>
+                                                                                                        <option  value="107">Isle of Man</option>
+                                                                                                        <option  value="108">Israel</option>
+                                                                                                        <option  value="109">Italy</option>
+                                                                                                        <option  value="111">Japan</option>
+                                                                                                        <option  value="112">Jersey</option>
+                                                                                                        <option  value="117">Kosovo</option>
+                                                                                                        <option  value="122">Lebanon</option>
+                                                                                                        <option  value="125">Libya</option>
+                                                                                                        <option  value="126">Liechtenstein</option>
+                                                                                                        <option  value="128">Luxembourg</option>
+                                                                                                        <option  value="130">Macedonia</option>
+                                                                                                        <option  value="131">Madagascar</option>
+                                                                                                        <option  value="251">Madeira</option>
+                                                                                                        <option  value="133">Malaysia</option>
+                                                                                                        <option  value="134">Maldives</option>
+                                                                                                        <option  value="136">Malta</option>
+                                                                                                        <option  value="142">Mexico</option>
+                                                                                                        <option  value="144">Moldova</option>
+                                                                                                        <option  value="145">Monaco</option>
+                                                                                                        <option  value="147">Montenegro</option>
+                                                                                                        <option  value="149">Morocco</option>
+                                                                                                        <option  value="155">Netherlands</option>
+                                                                                                        <option  value="157">New Zealand</option>
+                                                                                                        <option  value="160">Nigeria</option>
+                                                                                                        <option  value="163">North Korea</option>
+                                                                                                        <option  value="165">Norway</option>
+                                                                                                        <option  value="169">Palestine</option>
+                                                                                                        <option  value="170">Panama</option>
+                                                                                                        <option  value="174">Philippines</option>
+                                                                                                        <option  value="176">Poland</option>
+                                                                                                        <option  value="177">Portugal</option>
+                                                                                                        <option  value="178">Puerto Rico</option>
+                                                                                                        <option  value="179">Qatar</option>
+                                                                                                        <option  value="181">Romania</option>
+                                                                                                        <option  value="182">Russia</option>
+                                                                                                        <option  value="192">San Marino</option>
+                                                                                                        <option  value="194">Saudi Arabia</option>
+                                                                                                        <option  value="196">Serbia</option>
+                                                                                                        <option  value="199">Singapore</option>
+                                                                                                        <option  value="201">Slovakia</option>
+                                                                                                        <option  value="202">Slovenia</option>
+                                                                                                        <option  value="205">South Africa</option>
+                                                                                                        <option  value="207">South Korea</option>
+                                                                                                        <option  value="209">Spain</option>
+                                                                                                        <option  value="215">Sweden</option>
+                                                                                                        <option  value="216">Switzerland</option>
+                                                                                                        <option  value="217">Syria</option>
+                                                                                                        <option  value="218">Taiwan</option>
+                                                                                                        <option  value="221">Thailand</option>
+                                                                                                        <option  value="222">Timor-Leste</option>
+                                                                                                        <option  value="227">Tunisia</option>
+                                                                                                        <option  value="228">Turkey</option>
+                                                                                                        <option  value="234">United Arab Emirates</option>
+                                                                                                        <option  value="235">United Kingdom</option>
+                                                                                                        <option  value="236">United States</option>
+                                                                                                        <option  value="238">Uruguay</option>
+                                                                                                        <option  value="241">Vatican City</option>
+                                                                                                        <option  value="242">Venezuela</option>
+                                                                                                        <option  value="243">Vietnam</option>
+                                                                                                        <option  value="245">Virgin Islands, US</option>
+                                                                                                        <option  value="247">Western Sahara</option>
+                                                                                                </select>
+										</td>
+										<td></td>
+										<td><input class="btn btn-info btn-sm" type="submit" value="Filter"></td>
+									</tr>
+
+																			<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=127">Novi Sad</a>
+												
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=RS">Serbia</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AD">Andorra</a> 0%</td>
+											<td class="small">10 minutes ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98200" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=90">Lienz</a>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=ME">Montenegro</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AT">Austria</a> 0%</td>
+											<td class="small">48 minutes ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98199" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=266">Gyeongju</a>
+												
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=TW">Taiwan</a> 0%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AD">Andorra</a> 0%</td>
+											<td class="small">51 minutes ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98198" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=308">Odense</a>
+												<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=PS">Palestine</a> 0%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">1 hour ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98197" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=66">Edinburgh</a>
+												<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MK">Macedonia</a> 20%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a> 80%</td>
+											<td class="small">4 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98196" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=466">Peshkopi</a>
+												
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=PH">Philippines</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SV">El Salvador</a> 0%</td>
+											<td class="small">5 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98195" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=475">Sendai</a>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=US">United States</a> 5%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AD">Andorra</a> 95%</td>
+											<td class="small">7 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98194" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=493">Ghent</a>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SV">El Salvador</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=PH">Philippines</a> 0%</td>
+											<td class="small">7 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98193" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=353">Gdansk</a>
+												<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=QA">Qatar</a> 28%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SG">Singapore</a> 72%</td>
+											<td class="small">8 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98192" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=229">Rodos</a>
+												<i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SG">Singapore</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AL">Albania</a> 0%</td>
+											<td class="small">10 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98191" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=519">Tarfaya</a>
+												<i class="icon icon-shield blue icon-big" data-toggle="tooltip" title="This region has a Bunker with 97% hit points left"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SG">Singapore</a> 0%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=LY">Libya</a> 0%</td>
+											<td class="small">11 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98190" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr class="active">
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=295">Krsko</a>
+												
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MC">Monaco</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">13 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98189" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=25">Bilbao</a>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=NG">Nigeria</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">13 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98188" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=346">Puerto Montt</a>
+												<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i><i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="2 Missiles Launched"></i><i class="icon icon-rocket green icon-gift" data-toggle="tooltip" title="Sponsored War: 1.07 | 0.00"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=FO">Faroe Islands</a> 47%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MK">Macedonia</a> 53%</td>
+											<td class="small">16 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98187" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+																				<tr >
+											<td>
+												<a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=3">Faro</a>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>
+											</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AL">Albania</a> 100%</td>
+											<td><a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">16 hours ago</td>
+											<td>
+																									<a href="https://myprofitland.com/war.php?key=29983796e6efc1760b87ec986359093d122665&id=98186" class="btn btn-success btn-sm">Active <i class="icon icon-search "></i></a>
+																								</td>
+										</tr>
+										
+								</table>
+							
+							</form>
+
+
+
+
+									<div class="pagination
+		 pagination-sm pagination-right		">
+		
+		<div class="pagination-text"><span><b>1</b>-<b>15</b> of <b>98190</b></span></div>		
+		
+		<ul>
+		<li class="active"><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=1">1</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=2">2</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=3">3</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=4">4</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=5">5</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=6">6</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=7">7</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=8">8</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=9">9</a></li><li ><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=10">10</a></li><li><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=2"><i class="icon-angle-right"></i></a></li><li><a href="https://myprofitland.com/wars.php?key=29983796e6efc1760b87ec986359093d122665&page=6546">Last</a></li>		</ul>
+				</div>
+									
+
+
+							<br>
+														<h5>Latest Military Vehicles Killed</h5>
+							
+							<table class="table table-condensed table-hover">
+								<thead>
+									<th width="170">Region</th>
+									<th>Killer</th>
+									<th>Victim</th>
+									<th width="120"></th>
+									<th width="30"></th>
+								</thead>
+
+																	<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=52">Adana</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=kurniawan214">kurniawan214</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/tw.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Annomali">Annomali</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/se.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 days ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26718", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=510">Agadir</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Beklerbk">Beklerbk</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ps.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=terbaik">terbaik</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td class="small">1 week ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26715", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=48">Miami</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Dakkon">Dakkon</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/us.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=mmggzz">mmggzz</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td class="small">2 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26712", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=42">Chicago</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Dakkon">Dakkon</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/us.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Antarctica">Antarctica</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ae.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td class="small">2 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26711", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=139">Mallaca Town</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=klose">klose</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Voda">Voda</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26709", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=139">Mallaca Town</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=BossTS">BossTS</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ps.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Voda">Voda</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26710", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=29">Vigo</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Beklerbk">Beklerbk</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ps.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=mmggzz">mmggzz</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26706", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=29">Vigo</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Beklerbk">Beklerbk</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ps.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Antarctica">Antarctica</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ae.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26703", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=29">Vigo</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=tourny">tourny</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=renddra44">renddra44</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ae.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26708", "#modal_ajax")'></a>
+										</td>
+									</tr>
+																		<tr>
+										<td><a href="https://myprofitland.com/region.php?key=29983796e6efc1760b87ec986359093d122665&id=29">Vigo</a></td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=luciiiiii">luciiiiii</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/es.png"><br>
+											<span class="small">Bomber Jet</span>
+										</td>
+										<td>
+											<a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=parker">parker</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"><br>
+											<span class="small">Heavy Tank</span>
+										</td>
+										<td class="small">3 weeks ago</td>
+										<td>
+											<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/mv_kill_log.php?key=29983796e6efc1760b87ec986359093d122665&id=26707", "#modal_ajax")'></a>
+										</td>
+									</tr>
+									
+							</table>
+
+
+
+						</div><!-- end .main -->			
+					
+						<div class="rightbar">
+	
+							<h6>My Friends</h6>
+
+										<div class="nw">
+							<a data-toggle="tooltip" title="Send a Message to Pepa" class="icon icon-envelope green" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Pepa"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Pepa">Pepa</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=ES"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/es.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Send a Message to Nicotin" class="icon icon-envelope green" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Nicotin"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Nicotin">Nicotin</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Send a Message to julienoor" class="icon icon-envelope green" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=julienoor"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=julienoor">julienoor</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 9 minutes ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=kurniawan214"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=kurniawan214">kurniawan214</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=TW"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/tw.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 13 minutes ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=archameera"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=archameera">archameera</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=SV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/sv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 18 minutes ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Bulux"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Bulux">Bulux</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=PH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ph.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 40 minutes ago, Send a Message to poteng" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=poteng"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=poteng">poteng</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=ID"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 49 minutes ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=515"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=515">515</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=XK"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/xk.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Phoenix"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Phoenix">Phoenix</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=EH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/eh.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Eagle"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Eagle">Eagle</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=IM"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/im.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Reingkarnasi"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Reingkarnasi">Reingkarnasi</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Tedong_Naga819"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=FO"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 3 hours ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=29983796e6efc1760b87ec986359093d122665&to=Dingdong"></a> <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Dingdong">Dingdong</a> <a href="https://myprofitland.com/country.php?key=29983796e6efc1760b87ec986359093d122665&id=AD"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ad.png"></a>
+						</div>
+					
+				
+				<a class="small" href="https://myprofitland.com/my_friends.php?key=29983796e6efc1760b87ec986359093d122665">View All</a>
+						<br>
+			<h6>Worldwide shouts</h6>
+
+							<span class="small">
+					Macedonia active work and war, wts general castle inside Macedonia				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+						2 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Really cheap energy from my old Canadian newspaper articles. <br />
+Select Canada from the newspapers list, go to the last page and scroll backwards.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Castoricescu">Castoricescu</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/cz.png"><br>
+						4 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					New Zealand open for two new workers. good salary cheap meals and food				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/nz.png"><br>
+						5 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Looking place 2 work. Semd your offer DM				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=Bijikukaku">Bijikukaku</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ae.png"><br>
+						6 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I am buying coffee plantation. Please send me your offert in private message.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=matrix">matrix</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ec.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I'm selling or renting my newspaper company in Indonesia. PM me				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=IWExNT">IWExNT</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Selling my Mansion and Castle in iceland dm me if you interest				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=ctsbest">ctsbest</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I am looking for a loan of 1,000 gold... and I want to make monthly repayments...<br />
+You can trust me.<br />
+I am an honest player...<br />
+<br />
+Regards, EdanE				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=29983796e6efc1760b87ec986359093d122665&id=HaiL-EdanE">HaiL-EdanE</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+			
+
+			<form action="https://myprofitland.com/dashboard.php?key=29983796e6efc1760b87ec986359093d122665" method="post" class="form-horizontal">
+				<input name="acn" type="hidden" value="newworldshout" />
+
+				<div class="form-cols-row">
+					<div class="form-col-sm-12">
+						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+					</div>
+				</div>
+
+				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
+				<span class="small">*Costs 2 gold</span>
+			</form>
+		
+
+		
+
+
+	</div><!-- end .rightbar -->						
+					</div><!-- end .contents-inner -->
+				</div><!-- end .container -->
+				<!-- end content area ---------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+
+
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+				<div class="copyright">
+					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://myprofitland.com/tos.php">Terms and conditions</a> <small>(14) 0.056s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://myprofitland.com/tos.php">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+			
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+	
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
