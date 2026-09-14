@@ -116,56 +116,65 @@
 			});
 
 		});
-		<style>
-		/* 1. BACKGROUND LUAR - DINDING BATU CASTLE pakai CSS doang */
+		    <style>
+/* 1. BACKGROUND LUAR - DINDING BATU CASTLE */
 body {
-  background-color: #3a3a3a;
+  background-color: #2e2e2e !important;
   background-image: 
     radial-gradient(circle at 20% 30%, #4a4a4a 2px, transparent 2px),
-    radial-gradient(circle at 80% 70%, #555 1px, transparent 1px),
-    linear-gradient(90deg, #2f2f2f 1px, transparent 1px),
-    linear-gradient(#353535 1px, transparent 1px);
-  background-size: 50px 50px, 30px 30px, 25px 25px, 25px 25px;
+    radial-gradient(circle at 80% 70%, #555 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px) !important;
+  background-size: 50px 50px, 35px 35px, 25px 25px, 25px 25px !important;
 }
 
-/* 2. CONTAINER TENGAH - PARCHMENT KERTAS KUNO */
-#main-container, .main, #content, .container {
+/* 2. CONTAINER TENGAH - PARCHMENT KERTAS KUNO (GANTI PUTIH) */
+#main-container, 
+.main, 
+#content, 
+.container,
+.wrapper,
+#wrapper,
+body > div.container,
+div[style*="background: white"],
+div[style*="background:#fff"],
+div[style*="background: #fff"] {
   background: #f4e4bc !important;
   background-image: 
     radial-gradient(ellipse at top left, rgba(139,90,43,0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(101,67,33,0.2) 0%, transparent 60%),
-    url("data:image/svg+xml,[STRIPPED]) !important;
-  border: 10px solid #8b5a2b;
-  border-style: ridge;
+    radial-gradient(ellipse at bottom right, rgba(101,67,33,0.2) 0%, transparent 60%) !important;
+  border: 10px solid #8b5a2b !important;
+  border-style: ridge !important;
   box-shadow: 
-    inset 0 0 80px rgba(139,90,43,0.3),
+    inset 0 0 80px rgba(139,90,43,0.25),
     0 10px 30px rgba(0,0,0,0.6),
-    0 0 0 4px #5a3a1a;
-  border-radius: 12px;
+    0 0 0 4px #5a3a1a !important;
+  border-radius: 12px !important;
+  padding: 15px !important;
 }
 
-/* 3. KOTAK-KOTAK DALAM - KAYU + PAKU */
-.panel, .box, .card, .my-friends, .energy-box {
+/* 3. KOTAK-KOTAK DALAM - KAYU + PAKU BESI */
+.panel, .box, .card, 
+.my-friends, .energy-box,
+div[class*="panel"],
+div[class*="box"] {
   background: #fff8e7 !important;
+  background-image: linear-gradient(to bottom, #fffaf0, #f5e6c8) !important;
   border: 3px solid #654321 !important;
-  border-left: 6px solid #8b5a2b;
+  border-left: 6px solid #8b5a2b !important;
   box-shadow: 
     4px 4px 0 #5a3a1a,
-    inset 0 0 20px rgba(139,90,43,0.1);
-  border-radius: 6px;
-  position: relative;
+    inset 0 0 20px rgba(139,90,43,0.08) !important;
+  border-radius: 6px !important;
+  margin-bottom: 12px !important;
 }
 
-/* Tambah efek paku di pojok pakai CSS */
-.panel::before, .box::before {
-  content: "•";
-  position: absolute;
-  top: 2px; left: 5px;
-  color: #5a3a1a;
-  font-size: 20px;
-  text-shadow: 1px 1px 0 #000;
+/* 4. HEADER & MENU BIAR NYATU SAMA TEMA */
+#header, .header, .top-menu {
+  background: linear-gradient(to bottom, #5a3a1a, #3e2711) !important;
+  border-bottom: 4px solid #8b5a2b !important;
 }
-				</style>
+</style>
 	</script>
 </head>
 
