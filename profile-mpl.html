@@ -1,0 +1,2707 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>My Profit Land - Online Strategy Browser Game</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://myprofitland.com/favicon.ico">
+<link rel="apple-touch-icon" href="https://myprofitland.com/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://myprofitland.com/css-game/base.css?2">
+<link rel="stylesheet" href="https://myprofitland.com/css-game/fa6.5.1/css/all.min.css?1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://myprofitland.com/js/base.js"></script>
+<script src="https://myprofitland.com/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			headers: {'X-Requested-With': 'XMLHttpRequest'},
+			beforeSend: function() {
+			    $('*').css('cursor', 'progress');
+			},
+			error: function (request, error) {
+		        console.log(arguments);
+		        //alert("Error: " + error);
+		        $('*').css('cursor', '');
+		    },
+			success: function(output){
+				$(my_div).html(output);
+				$('*').css('cursor', '');
+			}
+		});
+	};
+
+</script>
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+
+			<div class="contents">
+				
+	<!-- PRE-HEADER ----------------------------
+	---------------------------------------- -->
+	<!-- For server-wide and account related alerts (non-game alerts) -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container --> 
+	<!-- end pre-header ------------------------
+	---------------------------------------- --> 
+	
+	<!-- HEADER --------------------------------
+	---------------------------------------- --> 
+	<!-- For Logo, search, languague selection and account related information -->
+		<div class="game-head" style="background-image: url(https://mplstatic.com/img/game-head.jpg)">
+		<div class="container">
+		
+			
+			<a class="brand" href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">
+				<img alt="myprofitland.com" src="https://mplstatic.com/img/logo-site.png">
+			</a>
+		
+			<div class="pull-right">
+				<div class="pull-left" style="margin-right: 8px">
+					<a class="label label-info" href="https://myprofitland.com/map/" target="_blank" rel="noopener" data-toggle="tooltip" title="Live World Map" aria-label="Open live world map">
+						<span class="icon-globe" aria-hidden="true"></span>
+					</a>
+				</div>
+				<div class="pull-left" style="margin-right: 16px">
+					<script type="text/javascript">
+
+						var currenttime = 'September 14, 2026 05:16:37' 
+
+						var serverdate=new Date(currenttime)
+
+						function padlength(what){
+							var output=(what.toString().length==1)? "0"+what : what
+							return output
+						}
+
+						function displaytime(){
+							serverdate.setSeconds(serverdate.getSeconds()+1)
+
+							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
+							document.getElementById("server_time").innerHTML=timestring
+						}
+
+						setInterval("displaytime()", 1000);
+						
+						$( document ).ready(function() {
+							$('#topnav-transactions-alert').on('click', function(){
+							    $('#topnav-transactions-alert').removeClass('label-success');
+							    $(this).addClass('label-light');
+							});
+
+							$('#topnav-alerts-alert').on('click', function(){
+							    $('#topnav-alerts-alert').removeClass('label-warning');
+							    $(this).addClass('label-light');
+							});
+						});
+
+
+					</script>
+
+											<a href="https://myprofitland.com/my_medals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" data-toggle="tooltip" title="Next Medal Session: 63.4% (1268 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
+							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:16:37</b></span>
+							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+								<div style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
+							</div>
+						</a>
+						
+				</div><!-- end .col -->
+				
+				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
+					<form method="post" action="https://myprofitland.com/search.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">
+						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
+					</form>
+				</div><!-- end .col -->
+				
+				<div class="pull-left">
+					<div class="text-right">
+						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_transactions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'>Income (20232)</a>
+						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_alerts.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'>Alerts (9569)</a>
+						<a class="label label-light" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Messages (0)</a>&nbsp;&nbsp;  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/notepad.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://myprofitland.com/my_settings.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://myprofitland.com/logout.php"><i class="icon icon-logout"></i></a> <br>
+						<small></small>
+					</div>
+				</div><!-- end .col -->
+			</div><!-- end .row -->
+		</div><!-- end .container -->
+	</div><!-- end .game-head --> 
+	
+	<!-- end header ----------------------------
+	---------------------------------------- --> 
+	
+	<!-- TOPNAV --------------------------------
+	---------------------------------------- -->
+	<nav class="topnav">
+		<div class="topnav-inner">
+			<div class="container">
+								
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				
+				<div class="topnav-collapse" id="topnav-collapse">
+					<ul class="nav topnav-nav">
+											<li class="active" > <a href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Home</a> </li>
+
+						<li> <a data-toggle="dropdown"> Activities
+														<span class="icon-stopwatch blue"></span>
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/workplaces.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
+																		<span class="icon-stopwatch blue"></span>
+																		</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/wars.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/dailyhero.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/northkorea.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/lookouts.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/local_bar.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/fund_offers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/offers_contest.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/market_local.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_global.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_financial.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_recruits.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
+								<li><a tabindex="-1" href="https://myprofitland.com/market_real_estate.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_companies.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_medals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_regions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/medals_shop.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_vct.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Monaco <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/country_accountancy.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_statistics.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_regions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_resources.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_storage.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_taxes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_govmembers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_lawproposals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_elections.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_patriots.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_army.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_companies.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
+															</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_local.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_global.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
+																<li class="divider" ></li>
+								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/organization_manage.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
+															</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Partners 
+															<span class="icon-pie-chart blue" data-toggle="tooltip" title="Shares dividends is tonight"></span>
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_fund.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_market.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
+																	<span class="icon-pie-chart blue" data-toggle="tooltip" title="Shares dividends is tonight" ></span>
+																</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_shareholders.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_myshares.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
+							</ul>
+						</li>
+						
+						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_playerlevel.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_networth.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_euro.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_gold.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_energy.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_economic_score.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wardamage.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wars.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruits.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruit_income.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_top_offers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_offers_euro.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_vctholders.php"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_damage.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_countrydamage.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_kills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_killstreak.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countrymilitary.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryregions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryactives.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryinfrastructures.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
+							</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/forum.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/code_of_conduct.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/documentation.php"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/arena_fund.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/globalmarket_fund.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/warfund.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
+								<li class="divider" ></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/private_countries.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/referral_rights.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
+								<li class="divider" ></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/alliances.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/latest_citizens.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/citizenship_changes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/abandoned_recruits.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
+							</ul>
+						</li>
+
+					</ul>
+				</div><!-- end .topnav-collapse -->
+				
+			</div><!-- end .container -->
+		</div><!-- end .topnav-inner -->
+	</nav>
+	
+	<!-- end topnav ----------------------------
+	---------------------------------------- -->
+	
+	
+
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				<div class="container">
+					<div class="clearfix">
+
+						<div class="leftbar">
+		
+	
+	
+		<div style="position:relative; padding-left:85px; height:78px">
+			<div style="position:absolute; left:0; top:0; ">
+				<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ADVAN">
+											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
+										</a>
+			</div>
+	
+			<p class="nw">
+				<b><a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ADVAN">ADVAN</a></b>
+				<br>
+				<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <span class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a>
+				<br>
+				<a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a></span><a data-toggle="tooltip" title="Active War" href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98189" class="icon icon-crosshairs red icon-big"></a>			</p>
+		</div>
+	
+		<div class="text-center small">
+			<b>Energy:</b> 62.41% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_energy_breakdown.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'></a> 		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="62.41" aria-valuemin="0" aria-valuemax="100" style="width: 62.41%;">
+			</div>
+		</div>
+		
+			
+		<div class="text-center small">
+			<b>Health:</b> 95.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_health_breakdown.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")'></a>
+		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="95.0" aria-valuemin="0" aria-valuemax="100" style="width: 95.0%;">
+			</div>
+		</div>
+
+
+
+		        <div class="text-center small">
+			<b>XP Level:</b> 29		</div>
+
+		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 11810/16091&nbsp;&nbsp;&nbsp;73%">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 73%;"></div>
+        </div>
+
+		
+		<div class="text-center">
+											</div>
+	
+
+		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="106.95">106.950</span> sVCT <a href="https://myprofitland.com/my_vct.php"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/euro_icon.png"> Euro: 0.03</p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/gold_icon.png"> Gold: 360.72 <a class="icon icon-line-chart" href="https://myprofitland.com/market_financial.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665"></a></p>
+		<p><img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mv.png"> RUF: 0.00</p>
+		
+
+
+				<div class="alert alert-info alert-sm">
+			<b>Breakfast</b> with 20% energy, will be served at 06:00, you have <b>7 units</b> in your <a href="https://myprofitland.com/my_inventory.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&area=meals">inventory</a><br>
+			Buy more <a href="https://myprofitland.com/market_local.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&type=1&sub=2&prod=127">here</a>
+		</div>
+				
+
+
+		<ul class="list-group">
+			
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companies.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Companies</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_inventory.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Inventory</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companion.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Companion</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_vehicles.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Vehicles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_financials.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Finances</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_weapons.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Weapons & Info</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_clothing.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Clothing</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_real_estate.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Real Estate</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_recruits.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Recruits</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_medals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Medals</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Newspaper Articles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_regions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">My Regions</a></li>
+					</ul>
+		
+		<p class="text-center"><a class="btn btn-success btn-sm" href="https://myprofitland.com/fund.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://myprofitland.com/withdraw_resellers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Withdraw <i class="icon icon-upload"></i></a></p>
+		
+					<style>
+				.kob-glow {
+					position: relative;
+					display: inline-block;
+					padding: 3px;
+					border-radius: 5px;
+					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
+					animation: kob-spin 6s linear infinite;
+					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
+				}
+				.kob-glow img {
+					display: block;
+					border-radius: 4px;
+				}
+				@property --kob-angle {
+					syntax: '<angle>';
+					initial-value: 0deg;
+					inherits: false;
+				}
+				@keyframes kob-spin {
+					to { --kob-angle: 360deg; }
+				}
+				@supports not (background: conic-gradient(from 0deg, red, blue)) {
+					.kob-glow { background: #00ff88; }
+				}
+			</style>
+			<p class="text-center" style="margin-top: 50px;">
+				<a class="kob-glow" href="https://kickoffboss.com/?recruitedme=nicmo&utm_source=mpl&utm_medium=leftbar&utm_campaign=cross_promo" target="_blank" rel="noopener noreferrer" title="Play KickOffBoss - our football manager game"><img width="170" height="61" alt="KickOffBoss - our football manager game" src="https://myprofitland.com/img/kob-banner.jpg"></a>
+			</p>
+			
+		<br>
+
+					<div id="google_translate_element"></div>
+			<script type="text/javascript">
+				function googleTranslateElementInit() {
+				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+				}
+			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+			
+		<br>
+
+
+		</div><!-- end .leftbar -->
+						<div class="main">
+
+							
+							<div class="row">
+								<div class="col-sm-4 text-center">
+
+									<div class="user-avatar">
+																				<div class="avatar-img" style="background-image:url(https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460)"></div>
+
+																					<div class="user-rank">
+												<div class="rank-img" data-toggle="tooltip" title="Corporal ADVAN" style="background-image:url(img/medals-and-ranks/rank-corporal.png)"></div>
+											</div>
+										
+
+										<h5 class="user-info">
+											<span class="username">ADVAN</span>
+																					</h5>
+
+																			</div>
+								</div>
+
+								<div class="col-sm-8">
+									<b>Registered:</b> <span data-toggle="tooltip" title="16-02-2022 09:11:42">4 years ago</span> 																			<a data-toggle="tooltip" title="Phone Verified" href="https://myprofitland.com/account_verification_sms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="icon icon-old-phone green"></a>
+																												<a data-toggle="tooltip" title="ID not Verified" href="https://myprofitland.com/id_verification.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="icon icon-v-card red"></a>
+																		<br>
+									<b>Last activity:</b> 23 seconds ago <span class="icon icon-circle-info blue" data-toggle="tooltip" title="23 seconds"></span><br>
+									<b>Recruiter:</b> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Bulux">Bulux</a> <span class="small">13.13% tax, 390.94 gold paid</span> <span data-toggle="tooltip" title="1 month, 1 week, 5 days, 6 hours, 21 minutes, 44 seconds"  class="small">(Locked for 1 month)</span>
+
+									
+									
+									<br><br>
+
+
+									<b>Citizenship:</b> <img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a><br>
+									<b>Location:</b> <img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> (<a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a>)<br><br>
+
+																		<div style="position: absolute; right: 0; top: 0; padding-right: 9px;">
+
+
+										
+										&nbsp;&nbsp;
+
+										
+
+
+										
+
+										
+
+									</div>
+									
+
+									<div class="col-sm-6">
+
+										<div class="text-center small">
+											<b>Energy:</b> 62.41%
+										</div>
+
+										<div class="progress progress-sm mb-sm-0">
+											<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="62.41" aria-valuemin="0" aria-valuemax="100" style="width: 62.41%;"></div>
+										</div>
+
+
+
+																				<div class="text-center small" style="margin-top: 5px">
+											<b>Experience Level:</b> 29										</div>
+
+										<div class="progress progress-sm mb-sm-0" data-toggle="tooltip" title="Progress: 11810/16091&nbsp;&nbsp;&nbsp;73%">
+											<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" style="width: 73%;"></div>
+										</div>
+
+										<div class="text-center small" style="margin-top: 5px">
+											<b>Economic Score:</b> 100										</div>
+
+										<div class="progress progress-sm mb-sm-0">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+										</div>
+
+
+									</div>
+
+									<div class="col-sm-6">
+
+
+										<div class="text-center small">
+											<b>Health:</b> 95.0%
+										</div>
+
+										<div class="progress progress-sm mb-sm-0">
+											<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="95.0" aria-valuemin="0" aria-valuemax="100" style="width: 95.0%;"></div>
+										</div>
+
+
+
+																				<div class="text-center small" style="margin-top: 5px">
+											<b>Work Skills:</b> 300/300 <a class="icon icon-circle-info" data-toggle="popover" title="ADVAN Work Skills" data-html="true" data-content-wrapper="#show-work-skills"></a>
+										</div>
+
+										<div class="progress progress-sm mb-sm-0">
+											<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+										</div>
+
+
+										<div id="show-work-skills" class="hide">
+
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1", "#modal_ajax")'>Gathering</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														100/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+														</div>
+													</div>
+												</div>
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=2", "#modal_ajax")'>Hand Working</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														0/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+														</div>
+													</div>
+												</div>
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=3", "#modal_ajax")'>Guest Servicing</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														100/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+														</div>
+													</div>
+												</div>
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=4", "#modal_ajax")'>Engineering</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														0/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+														</div>
+													</div>
+												</div>
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=5", "#modal_ajax")'>Writing and Aesthetics</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														0/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+														</div>
+													</div>
+												</div>
+																							<div class="clearfix">
+													<div class="pull-left">
+														<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_skills.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=6", "#modal_ajax")'>Extraction</a></b>&emsp;
+													</div>
+
+													<div class="pull-right">
+														100/100
+													</div>
+												</div>
+
+												<div class="clearfix">
+													<div class="progress progress-xs mb-sm-10">
+														<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+														</div>
+													</div>
+												</div>
+											
+										</div>
+
+
+									</div>
+
+									<br>
+
+								</div>
+							</div>
+
+
+							<br>
+
+							<div role="tabpanel">
+
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li class="active"><a href="#transactions" aria-controls="transactions" role="tab" data-toggle="tab"><i class="fa fa-list"></i> Transactions</a></li>
+									<li><a href="#finances" aria-controls="finances" role="tab" data-toggle="tab"><i class="fa fa-line-chart"></i> Finances</a></li>
+									<li><a href="#assets" aria-controls="assets" role="tab" data-toggle="tab"><i class="fa fa-home"></i> Assets</a></li>
+									<li><a href="#companies" aria-controls="companies" role="tab" data-toggle="tab"><i class="fa fa-industry"></i> Companies</a></li>
+									<li><a href="#military" aria-controls="military" role="tab" data-toggle="tab"><i class="fa fa-shield"></i> Military</a></li>
+									<li><a href="#organization" aria-controls="organization" role="tab" data-toggle="tab"><i class="fa fa-sitemap"></i> Organization</a></li>
+									<li><a href="#referrals" aria-controls="referrals" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Recruits</a></li>
+									<li><a href="#companion" aria-controls="companion" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Companion</a></li>
+									<li><a href="#achievements" aria-controls="achievements" role="tab" data-toggle="tab"><i class="fa fa-trophy"></i> Achievements</a></li>
+									<li><a href="#movement" aria-controls="movement" role="tab" data-toggle="tab"><i class="fa fa-plane"></i> Recent Movement</a></li>
+								</ul>
+
+								<!-- Tab panes -->
+								<div class="tab-content">
+
+
+									<div role="tabpanel" class="tab-pane active" id="transactions">
+
+										<br>
+
+
+
+
+										<script type="text/javascript">
+											ajaxcall("https://myprofitland.com/ajax/transactions.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&type=user&id=ADVAN", "#showtransactions");
+										</script>
+
+										<div id="showtransactions"></div>
+
+
+
+									</div>
+
+
+
+
+
+
+
+									<div role="tabpanel" class="tab-pane" id="finances">
+										<br>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<h5>Balance</h5>
+
+												<img width="15" height="15" src="https://myprofitland.com/img/euro_icon.png"> 0.03 Euro<br>
+												<img width="15" height="15" src="https://myprofitland.com/img/gold_icon.png"> 360.72 Gold<br>
+												<i style="margin-right: 5px;" data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i> 106.950 sVCT
+
+											</div>
+
+											<div class="col-sm-6">
+												<h5>Net Worth</h5>
+
+												<b>Euro:</b> 179.03 <a class="icon-cycle blue" href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ADVAN&acn=refreshnetworth"></a>											</div>
+										</div>
+
+
+
+										<br>
+
+										<h5>Currencies</h5>
+
+										<div class="currencies-container">
+											<div class="row currencies-list" id="currenciesList">
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/mc.png"> <b>Monaco:</b> 1,091.51 MFR<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/ph.png"> <b>Philippines:</b> 200.18 PHP<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/id.png"> <b>Indonesia:</b> 155.43 IDR<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/by.png"> <b>Belarus:</b> 72.02 BLR<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/va.png"> <b>Vatican City:</b> 67.19 VAL<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/uy.png"> <b>Uruguay:</b> 47.42 UYU<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/il.png"> <b>Israel:</b> 46.14 SHE<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/sm.png"> <b>San Marino:</b> 45.03 SAM<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/si.png"> <b>Slovenia:</b> 6.98 SIT<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/sa.png"> <b>Saudi Arabia:</b> 5.97 SAR<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/md.png"> <b>Moldova:</b> 2.54 LEU<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/ch.png"> <b>Switzerland:</b> 1.90 CHF<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/nl.png"> <b>Netherlands:</b> 1.67 NLG<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/es.png"> <b>Spain:</b> 1.65 ESP<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/rm.png"> <b>Madeira:</b> 0.97 MAE<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/us.png"> <b>United States:</b> 0.65 USD<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/sy.png"> <b>Syria:</b> 0.57 SYP<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/ro.png"> <b>Romania:</b> 0.25 RON<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/ba.png"> <b>Bosnia and Herzegovina:</b> 0.18 MKA<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/tl.png"> <b>Timor-Leste:</b> 0.10 CEN<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/pt.png"> <b>Portugal:</b> 0.09 PTE<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/gl.png"> <b>Greenland:</b> 0.02 KRO<br>
+													</div>
+																									<div class="col-sm-6 currency-item">
+														<img width="24" height="24" src="https://myprofitland.com/img/country_flags/24/ve.png"> <b>Venezuela:</b> 0.00 VNZ<br>
+													</div>
+																							</div>
+																						<div class="currencies-fade" id="currenciesFade"></div>
+											<div class="text-center" style="margin-top: 10px;">
+												<a href="javascript:void(0);" id="toggleCurrencies" onclick="toggleCurrencies()">
+													<i class="fa-solid fa-chevron-down"></i> Show all currencies
+												</a>
+											</div>
+																					</div>
+
+										<style>
+										.currencies-container {
+											position: relative;
+										}
+										.currencies-list {
+											max-height: 180px;
+											overflow: hidden;
+											transition: max-height 0.4s ease-in-out;
+										}
+										.currencies-list.expanded {
+											max-height: 2000px;
+										}
+										.currencies-fade {
+											position: absolute;
+											bottom: 30px;
+											left: 0;
+											right: 0;
+											height: 50px;
+											background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%);
+											pointer-events: none;
+											transition: opacity 0.3s ease-out;
+										}
+										.currencies-fade.hidden {
+											opacity: 0;
+										}
+										.currency-item {
+											padding: 2px 15px;
+										}
+										</style>
+
+										<script>
+										function toggleCurrencies() {
+											var list = document.getElementById('currenciesList');
+											var fade = document.getElementById('currenciesFade');
+											var toggle = document.getElementById('toggleCurrencies');
+											var container = document.querySelector('.currencies-container');
+
+											if (list.classList.contains('expanded')) {
+												list.classList.remove('expanded');
+												fade.classList.remove('hidden');
+												toggle.innerHTML = '<i class="fa-solid fa-chevron-down"></i> Show all currencies';
+												container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+											} else {
+												list.classList.add('expanded');
+												fade.classList.add('hidden');
+												toggle.innerHTML = '<i class="fa-solid fa-chevron-up"></i> Show less';
+											}
+										}
+										</script>
+
+										<br>
+
+										<h5>Bank Loans</h5>
+
+																					<table class="table table-condensed table-hover">
+												<thead>
+													<th>Bank</th>
+													<th width="130" class="text-center">Loan Amount</th>
+													<th width="80" class="text-center">Status</th>
+													<th width="130" class="text-center">Installments</th>
+													<th width="110" class="text-center">Repaid</th>
+													<th width="25"></th>
+												</thead>
+																									<tr>
+														<td>
+															<div style="position:relative; padding-left:55px">
+																<div style="position:absolute; left:0; top:0">
+																	<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=iamroyal">
+																																					<img title="iamroyal" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/f4391d89817ae3ee893ac10d6d2ca885.jpg?1694417394">
+																																			</a>
+																</div>
+
+
+																<span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=33210">iamroyal - Royal's Empire - Moldova - Bank</a><br>
+																	Owner: <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=iamroyal">iamroyal</a> <img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/md.png"></span>
+
+															</div>
+														</td>
+														<td class="text-center">
+															80.00 Gold<br>
+															<small>3% interest</small>
+														</td>
+														<td class="text-center">
+																																																												<span class="label label-success">Complete</span>														</td>
+														<td class="text-center">
+															10 of 10<br>
+															<span class="small">Every 7 days</span>														</td>
+														<td class="text-center">
+															82.40 Gold<br>
+															<small>103% of 103%</small>
+														</td>
+														<td>
+																															<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/loan_instalments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=630975c0e7658", "#modal_ajax")'></a>
+																													</td>
+													</tr>
+																									<tr>
+														<td>
+															<div style="position:relative; padding-left:55px">
+																<div style="position:absolute; left:0; top:0">
+																	<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=iamroyal">
+																																					<img title="iamroyal" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/f4391d89817ae3ee893ac10d6d2ca885.jpg?1694417394">
+																																			</a>
+																</div>
+
+
+																<span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=33210">iamroyal - Royal's Empire - Moldova - Bank</a><br>
+																	Owner: <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=iamroyal">iamroyal</a> <img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/md.png"></span>
+
+															</div>
+														</td>
+														<td class="text-center">
+															80.00 Gold<br>
+															<small>3% interest</small>
+														</td>
+														<td class="text-center">
+																																																												<span class="label label-success">Complete</span>														</td>
+														<td class="text-center">
+															10 of 10<br>
+															<span class="small">Every 7 days</span>														</td>
+														<td class="text-center">
+															82.40 Gold<br>
+															<small>103% of 103%</small>
+														</td>
+														<td>
+																															<a class="icon-file-text-o big" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/loan_instalments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=6302ef3761947", "#modal_ajax")'></a>
+																													</td>
+													</tr>
+																							</table>
+										
+									</div>
+
+
+
+
+
+									<div role="tabpanel" class="tab-pane" id="assets">
+										<br>
+
+										<b>Partners Fund Shares:</b> <i data-toggle="tooltip" title="Partners Fund Shares" class="icon-pie-chart blue"></i>0 <small>(0 for sale)</small>
+
+										<br><br>
+
+										<h5>Clothing</h5>
+
+										<div class="row">
+
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-coat.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Coat</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Coat</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-jacket.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Jacket</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Jacket</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-pants.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Pants</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Pants</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-vest.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Vest</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Vest</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-shirt.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Shirt</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Shirt</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-underwear.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Underwear</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Underwear</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-socks.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Socks</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Socks</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-shoes.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Shoes</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Shoes</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-gloves.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Gloves</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Gloves</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+											
+												<div class="col-sm-3">
+								
+													<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" ><!-- #0 -->
+														<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+															<div style="background-color:#f4f4f4; border-radius:50%;">
+																																	<img width="85" height="85" src="https://myprofitland.com/img/assets/products/no-hat.png">
+																															</div>
+														</div><!-- end #1 -->
+
+														<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+															<b>Hat</b><br>
+
+															<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+																																	<span class="text-light small">You have no Hat</b> <i class="icon icon-circle-info text-muted" data-toggle="info-popover" data-content="Go to the Local or Global market and buy some."></i></span>
+																															</div>
+
+														</div><!-- end #2 -->
+
+													</div><!-- end #0 -->
+												</div>
+																					</div>
+
+
+										Total energy per day: 0%<br>
+
+
+
+
+
+
+
+										<br>
+
+										<h5>Real Estate (0)</h5>
+										<br>
+
+										<div class="alert alert-warning">ADVAN doesn't own any real estate yet</div>
+
+
+
+
+										<br>
+
+										<h5>Transport Vehicles (1)</h5>
+										<br>
+
+																					<div class="row">
+
+																									<div class="col-sm-4">
+
+														<div style="position:relative; padding-left:70px">
+															<div style="position:absolute; left:0; top:0;">
+																<img title="Private Plane" width="65" height="65" src="https://myprofitland.com/img/assets/white_plane.png">
+															</div>
+
+															<span class="small"><b>Private Plane</b></span> <i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><br>
+															<span class="small">in <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a></span><br><br>
+
+														</div>
+
+													</div>
+												
+											</div>
+										
+
+
+
+									</div>
+
+
+
+
+
+
+									<div role="tabpanel" class="tab-pane" id="companies">
+										<br>
+																					<h5>Companies Owned</h5>
+
+											<div class="row">
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=37852">
+
+																	
+																	<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/newspaper.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=37852">⏪♻closeup #2♻⏩</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 1&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/id.png"> IDR: 96.17</span><br>
+															<span class="small">Newspaper | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=34704">
+
+																	
+																	<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/newspaper.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=34704">⏪♻closeup #1♻⏩</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 10.94&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/id.png"> IDR: 363.22</span><br>
+															<span class="small">Newspaper | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=22033">
+
+																	
+																	<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/newspaper.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=22033">⏪♻closeup #3♻⏩</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 0&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/id.png"> IDR: 56.92</span><br>
+															<span class="small">Newspaper | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=47692">
+
+																	
+																	<img style="margin-top: 10px;" title="Solar Panel Farm" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/solar-panel-farm.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=47692">ADVAN - Solar Panel Farm</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 64.94&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/md.png"> LEU: 0</span><br>
+															<span class="small">Solar Panel Farm | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=39637">
+
+																	
+																	<img style="margin-top: 10px;" title="Attack Weapons Factory" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/attack-weapons-factory.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=39637">🌹ADVAN🌹 - Attack Weapons Factory</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 4.75&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/cl.png"> CLP: 66.07</span><br>
+															<span class="small">Attack Weapons Factory | Workplaces: 3</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=51097">
+
+																	
+																	<img style="margin-top: 10px;" title="Milk and Coffee Shop" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/milk-and-coffee-shop.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=51097">🌹ADVAN🌹 - Milk and Coffee Shop</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 7.76&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/md.png"> LEU: 19.21</span><br>
+															<span class="small">Milk and Coffee Shop | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=53359">
+
+																	
+																	<img style="margin-top: 10px;" title="Clothes Factory" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/clothes-factory.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=53359">🌹ADVAN🌹 - Clothes Factory</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 1.55&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ar.png"> ARS: 18.47</span><br>
+															<span class="small">Clothes Factory | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=49684">
+
+																	
+																	<img style="margin-top: 10px;" title="Recycling Center" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/recycling-center.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=49684">🌹ADVAN🌹 - Recycling Center</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 0.37&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/es.png"> ESP: 55.61</span><br>
+															<span class="small">Recycling Center | Workplaces: 1</span>
+															<br>
+
+														</div>
+
+													</div>
+																							</div>
+											<br>
+											A total of 91.32 Gold in 8 companies
+
+										
+
+
+										<br><br>
+																					<h5>Company Manager</h5>
+
+											<div class="row">
+																									<div class="col-sm-6 mb-sm-30 nw">
+
+														<div style="position:relative; padding-left:95px">
+
+															<div style="position:absolute; left:0; top:0;">
+																<a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=50040">
+
+																	
+																	<img style="margin-top: 10px;" title="Iron Mine" width="85" height="85" src="https://myprofitland.com/img/assets/buildings-companies/iron-mine.png">																</a>
+															</div>
+
+															<b><span class="small"><a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=50040">Bulux - Philippines iron mine corp.</a></span></b><br>
+															<span class="small"><img width="14" height="14" src="https://myprofitland.com/img/gold_icon.png"> Gold: 2.1&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ph.png"> PHP: 830.47</span><br>
+															<span class="small">Iron Mine | Workplaces: 5</span>
+															<br>
+
+														</div>
+
+													</div>
+																							</div>
+																			</div>
+
+
+
+
+
+
+									<div role="tabpanel" class="tab-pane" id="military">
+
+										<br>
+
+										<h5>Medals and Ranks</h5>
+
+										<br>
+
+
+
+										<table width="100%">
+											<thead>
+												<tr>
+													<th></th>
+													<th></th>
+
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Private" src="img/medals-and-ranks/medal-private.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Corporal" src="img/medals-and-ranks/medal-corporal.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Sergeant" src="img/medals-and-ranks/medal-sergeant.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Lieutenant" src="img/medals-and-ranks/medal-lieutenant.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Captain" src="img/medals-and-ranks/medal-captain.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Major" src="img/medals-and-ranks/medal-major.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="Colonel" src="img/medals-and-ranks/medal-colonel.png"></th>
+																											<th width="72px" class="text-center"><img data-toggle="tooltip" title="General" src="img/medals-and-ranks/medal-general.png"></th>
+													
+												</tr>
+											</thead>
+
+											<tbody>
+
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Indonesia" src="https://myprofitland.com/img/country_flags/32/id.png"><br>
+														</td>
+														<td class="text-center">
+																															<img width="36px" data-toggle="tooltip" height="36px" title="Corporal Rank" src="img/medals-and-ranks/rank-corporal.png">
+																													</td>
+
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Private Medals">10</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">11</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Sergeant Medals">8</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Lieutenant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Captain Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Moldova" src="https://myprofitland.com/img/country_flags/32/md.png"><br>
+														</td>
+														<td class="text-center">
+																															<img width="36px" data-toggle="tooltip" height="36px" title="Corporal Rank" src="img/medals-and-ranks/rank-corporal.png">
+																													</td>
+
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Private Medals">10</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">10</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Sergeant Medals">3</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Lieutenant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Captain Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Monaco" src="https://myprofitland.com/img/country_flags/32/mc.png"><br>
+														</td>
+														<td class="text-center">
+																															<img width="36px" data-toggle="tooltip" height="36px" title="Corporal Rank" src="img/medals-and-ranks/rank-corporal.png">
+																													</td>
+
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Private Medals">17</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">20</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Sergeant Medals">4</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Lieutenant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Captain Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Philippines" src="https://myprofitland.com/img/country_flags/32/ph.png"><br>
+														</td>
+														<td class="text-center">
+																															<img width="36px" data-toggle="tooltip" height="36px" title="Sergeant Rank" src="img/medals-and-ranks/rank-sergeant.png">
+																													</td>
+
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Private Medals">10</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">65</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Sergeant Medals">27</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Lieutenant Medals">5</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Captain Medals">2</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="San Marino" src="https://myprofitland.com/img/country_flags/32/sm.png"><br>
+														</td>
+														<td class="text-center">
+																													</td>
+
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Private Medals">4</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Corporal Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Sergeant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Lieutenant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Captain Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Saudi Arabia" src="https://myprofitland.com/img/country_flags/32/sa.png"><br>
+														</td>
+														<td class="text-center">
+																															<img width="36px" data-toggle="tooltip" height="36px" title="Captain Rank" src="img/medals-and-ranks/rank-captain.png">
+																													</td>
+
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Private Medals">10</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">30</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Sergeant Medals">47</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Lieutenant Medals">10</span></td>
+																													<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Captain Medals">10</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+																									<tr>
+														<td>
+																														<img width="32" data-toggle="tooltip" height="32" title="Uruguay" src="https://myprofitland.com/img/country_flags/32/uy.png"><br>
+														</td>
+														<td class="text-center">
+																													</td>
+
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Private Medals">3</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Corporal Medals">2</span></td>
+																													<td class="text-center"><span class="label label-info" data-toggle="tooltip" title="Sergeant Medals">2</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Lieutenant Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Captain Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																													<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+														
+													</tr>
+												
+												<tr>
+													<td colspan="10">
+														<hr>
+													</td>
+												</tr>
+												<tr>
+													<td colspan="2"><b>Collectables</b></td>
+																											<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Private Medals">0</span></td>
+																											<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Corporal Medals">25</span></td>
+																											<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Sergeant Medals">0</span></td>
+																											<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Lieutenant Medals">1</span></td>
+																											<td class="text-center"><span class="label label-success" data-toggle="tooltip" title="Captain Medals">1</span></td>
+																											<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Major Medals">0</span></td>
+																											<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="Colonel Medals">0</span></td>
+																											<td class="text-center"><span class="label label-light" data-toggle="tooltip" title="General Medals">0</span></td>
+																									</tr>
+
+											</tbody>
+										</table>
+
+										<br><br>
+
+
+
+
+
+										<h5>Military Vehicles</h5>
+
+
+																					<div class="well well-sm">
+
+																									<h5>Heavy Tank</h5>
+													<div class="alert alert-warning alert-sm">No rank to use a Heavy Tank yet</div>
+												
+											</div>
+																					<div class="well well-sm">
+
+																									<h5>Bomber Jet</h5>
+													<div class="alert alert-warning alert-sm">No rank to use a Bomber Jet yet</div>
+												
+											</div>
+										
+
+
+
+
+
+										<br>
+
+
+																					<h5>Attack Weapons</h5>
+
+											<div class="row">
+
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Hunting Knife" data-html="true" data-content-wrapper="#weapon-info-1918414"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/knife.png?1">
+
+																			<div id="weapon-info-1918414" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Knife</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Exploding Grenade" data-html="true" data-content-wrapper="#weapon-info-1918415"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/grenade.png?1">
+
+																			<div id="weapon-info-1918415" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Grenade</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Desert Eagle" data-html="true" data-content-wrapper="#weapon-info-1918416"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/pistol.png?1">
+
+																			<div id="weapon-info-1918416" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Pistol</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Laser Sight Rifle" data-html="true" data-content-wrapper="#weapon-info-1918417"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/rifle.png?1">
+
+																			<div id="weapon-info-1918417" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Rifle</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Heavy MG" data-html="true" data-content-wrapper="#weapon-info-1918418"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/machine-gun.png?1">
+
+																			<div id="weapon-info-1918418" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Machine Gun</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="RPG" data-html="true" data-content-wrapper="#weapon-info-1918419"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/bazuka.png?1">
+
+																			<div id="weapon-info-1918419" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 94%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Launcher</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100" style="width: 94%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+												
+											</div>
+											<br>
+											Total Attack Damage: 3000<br><br>
+																					<h5>Defence Weapons</h5>
+
+											<div class="row">
+
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Plated Helmet" data-html="true" data-content-wrapper="#weapon-info-1801561"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/helmet.png?1">
+
+																			<div id="weapon-info-1801561" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Helmet</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Armoured Gloves" data-html="true" data-content-wrapper="#weapon-info-1801562"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/army_gloves.png?1">
+
+																			<div id="weapon-info-1801562" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Gloves</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Reinforced Boots" data-html="true" data-content-wrapper="#weapon-info-1801563"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/boots.png?1">
+
+																			<div id="weapon-info-1801563" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Boots</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Carbon Glasses" data-html="true" data-content-wrapper="#weapon-info-1801564"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/glasses.png?1">
+
+																			<div id="weapon-info-1801564" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Glasses</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Plated Vest" data-html="true" data-content-wrapper="#weapon-info-1801565"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/bulletproof_vest.png?1">
+
+																			<div id="weapon-info-1801565" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Vest</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+																										<div class="col-sm-4">
+
+															<div style="position:relative; padding-left: 100px; margin-bottom: 20px;" data-toggle="info-popover" data-placement="top" title="Reinforced Shield" data-html="true" data-content-wrapper="#weapon-info-1801566"><!-- #0 -->
+																<div style="position:absolute; left:0; top:0; padding:3px;"><!-- #1 -->
+																	<div style="background-color:#f4f4f4; border-radius:50%;">
+
+
+
+
+																																					<img width="85" height="85" src="https://myprofitland.com/img/assets/products/shield.png?1">
+
+																			<div id="weapon-info-1801566" class="hide">
+
+																				<p class="small">
+																					<b>Item Quality:</b> <i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i><br>
+																					<b>Damage Points:</b> 500 per hit<br>
+																					<b>Durability:</b> 34%																				</p>
+
+																			</div>
+																																			</div>
+																</div><!-- end #1 -->
+
+																<div class="small" style="position:relative; height:85px;"><!-- #2 -->
+																	<b>Shield</b><br>
+
+																	<div style="position:absolute; width:100%; left:0; bottom:0; right:0;">
+
+																																					<div class="big mb-sm-5"><i class="icon icon-star yellow"></i><i class="icon icon-star yellow"></i></div>
+
+
+																			<div class="progress progress-xxs mb-sm-0">
+																				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
+																			</div>
+																																			</div>
+
+																</div><!-- end #2 -->
+
+															</div><!-- end #0 -->
+														</div><!-- end .col -->
+												
+											</div>
+											<br>
+											Total Defence Damage: 3000<br><br>
+										
+
+										<br>
+
+
+										<h5>Latest War Participations</h5>
+
+										
+
+																					<table class="table table-condensed table-hover">
+												<thead>
+													<th>Region</th>
+													<th>Fighting For</th>
+													<th width="180" class="text-center">Damage</th>
+													<th width="180"></th>
+												</thead>
+
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=191">Almere</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98098">22,565</a></td>
+														<td>3 days ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=352">Bydgoszcz</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97995">40,672</a></td>
+														<td>1 week ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=481">Kecskemet</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97984">40,402</a></td>
+														<td>1 week ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=379">Tromso</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97926">42,447</a></td>
+														<td>1 week ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97830">42,954</a></td>
+														<td>2 weeks ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=145">Hannover</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97718">41,497</a></td>
+														<td>2 weeks ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=317">Split</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97688">18,233</a></td>
+														<td>2 weeks ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97658">40,340</a></td>
+														<td>3 weeks ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=181">Bologna</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97593">41,405</a></td>
+														<td>3 weeks ago</td>
+													</tr>
+																									<tr>
+														<td><span class="nwe"><b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=83">Innsbruck</a></b></span></td>
+														<td><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a></td>
+														<td class="text-center"><a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=97458">92,539</a></td>
+														<td>4 weeks ago</td>
+													</tr>
+												
+											</table>
+										
+
+
+									</div>
+
+
+
+
+									<div role="tabpanel" class="tab-pane" id="organization">
+										<br>
+										<div class="row">
+																							<h5><a href="https://myprofitland.com/organizations_info.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=239">GrandPrix Monaco</a></h5>
+
+																									<div class="text-center">
+														<img src="https://mplstatic.com/org_banners/239.jpg?1575463041"><br><br>
+													</div>
+												
+												<b>Joined:</b> 4 weeks ago<br>
+												<b>Rank:</b> Officer<br>
+												<b>Damage Done:</b> 423,054
+
+												
+
+
+																					</div>
+
+									</div>
+
+
+
+									<div role="tabpanel" class="tab-pane" id="referrals">
+
+										<br>
+										<div class="row">
+
+											<div class="alert alert-warning">ADVAN has no recruits.</div>										</div>
+
+									</div>
+
+
+									<div role="tabpanel" class="tab-pane" id="companion">
+																				<br>
+
+																					<div class="alert alert-warning">ADVAN hasnt found a life companion yet</div>
+										
+
+
+										<br>
+
+
+
+
+									</div>
+
+
+									<div role="tabpanel" class="tab-pane" id="achievements">
+
+										<br>
+
+
+										
+											<h6>Work Achievements</h6>
+
+											<div class="row">
+																										<div class="col-sm-3 text-center">
+																															<div>
+																	<img data-toggle="tooltip" title="Work Bonus" width="60" height="60" src="https://myprofitland.com/img/achievements/awards-2.png">
+																	<div style="position: absolute; top: 32px; left: 112px; background-color: #ffffff; border-radius: 10px; padding: 3px; border: 2px solid #000000;">427</div>
+																</div>
+																														<span class="small"><b>Work Bonus</b></span>
+														</div>
+																							</div>
+
+										
+											<h6>War Achievements</h6>
+
+											<div class="row">
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="North Korean Fighter" width="60" height="60" src="https://myprofitland.com/img/achievements/off_medal_nk.png">
+																<br>
+																														<span class="small"><b>North Korean Fighter</b></span>
+														</div>
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="War Daily Hero" width="60" height="60" src="https://myprofitland.com/img/achievements/off_daily_hero.png">
+																<br>
+																														<span class="small"><b>War Daily Hero</b></span>
+														</div>
+																							</div>
+
+										
+											<h6>Bombing Achievements</h6>
+
+											<div class="row">
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="Chemical Launch" width="60" height="60" src="https://myprofitland.com/img/achievements/off_missile.png">
+																<br>
+																														<span class="small"><b>Chemical Launch</b></span>
+														</div>
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="Ballistic Launch" width="60" height="60" src="https://myprofitland.com/img/achievements/off_missile.png">
+																<br>
+																														<span class="small"><b>Ballistic Launch</b></span>
+														</div>
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="Nuclear Launch" width="60" height="60" src="https://myprofitland.com/img/achievements/off_missile.png">
+																<br>
+																														<span class="small"><b>Nuclear Launch</b></span>
+														</div>
+																										<div class="col-sm-3 text-center">
+																															<img data-toggle="tooltip" title="Chemical Victim" width="60" height="60" src="https://myprofitland.com/img/achievements/off_poison.png">
+																<br>
+																														<span class="small"><b>Chemical Victim</b></span>
+														</div>
+																							</div>
+
+										
+
+									</div>
+
+
+									<div role="tabpanel" class="tab-pane" id="movement">
+
+										<br>
+
+																					<table class="table table-condensed table-hover">
+												<thead>
+													<th width="200">From</th>
+													<th width="200">To</th>
+													<th width="130">When</th>
+												</thead>
+																									<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a>
+														</td>
+														<td>13 minutes ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=191">Almere</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>3 days ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=191">Almere</a>
+														</td>
+														<td>3 days ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=352">Bydgoszcz</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=352">Bydgoszcz</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/kp.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=481">Kecskemet</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/kp.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=481">Kecskemet</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/za.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=379">Tromso</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/za.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=379">Tromso</a>
+														</td>
+														<td>1 week ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mk.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=145">Hannover</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mk.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=145">Hannover</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=317">Split</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=317">Split</a>
+														</td>
+														<td>2 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>3 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=144">Hamburg</a>
+														</td>
+														<td>3 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/tw.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=181">Bologna</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>3 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/tw.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=181">Bologna</a>
+														</td>
+														<td>3 weeks ago</td>
+													</tr>
+																										<tr>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/tw.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=181">Bologna</a>
+														</td>
+														<td>
+															<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=445">Monaco</a>
+														</td>
+														<td>3 weeks ago</td>
+													</tr>
+																								</table>
+																				</div>
+
+
+								</div>
+
+							</div>
+
+
+						</div><!-- end .main -->
+
+
+						
+
+						<div class="rightbar">
+	
+							<h6>My Friends</h6>
+
+										<div class="nw">
+							<a data-toggle="tooltip" title="Send a Message to julienoor" class="icon icon-envelope green" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=julienoor"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=julienoor">julienoor</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Send a Message to Nicotin" class="icon icon-envelope green" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Nicotin"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Nicotin">Nicotin</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 15 minutes ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=kurniawan214"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=kurniawan214">kurniawan214</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=TW"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/tw.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 18 minutes ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Tedong_Naga819"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=FO"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 25 minutes ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Reingkarnasi"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Reingkarnasi">Reingkarnasi</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 31 minutes ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Dingdong"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Dingdong">Dingdong</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=AD"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ad.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 35 minutes ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=archameera"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=archameera">archameera</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=SV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/sv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Phoenix"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Phoenix">Phoenix</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=EH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/eh.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Eagle"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Eagle">Eagle</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=IM"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/im.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to RAJAPERDANAINTI" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=RAJAPERDANAINTI"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=RAJAPERDANAINTI">RAJAPERDANAINTI</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ID"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=515"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=515">515</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=XK"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/xk.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 4 hours ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Bulux"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Bulux">Bulux</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=PH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ph.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 5 hours ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&to=Pepa"></a> <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Pepa">Pepa</a> <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ES"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/es.png"></a>
+						</div>
+					
+				
+				<a class="small" href="https://myprofitland.com/my_friends.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">View All</a>
+						<br>
+			<h6>Worldwide shouts</h6>
+
+							<span class="small">
+					Macedonia active work and war, wts general castle inside Macedonia				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+						2 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Really cheap energy from my old Canadian newspaper articles. <br />
+Select Canada from the newspapers list, go to the last page and scroll backwards.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Castoricescu">Castoricescu</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/cz.png"><br>
+						4 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					New Zealand open for two new workers. good salary cheap meals and food				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/nz.png"><br>
+						5 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Looking place 2 work. Semd your offer DM				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=Bijikukaku">Bijikukaku</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ae.png"><br>
+						6 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I am buying coffee plantation. Please send me your offert in private message.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=matrix">matrix</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ec.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I'm selling or renting my newspaper company in Indonesia. PM me				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=IWExNT">IWExNT</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Selling my Mansion and Castle in iceland dm me if you interest				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=ctsbest">ctsbest</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I am looking for a loan of 1,000 gold... and I want to make monthly repayments...<br />
+You can trust me.<br />
+I am an honest player...<br />
+<br />
+Regards, EdanE				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=HaiL-EdanE">HaiL-EdanE</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/id.png"><br>
+						1 week ago</b> 				</span>
+				<br><br>
+			
+
+			<form action="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" method="post" class="form-horizontal">
+				<input name="acn" type="hidden" value="newworldshout" />
+
+				<div class="form-cols-row">
+					<div class="form-col-sm-12">
+						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+					</div>
+				</div>
+
+				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
+				<span class="small">*Costs 2 gold</span>
+			</form>
+		
+
+		
+
+
+	</div><!-- end .rightbar -->
+					</div><!-- end .contents-inner -->
+				</div><!-- end .container -->
+				<!-- end content area ---------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+
+
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+				<div class="copyright">
+					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://myprofitland.com/tos.php">Terms and conditions</a> <small>(33) 0.016s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://myprofitland.com/tos.php">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+
+</html>
