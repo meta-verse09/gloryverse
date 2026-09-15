@@ -1,4 +1,4 @@
-# TEKNIS — GLORYVERSE
+# TEKNIS — GLORYVERSE 
 ## Stack
 - Hosting: Cloudflare Pages, repo GitHub meta-verse09/gloryverse → gloryverse.id
 - Backend: Supabase (auth, profiles, mv_rounds)
