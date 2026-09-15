@@ -1,4 +1,4 @@
-# ROADMAP — GLORYVERSE
+# ROADMAP — GLORYVERSE 
 ## SELESAI
 - Fondasi negara: halaman, ekonomi, auth, forum, shout, teman online
 - Worker AI (Llama teks+visi) anti-pensiun (chain model)
