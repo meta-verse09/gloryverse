@@ -54,7 +54,7 @@ function draw(){
  const tin=TX.filter(x=>x.a>0).reduce((s,x)=>s+x.a,0);
  const tout=TX.filter(x=>x.a<=0).reduce((s,x)=>s-x.a,0);
  $('sumIn').innerText='+'+tin;$('sumOut').innerText='-'+tout;
- const list=TX.filter(x=>F==='all'||(F==='in'?x.a>0:x.a<=0));
+ const list=TX.filter(x=>F==='all'||(F==='in'?x.a>0:x.a<=0)); 
  $('txTbl').innerHTML='<tr><th>Keterangan</th><th>Jumlah</th><th>Waktu</th></tr>'+
  (list.length?list.map(x=>`<tr><td>${x.d}</td><td class="${x.a>=0?'plus':'min'}">${x.a>=0?'+':''}${x.a} ${x.c}</td><td class="dim">${ago(x.t)}</td></tr>`).join('')
  :'<tr><td colspan="3" class="dim">Belum ada transaksi pada filter ini.</td></tr>');}
