@@ -1,0 +1,289 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>My Profit Land - Online Strategy Browser Game</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://myprofitland.com/favicon.ico">
+<link rel="apple-touch-icon" href="https://myprofitland.com/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://myprofitland.com/css-site/base.css?t=1493636609">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://myprofitland.com/js/base.js"></script>
+<script src="https://myprofitland.com/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script type="text/javascript">
+	var newwindow;
+	var intId;
+	function login(url){
+		var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+			 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+			 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
+			 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
+			 width    = 500,
+			 height   = 270,
+			 left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
+			 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
+			 features = (
+				'width=' + width +
+				',height=' + height +
+				',left=' + left +
+				',top=' + top
+			  );
+
+		newwindow=window.open(url,'Login_by_facebook',features);
+
+	   if (window.focus) {newwindow.focus()}
+	  return false;
+	}
+</script>
+
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			success: function(output){
+				$(my_div).html(output);
+			}
+		});
+	};
+
+</script>
+
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-5136240-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-5136240-6');
+</script>
+
+
+
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+			
+			<div class="contents">
+				<!-- TOPNAV --------------------------------
+---------------------------------------- -->
+<nav class="topnav">
+	
+	<div class="topnav-inner">
+		<div class="container">
+			<div class="topnav-header">
+
+				<a class="brand" href="https://myprofitland.com/dashboard.php?key=2e5c93c862a524e8f5364139ac168b71122665">
+					<img alt="myprofitland.com" src="https://myprofitland.com/img/logo-site.png">
+				</a>
+
+				<button type="button" class="topnav-toggle" data-toggle="collapse" data-target="#topnav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse topnav-collapse" id="topnav-collapse">
+				<ul class="nav topnav-nav">
+					
+					<li>
+						<a href="https://myprofitland.com">Home</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/register.php">Register</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/account_recovery.php">Lost Password</a>
+					</li>
+					
+					<li>
+						<a href="https://myprofitland.com/documentation.php">Documentation</a>
+					</li>
+
+					<li>
+						<a href="https://myprofitland.com/contact.php">Contact</a>
+					</li>
+											<li>
+							<a href="https://myprofitland.com/dashboard.php?key=2e5c93c862a524e8f5364139ac168b71122665"><span class="blue"><i class="icon-login"></i>&nbsp;&nbsp;Back to game</span></a>
+						</li>
+						
+				</ul>
+			</div><!-- end .topnav-collapse -->
+		</div><!-- end .container -->
+	</div><!-- end .topnav-inner -->
+	
+</nav>
+<!-- end topnav ----------------------------
+---------------------------------------- -->
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+
+				<div class="container">
+
+						<div class="row">
+						
+							<!-- MAIN COL ------------------------------------- -->
+							<div class="col-xs-12 col-md-8 col-md-offset-2">
+								<h2 class="subsection-header light">
+								Contact My Profit Land Support
+							</h2>
+
+														
+							<p>
+								Please use the form below to contact the staff about any issues with the game. Keep in mind that:<br>
+								- Our support is english only<br>
+								- Questions regarding gameplay, please use the forums<br>
+								- We will not help with phone verification, follow the game instructions<br>
+								<b>- If you have been banned for using multiple accounts or VPNs, you wont get a reply</b><br>
+							</p>
+							
+							<br>
+
+							<form  method="post" action="/contact.php?acn=submit" class="form-horizontal">
+
+									<div class="form-cols-row">
+										<div class="form-col-xs-12">
+											<label class="control-label" for="name">
+												Name <span class="light">(required)</span>
+											</label>
+											<input type="text" class="form-control required" id="name" name="name" value="">
+										</div><!-- end .form-col-*-* -->
+									</div><!-- end .form-row -->
+
+									<div class="form-cols-row">
+										<div class="form-col-xs-12">
+											<label class="control-label" for="email">
+												Email <span class="light">(required)</span>
+											</label>
+											<input type="email" class="form-control required" id="email" name="email" value="">
+										</div><!-- end .form-col-*-* -->
+									</div><!-- end .form-row -->
+
+									<div class="form-cols-row">
+										<div class="form-col-xs-12">
+											<label class="control-label" for="email">
+												Game Username
+											</label>
+											<input type="username" class="form-control required" id="username" name="username" value="">
+										</div><!-- end .form-col-*-* -->
+									</div><!-- end .form-row -->
+
+									<div class="form-cols-row">
+										<div class="form-col-xs-12">
+											<label class="control-label" for="subject">
+												Subject <span class="light">(required)</span>
+											</label>
+											<input type="text" class="form-control" id="subject" name="subject" value="">
+										</div><!-- end .form-col-*-* -->
+									</div><!-- end .form-row -->
+									
+									<div class="form-row">
+										<label class="control-label" for="message">
+											Message <span class="light">(required)</span>
+										</label>
+										<textarea class="form-control required" id="message" name="message" rows="6"></textarea>
+									</div><!-- end .form-row -->
+									
+									<div class="form-cols-row">
+										<div class="form-col-xs-12">
+											<div class="g-recaptcha" data-sitekey="6Lek5ygTAAAAAPpJ-nek3EiCfY3ATQc0gZ77a2C3"></div>
+										</div>
+									</div><!-- end .form-row -->
+									
+									<div class="form-row">
+										<div class="form-col-xs-12">
+											<button type="submit" class="btn btn-primary">&nbsp;&nbsp;&nbsp;&nbsp;Send&nbsp;&nbsp;&nbsp;&nbsp;</button>
+										</div><!-- end .form-col-*-* -->
+									</div><!-- end .form-row -->
+
+								</form>
+
+						
+							</div><!-- end main col --------------------------------- -->
+						
+					</div><!-- end .row -->
+						
+				</div>
+
+				<!-- end content area ---------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				
+					
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+				<div class="copyright">
+					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://myprofitland.com/tos.php">Terms and conditions</a> <small>(2) 0.007s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://myprofitland.com/tos.php">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+			
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
