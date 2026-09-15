@@ -3,7 +3,7 @@
    ============================================ */
 
 // Dummy Data Company (nanti diganti dengan data dari Supabase)
-const companyData = {
+const companyData = { 
   gathering: [
     { employer: 'Poa - Coffee Plantation', owner: 'Poa', company: 'Coffee Plantation', wage: 14.0, skill: 'Gathering', skillLevel: 100 },
     { employer: 'Poa - Wood Cutter', owner: 'Poa', company: 'Wood Cutter', wage: 14.0, skill: 'Gathering', skillLevel: 100 },
