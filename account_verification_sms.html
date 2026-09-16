@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>My Profit Land - Online Strategy Browser Game Account Verification</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="My Profit Land - Online Strategy Browser Game Account Verification" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://myprofitland.com/favicon.ico">
+<link rel="apple-touch-icon" href="https://myprofitland.com/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://myprofitland.com/css-game/base.css?2">
+<link rel="stylesheet" href="https://myprofitland.com/css-game/fa6.5.1/css/all.min.css?1">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://myprofitland.com/js/base.js"></script>
+<script src="https://myprofitland.com/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			headers: {'X-Requested-With': 'XMLHttpRequest'},
+			beforeSend: function() {
+			    $('*').css('cursor', 'progress');
+			},
+			error: function (request, error) {
+		        console.log(arguments);
+		        //alert("Error: " + error);
+		        $('*').css('cursor', '');
+		    },
+			success: function(output){
+				$(my_div).html(output);
+				$('*').css('cursor', '');
+			}
+		});
+	};
+
+</script>
+
+
+
+
+
+
+
+
+
+	<meta name="robots" content="noindex, nofollow">
+	
+	<!-- Firebase SDK -->
+	<script type="module">
+			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+			import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+	
+			const firebaseConfig = {
+				apiKey: "AIzaSyB2wOi2wigCgR6kwNYBPGh5KYRNPWoSkDg",
+				authDomain: "my-profit-land-1528747259776.firebaseapp.com",
+				projectId: "my-profit-land-1528747259776",
+				storageBucket: "my-profit-land-1528747259776.firebasestorage.app",
+				messagingSenderId: "900742102216",
+				appId: "1:900742102216:web:6b5d793444a200f7d0b9fd",
+				measurementId: "G-NZR9DSHLL5"
+			};
+	
+			// Initialize Firebase
+			const app = initializeApp(firebaseConfig);
+			const auth = getAuth(app);
+	
+			if (!auth.settings) {
+				auth.settings = {};
+			}
+			if (typeof auth.settings.appVerificationDisabledForTesting === 'undefined') {
+				auth.settings.appVerificationDisabledForTesting = false;
+			}
+	
+			// Make auth available globally
+			window.firebaseAuth = auth;
+			window.RecaptchaVerifier = RecaptchaVerifier;
+			window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+			// Wait for the DOM to be ready, then initialize reCAPTCHA and event handlers
+			$(document).ready(function() {
+				initializeRecaptcha();
+
+				// Send verification code (.off first so a re-run never double-binds and sends two SMS)
+				$('#sendCodeBtn').off('click.sms').on('click.sms', function() {
+					sendVerificationCode();
+				});
+
+				// Verify code
+				$('#verifyCodeBtn').off('click.sms').on('click.sms', function() {
+					verifyCode();
+				});
+
+				// Resend code
+				$('#resendCodeBtn').off('click.sms').on('click.sms', function() {
+					sendVerificationCode();
+				});
+			});
+		</script>
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+			
+			<div class="contents">
+				
+	<!-- PRE-HEADER ----------------------------
+	---------------------------------------- -->
+	<!-- For server-wide and account related alerts (non-game alerts) -->
+
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container --> 
+	<!-- end pre-header ------------------------
+	---------------------------------------- --> 
+	
+	<!-- HEADER --------------------------------
+	---------------------------------------- --> 
+	<!-- For Logo, search, languague selection and account related information -->
+		<div class="game-head" style="background-image: url(https://mplstatic.com/img/game-head.jpg)">
+		<div class="container">
+		
+			
+			<a class="brand" href="https://myprofitland.com/dashboard.php?key=50589388c8ffd9280bc92f1f8c69834c122665">
+				<img alt="myprofitland.com" src="https://mplstatic.com/img/logo-site.png">
+			</a>
+		
+			<div class="pull-right">
+				<div class="pull-left" style="margin-right: 8px">
+					<a class="label label-info" href="https://myprofitland.com/map/" target="_blank" rel="noopener" data-toggle="tooltip" title="Live World Map" aria-label="Open live world map">
+						<span class="icon-globe" aria-hidden="true"></span>
+					</a>
+				</div>
+				<div class="pull-left" style="margin-right: 16px">
+					<script type="text/javascript">
+
+						var currenttime = 'September 16, 2026 01:21:00' 
+
+						var serverdate=new Date(currenttime)
+
+						function padlength(what){
+							var output=(what.toString().length==1)? "0"+what : what
+							return output
+						}
+
+						function displaytime(){
+							serverdate.setSeconds(serverdate.getSeconds()+1)
+
+							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
+							document.getElementById("server_time").innerHTML=timestring
+						}
+
+						setInterval("displaytime()", 1000);
+						
+						$( document ).ready(function() {
+							$('#topnav-transactions-alert').on('click', function(){
+							    $('#topnav-transactions-alert').removeClass('label-success');
+							    $(this).addClass('label-light');
+							});
+
+							$('#topnav-alerts-alert').on('click', function(){
+							    $('#topnav-alerts-alert').removeClass('label-warning');
+							    $(this).addClass('label-light');
+							});
+						});
+
+
+					</script>
+
+											<a href="https://myprofitland.com/my_medals.php?key=50589388c8ffd9280bc92f1f8c69834c122665" data-toggle="tooltip" title="Next Medal Session: 30.7% (613 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
+							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">01:21:00</b></span>
+							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+								<div style="height: 100%; width: 30.7%; border-radius: 1px; background: #f0ad4e;"></div>
+							</div>
+						</a>
+						
+				</div><!-- end .col -->
+				
+				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
+					<form method="post" action="https://myprofitland.com/search.php?key=50589388c8ffd9280bc92f1f8c69834c122665">
+						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
+					</form>
+				</div><!-- end .col -->
+				
+				<div class="pull-left">
+					<div class="text-right">
+						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_transactions.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'>Income (20264)</a>
+						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/my_alerts.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'>Alerts (9572)</a>
+						<a class="label label-light" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665">Messages (0)</a>&nbsp;&nbsp; <a class="label label-info" data-toggle="modal tooltip" title="Open last used company" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/company_manage.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=55835", "#modal_ajax")'><i class="icon-shop"></i></a> <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/notepad.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://myprofitland.com/my_settings.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://myprofitland.com/logout.php"><i class="icon icon-logout"></i></a> <br>
+						<small></small>
+					</div>
+				</div><!-- end .col -->
+			</div><!-- end .row -->
+		</div><!-- end .container -->
+	</div><!-- end .game-head --> 
+	
+	<!-- end header ----------------------------
+	---------------------------------------- --> 
+	
+	<!-- TOPNAV --------------------------------
+	---------------------------------------- -->
+	<nav class="topnav">
+		<div class="topnav-inner">
+			<div class="container">
+								
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				
+				<div class="topnav-collapse" id="topnav-collapse">
+					<ul class="nav topnav-nav">
+											<li class="active" > <a href="https://myprofitland.com/dashboard.php?key=50589388c8ffd9280bc92f1f8c69834c122665">Home</a> </li>
+
+						<li> <a data-toggle="dropdown"> Activities
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/workplaces.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
+																		</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/wars.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/dailyhero.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/northkorea.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/lookouts.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/newspapers.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/local_bar.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/fund_offers.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/offers_contest.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/market_local.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_global.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_financial.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_recruits.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
+								<li><a tabindex="-1" href="https://myprofitland.com/market_real_estate.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_companies.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_medals.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_regions.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/medals_shop.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/market_vct.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
+							</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Monaco <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/country_accountancy.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_statistics.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_regions.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_resources.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_storage.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_taxes.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_govmembers.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_lawproposals.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_elections.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_patriots.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_army.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/country_companies.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
+															</ul>
+						</li>
+						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_local.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/organizations_global.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
+																<li class="divider" ></li>
+								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/organization_manage.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
+															</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Partners 
+														<span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_fund.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_market.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
+																</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_shareholders.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/partners_myshares.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
+							</ul>
+						</li>
+						
+						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_playerlevel.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_networth.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_euro.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_gold.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_energy.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_economic_score.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wardamage.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_wars.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruits.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_recruit_income.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_top_offers.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_offers_euro.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_vctholders.php"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_damage.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_countrydamage.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_kills.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_mvehicles_killstreak.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_country.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countrymilitary.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryregions.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryactives.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/rankings_countryinfrastructures.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
+							</ul>
+						</li>
+
+						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a tabindex="-1" href="https://myprofitland.com/forum.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/code_of_conduct.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/documentation.php"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+								<li class="divider"></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/arena_fund.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/globalmarket_fund.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/warfund.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
+								<li class="divider" ></li>
+																<li><a tabindex="-1" href="https://myprofitland.com/private_countries.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/referral_rights.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
+								<li class="divider" ></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/alliances.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/latest_citizens.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/citizenship_changes.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
+								<li><a tabindex="-1" href="https://myprofitland.com/abandoned_recruits.php?key=50589388c8ffd9280bc92f1f8c69834c122665"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
+							</ul>
+						</li>
+
+					</ul>
+				</div><!-- end .topnav-collapse -->
+				
+			</div><!-- end .container -->
+		</div><!-- end .topnav-inner -->
+	</nav>
+	
+	<!-- end topnav ----------------------------
+	---------------------------------------- -->
+	
+	
+
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				<div class="container">
+					<div class="clearfix">
+					
+						<div class="leftbar">
+		
+	
+	
+		<div style="position:relative; padding-left:85px; height:78px">
+			<div style="position:absolute; left:0; top:0; ">
+				<a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=ADVAN">
+											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
+										</a>
+			</div>
+	
+			<p class="nw">
+				<b><a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=ADVAN">ADVAN</a></b>
+				<br>
+				<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> <span class="small"><a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=MC">Monaco</a>
+				<br>
+				<a href="https://myprofitland.com/region.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=445">Monaco</a></span>			</p>
+		</div>
+	
+		<div class="text-center small">
+			<b>Energy:</b> 59.36% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_energy_breakdown.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'></a> 		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="59.36" aria-valuemin="0" aria-valuemax="100" style="width: 59.36%;">
+			</div>
+		</div>
+		
+			
+		<div class="text-center small">
+			<b>Health:</b> 100.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_health_breakdown.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'></a>
+		</div>
+		<div class="progress progress-xs mb-sm-10">
+			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100.0" aria-valuemin="0" aria-valuemax="100" style="width: 100.0%;">
+			</div>
+		</div>
+
+
+
+		        <div class="text-center small">
+			<b>XP Level:</b> 29		</div>
+
+		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 12045/16091&nbsp;&nbsp;&nbsp;74%">
+            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="74" aria-valuemin="0" aria-valuemax="100" style="width: 74%;"></div>
+        </div>
+
+		
+		<div class="text-center">
+			<p><a class="label label-info" href="https://myprofitland.com/my_work_history.php?key=50589388c8ffd9280bc92f1f8c69834c122665">Working (2 hours)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/work_early_release.php?key=50589388c8ffd9280bc92f1f8c69834c122665", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
+	
+
+		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="113.67">113.670</span> sVCT <a href="https://myprofitland.com/my_vct.php"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/euro_icon.png"> Euro: 0.03</p>
+		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://myprofitland.com/img/gold_icon.png"> Gold: 40.49 <a class="icon icon-line-chart" href="https://myprofitland.com/market_financial.php?key=50589388c8ffd9280bc92f1f8c69834c122665"></a></p>
+		<p><img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mc.png"> MFR: 547.25</p>
+		
+
+
+				
+
+
+		<ul class="list-group">
+			
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companies.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Companies</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_inventory.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Inventory</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_companion.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Companion</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_vehicles.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Vehicles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_financials.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Finances</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_weapons.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Weapons & Info</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_clothing.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Clothing</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_real_estate.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Real Estate</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_recruits.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Recruits</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_medals.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Medals</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_newspapers.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Newspaper Articles</a></li>
+			<li class="list-group-item"><a href="https://myprofitland.com/my_regions.php?key=50589388c8ffd9280bc92f1f8c69834c122665">My Regions</a></li>
+					</ul>
+		
+		<p class="text-center"><a class="btn btn-success btn-sm" href="https://myprofitland.com/fund.php?key=50589388c8ffd9280bc92f1f8c69834c122665">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://myprofitland.com/withdraw_resellers.php?key=50589388c8ffd9280bc92f1f8c69834c122665">Withdraw <i class="icon icon-upload"></i></a></p>
+		
+					<style>
+				.kob-glow {
+					position: relative;
+					display: inline-block;
+					padding: 3px;
+					border-radius: 5px;
+					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
+					animation: kob-spin 6s linear infinite;
+					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
+				}
+				.kob-glow img {
+					display: block;
+					border-radius: 4px;
+				}
+				@property --kob-angle {
+					syntax: '<angle>';
+					initial-value: 0deg;
+					inherits: false;
+				}
+				@keyframes kob-spin {
+					to { --kob-angle: 360deg; }
+				}
+				@supports not (background: conic-gradient(from 0deg, red, blue)) {
+					.kob-glow { background: #00ff88; }
+				}
+			</style>
+			<p class="text-center" style="margin-top: 50px;">
+				<a class="kob-glow" href="https://kickoffboss.com/?recruitedme=nicmo&utm_source=mpl&utm_medium=leftbar&utm_campaign=cross_promo" target="_blank" rel="noopener noreferrer" title="Play KickOffBoss - our football manager game"><img width="170" height="61" alt="KickOffBoss - our football manager game" src="https://myprofitland.com/img/kob-banner.jpg"></a>
+			</p>
+			
+		<br>
+
+					<div id="google_translate_element"></div>
+			<script type="text/javascript">
+				function googleTranslateElementInit() {
+				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+				}
+			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+			
+		<br>
+
+
+		</div><!-- end .leftbar -->					
+						<div class="main">
+							
+
+														
+							<h4>Phone Verification (SMS)</h4>
+								
+							<p>Making sure the game is fair for everyone is very important for us. For this reason we ask players to verify their accounts using their phone. This way we limit the amount of active duplicate accounts within the game. Phone validation is <b>free</b> for everyone and the process is fairly simple.</p>
+
+															<div class="alert alert-success">Account verified with the phone number: <b>85263477631</b></div>
+														</div><!-- end .main -->			
+						
+							
+
+						<div class="rightbar">
+	
+							<h6>My Friends</h6>
+
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 14 minutes ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=julienoor"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=julienoor">julienoor</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 16 minutes ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=kurniawan214"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=kurniawan214">kurniawan214</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=TW"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/tw.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 24 minutes ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Phoenix"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Phoenix">Phoenix</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=EH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/eh.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 25 minutes ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Eagle"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Eagle">Eagle</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=IM"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/im.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 26 minutes ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Reingkarnasi"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Reingkarnasi">Reingkarnasi</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=MC"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mc.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 34 minutes ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Tedong_Naga819"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=FO"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 38 minutes ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Bulux"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Bulux">Bulux</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=PH"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ph.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 53 minutes ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Dingdong"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Dingdong">Dingdong</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=AD"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/ad.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=archameera"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=archameera">archameera</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=SV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/sv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Pepa"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Pepa">Pepa</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=ES"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/es.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 8 hours ago, Send a Message to Aris" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Aris"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Aris">Aris</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=FO"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/fo.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 11 hours ago, Send a Message to Nicotin" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=Nicotin"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Nicotin">Nicotin</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=MV"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"></a>
+						</div>
+					
+										<div class="nw">
+							<a data-toggle="tooltip" title="Last Online 12 hours ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://myprofitland.com/my_pms.php?key=50589388c8ffd9280bc92f1f8c69834c122665&to=515"></a> <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=515">515</a> <a href="https://myprofitland.com/country.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=XK"><img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/xk.png"></a>
+						</div>
+					
+				
+				<a class="small" href="https://myprofitland.com/my_friends.php?key=50589388c8ffd9280bc92f1f8c69834c122665">View All</a>
+						<br>
+			<h6>Worldwide shouts</h6>
+
+							<span class="small">
+					We are looking for workers in Libya:<br />
+<br />
+Workbonus: 6g<br />
+Min wage: 0.3g/h<br />
+<br />
+Monthly income: +175g				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Only">Only</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/sg.png"><br>
+						1 day ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Tunísia open for 2 more worker, cheap real estate and companies , for sell milkcoffee shop upgrade 4 ,Castle 12.000 días , join today!				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Villano">Villano</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/tn.png"><br>
+						1 day ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					I am renting out my attack-weapon company; anyone interested can message me.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=ZONE_GAMER">ZONE_GAMER</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mv.png"><br>
+						2 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Selling wood, selling all chain Company in Australia very good price. Selling jug PM ME				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=Giuros">Giuros</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/sk.png"><br>
+						2 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					wts new private plane				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+						2 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Israel is hiring workers; there is a good local market and rentals available for everyone. Work Bonus: 4 gold + 1 gold per job. Welcome bonus: 50 gold.				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=SuperKhrys">SuperKhrys</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/il.png"><br>
+						3 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Hungary need 2 workers, we please you to come, we are running max work bonus time to time, we are runing to profit someone also time to time. Let me hear you - text me, we will talk. Regards, Luko!				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=lukosius7">lukosius7</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/hu.png"><br>
+						4 days ago</b> 				</span>
+				<br><br>
+							<span class="small">
+					Macedonia active work and war, wts general castle inside Macedonia				</span>
+
+				<br>
+				<span class="small">
+					<b>by <a href="https://myprofitland.com/profile.php?key=50589388c8ffd9280bc92f1f8c69834c122665&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://myprofitland.com/img/country_flags/16/mk.png"><br>
+						4 days ago</b> 				</span>
+				<br><br>
+			
+
+			<form action="https://myprofitland.com/dashboard.php?key=50589388c8ffd9280bc92f1f8c69834c122665" method="post" class="form-horizontal">
+				<input name="acn" type="hidden" value="newworldshout" />
+
+				<div class="form-cols-row">
+					<div class="form-col-sm-12">
+						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+					</div>
+				</div>
+
+				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
+				<span class="small">*Costs 2 gold</span>
+			</form>
+		
+
+		
+
+
+	</div><!-- end .rightbar -->						
+					</div><!-- end .contents-inner -->
+				</div><!-- end .container -->
+				<!-- end content area ---------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+
+
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+			
+				<div class="copyright">
+					Copyright 2026 &copy; myprofitland.com. All rights reserved. <a href="https://myprofitland.com/privacy_policy.php">Privacy policy</a> | <a href="https://myprofitland.com/tos.php">Terms and conditions</a> <small>(5) 0.008s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://myprofitland.com/tos.php">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+	
+	<script>
+			let confirmationResult = null;
+			let recaptchaVerifier = null;
+			let isRecaptchaReady = false;
+			let recaptchaInitInProgress = false;
+
+			// Use DB phone values for SMS - prevents form manipulation
+			const dbPhone = '85263477631';
+			const dbPhoneExt = '62';
+
+			// Enforce numeric-only input on #user_phone (input/paste/keydown)
+			$(function() {
+				const $phone = $('#user_phone');
+				if ($phone.length) {
+					$phone.on('input', function() {
+						const start = this.selectionStart;
+						const end = this.selectionEnd;
+						const cleaned = this.value.replace(/[^0-9]/g, '');
+						if (this.value !== cleaned) {
+							this.value = cleaned;
+							// restore caret as best effort
+							try { this.setSelectionRange(start, end); } catch(e) {}
+						}
+					});
+					$phone.on('paste', function(e) {
+						e.preventDefault();
+						const clipboard = (e.originalEvent || e).clipboardData.getData('text/plain') || '';
+						const cleaned = clipboard.replace(/[^0-9]/g, '');
+						document.execCommand('insertText', false, cleaned);
+					});
+					$phone.on('keydown', function(e) {
+						// Allow: backspace, tab, enter, escape, arrows, delete, home/end, and shortcuts (ctrl/cmd)
+						const allowed = [8,9,13,27,35,36,37,38,39,40,46];
+						if (e.ctrlKey || e.metaKey || e.altKey) return;
+						if (allowed.indexOf(e.keyCode) !== -1) return;
+						// Allow number keys (top row and numpad)
+						if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) return;
+						e.preventDefault();
+					});
+				}
+			});
+		
+			// grecaptcha keeps its widget state attached to the container element itself,
+			// so emptying the element is not enough - re-rendering into the same node
+			// throws "reCAPTCHA has already been rendered in this element".
+			// Swap in a brand new node instead.
+			function resetRecaptchaContainer() {
+				var old = document.getElementById('recaptcha-container');
+				if (!old || !old.parentNode) return;
+				var fresh = document.createElement('div');
+				fresh.id = 'recaptcha-container';
+				fresh.style.marginBottom = '10px';
+				old.parentNode.replaceChild(fresh, old);
+			}
+
+			function initializeRecaptcha() {
+				// Guard against overlapping inits (module re-run, double-click on a failed send, BFCache restore)
+				if (recaptchaInitInProgress) return;
+				recaptchaInitInProgress = true;
+				isRecaptchaReady = false;
+
+				try {
+					// Tear down any previous verifier before touching the DOM
+					if (recaptchaVerifier) {
+						try { recaptchaVerifier.clear(); } catch (clearError) {}
+						recaptchaVerifier = null;
+					}
+					resetRecaptchaContainer();
+
+					recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+						'size': 'invisible',
+						'callback': function(response) {
+							isRecaptchaReady = true;
+							// Invisible reCAPTCHA is ready automatically
+						},
+						'expired-callback': function() {
+							isRecaptchaReady = false;
+							$('#firebaseStatus').html('<div class="alert alert-warning">reCAPTCHA expired. Please try again.</div>');
+						}
+					});
+					recaptchaVerifier.render().then(function() {
+						isRecaptchaReady = true;
+						recaptchaInitInProgress = false;
+					}).catch(function(renderError) {
+						recaptchaInitInProgress = false;
+						console.error('reCAPTCHA render error:', renderError);
+						$('#firebaseStatus').html('<div class="alert alert-danger">Failed to load reCAPTCHA. Please refresh the page or try a different browser. (Error: ' + renderError.message + ')</div>');
+					});
+				} catch (error) {
+					recaptchaInitInProgress = false;
+					console.error('reCAPTCHA initialization error:', error);
+					$('#firebaseStatus').html('<div class="alert alert-danger">Failed to initialize reCAPTCHA: ' + error.message + '</div>');
+				}
+			}
+		
+			function formatPhoneNumber() {
+				// Use DB values, not form fields - prevents manipulation
+				if (!dbPhoneExt || dbPhoneExt === '0' || !dbPhone) {
+					return null;
+				}
+
+				// Format as E.164: +[country code][phone number]
+				return '+' + dbPhoneExt + dbPhone;
+			}
+			
+			// Return a masked version of an E.164 phone for display: +CC X*****YZ
+			function maskPhone(e164) {
+				if (!e164) return '';
+				// Keep the '+' and up to 3 chars after it (simple heuristic), and last 2 chars
+				const prefix = e164.slice(0, 4);
+				const suffix = e164.slice(-2);
+				const middleLen = Math.max(3, e164.length - prefix.length - suffix.length);
+				return prefix + '*'.repeat(middleLen) + suffix;
+			}
+			
+			let resendTimer = null;
+			function startResendCountdown(seconds) {
+				clearInterval(resendTimer);
+				let remaining = seconds;
+				const $resend = $('#resendCodeBtn');
+				if ($resend.length === 0) return;
+				if (remaining <= 0) {
+					$resend.prop('disabled', false).html('<i class="icon-refresh"></i> Resend Code').show();
+					return;
+				}
+				$resend.prop('disabled', true).show();
+				resendTimer = setInterval(function() {
+					if (remaining <= 0) {
+						clearInterval(resendTimer);
+						$resend.prop('disabled', false).html('<i class="icon-refresh"></i> Resend Code');
+						return;
+					}
+					const m = Math.floor(remaining / 60).toString().padStart(2,'0');
+					const s = (remaining % 60).toString().padStart(2,'0');
+					$resend.html('<i class="icon-refresh"></i> Resend in ' + m + ':' + s);
+					remaining--;
+				}, 1000);
+			}
+		
+		function sendVerificationCode() {
+			const phoneNumber = formatPhoneNumber();
+		
+			if (!phoneNumber) {
+				$('#firebaseStatus').html('<div class="alert alert-danger">Please enter a valid phone number and select a country code.</div>');
+				return;
+			}
+		
+			if (!isRecaptchaReady) {
+				$('#firebaseStatus').html('<div class="alert alert-warning">Security verification is still loading. Please wait a moment and try again, or refresh the page.</div>');
+				return;
+			}
+		
+			$('#sendCodeBtn').prop('disabled', true).html('<i class="icon-spinner icon-spin"></i> Checking limits...');
+			$('#firebaseStatus').html('<div class="alert alert-info">Checking rate limits...</div>');
+		
+			// STEP 1: Check rate limits on server BEFORE sending SMS
+			$.ajax({
+				url: 'https://myprofitland.com/ajax/sms/check_sms_rate_limit.php',
+				type: 'POST',
+				data: {
+					key: '50589388c8ffd9280bc92f1f8c69834c122665',
+					phone_number: phoneNumber,
+					csrf_token: '819747241a23b03fe95f82bdc27b8b59dc93987ee2926948f9807d84071ea069'
+				},
+				dataType: 'json',
+				success: function(response) {
+					if (response.success) {
+						// Rate limit check passed - now send SMS via Firebase
+						$('#firebaseStatus').html('<div class="alert alert-info">Sending verification code to ' + maskPhone(phoneNumber) + '...</div>');
+						$('#sendCodeBtn').html('<i class="icon-spinner icon-spin"></i> Sending...');
+						
+						window.signInWithPhoneNumber(window.firebaseAuth, phoneNumber, recaptchaVerifier)
+							.then(function(confirmation) {
+								confirmationResult = confirmation;
+								$('#sendCodeBtn').prop('disabled', true).html('<i class="icon-check"></i> Code Sent');
+								$('#codeVerificationSection').show();
+								// Show masked phone in success message and autofocus code input
+								$('#firebaseStatus').html('<div class="alert alert-success">Verification code sent to ' + maskPhone(phoneNumber) + '. Enter the 6‑digit code you received.</div>');
+								$('#verification_code').focus();
+		
+								// Start client-side resend cooldown. Use server-provided retry_after if present, otherwise default to 600s.
+								const cooldown = parseInt(response.retry_after) || 600;
+								startResendCountdown(cooldown);
+
+								// The verifier is spent. It is invisible, so re-arm it now
+								// and Resend works without a page reload.
+								initializeRecaptcha();
+							})
+							.catch(function(error) {
+								console.error('Error sending code:', error);
+								let errorMessage = 'Failed to send verification code. ';
+								
+								if (error.code === 'auth/invalid-phone-number') {
+									errorMessage += 'Invalid phone number format.';
+								} else if (error.code === 'auth/too-many-requests') {
+									errorMessage += 'Too many requests. Please try again later.';
+								} else if (error.code === 'auth/quota-exceeded') {
+									errorMessage += 'SMS quota exceeded. Please contact support.';
+								} else {
+									errorMessage += error.message;
+								}
+								
+								$('#firebaseStatus').html('<div class="alert alert-danger">' + errorMessage + '</div>');
+								$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+								
+								// Reset reCAPTCHA (initializeRecaptcha clears the old verifier itself)
+								initializeRecaptcha();
+							});
+					} else {
+						// Rate limit check failed — prefer structured message fields
+						const retryAfter = parseInt(response.retry_after) || 0;
+						if (retryAfter > 0) {
+							startResendCountdown(retryAfter);
+						}
+						
+						// Build human-friendly message
+						const baseMsg = response.message || response.error || 'Rate limit exceeded';
+						const parts = [];
+						
+						// If the server provides a masked phone, include it to reassure the user.
+						if (response.masked_phone) {
+							parts.push('Phone: ' + response.masked_phone + '.');
+						}
+						
+						// Main message
+						parts.push(baseMsg);
+		
+						// Attempts left
+						if (typeof response.attempts_left !== 'undefined') {
+							parts.push('Attempts left: ' + response.attempts_left + '.');
+						}
+		
+						// Retry-after — format as H:MM:SS or minutes
+						if (retryAfter > 0) {
+							const hrs = Math.floor(retryAfter / 3600);
+							const mins = Math.floor((retryAfter % 3600) / 60);
+							const secs = retryAfter % 60;
+							let timeStr = '';
+							if (hrs > 0) timeStr = hrs + 'h ' + mins.toString().padStart(2,'0') + 'm';
+							else timeStr = mins.toString().padStart(2,'0') + 'm ' + secs.toString().padStart(2,'0') + 's';
+							parts.push('Please try again in ' + timeStr + '.');
+						}
+		
+						// Support reference
+						if (response.ref) {
+							parts.push('(ref: ' + response.ref + ')');
+						}
+		
+						const details = parts.join(' ');
+		
+						$('#firebaseStatus').html('<div class="alert alert-danger">' + details + '</div>');
+						$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error('Rate limit check error:', error);
+					$('#firebaseStatus').html('<div class="alert alert-danger">Failed to verify rate limits. Please try again.</div>');
+					$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+				}
+			});
+		}
+		
+			function verifyCode() {
+				const code = $('#verification_code').val().trim();
+		
+				if (!code || code.length !== 6) {
+					$('#firebaseStatus').html('<div class="alert alert-danger">Please enter a valid 6-digit verification code.</div>');
+					return;
+				}
+		
+				if (!confirmationResult) {
+					$('#firebaseStatus').html('<div class="alert alert-danger">No verification session found. Please request a new code.</div>');
+					return;
+				}
+		
+				$('#verifyCodeBtn').prop('disabled', true).html('<i class="icon-spinner icon-spin"></i> Verifying...');
+				$('#firebaseStatus').html('<div class="alert alert-info">Verifying code...</div>');
+		
+				confirmationResult.confirm(code)
+					.then(function(result) {
+						// User signed in successfully, get the ID token
+						const user = result.user;
+						return user.getIdToken();
+					})
+					.then(function(idToken) {
+					// Send ID token to server for verification
+					$.ajax({
+						url: 'https://myprofitland.com/ajax/sms/firebase_verify_token.php',
+						type: 'POST',
+							data: {
+								key: '50589388c8ffd9280bc92f1f8c69834c122665',
+								id_token: idToken,
+								csrf_token: '819747241a23b03fe95f82bdc27b8b59dc93987ee2926948f9807d84071ea069'
+							},
+							dataType: 'json',
+							success: function(response) {
+								if (response.success) {
+									$('#firebaseStatus').html('<div class="alert alert-success">' + response.message + '</div>');
+									// Immediately clear any Firebase auth state to avoid session conflicts
+									if (window.firebaseAuth && window.firebaseAuth.signOut) {
+										window.firebaseAuth.signOut().catch(function(){});
+									}
+									// Redirect after 2 seconds
+									setTimeout(function() {
+										window.location.href = 'https://myprofitland.com/account_verification_sms.php?key=50589388c8ffd9280bc92f1f8c69834c122665';
+									}, 2000);
+								} else {
+									$('#firebaseStatus').html('<div class="alert alert-danger">' + (response.error || 'Verification failed') + '</div>');
+									$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+								}
+							},
+							error: function(xhr, status, error) {
+								console.error('Server error:', error);
+								$('#firebaseStatus').html('<div class="alert alert-danger">Server error occurred. Please try again.</div>');
+								$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+							}
+						});
+					})
+					.catch(function(error) {
+						console.error('Verification error:', error);
+						let errorMessage = 'Verification failed. ';
+						
+						if (error.code === 'auth/invalid-verification-code') {
+							errorMessage += 'Invalid verification code. Please check and try again.';
+						} else if (error.code === 'auth/code-expired') {
+							errorMessage += 'Verification code has expired. Please request a new code.';
+						} else {
+							errorMessage += error.message;
+						}
+						
+						$('#firebaseStatus').html('<div class="alert alert-danger">' + errorMessage + '</div>');
+						$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+					});
+			}
+		</script>
+	
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
