@@ -1,0 +1,120 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#06101d">
+    <title>MPL World Map</title>
+    <link rel="stylesheet" href="vendor/maplibre-gl.css">
+    <link rel="stylesheet" href="styles.css?v=a0850249bf6b">
+</head>
+<body>
+    <main class="map-shell">
+        <div id="map" aria-label="Interactive My Profit Land world map"></div>
+
+        <header class="map-header">
+            <div class="brand-lockup">
+                <span class="brand-mark" aria-hidden="true">MPL</span>
+                <div>
+                    <p class="eyebrow">WORLD OPERATIONS</p>
+                    <h1>Live strategic map</h1>
+                </div>
+            </div>
+            <div class="live-status" id="liveStatus" role="status" aria-live="polite">
+                <span class="status-light" aria-hidden="true"></span>
+                <span id="liveStatusText">Connecting to MPL network</span>
+            </div>
+        </header>
+
+        <aside class="map-panel world-panel" aria-label="Map data layers">
+            <div class="panel-section controls">
+                <button type="button" id="toggleTraffic" class="is-active" aria-pressed="true">
+                    <span aria-hidden="true">&#9992;</span>
+                    Live traffic
+                </button>
+                <button type="button" id="togglePopulation" class="is-active" aria-pressed="true">
+                    <span aria-hidden="true">&#9679;</span>
+                    Locals
+                </button>
+                <button type="button" id="toggleWars" class="is-active" aria-pressed="true">
+                    <span aria-hidden="true">&#9888;</span>
+                    Active wars
+                </button>
+            </div>
+
+            <div class="panel-section legend">
+                <p class="section-label">MAP KEY</p>
+                <div><i class="key-line plane-line"></i>Private Plane route</div>
+                <div><i class="key-line war-line"></i>Active MPL war</div>
+                <div><i class="key-population"></i>Locals by region</div>
+            </div>
+        </aside>
+
+        <aside class="map-panel ranking-panel" aria-label="Top countries by controlled regions">
+            <div class="ranking-heading">
+                <div>
+                    <p class="section-label">REGIONAL CONTROL</p>
+                    <h2>Top countries</h2>
+                </div>
+                <span class="ranking-badge">TOP 10</span>
+            </div>
+            <ol id="countryRanking" class="country-ranking">
+                <li class="empty-state">Loading country ranking&hellip;</li>
+            </ol>
+        </aside>
+
+        <aside id="regionPanel" class="map-panel region-panel" aria-labelledby="regionPanelTitle" aria-hidden="true">
+            <div class="region-panel-heading">
+                <div>
+                    <p class="section-label">REGION INTELLIGENCE</p>
+                    <h2 id="regionPanelTitle">Region details</h2>
+                </div>
+                <button type="button" id="closeRegionPanel" class="region-panel-close" aria-label="Close region details">&times;</button>
+            </div>
+            <div id="regionPanelContent" class="region-panel-content">
+                <p class="empty-state">Select a region on the map.</p>
+            </div>
+        </aside>
+
+        <aside class="map-panel conflict-panel" aria-label="Active MPL wars">
+            <div class="conflict-heading">
+                <div>
+                    <p class="section-label">ACTIVE CONFLICTS</p>
+                    <h2><span id="activeWarCount">0</span> wars</h2>
+                </div>
+                <span class="conflict-live">LIVE</span>
+            </div>
+            <div id="warList" class="war-list">
+                <p class="empty-state">Waiting for active wars&hellip;</p>
+            </div>
+        </aside>
+
+        <aside class="map-panel traffic-panel" aria-label="Active MPL travel">
+            <div class="traffic-heading">
+                <div>
+                    <p class="section-label">LIVE TRAFFIC</p>
+                    <h2><span id="activeTravelCount">0</span> journeys</h2>
+                </div>
+                <div class="traffic-breakdown" aria-label="Journey totals by vehicle">
+                    <span title="Private Planes">&#9992; <b id="planeCount">0</b></span>
+                </div>
+            </div>
+            <div id="journeyList" class="journey-list">
+                <p class="empty-state">Waiting for active journeys&hellip;</p>
+            </div>
+        </aside>
+
+        <footer class="map-credit">
+            Geographic base: Natural Earth &middot; Renderer: MapLibre GL JS
+        </footer>
+    </main>
+
+    <script>
+        window.MPL_MAP3 = {"regionsDataUrl":"regions_data.php?v=a230422679db\u0026query=50fa10ab9933\u0026regions=1330","regionCount":655,"travelFeedUrl":"travel_feed.php","warFeedUrl":"wars_data.php","populationFeedUrl":"population_data.php","vehicleImages":{"plane":"../img/assets/white_plane.png"},"generatedAt":1789518743};
+    </script>
+    <script src="vendor/maplibre-gl.js"></script>
+    <script src="script.js?v=52e33c378506"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
