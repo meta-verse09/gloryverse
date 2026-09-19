@@ -145,41 +145,51 @@
 						<span class="icon-globe" aria-hidden="true"></span>
 					</a>
 				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+				<div class="pull-left" style="margin-right: 16px; color:#FFD700; font-weight:bold;">
+  SERVER (LONDON): <span id="server_time">00:00:00</span> | 
+  WIB: <span id="wib_time">00:00:00</span>
+</div>
 
-						var currenttime = 'September 14, 2026 05:03:35' 
+<script type="text/javascript">
+function displaytime(){
+  var now = new Date();
 
-						var serverdate=new Date(currenttime)
+  // JAM SERVER LONDON ASLI - AUTO DST MARET & OKTOBER
+  var londonTime = now.toLocaleTimeString('en-GB', {
+    timeZone: 'Europe/London',
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
+  // JAM WIB PADANG LU
+  var wibTime = now.toLocaleTimeString('en-GB', {
+    timeZone: 'Asia/Jakarta',
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
 
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
+  document.getElementById("server_time").innerHTML = londonTime;
+  document.getElementById("wib_time").innerHTML = wibTime;
+}
 
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
+setInterval(displaytime, 1000);
+displaytime();
 
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
+$( document ).ready(function() {
+  $('#topnav-transactions-alert').on('click', function(){
+      $('#topnav-transactions-alert').removeClass('label-success');
+      $(this).addClass('label-light');
+  });
+  $('#topnav-alerts-alert').on('click', function(){
+      $('#topnav-alerts-alert').removeClass('label-warning');
+      $(this).addClass('label-light');
+  });
+});
+</script>
 
 											<a href="https://myprofitland.com/my_medals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" data-toggle="tooltip" title="Next Medal Session: 63.3% (1267 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
 							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:03:35</b></span>
