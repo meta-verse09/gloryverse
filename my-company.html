@@ -141,9 +141,22 @@
 
 											<a href="https://myprofitland.com/my_medals.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" data-toggle="tooltip" title="Next Medal Session: 63.4% (1268 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
 							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:24:44</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
+<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+  <div style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
+</div>
+												<script>
+function updateLondonClock(){
+  var now = new Date();
+  // JAM LONDON BENERAN - AUTO GANTI BST/GMT MARET & OKTOBER
+  var londonTime = now.toLocaleTimeString('en-GB', {
+    timeZone: 'Europe/London',
+    hour12: false
+  });
+  document.getElementById("server_time").innerHTML = londonTime;
+}
+setInterval(updateLondonClock, 1000);
+updateLondonClock();
+</script>
 						</a>
 						
 				</div><!-- end .col -->
