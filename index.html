@@ -178,8 +178,15 @@
 							---------------------------------------- -->
 														
 							<div class="login-box">
-																	<div><b>ADVAN</b>, you are already logged in. <a href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Go back to game.</a></div>
-																</div><!-- end .login-box -->
+																	<div><b id="username-display"></b>, you are already logged in. <a href="/dashboard">Go back to game.</a></div>
+
+<script>
+// Ambil username dari Supabase Auth / LocalStorage yang tadi lu ZERO itu
+const user = JSON.parse(localStorage.getItem('gloryverse_user'))
+if(user){
+  document.getElementById('username-display').innerText = user.username.toUpperCase()
+}
+</script> -->
 							<!-- end login ----------------------------
 							---------------------------------------- -->
 							
