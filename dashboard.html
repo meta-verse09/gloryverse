@@ -135,65 +135,32 @@
 		<div class="container">
 		
 			
-			<a class="brand" href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">
-				<img alt="myprofitland.com" src="https://gloryverse.id/logo-site.png">
+			<a class="brand" href="https://gloryverse.id/dashboard.html?">
+				<img alt="myprofitland.com" src="https://gloryverse.id/img/logo-site.png">
 			</a>
 		
 			<div class="pull-right">
 				<div class="pull-left" style="margin-right: 8px">
-					<a class="label label-info" href="https://myprofitland.com/map/" target="_blank" rel="noopener" data-toggle="tooltip" title="Live World Map" aria-label="Open live world map">
-						<span class="icon-globe" aria-hidden="true"></span>
-					</a>
 				</div>
 				
-				<div class="pull-left" style="margin-right: 16px; color:#FFD700; font-weight:bold;">
-  SERVER (LONDON): <span id="server_time">00:00:00</span> | 
-  WIB: <span id="wib_time">00:00:00</span>
+				<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:24:44</b></span>
+<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+  <div style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
 </div>
-
-<script type="text/javascript">
-function displaytime(){
+<script>
+function updateLondonClock(){
   var now = new Date();
-
-  // JAM SERVER LONDON ASLI - AUTO DST MARET & OKTOBER
+  // JAM LONDON BENERAN - AUTO GANTI BST/GMT MARET & OKTOBER
   var londonTime = now.toLocaleTimeString('en-GB', {
     timeZone: 'Europe/London',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
+    hour12: false
   });
-
-  // JAM WIB PADANG LU
-  var wibTime = now.toLocaleTimeString('en-GB', {
-    timeZone: 'Asia/Jakarta',
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-
   document.getElementById("server_time").innerHTML = londonTime;
-  document.getElementById("wib_time").innerHTML = wibTime;
 }
-
-setInterval(displaytime, 1000);
-displaytime();
-
-$( document ).ready(function() {
-  $('#topnav-transactions-alert').on('click', function(){
-      $('#topnav-transactions-alert').removeClass('label-success');
-      $(this).addClass('label-light');
-  });
-  $('#topnav-alerts-alert').on('click', function(){
-      $('#topnav-alerts-alert').removeClass('label-warning');
-      $(this).addClass('label-light');
-  });
-});
+setInterval(updateLondonClock, 1000);
+updateLondonClock();
 </script>
-
-											<a href="https://myprofitland.com/my_medals.php?" data-toggle="tooltip" title="Next Medal Session: 63.3% (1267 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:03:35</b></span>
+			
 							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
 								<div style="height: 100%; width: 63.3%; border-radius: 1px; background: #f0ad4e;"></div>
 							</div>
@@ -485,10 +452,6 @@ $( document ).ready(function() {
 					.kob-glow { background: #00ff88; }
 				}
 			</style>
-			<p class="text-center" style="margin-top: 50px;">
-				<a class="kob-glow" href="https://kickoffboss.com/?recruitedme=nicmo&utm_source=mpl&utm_medium=leftbar&utm_campaign=cross_promo" target="_blank" rel="noopener noreferrer" title="Play KickOffBoss - our football manager game"><img width="170" height="61" alt="KickOffBoss - our football manager game" src="https://myprofitland.com/img/kob-banner.jpg"></a>
-			</p>
-			
 		<br>
 
 					<div id="google_translate_element"></div>
