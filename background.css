@@ -1,0 +1,13 @@
+<style>
+.kertas-usang{
+  background:#e8d5a3;
+  background-image: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.25) 100%);
+  position:relative; overflow:hidden;
+  padding:40px; border-radius:4px;
+}
+.kertas-usang:after{
+  content:''; position:absolute; width:200px; height:200px;
+  background: radial-gradient(circle, rgba(101,67,33,0.25) 0%, transparent 70%);
+  top:10%; right:15%; border-radius:50%; /* noda kopi bray */
+}
+</style>
