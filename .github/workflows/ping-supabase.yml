@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Ping Supabase Glory Verse
         run: |
-          curl -X GET "https://xxxx.supabase.co/rest/v1/" \
+          curl -X GET "https://gfhcqbosxtcuvxttmzsm.supabase.co/rest/v1/profiles?select=count" \
           -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
           -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
           echo "Udah gue ping bray! Jam London: $(date)"
