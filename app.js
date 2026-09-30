@@ -1,3 +1,4 @@
+
 var B='https://gloryverse.id/';
 
 // ===== DAFTAR MENU: tambah/ubah link cukup di sini. Format: ['Nama','nama_file'] =====
@@ -53,3 +54,15 @@ if(clockEl){
   tick();
   setInterval(tick,1000);
 }
+
+// ===== Kompatibilitas: HTML dari server yang memanggil ajaxcall(url,'#target') tetap jalan =====
+// Target '#modal_ajax' dibuka sebagai lembar; target lain diisi langsung.
+function ajaxcall(url,target){
+  if(target==='#modal_ajax')openSheet('<p class="hint">Loading...</p>');
+  fetch(url,{headers:{'X-Requested-With':'XMLHttpRequest'},credentials:'include'})
+    .then(function(r){return r.text()})
+    .then(function(h){if(target==='#modal_ajax')openSheet(h);else document.querySelector(target).innerHTML=h})
+    .catch(function(){var m='<p>Could not load. Please try again.</p>';if(target==='#modal_ajax')openSheet(m);else document.querySelector(target).innerHTML=m});
+}
+// Tautan lama href="#modal_ajax" tidak boleh melompat halaman
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href="#modal_ajax"]');if(a)e.preventDefault()});
