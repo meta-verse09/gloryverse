@@ -34,6 +34,52 @@
 <!-- Extra JS -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 
+	<!-- Supabase JS Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+  // Inisialisasi Supabase (Ganti dengan URL dan KEY dari dashboard Anda)
+  const supabaseUrl = 'https://xyzcompany.supabase.co'; 
+  const supabaseKey = 'your-anon-key'; 
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // Fungsi untuk mengambil data negara dan update tabel HTML
+  async function loadRanking() {
+    const { data, error } = await supabase
+      .from('countries')
+      .select('*')
+      .order('total_citizens', { ascending: false });
+
+    if (error) {
+      console.error('Error loading ranking:', error);
+      return;
+    }
+
+    // Cari elemen tbody dari tabel ranking di HTML Anda
+    // Catatan: Di HTML Anda, tabelnya belum punya <tbody>, jadi kita harus menambahkannya lewat JS atau mengubah HTML sedikit
+    const tableBody = document.querySelector('.table-condensed tbody'); 
+    
+    if(tableBody && data) {
+        let htmlContent = '';
+        data.forEach((country, index) => {
+            htmlContent += `
+            <tr>
+                <td>${index + 1}º</td>
+                <td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/${country.code}.png" title="${country.name}"></td>
+                <td><a href="#">${country.name}</a></td>
+                <td class="text-right">${country.work_bonus} Gold</td>
+                <td class="text-right">${country.total_jobs}</td>
+                <td class="text-right">${country.total_citizens}</td>
+            </tr>`;
+        });
+        tableBody.innerHTML = htmlContent;
+    }
+  }
+
+  // Panggil fungsi saat halaman dimuat
+  document.addEventListener('DOMContentLoaded', loadRanking);
+</script>
+	
 <script type="text/javascript">
 	var newwindow;
 	var intId;
