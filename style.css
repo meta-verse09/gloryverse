@@ -1,3 +1,4 @@
+
 /* ===== WARNA: ubah di sini, semua halaman ikut berubah ===== */
 :root{--bg:#f1f2f6;--card:#fff;--text:#111418;--hint:#7d8590;--line:#e4e6eb;--accent:#3390ec;--gold:#d99a13;--ok:#2fb86a;--bad:#e5484d}
 @media (prefers-color-scheme:dark){:root{--bg:#0f1418;--card:#1a2229;--text:#f2f4f6;--hint:#8b98a5;--line:#2a343d;--accent:#4a9ff5;--gold:#f0b429}}
@@ -96,3 +97,15 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
 details{border-top:1px solid var(--line)}
 summary{padding:13px 4px;font-weight:600;cursor:pointer}
 details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15px}
+
+/* ===== TAMBAHAN: isi yang dimuat dari server (ajax), teman, titik status ===== */
+.text-center{text-align:center}.text-right{text-align:right}
+.ajax{overflow-x:auto;font-size:14px}
+.ajax table{width:100%;border-collapse:collapse}
+.ajax th,.ajax td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.ajax img{max-width:100%}
+.ajax .btn{padding:6px 12px;font-size:13px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--ok)}.dot.y{background:var(--gold)}
+.row img.fl{width:14px;height:14px}
+.shout2{padding:12px 14px;border-top:1px solid var(--line);font-size:14px}
+.shout2:first-child{border-top:0}
