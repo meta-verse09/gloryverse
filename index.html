@@ -657,5 +657,102 @@ if(user){
 
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
+<!-- 1. Load Library Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<script>
+  // 2. Konfigurasi Supabase (GANTI DENGAN DATA ANDA)
+  const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'; 
+  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+  // 3. Fungsi untuk memuat Data Ranking Negara
+  async function loadCountryRanking() {
+    // Ambil data dari tabel 'countries', urutkan berdasarkan jumlah warga terbanyak
+    const { data, error } = await supabase
+      .from('countries')
+      .select('*')
+      .order('total_citizens', { ascending: false });
+
+    if (error) {
+      console.error('Gagal memuat ranking:', error);
+      return;
+    }
+
+    // Cari tabel di HTML (Kita targetkan tabel pertama yang ada di dalam section-w)
+    // Catatan: Agar lebih akurat, sebaiknya beri id="ranking-table" pada tabel HTML Anda
+    const tableBody = document.querySelector('.section-w:nth-of-type(2) .table tbody');
+    
+    if (tableBody && data) {
+        let rows = '';
+        data.forEach((country, index) => {
+            rows += `
+            <tr>
+                <td>${index + 1}º</td>
+                <td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/${country.code}.png" title="${country.name}"></td>
+                <td><a href="#">${country.name}</a></td>
+                <td class="text-right">${country.work_bonus} Gold</td>
+                <td class="text-right">${country.total_jobs}</td>
+                <td class="text-right">${country.total_citizens}</td>
+            </tr>`;
+        });
+        tableBody.innerHTML = rows;
+    }
+  }
+
+  // 4. Fungsi untuk memuat Data Perang Aktif
+  async function loadActiveWars() {
+    const { data, error } = await supabase
+      .from('wars')
+      .select(`
+        region_name,
+        attacker_progress,
+        defender_progress,
+        attacker_country:attacker_country_id (name, code),
+        defender_country:defender_country_id (name, code)
+      `)
+      .eq('is_active', true);
+
+    if (error) {
+      console.error('Gagal memuat perang:', error);
+      return;
+    }
+
+    // Targetkan tabel kedua di section-w yang sama (tabel Active Wars)
+    const warTableBody = document.querySelectorAll('.section-w:nth-of-type(2) .table')[1].querySelector('tbody');
+
+    if (warTableBody && data) {
+        let warRows = '';
+        data.forEach(war => {
+            // Hitung total progress untuk persentase bar
+            const total = war.attacker_progress + war.defender_progress;
+            const attPercent = total === 0 ? 0 : (war.attacker_progress / total) * 100;
+            const defPercent = total === 0 ? 0 : (war.defender_progress / total) * 100;
+
+            warRows += `
+            <tr>
+                <td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">${war.region_name}</a></b></span></td>
+                <td class="text-center"><a href="#" title="${war.attacker_country.name}" data-toggle="tooltip">${war.attacker_country.code.toUpperCase()}</a></td>
+                <td class="text-right"><small>${war.attacker_progress}%</small></td>
+                <td>
+                    <div class="progress progress-xs">
+                        <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: ${attPercent}%"></div>
+                        <div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${defPercent}%"></div>
+                    </div>
+                </td>
+                <td class="text-right"><small>${war.defender_progress}%</small></td>
+                <td class="text-center"><a href="#" title="${war.defender_country.name}" data-toggle="tooltip">${war.defender_country.code.toUpperCase()}</a></td>
+            </tr>`;
+        });
+        warTableBody.innerHTML = warRows;
+    }
+  }
+
+  // Jalankan fungsi saat halaman selesai dimuat
+  document.addEventListener('DOMContentLoaded', () => {
+    loadCountryRanking();
+    loadActiveWars();
+  });
+</script>
 </body>
 </html>
