@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,104 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Dashboard - Glory Verse</title>
 <link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<style>
-/* ===== WARNA (sama dengan halaman landing) ===== */
-:root{--bg:#f1f2f6;--card:#fff;--text:#111418;--hint:#7d8590;--line:#e4e6eb;--accent:#3390ec;--gold:#d99a13;--ok:#2fb86a;--bad:#e5484d}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1418;--card:#1a2229;--text:#f2f4f6;--hint:#8b98a5;--line:#2a343d;--accent:#4a9ff5;--gold:#f0b429}}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-a{color:var(--accent);text-decoration:none}
-.wrap{max-width:520px;margin:0 auto;padding:0 12px}
-.hint{color:var(--hint)}.small{font-size:13px}
-
-/* ===== HEADER ===== */
-.top{position:sticky;top:0;z-index:5;background:var(--card);padding-top:env(safe-area-inset-top,0px)}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;height:50px}
-.top img{height:26px;display:block}
-.clock{font-weight:700;font-variant-numeric:tabular-nums}
-.medal{display:block;height:3px;background:var(--line)}
-.medal i{display:block;height:100%;background:var(--gold)}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 12px 2px;max-width:520px;margin:0 auto;scrollbar-width:none}
-.chip{flex:none;font-size:13px;font-weight:600;padding:6px 12px;border-radius:99px;background:var(--card);color:var(--text)}
-.chip.g{background:var(--ok);color:#fff}.chip.w{background:var(--gold);color:#fff}
-
-/* ===== KARTU ===== */
-.sec{margin-top:18px}
-.sec h2{font-size:14px;font-weight:600;color:var(--hint);margin:0 4px 8px;display:flex;justify-content:space-between;align-items:center}
-.card{background:var(--card);border-radius:14px;overflow:hidden}
-.pad{padding:14px}
-.row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid var(--line);color:var(--text)}
-.row:first-child{border-top:0}
-.row .grow{flex:1;min-width:0}
-.row .grow b{display:block;font-weight:600}
-.chev::after{content:"›";color:var(--hint);font-size:20px}
-.val{font-weight:600;white-space:nowrap}
-.gold{color:var(--gold)}
-
-/* ===== TOMBOL & FORM ===== */
-.btn{display:inline-block;font:inherit;font-weight:600;font-size:15px;border:0;border-radius:10px;padding:10px 16px;cursor:pointer;background:var(--accent);color:#fff;text-align:center}
-.btn.alt{background:var(--bg);color:var(--text)}.btn.red{background:var(--bad)}.btn.grn{background:var(--ok)}
-.btn.full{display:block;width:100%}
-.btns{display:flex;gap:8px}.btns .btn{flex:1}
-input,textarea,select{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid transparent;border-radius:10px;padding:11px 13px;margin-bottom:8px}
-input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
-
-/* ===== PROFIL ===== */
-.me{display:flex;gap:14px;align-items:center;margin-bottom:14px}
-.me img.av{width:68px;height:68px;border-radius:50%;object-fit:cover}
-.me h1{font-size:20px}
-.me img.fl{width:14px;height:14px;vertical-align:-2px}
-.bar{margin:10px 0 0}
-.bar div.l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
-.bar div.t{height:8px;border-radius:4px;background:var(--bg);overflow:hidden}
-.bar div.t i{display:block;height:100%;border-radius:4px}
-.money{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
-.money div{background:var(--bg);border-radius:10px;padding:9px 12px;font-weight:600;font-size:15px}
-.money span{display:block;font-size:12px;font-weight:400;color:var(--hint)}
-.money img{width:14px;height:14px;vertical-align:-2px}
-
-/* ===== LAIN-LAIN ===== */
-.note{padding:12px 14px;border-radius:12px;background:rgba(229,72,77,.12);font-size:14px;margin-bottom:10px}
-.house{text-align:center;padding:14px}
-.house img{width:130px}
-.tag{display:inline-block;font-size:13px;font-weight:600;padding:4px 12px;border-radius:99px;background:rgba(47,184,106,.15);color:var(--ok)}
-.shout{display:flex;gap:12px;padding:12px 14px;border-top:1px solid var(--line)}
-.shout:first-child{border-top:0}
-.shout img{width:40px;height:40px;border-radius:50%;flex:none}
-.war{padding:12px 14px;border-top:1px solid var(--line)}
-.war:first-child{border-top:0}
-.war .vs{display:flex;justify-content:space-between;font-size:14px;margin:4px 0}
-.news{display:flex;gap:12px;padding:12px 14px;border-top:1px solid var(--line);color:var(--text)}
-.news:first-child{border-top:0}
-.news img{width:85px;height:65px;object-fit:cover;border-radius:8px;flex:none}
-.empty{padding:22px 14px;text-align:center;color:var(--hint);font-size:14px}
-.hide{display:none}
-.foot{text-align:center;color:var(--hint);font-size:12px;margin:24px 0 8px}
-
-/* ===== MENU BAWAH ===== */
-.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-.tabbar .wrap{display:flex}
-.tabbar a{flex:1;text-align:center;padding:8px 0 9px;font-size:12px;color:var(--hint)}
-.tabbar a b{display:block;font-size:20px;line-height:1.2;font-weight:400}
-.tabbar a.on{color:var(--accent)}
-
-/* ===== LEMBAR (bottom sheet) ===== */
-.shade{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9;display:none}
-.shade.on{display:block}
-.sheet{position:absolute;left:0;right:0;bottom:0;max-height:86%;overflow:auto;background:var(--card);border-radius:18px 18px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom,0px));max-width:520px;margin:0 auto}
-.sheet h3{font-size:17px;margin-bottom:10px}
-details{border-top:1px solid var(--line)}
-summary{padding:13px 4px;font-weight:600;cursor:pointer}
-details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15px}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <header class="top" id="top">
   <div class="wrap">
     <a href="https://gloryverse.id/dashboard.html"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
-    <a class="clock" href="https://gloryverse.id/my_medals.html" title="Next Medal Session: 64.2% (1284 / 2000 Gold)"><span id="server_time">09:12:51</span></a>
+    <a class="clock" href="https://gloryverse.id/my_medals.html" title="Next Medal Session: 64.2% (1284 / 2000 Gold)"><span id="server_time" data-time="September 30, 2026 09:12:51">09:12:51</span></a>
   </div>
   <a class="medal" href="https://gloryverse.id/my_medals.html"><i style="width:64.2%"></i></a>
 </header>
@@ -141,7 +52,7 @@ details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15p
       <div><span>MFR</span><img alt="" src="https://gloryverse.id/img/country_flags/16/mc.png"> 662.98</div>
     </div>
 
-    <p class="small" style="margin-bottom:12px"><a class="tag" style="background:rgba(51,144,236,.15);color:var(--accent)" href="https://gloryverse.id/my_work_history.html">Working (56 minutes)</a></p>
+    <p class="small" style="margin-bottom:12px"><a class="tag b" href="https://gloryverse.id/my_work_history.html">Working (56 minutes)</a></p>
     <div class="btns">
       <a class="btn grn" href="https://gloryverse.id/fund.html">Invest</a>
       <a class="btn red" href="https://gloryverse.id/withdraw_resellers.html">Withdraw</a>
@@ -153,7 +64,7 @@ details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15p
 
   <!-- ===== LOKASI ===== -->
   <section class="sec"><h2>Location</h2>
-    <div class="note">The <b><a href="https://gloryverse.id/referral_rights.html">Referral Rights auction</a></b> ends today between 12:00 and 24:00 hours at a random time. There is no auction sniping.</div>
+    <div class="alert">The <b><a href="https://gloryverse.id/referral_rights.html">Referral Rights auction</a></b> ends today between 12:00 and 24:00 hours at a random time. There is no auction sniping.</div>
     <div class="card">
       <div class="row"><span class="grow">Nationality<b><a href="https://gloryverse.id/country.html&id=MC">Monaco</a></b></span></div>
       <div class="row"><span class="grow">You are in<b><a href="https://gloryverse.id/region.html&id=445">Monaco</a></b></span></div>
@@ -257,58 +168,16 @@ details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15p
 <!-- Lembar geser dari bawah: dipakai untuk menu utama dan isi popup (Income, Alerts, dll) -->
 <div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
 
+<script src="app.js"></script>
 <script>
-var B='https://gloryverse.id/';
-
-// ===== DAFTAR MENU: tambah/ubah link cukup di sini. Format: ['Nama','nama_file'] =====
-var MENU={
- 'Activities':[['Work','workplaces'],['War Activity','wars'],['Daily Hero','dailyhero'],['North Korea Wars','northkorea'],['Lookout Posts','lookouts'],['Newspapers','newspapers'],['The Local Bar','local_bar'],['Offers','fund_offers'],['Offers Contest','offers_contest']],
- 'Markets':[['Local Goods Market','market_local'],['Global Goods Market','market_global'],['Financial Market','market_financial'],['Recruits Auctions','market_recruits'],['Real Estate Market','market_real_estate'],['Company Auctions','market_companies'],['Medals Market','market_medals'],['Regions Market','market_regions'],['Medals Shop','medals_shop'],['Victory Tokens Market','market_vct']],
- 'Monaco':[['Accountancy','country_accountancy'],['Statistics','country_statistics'],['Regions','country_regions'],['Resources','country_resources'],['Storage','country_storage'],['Taxes Ideologies and Bonuses','country_taxes'],['Government Members','country_govmembers'],['Law Proposals','country_lawproposals'],['Government Elections','country_elections'],['Patriots','country_patriots'],['Army','country_army'],['Companies','country_companies']],
- 'Organizations':[['Local Organizations','organizations_local'],['Global Organizations','organizations_global']],
- 'Partners':[['The Fund','partners_fund'],['Share Market','partners_market'],['Shareholders','partners_shareholders'],['My Shares','partners_myshares']],
- 'Rankings':[['Player Level','rankings_playerlevel'],['Net Worth','rankings_networth'],['Euros','rankings_euro'],['Gold','rankings_gold'],['Energy','rankings_energy'],['Economic Score','rankings_economic_score'],['War Damage','rankings_wardamage'],['Top Wars','rankings_wars'],['Recruits Count','rankings_recruits'],['Recruits Income','rankings_recruit_income'],['Top Paid Offers','rankings_top_offers'],['Offers Top Earners','rankings_offers_euro'],['Top VCT Holders','rankings_vctholders'],['Countries by Citizenship','rankings_country'],['Countries by Military Power','rankings_countrymilitary'],['Countries by Region Count','rankings_countryregions'],['Countries by Activity','rankings_countryactives'],['Countries by Infrastructure','rankings_countryinfrastructures']],
- 'Community':[['Forums','forum'],['Code of Conduct','code_of_conduct'],['Documentation','documentation'],['Arena Fund','arena_fund'],['Global Market Fund','globalmarket_fund'],['War Fund','warfund'],['Private Country Auction','private_countries'],['Referral Rights Auction','referral_rights'],['Alliances','alliances'],['Latest Citizens','latest_citizens'],['Citizenship Changes','citizenship_changes'],['Abandoned Recruits','abandoned_recruits']]
-};
+// Daftar "My stuff" (khusus halaman ini). Format: ['Nama','nama_file']
 var MY=[['My Companies','my_companies'],['My Inventory','my_inventory'],['My Companion','my_companion'],['My Vehicles','my_vehicles'],['My Finances','my_financials'],['My Weapons & Info','my_weapons'],['My Clothing','my_clothing'],['My Real Estate','my_real_estate'],['My Recruits','my_recruits'],['My Medals','my_medals'],['My Newspaper Articles','my_newspapers'],['My Regions','my_regions']];
-
-var shade=document.getElementById('shade'),sheet=document.getElementById('sheet');
-function openSheet(html){sheet.innerHTML=html;shade.classList.add('on')}
-shade.addEventListener('click',function(e){if(e.target===shade)shade.classList.remove('on')});
-
-// Daftar "My stuff"
 document.getElementById('mystuff').innerHTML=MY.map(function(m){return '<a class="row chev" href="'+B+m[1]+'.html"><span class="grow">'+m[0]+'</span></a>'}).join('');
-
-// Tombol Menu (bawah): menu utama berupa akordeon
-document.querySelector('[data-menu]').addEventListener('click',function(e){
-  e.preventDefault();
-  openSheet('<h3>Menu</h3>'+Object.keys(MENU).map(function(g){
-    return '<details><summary>'+g+'</summary>'+MENU[g].map(function(m){return '<a href="'+B+m[1]+'.html">'+m[0]+'</a>'}).join('')+'</details>';
-  }).join(''));
-});
-
-// Popup Income / Alerts / Notepad / Change region: isi diambil dari server lalu ditaruh di lembar.
-// Catatan: bekerja bila halaman ini berada di domain yang sama dengan gloryverse.id
-document.querySelectorAll('[data-sheet]').forEach(function(a){
-  a.addEventListener('click',function(e){
-    e.preventDefault();
-    openSheet('<p class="hint">Loading...</p>');
-    fetch(a.dataset.sheet,{headers:{'X-Requested-With':'XMLHttpRequest'},credentials:'include'})
-      .then(function(r){return r.text()}).then(openSheet)
-      .catch(function(){openSheet('<p>Could not load. Please try again.</p>')});
-  });
-});
 
 // Tombol "+ New" shout
 document.getElementById('toggleShout').addEventListener('click',function(e){
   e.preventDefault();document.getElementById('new_shout').classList.toggle('hide');
 });
-
-// Jam server berjalan
-var t=new Date('September 30, 2026 09:12:51');
-function p(n){return (n<10?'0':'')+n}
-setInterval(function(){t.setSeconds(t.getSeconds()+1);
-  document.getElementById('server_time').textContent=p(t.getHours())+':'+p(t.getMinutes())+':'+p(t.getSeconds())},1000);
 </script>
 </body>
 </html>
