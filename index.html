@@ -1,521 +1,184 @@
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="custom.css">
-	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-<title>Glory Verse - One World, One Game</title>
-
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="Glory Verse" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="Glory Verse - One World, One Game" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- Favicon -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glory Verse - Online Strategy Browser Game</title>
+<meta name="description" content="Glory Verse is a free online strategy game. Work, fight, open companies and start wars right in your browser.">
 <link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+/* ===== WARNA: ubah di sini, seluruh halaman ikut berubah ===== */
+:root{
+  --bg:#f1f2f6; --card:#ffffff; --text:#111418; --hint:#7d8590;
+  --line:#e4e6eb; --accent:#3390ec; --accent-text:#ffffff; --gold:#d99a13;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0f1418; --card:#1a2229; --text:#f2f4f6; --hint:#8b98a5; --line:#2a343d; --accent:#4a9ff5; --gold:#f0b429}
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:520px;margin:0 auto;padding:0 12px}
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-site/base.css?t=1493636609">
+/* ===== HEADER (atas) ===== */
+.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
+.top img{height:28px;display:block}
+.top .docs{font-size:15px}
 
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+/* ===== KARTU & JUDUL BAGIAN ===== */
+.sec{margin-top:20px}
+.sec h2{font-size:14px;font-weight:600;color:var(--hint);margin:0 4px 8px}
+.card{background:var(--card);border-radius:14px;overflow:hidden}
 
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+/* ===== HERO + FORM ===== */
+.hero{padding:22px 18px 18px;margin-top:14px}
+.hero p.small{color:var(--hint);font-size:14px}
+.hero h1{font-size:26px;line-height:1.15;margin:4px 0 10px}
+.hero p.desc{color:var(--hint);font-size:15px;margin-bottom:16px}
+.seg{display:flex;background:var(--bg);border-radius:10px;padding:3px;margin-bottom:14px}
+.seg button{flex:1;border:0;background:none;color:var(--hint);font:inherit;font-weight:600;padding:8px;border-radius:8px;cursor:pointer}
+.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+input{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid transparent;border-radius:10px;padding:12px 14px;margin-bottom:10px}
+input:focus{outline:none;border-color:var(--accent)}
+.btn{display:block;width:100%;text-align:center;font:inherit;font-weight:600;border:0;border-radius:10px;padding:13px;cursor:pointer;background:var(--accent);color:var(--accent-text)}
+.btn.alt{background:var(--bg);color:var(--text);margin-top:10px}
+.links{text-align:center;font-size:14px;margin-top:12px}
+.panel{display:none}.panel.on{display:block}
 
-	<!-- Supabase JS Library -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+/* ===== DAFTAR (ranking) ===== */
+.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.rank{width:22px;color:var(--hint);font-weight:600}
+.row img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+.row .name{flex:1;min-width:0}
+.row .name b{display:block;font-weight:600}
+.row .name span{font-size:13px;color:var(--hint)}
+.bonus{font-weight:600;color:var(--gold);white-space:nowrap}
 
-<script>
-  // Inisialisasi Supabase (Ganti dengan URL dan KEY dari dashboard Anda)
-  const supabaseUrl = 'https://xyzcompany.supabase.co'; 
-  const supabaseKey = 'your-anon-key'; 
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+/* ===== KURS ===== */
+.rate{padding:14px}
+.rate .big{font-size:22px;font-weight:700;margin-bottom:8px}
+.rate .big span{color:var(--gold)}
 
-  // Fungsi untuk mengambil data negara dan update tabel HTML
-  async function loadRanking() {
-    const { data, error } = await supabase
-      .from('countries')
-      .select('*')
-      .order('total_citizens', { ascending: false });
+/* ===== KOSONG ===== */
+.empty{padding:22px 14px;text-align:center;color:var(--hint);font-size:14px}
 
-    if (error) {
-      console.error('Error loading ranking:', error);
-      return;
-    }
-
-    // Cari elemen tbody dari tabel ranking di HTML Anda
-    // Catatan: Di HTML Anda, tabelnya belum punya <tbody>, jadi kita harus menambahkannya lewat JS atau mengubah HTML sedikit
-    const tableBody = document.querySelector('.table-condensed tbody'); 
-    
-    if(tableBody && data) {
-        let htmlContent = '';
-        data.forEach((country, index) => {
-            htmlContent += `
-            <tr>
-                <td>${index + 1}º</td>
-                <td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/${country.code}.png" title="${country.name}"></td>
-                <td><a href="#">${country.name}</a></td>
-                <td class="text-right">${country.work_bonus} Gold</td>
-                <td class="text-right">${country.total_jobs}</td>
-                <td class="text-right">${country.total_citizens}</td>
-            </tr>`;
-        });
-        tableBody.innerHTML = htmlContent;
-    }
-  }
-
-  // Panggil fungsi saat halaman dimuat
-  document.addEventListener('DOMContentLoaded', loadRanking);
-</script>
-	
-<script type="text/javascript">
-	var newwindow;
-	var intId;
-	function login(url){
-		var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
-			 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
-			 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
-			 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
-			 width    = 500,
-			 height   = 270,
-			 left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
-			 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
-			 features = (
-				'width=' + width +
-				',height=' + height +
-				',left=' + left +
-				',top=' + top
-			  );
-
-		newwindow=window.open(url,'Login_by_facebook',features);
-
-	   if (window.focus) {newwindow.focus()}
-	  return false;
-	}
-</script>
-
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			success: function(output){
-				$(my_div).html(output);
-			}
-		});
-	};
-
-</script>
-
-
-
-
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-5136240-6"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'UA-5136240-6');
-</script>
-
-
-
-	<script src='https://www.google.com/recaptcha/api.js'></script>
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" rel="stylesheet">
+/* ===== MENU BAWAH ===== */
+.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.tabbar .wrap{display:flex}
+.tabbar a{flex:1;text-align:center;padding:8px 0 9px;font-size:12px;color:var(--hint)}
+.tabbar a b{display:block;font-size:20px;line-height:1.2;font-weight:400}
+.tabbar a.on{color:var(--accent)}
+.foot{text-align:center;color:var(--hint);font-size:12px;margin:24px 0 8px}
+</style>
 </head>
-
 <body>
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				<!-- TOPNAV --------------------------------
----------------------------------------- -->
-<nav class="topnav">
-	
-	<div class="topnav-inner">
-		<div class="container">
-			<div class="topnav-header">
+<header class="top"><div class="wrap">
+  <a href="https://gloryverse.id"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
+  <a class="docs" href="https://gloryverse.id/documentation.html">Documentation</a>
+</div></header>
 
-				<a class="brand" href="https://gloryverse.id/dashboard.html">
-					<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-				</a>
+<main class="wrap">
 
-				<button type="button" class="topnav-toggle" data-toggle="collapse" data-target="#topnav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-			</div>
-	
-			<!-- Collect the nav links, forms, and other content for toggling -->
-			<div class="collapse topnav-collapse" id="topnav-collapse">
-				<ul class="nav topnav-nav">
-					
-					<li>
-						<a href="https://gloryverse.id">Home</a>
-					</li>
+  <!-- ===== HOME: hero + login/register ===== -->
+  <section id="home" class="card hero">
+    <p class="small">A new world order is forming.</p>
+    <h1>What will be your role?</h1>
+    <p class="desc">Work, fight, open companies and start wars. Free to play, right in your browser.</p>
 
-					<li>
-						<a href="https://gloryverse.id/register.html">Register</a>
-					</li>
+    <div class="seg">
+      <button type="button" class="on" data-tab="login">Login</button>
+      <button type="button" data-tab="register">Register</button>
+    </div>
 
-					<li>
-						<a href="https://gloryverse.id/account_recovery.html">Lost Password</a>
-					</li>
-					
-					<li>
-						<a href="https://gloryverse.id/documentation.html">Documentation</a>
-					</li>
+    <!-- Panel LOGIN: name dan action sama seperti aslinya, jangan diubah -->
+    <form id="login" class="panel on" method="post" action="https://gloryverse.id/authys.html">
+      <input type="email" name="user_email" placeholder="Email" autocomplete="email" required>
+      <input type="password" name="user_password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn" type="submit">Login</button>
+      <a class="btn alt" href="https://gloryverse.id/google_auth.html">Continue with Google</a>
+      <p class="links"><a href="https://gloryverse.id/account_recovery.html">Lost password?</a></p>
+    </form>
 
-					<li>
-						<a href="https://gloryverse.id/contact.html">Contact</a>
-					</li>
-											<li>
-							<a href="https://gloryverse.id/dashboard.html"><span class="blue"><i class="icon-login"></i>&nbsp;&nbsp;Back to game</span></a>
-						</li>
-						
-				</ul>
-			</div><!-- end .topnav-collapse -->
-		</div><!-- end .container -->
-	</div><!-- end .topnav-inner -->
-	
-</nav>
-<!-- end topnav ----------------------------
----------------------------------------- -->
+    <!-- Panel REGISTER -->
+    <div id="register" class="panel">
+      <a class="btn" href="https://gloryverse.id/register.html">Create free account</a>
+      <p class="links" style="color:var(--hint)">It takes less than a minute.</p>
+    </div>
+  </section>
 
-				<!-- HEADER AREA ---------------------------
-				---------------------------------------- -->
-				<div class="header banner large">
-					<div class="banner-inner" style="background-image: url(https://gloryverse.id/banner-home.jpeg)">
-					
-						<div class="container">
-						
-														
-							<br>
-							<br>
-							<br>
-							<br>
-							<h1 class="hidden-xs">
-								<div style="background: rgba(0,0,0,0.5); padding: 12px 16px; border-radius: 10px; display: inline-block;">
-								<small style="color: #FFFFFF;">A new era of power is rising.</small><br>
-								<big><b style="color: #FFFFFF;">Where do you stand?</b></big>
-								</div>
-							</h1>
-							
-							<!-- LOGIN --------------------------------
-							---------------------------------------- -->
-														
-							<div class="login-box">
-																	<div><b id="username-display"></b>, you are already logged in. <a href="/dashboard">Go back to game.</a></div>
-
-<script>
-// Ambil username dari Supabase Auth / LocalStorage yang tadi lu ZERO itu
-const user = JSON.parse(localStorage.getItem('gloryverse_user'))
-if(user){
-  document.getElementById('username-display').innerText = user.username.toUpperCase()
-}
-</script> -->
-							<!-- end login ----------------------------
-							---------------------------------------- -->
-							
-						</div><!-- end .container -->
-					
-					</div>
-				</div><!-- end .header -->
-				<!-- end header area -----------------------
-				---------------------------------------- -->
-				
-
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				
-				<!-- INTRO ------------------------------------
-				------------------------------------------- -->
-				<div class="section-w">
-					<div class="container">
-						<div class="row">
-						
-							<div class="col-sm-12">
-								
-								<p>Glory Verse is a persistent strategy game. It's played 100% in your browser, so you don't need to install anything to start. It's one of the only economy games where your daily grind actually pays you back. As a life simulation, it lets you fight, work, create businesses, and trigger wars. It's a complex world, and the more you play, the more ways you'll discover to grow your empire.</p>
-								<br>
-				
-								<div class="text-center"><a class="btn btn-warning-bvl btn-lg" href="https://gloryverse.id/register.html">Register now. It's free</a></div>
-								
-
-							</div><!-- end .col-* -->
-							
-						</div><!-- end .row -->
-					</div><!-- end .container -->
-				</div><!-- end .section -->
-				
-
-				<!-- RATINGS + LAST PAYMENT -------------------
-				------------------------------------------- -->
-				<div class="section-w">
-					<div class="container">
-						<div class="row">
-						
-							<div class="col-xs-12 col-md-6">
-								<h4>Countries Ranking</h4>
-								
-								<table class="table table-condensed table-hover">
-									<thead>
-										<th width="50"></th>
-										<th width="50"></th>
-										<th>Country</th>
-										<th class="text-right">Work Bonus</th>
-										<th width="60" class="text-right">Jobs</th>
-										<th width="90" class="text-right">Citizens</th>
-									</thead>
-																			
-																		</table>
-
-
-							</div><!-- end .col-* -->
-						
-							<div class="col-xs-12 col-md-6">
-								<h4>Latest Withdrawals</h4>
-
-								<table class="table table-condensed table-hover">
-									<thead>
-										<th width="50"></th>
-										<th>Citizen</th>
-										<th>When</th>
-										<th width="150" class="text-right">Amount</th>
-									</thead>
-																			
-																		</table>
-							</div><!-- end .col-* -->
-							
-						</div><!-- end .row -->
-
-
-
-
-						<div class="row">
-						
-							<div class="col-xs-12 col-md-6">
-								<h4>Euro/Gold Exchange Rate</h4>
-								
-								<br>
-								
-								
-								<canvas id="myChart" height="150"></canvas>
-								<script>
-									var ctx = document.getElementById('myChart').getContext('2d');
-									var myChart = new Chart(ctx, {
-									  type: 'line',
-									  data: {
-									    labels: ['14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', '14', ],
-									    datasets: [{
-									      label: 'Exchange rate',
-									      data: [24.2150000000, 24.2130000000, 24.2110000000, 24.2090000000, 24.2070000000, 24.2050000000, 24.2030000000, 24.2010000000, 24.1990000000, 24.1970000000, 24.1950000000, 24.1930000000, 24.1910000000, 24.1890000000, 24.1870000000, 24.1830000000, 24.1730000000, 24.1630000000, 24.1530000000, 24.1470000000, 24.1490000000, 24.1450000000, 24.1470000000, 24.1490000000, 24.1290000000, 24.1310000000, 24.1290000000, 24.1310000000, 24.1250000000, 24.1270000000, ],
-									      fill: false
-									    }]
-									  },
-									  options: {
-								         legend: {
-								            display: false
-								         }
-								    	}
-									});
-
-								</script>
-								
-								1 Euro is currently worth 24.127 Gold
-
-							</div>
-
-
-							<div class="col-xs-12 col-md-6">
-								<h4>Active Wars</h4>
-
-								
-																	<table class="table table-condensed table-hover">
-										<thead>
-											<th>Region</th>
-											<th width="88" class="text-center">Attackers</th>
-											<th width="42" class="text-right"></th>
-											<th width="80"></th>
-											<th width="42" class="text-right"></th>
-											<th width="88" class="text-center">Defenders</th>
-										</thead>
-										
-															
-											
-									</table>
-									
-							</div>
-
-
-						</div>
-					</div>
-				</div>
-
-
-
-
-
-
-
-
-
-
-				
-
-					
-			</div><!-- end .contents -->
-			<div class="footer">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-				
-			<script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-				
-				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(6) 0.019s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
-</div>
-
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using GloryVerse, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
-
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
-			
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
-<!-- 1. Load Library Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
-<script>
-  // 2. Konfigurasi Supabase (GANTI DENGAN DATA ANDA)
-  const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'; 
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
-  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-
-  // 3. Fungsi untuk memuat Data Ranking Negara
-  async function loadCountryRanking() {
-    // Ambil data dari tabel 'countries', urutkan berdasarkan jumlah warga terbanyak
-    const { data, error } = await supabase
-      .from('countries')
-      .select('*')
-      .order('total_citizens', { ascending: false });
-
-    if (error) {
-      console.error('Gagal memuat ranking:', error);
-      return;
-    }
-
-    // Cari tabel di HTML (Kita targetkan tabel pertama yang ada di dalam section-w)
-    // Catatan: Agar lebih akurat, sebaiknya beri id="ranking-table" pada tabel HTML Anda
-    const tableBody = document.querySelector('.section-w:nth-of-type(2) .table tbody');
+  <!-- ===== RANKING NEGARA ===== -->
+  <section id="ranking" class="sec">
+    <h2>Countries ranking</h2>
     
-    if (tableBody && data) {
-        let rows = '';
-        data.forEach((country, index) => {
-            rows += `
-            <tr>
-                <td>${index + 1}º</td>
-                <td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/${country.code}.png" title="${country.name}"></td>
-                <td><a href="#">${country.name}</a></td>
-                <td class="text-right">${country.work_bonus} Gold</td>
-                <td class="text-right">${country.total_jobs}</td>
-                <td class="text-right">${country.total_citizens}</td>
-            </tr>`;
-        });
-        tableBody.innerHTML = rows;
-    }
-  }
+    <p class="foot" style="margin:6px 0 0;text-align:left">Bonus shown is the work bonus per job.</p>
+  </section>
 
-  // 4. Fungsi untuk memuat Data Perang Aktif
-  async function loadActiveWars() {
-    const { data, error } = await supabase
-      .from('wars')
-      .select(`
-        region_name,
-        attacker_progress,
-        defender_progress,
-        attacker_country:attacker_country_id (name, code),
-        defender_country:defender_country_id (name, code)
-      `)
-      .eq('is_active', true);
+  <!-- ===== KURS EURO/GOLD ===== -->
+  <section id="rate" class="sec">
+    <h2>Euro / Gold exchange rate</h2>
+    <div class="card rate">
+      <div class="big">1 Euro = <span>24.015 Gold</span></div>
+      <canvas id="myChart" height="150"></canvas>
+    </div>
+  </section>
 
-    if (error) {
-      console.error('Gagal memuat perang:', error);
-      return;
-    }
+  <!-- ===== PERANG AKTIF ===== -->
+  <section id="wars" class="sec">
+    <h2>Active wars</h2>
+    <div class="card"><div class="empty">No active wars right now.</div></div>
+  </section>
 
-    // Targetkan tabel kedua di section-w yang sama (tabel Active Wars)
-    const warTableBody = document.querySelectorAll('.section-w:nth-of-type(2) .table')[1].querySelector('tbody');
+  <!-- ===== PENARIKAN TERBARU ===== -->
+  <section class="sec">
+    <h2>Latest withdrawals</h2>
+    <div class="card"><div class="empty">No withdrawals yet.</div></div>
+  </section>
 
-    if (warTableBody && data) {
-        let warRows = '';
-        data.forEach(war => {
-            // Hitung total progress untuk persentase bar
-            const total = war.attacker_progress + war.defender_progress;
-            const attPercent = total === 0 ? 0 : (war.attacker_progress / total) * 100;
-            const defPercent = total === 0 ? 0 : (war.defender_progress / total) * 100;
+  <p class="foot">Copyright 2026 © gloryverse.id ·
+    <a href="https://gloryverse.id/privacy_policy.html">Privacy</a> ·
+    <a href="https://gloryverse.id/tos.html">Terms</a> ·
+    <a href="https://gloryverse.id/contact.html">Contact</a></p>
+</main>
 
-            warRows += `
-            <tr>
-                <td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">${war.region_name}</a></b></span></td>
-                <td class="text-center"><a href="#" title="${war.attacker_country.name}" data-toggle="tooltip">${war.attacker_country.code.toUpperCase()}</a></td>
-                <td class="text-right"><small>${war.attacker_progress}%</small></td>
-                <td>
-                    <div class="progress progress-xs">
-                        <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: ${attPercent}%"></div>
-                        <div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${defPercent}%"></div>
-                    </div>
-                </td>
-                <td class="text-right"><small>${war.defender_progress}%</small></td>
-                <td class="text-center"><a href="#" title="${war.defender_country.name}" data-toggle="tooltip">${war.defender_country.code.toUpperCase()}</a></td>
-            </tr>`;
-        });
-        warTableBody.innerHTML = warRows;
-    }
-  }
+<!-- ===== MENU BAWAH: 4 tombol yang lompat ke bagian di atas ===== -->
+<nav class="tabbar"><div class="wrap">
+  <a href="#home" class="on"><b>⌂</b>Home</a>
+  <a href="#ranking"><b>★</b>Ranking</a>
+  <a href="#rate"><b>€</b>Rate</a>
+  <a href="#wars"><b>⚔</b>Wars</a>
+</div></nav>
 
-  // Jalankan fungsi saat halaman selesai dimuat
-  document.addEventListener('DOMContentLoaded', () => {
-    loadCountryRanking();
-    loadActiveWars();
+<script>
+// Tab Login / Register
+document.querySelectorAll('.seg button').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b)});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.tab)});
   });
+});
+
+// Menu bawah: tandai bagian yang sedang terlihat
+var links=document.querySelectorAll('.tabbar a');
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})}
+  });
+},{rootMargin:'-40% 0px -55% 0px'});
+['home','ranking','rate','wars'].forEach(function(id){io.observe(document.getElementById(id))});
+
+// Grafik kurs (Chart.js v4). Ganti angka di data untuk memperbarui grafik.
+var rates=[24.027,24.023,24.013,23.993,23.987,24.007,24.011,24.009,24.007,24.009,24.011,24.009,24.017,24.007,24.009,24.011,24.013,24.011,24.013,24.015,23.991,23.989,23.987,23.995,23.999,24.005,24.007,24.003,24.001,24.015];
+new Chart(document.getElementById('myChart'),{
+  type:'line',
+  data:{labels:rates.map(function(_,i){return i+1}),
+    datasets:[{label:'Exchange rate',data:rates,borderColor:'#d99a13',backgroundColor:'rgba(217,154,19,.12)',borderWidth:2,pointRadius:0,tension:.3,fill:true}]},
+  options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{maxTicksLimit:4}}}}
+});
 </script>
 </body>
 </html>
