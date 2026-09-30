@@ -109,3 +109,18 @@ details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15p
 .row img.fl{width:14px;height:14px}
 .shout2{padding:12px 14px;border-top:1px solid var(--line);font-size:14px}
 .shout2:first-child{border-top:0}
+
+/* ===== DOKUMENTASI: daftar bagian yang bisa dibuka (accordion) ===== */
+.doc{background:var(--card);border-radius:14px;margin-bottom:8px;overflow:hidden;border-top:0}
+.doc summary{padding:14px;font-weight:600;cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.doc summary::-webkit-details-marker{display:none}
+.doc summary::after{content:"›";color:var(--hint);font-size:20px;line-height:1;transition:transform .15s}
+.doc[open] summary::after{transform:rotate(90deg)}
+.doc-body{padding:0 14px 14px;font-size:15px;line-height:1.6;overflow-wrap:anywhere}
+.doc-body p{margin:0 0 8px}
+.doc-body h5{font-size:15px;font-weight:700;margin:0 0 10px}
+.doc-body b,.doc-body strong{font-weight:700}
+.doc-body ul{padding-left:20px;margin:0 0 8px}
+.doc-body img{max-width:100%}
+.doc-body a{word-break:break-all}
+.search{position:sticky;top:calc(50px + env(safe-area-inset-top,0px));z-index:4;padding:10px 0 2px;background:var(--bg)}
