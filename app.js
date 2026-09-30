@@ -44,11 +44,12 @@ document.querySelectorAll('[data-sheet-el]').forEach(function(a){
   });
 });
 
-// Jam server berjalan: waktu awal diambil dari atribut data-time pada #server_time
+// Jam server = waktu London (otomatis GMT/BST). Untuk zona lain, ganti 'Europe/London'.
+var SERVER_TZ='Europe/London';
 var clockEl=document.getElementById('server_time');
 if(clockEl){
-  var t=new Date(clockEl.dataset.time);
-  var p=function(n){return (n<10?'0':'')+n};
-  setInterval(function(){t.setSeconds(t.getSeconds()+1);
-    clockEl.textContent=p(t.getHours())+':'+p(t.getMinutes())+':'+p(t.getSeconds())},1000);
+  var fmt=new Intl.DateTimeFormat('en-GB',{timeZone:SERVER_TZ,hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+  var tick=function(){clockEl.textContent=fmt.format(new Date())};
+  tick();
+  setInterval(tick,1000);
 }
