@@ -13,45 +13,38 @@
 <header class="top">
   <div class="wrap">
     <a href="https://gloryverse.id/dashboard.html"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
-    <a class="clock" href="https://gloryverse.id/my_medals.html" title="Next Medal Session: 68.9% (1379 / 2000 Gold)"><span id="server_time">10:17:07</span></a>
+    <a class="clock" href="https://gloryverse.id/my_medals.html"><span id="server_time">10:17:07</span></a>
   </div>
-  <a class="medal" href="https://gloryverse.id/my_medals.html"><i style="width:68.9%"></i></a>
+  <a class="medal" href="https://gloryverse.id/my_medals.html"><i style="width:0%"></i></a>
 </header>
 
 <div class="chips">
-  <a class="chip g" href="#" data-sheet="https://gloryverse.id/ajax/my_transactions.html">Income (20502)</a>
-  <a class="chip w" href="#" data-sheet="https://gloryverse.id/ajax/my_alerts.html">Alerts (9613)</a>
-  <a class="chip" href="https://gloryverse.id/my_pms.html">Messages (0)</a>
-  <a class="chip" href="#" data-sheet="https://gloryverse.id/ajax/notepad.html">Notepad</a>
+  <a class="chip g" href="#" data-sheet="https://gloryverse.id/ajax/my_transactions.html">Income</a>
+  <a class="chip w" href="#" data-sheet="https://gloryverse.id/ajax/my_alerts.html">Alerts</a>
+  <a class="chip" href="https://gloryverse.id/my_pms.html">Messages</a>
   <a class="chip" href="https://gloryverse.id/my_settings.html">Settings</a>
   <a class="chip" href="https://gloryverse.id/logout.html">Logout</a>
 </div>
 
 <main class="wrap">
 
-  <!-- ===== PROFIL RINGKAS ===== -->
+  <!-- ===== PROFIL RINGKAS (kosong) ===== -->
   <section class="sec"><div class="card pad">
-    <div class="me">
-      <a href="https://gloryverse.id/profile.html&id=ADVAN"><img class="av" alt="ADVAN" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg"></a>
-      <div>
-        <h1>ADVAN</h1>
-        <div class="small"><img class="fl" alt="" src="https://gloryverse.id/img/country_flags/16/mc.png"> <a href="https://gloryverse.id/country.html&id=MC">Monaco</a> · <a href="https://gloryverse.id/region.html&id=445">Monaco</a></div>
-      </div>
-    </div>
-    <div class="bar"><div class="l"><b>Energy</b><span>74.94%</span></div><div class="t"><i style="width:74.94%;background:var(--ok)"></i></div></div>
-    <div class="bar"><div class="l"><b>Health</b><span>96.0%</span></div><div class="t"><i style="width:96%;background:var(--bad)"></i></div></div>
-    <div class="bar"><div class="l"><b>XP Level 29</b><span>13740 / 16091</span></div><div class="t"><i style="width:85%;background:var(--accent)"></i></div></div>
+    <div class="me"><span class="av0"></span><div><h1>—</h1><div class="small hint">—</div></div></div>
+    <div class="bar"><div class="l"><b>Energy</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--ok)"></i></div></div>
+    <div class="bar"><div class="l"><b>Health</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--bad)"></i></div></div>
+    <div class="bar"><div class="l"><b>XP Level</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--accent)"></i></div></div>
     <div class="money">
-      <div><span>Euro</span><img alt="" src="https://gloryverse.id/img/euro_icon.png"> 4.03</div>
-      <div><span>Gold</span><img alt="" src="https://gloryverse.id/img/gold_icon.png"> 10.44</div>
+      <div><span>Euro</span>—</div>
+      <div><span>Gold</span>—</div>
     </div>
   </div></section>
 
   <!-- ===== LOCAL MARKET ===== -->
   <section class="sec"><h2>Local market</h2>
     <p class="small hint" style="margin:0 4px 10px">Buy all the products that local companies are selling.</p>
-    <!-- Isi pasar dimuat dari server di sini (lihat skrip di bawah) -->
-    <div class="card pad ajax" id="market_ajax"><span class="hint">Loading market...</span></div>
+    <!-- Isi pasar nanti dimuat dari backend ke sini -->
+    <div class="card pad ajax" id="market_ajax"><div class="empty" style="padding:8px">No products on the market yet.</div></div>
   </section>
 
   <!-- ===== TEMAN ===== -->
@@ -85,29 +78,18 @@
 var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')};
 var flag=function(c){return '<img class="fl" alt="" src="'+B+'img/country_flags/16/'+c+'.png">'};
 
-// Isi pasar lokal dari server (sama seperti aslinya)
-ajaxcall(B+'ajax/market_local.html&type=1&sub=0&prod=0','#market_ajax');
-
-// Teman: ['nama','kode negara','terakhir online' (kosong = sedang online)]
-var FR=[['Pepa','es',''],['Dingdong','mc',''],['julienoor','mc','9 minutes ago'],['kurniawan214','tw','15 minutes ago'],['Reingkarnasi','mc','15 minutes ago'],['archameera','sv','18 minutes ago'],['Bulux','ph','40 minutes ago'],['Eagle','im','1 hour ago'],['515','xk','2 hours ago'],['RAJAPERDANAINTI','ly','3 hours ago'],['Phoenix','eh','3 hours ago'],['Tedong_Naga819','fo','3 hours ago'],['Aris','fo','3 hours ago']];
-document.getElementById('friends').innerHTML=FR.map(function(f){
+// Teman: ['nama','kode negara','terakhir online' (kosong = sedang online)]. Kosong dulu.
+var FR=[];
+document.getElementById('friends').innerHTML=(FR.length?FR.map(function(f){
   return '<div class="row"><span class="dot'+(f[2]?' y':'')+'"></span><a class="grow" href="'+B+'profile.html&id='+f[0]+'"><b style="color:var(--text)">'+esc(f[0])+'</b></a>'+
     flag(f[1])+'<span class="small hint">'+(f[2]||'online')+'</span><a href="'+B+'my_pms.html&to='+f[0]+'" title="Send a message">✉</a></div>';
-}).join('')+'<a class="row chev" href="'+B+'my_friends.html"><span class="grow">View all</span></a>';
+}).join(''):'<div class="empty">No friends yet.</div>')+'<a class="row chev" href="'+B+'my_friends.html"><span class="grow">View all</span></a>';
 
-// Shout dunia: [teks, pengirim, negara, kapan]
-var WS=[
-['We are looking for workers in Libya; we offer a 6g work bonus. The local market is 90% active with plenty of job openings, mansions, and a fully stocked market, plus a 50g welcome bonus for the country. PM for more information.','victorh007','ly','1 day ago'],
-['WTS new General Castle, anywhere you want, text me directly','archameera','sv','1 day ago'],
-['My notary office is for sale, private inquiries only.','Elorkaduron','es','2 days ago'],
-['Wts GC and Mansion in ICELAND and my coffee shop company, message me if you interest seling for only high bidder :)','ctsbest','id','2 days ago'],
-["I want to buy the General's Castle in Spain, send me your offer.",'Elcesar','es','3 days ago'],
-['vatican city needs a few more workers cheap wine and lunch/dinner. 1g per shift','TheParagon','va','4 days ago'],
-['The new General Castle can be placed anywhere, PM me directly','GeneraLCommander.IDN','ae','5 days ago'],
-['Israel is hiring some more good workers; we have it all: a good market, rentals, 5 gold work bonus, and 1 gold per job. 50-gold welcome bonus, no requirements for joining.','SuperKhrys','il','5 days ago']];
-document.getElementById('world').innerHTML=WS.map(function(w){
+// Shout dunia: [teks, pengirim, negara, kapan]. Kosong dulu.
+var WS=[];
+document.getElementById('world').innerHTML=WS.length?WS.map(function(w){
   return '<div class="shout2"><div>'+esc(w[0])+'</div><div class="small hint" style="margin-top:6px">by <a href="'+B+'profile.html&id='+w[1]+'">'+esc(w[1])+'</a> '+flag(w[2])+' · '+w[3]+'</div></div>';
-}).join('');
+}).join(''):'<div class="empty">No shouts yet.</div>';
 </script>
 </body>
 </html>
