@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -114,7 +115,9 @@ input:focus{outline:none;border-color:var(--accent)}
   <!-- ===== RANKING NEGARA ===== -->
   <section id="ranking" class="sec">
     <h2>Countries ranking</h2>
-    
+    <div class="card">
+      <div class="empty">No countries yet.</div>
+    </div>
     <p class="foot" style="margin:6px 0 0;text-align:left">Bonus shown is the work bonus per job.</p>
   </section>
 
@@ -122,7 +125,7 @@ input:focus{outline:none;border-color:var(--accent)}
   <section id="rate" class="sec">
     <h2>Euro / Gold exchange rate</h2>
     <div class="card rate">
-      <div class="big">1 Euro = <span>24.015 Gold</span></div>
+      <div class="big">1 Euro = <span>—</span></div>
       <canvas id="myChart" height="150"></canvas>
     </div>
   </section>
@@ -172,7 +175,7 @@ var io=new IntersectionObserver(function(es){
 ['home','ranking','rate','wars'].forEach(function(id){io.observe(document.getElementById(id))});
 
 // Grafik kurs (Chart.js v4). Ganti angka di data untuk memperbarui grafik.
-var rates=[24.027,24.023,24.013,23.993,23.987,24.007,24.011,24.009,24.007,24.009,24.011,24.009,24.017,24.007,24.009,24.011,24.013,24.011,24.013,24.015,23.991,23.989,23.987,23.995,23.999,24.005,24.007,24.003,24.001,24.015];
+var rates=[]; // kosong: diisi dari backend
 new Chart(document.getElementById('myChart'),{
   type:'line',
   data:{labels:rates.map(function(_,i){return i+1}),
