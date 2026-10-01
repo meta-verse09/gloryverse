@@ -68,6 +68,7 @@ fetch(DOC_SOURCE,{credentials:'include'}).then(function(r){return r.text()}).the
   doc.querySelectorAll('.panel-default').forEach(function(p){
     var a=p.querySelector('.panel-heading a'),body=p.querySelector('.panel-body');
     if(!a||!body)return;
+    if(/other info and links/i.test(a.textContent))return; // bagian ini dihapus
     out+='<details class="doc" id="'+a.getAttribute('href').replace('#','')+'"><summary>'+a.textContent.trim()+'</summary><div class="doc-body">'+clean(body)+'</div></details>';
   });
   box.innerHTML=out||'<div class="card empty">Documentation is empty.</div>';
