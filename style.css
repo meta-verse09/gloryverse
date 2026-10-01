@@ -124,3 +124,6 @@ details a{display:block;padding:9px 4px 9px 14px;color:var(--text);font-size:15p
 .doc-body img{max-width:100%}
 .doc-body a{word-break:break-all}
 .search{position:sticky;top:calc(50px + env(safe-area-inset-top,0px));z-index:4;padding:10px 0 2px;background:var(--bg)}
+
+/* ===== KERANGKA KOSONG: lingkaran avatar kosong ===== */
+.av0{width:56px;height:56px;border-radius:50%;background:var(--bg);flex:none;display:block}
