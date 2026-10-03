@@ -12,7 +12,12 @@
 
     <!-- ADSTERRA: SOCIAL BAR -->
     <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
-
+   
+    /* Trik membuat peta OSM jadi Dark Mode tanpa API Key */
+.leaflet-tile {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+    
     <script>
         tailwind.config = {
             theme: {
@@ -221,6 +226,13 @@
         // JALANKAN
         checkAuth();
         setInterval(checkAuth, 60000); // Soft refresh setiap 60 detik
+
+        // GANTI bagian L.tileLayer(...) dengan ini:
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+}).addTo(map);
+        
     </script>
 </body>
 </html>
