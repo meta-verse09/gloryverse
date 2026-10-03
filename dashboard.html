@@ -1,147 +1,158 @@
- 
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dashboard - Glory Verse</title>
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GloryVerse</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Leaflet CSS (Untuk Peta OSM) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- ADSTERRA: SOCIAL BAR (Floating Ad) -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
-<body>
+<body class="bg-brand-dark text-slate-200 font-sans overflow-hidden relative">
 
-<header class="top" id="top">
-  <div class="wrap">
-    <a href="https://gloryverse.id/dashboard.html"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
-    <a class="clock" href="https://gloryverse.id/my_medals.html"><span id="server_time" data-time="September 30, 2026 09:12:51">09:12:51</span></a>
-  </div>
-  <a class="medal" href="https://gloryverse.id/my_medals.html"><i style="width:0%"></i></a>
-</header>
+    <!-- 1. PETA DASAR (OSM) - Full Screen di Belakang -->
+    <div id="map" class="absolute inset-0 z-0"></div>
 
-<!-- Chip notifikasi: geser ke samping -->
-<div class="chips">
-  <a class="chip g" href="#" data-sheet="https://gloryverse.id/ajax/my_transactions.html">Income</a>
-  <a class="chip w" href="#" data-sheet="https://gloryverse.id/ajax/my_alerts.html">Alerts</a>
-  <a class="chip" href="https://gloryverse.id/my_pms.html">Messages</a>
-  <a class="chip" href="https://gloryverse.id/my_settings.html">Settings</a>
-  <a class="chip" href="https://gloryverse.id/logout.html">Logout</a>
-</div>
+    <!-- 2. UI LAYER (Di Atas Peta) -->
+    <div class="relative z-10 flex flex-col h-screen">
+        
+        <!-- TOP NAVBAR -->
+        <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</div>
+                <span class="font-bold text-lg tracking-tight">GLORY<span class="text-amber-500">VERSE</span></span>
+            </div>
 
-<main class="wrap">
+            <!-- Player Stats (Nanti di-fetch dari Supabase) -->
+            <div class="hidden md:flex items-center gap-6 text-sm font-semibold">
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                    <span class="text-yellow-400">💰</span> <span>1,250 Gold</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                    <span class="text-blue-400">🪙</span> <span>5,000 Currency</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                    <span class="text-purple-400">💎</span> <span>15 Diamond</span>
+                </div>
+            </div>
 
-  <!-- ===== PROFIL PEMAIN (kosong: diisi dari backend) ===== -->
-  <section class="sec"><div class="card pad">
-    <div class="me"><span class="av0"></span><div><h1>—</h1><div class="small hint">—</div></div></div>
-    <div class="bar"><div class="l"><b>Energy</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--ok)"></i></div></div>
-    <div class="bar"><div class="l"><b>Health</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--bad)"></i></div></div>
-    <div class="bar"><div class="l"><b>XP Level</b><span>—</span></div><div class="t"><i style="width:0%;background:var(--accent)"></i></div></div>
-    <div class="money">
-      <div><span>Stashed VCT</span>—</div>
-      <div><span>Euro</span>—</div>
-      <div><span>Gold</span>—</div>
-      <div><span>Local currency</span>—</div>
+            <!-- Profile / Wallet -->
+            <div class="flex items-center gap-3">
+                <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                    👻 0x8F...3A9
+                </button>
+                <div class="w-10 h-10 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer">
+                    👤
+                </div>
+            </div>
+        </nav>
+
+        <!-- ADSTERRA: NATIVE BANNER CONTAINER -->
+        <!-- Ditempatkan strategis di bawah navbar, center, agar terlihat tapi tidak menutupi peta -->
+        <div class="w-full flex justify-center py-2 bg-slate-900/50 backdrop-blur-sm border-b border-slate-800">
+            <div class="bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
+                <!-- Script Native Banner Adsterra -->
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT AREA (Floating Panels) -->
+        <div class="flex-1 relative p-4 pointer-events-none"> <!-- pointer-events-none biar bisa klik peta di area kosong -->
+            
+            <!-- LEFT PANEL: Region Info & Actions -->
+            <div class="absolute top-4 left-4 w-64 bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-xl p-4 shadow-2xl pointer-events-auto">
+                <h3 class="text-amber-500 font-bold text-sm uppercase tracking-wider mb-3">📍 Region Saat Ini</h3>
+                <p class="text-white font-bold text-xl mb-1">DKI Jakarta</p>
+                <p class="text-slate-400 text-xs mb-4">Indonesia (ID)</p>
+                
+                <div class="space-y-2">
+                    <button class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg text-sm transition">🏗️ Bangun Company</button>
+                    <button class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition">⚔️ Attack Region</button>
+                    <button class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition">📊 Local Market</button>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: Mini Leaderboard / Top Player -->
+            <div class="absolute top-4 right-4 w-64 bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-xl p-4 shadow-2xl pointer-events-auto hidden md:block">
+                <h3 class="text-amber-500 font-bold text-sm uppercase tracking-wider mb-3">🏆 Top Player Region</h3>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex justify-between items-center">
+                        <span class="text-white font-semibold">1. Sultan_Betawi</span>
+                        <span class="text-yellow-400 text-xs">Lv. 42</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-slate-300">2. CryptoKing99</span>
+                        <span class="text-slate-400 text-xs">Lv. 38</span>
+                    </li>
+                    <li class="flex justify-between items-center">
+                        <span class="text-slate-300">3. JawaTimur_FTW</span>
+                        <span class="text-slate-400 text-xs">Lv. 35</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
     </div>
-    <div class="btns">
-      <a class="btn grn" href="https://gloryverse.id/fund.html">Invest</a>
-      <a class="btn red" href="https://gloryverse.id/withdraw_resellers.html">Withdraw</a>
-    </div>
-  </div></section>
 
-  <!-- ===== MENU PRIBADI ===== -->
-  <section class="sec"><h2>My stuff</h2><div class="card" id="mystuff"></div></section>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        // 1. INISIALISASI PETA OSM
+        // Koordinat default: Tengah Indonesia. Zoom level 5.
+        const map = L.map('map', {
+            zoomControl: false // Kita pindahkan zoom control nanti biar nggak nutupin UI
+        }).setView([-2.5489, 118.0149], 5);
 
-  <!-- ===== LOKASI ===== -->
-  <section class="sec"><h2>Location</h2>
-    <div class="card">
-      <div class="row"><span class="grow">Nationality<b>—</b></span></div>
-      <div class="row"><span class="grow">You are in<b>—</b></span></div>
-      <div class="row"><span class="grow">Available jobs<b>—</b></span></div>
-      <div class="pad"><a class="btn alt full" href="#" data-sheet="https://gloryverse.id/ajax/user_travel.html">Change region</a></div>
-      <div class="empty" style="padding-top:0">No housing info yet.</div>
-    </div>
-  </section>
+        // 2. TAMBAHKAN TILE LAYER (Tampilan Peta Gelap / Dark Mode biar cocok dengan UI)
+        // Kita pakai CartoDB Dark Matter untuk tampilan peta yang elegan dan nggak norak
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 19
+        }).addTo(map);
 
-  <!-- ===== PERANG ===== -->
-  <section class="sec"><h2>Wars</h2>
-    <form action="https://gloryverse.id/dashboard.html" method="post">
-      <!-- Tambahkan <option> negara di sini kalau datanya sudah ada -->
-      <select name="check_country_id" onchange="this.form.submit()">
-        <option value="">Check another country...</option>
-      </select>
-    </form>
-    <div class="card"><div class="empty">No active wars.</div></div>
-  </section>
+        // 3. PINDAHKAN ZOOM CONTROL KE KANAN BAWAH (Biar rapi)
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
 
-  <!-- ===== SHOUT LOKAL ===== -->
-  <section class="sec"><h2>Latest local shouts <a href="#" id="toggleShout" class="btn alt" style="padding:4px 12px;font-size:13px">+ New</a></h2>
-    <form id="new_shout" class="card pad hide" action="https://gloryverse.id/dashboard.html" method="post" style="margin-bottom:10px">
-      <input name="acn" type="hidden" value="newshout">
-      <textarea maxlength="255" name="user_shout_text" rows="4" placeholder="Message"></textarea>
-      <label class="small"><input type="checkbox" name="votingshout" value="1" style="width:auto;margin-right:6px">Yes/No voting enabled</label>
-      <button class="btn full" type="submit" style="margin-top:10px">Send shout</button>
-      <p class="small hint" style="margin-top:8px">By writing here you agree with our <a href="https://gloryverse.id/code_of_conduct.html">code of conduct</a>.</p>
-    </form>
-    <div class="card">
-      <!-- Tambah shout: salin satu blok .shout (lihat style.css) -->
-      <div class="empty">No shouts yet.</div>
-      <a class="row chev" href="https://gloryverse.id/local_shouts.html"><span class="grow">View all shouts</span></a>
-    </div>
-  </section>
+        // CONTOH: Menambahkan Marker Perusahaan di Peta (Nanti ini dari Database Supabase)
+        const companyIcon = L.divIcon({
+            className: 'custom-div-icon',
+            html: "<div style='background-color: #F59E0B; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px #F59E0B;'></div>",
+            iconSize: [12, 12],
+            iconAnchor: [6, 6]
+        });
 
-  <!-- ===== FORUM & OFFERS ===== -->
-  <section class="sec"><h2>Latest forum posts</h2><div class="card"><div class="empty">No forum posts yet.</div>
-    <a class="row chev" href="https://gloryverse.id/forum.html"><span class="grow">Open forum</span></a></div></section>
+        // Marker contoh di Jakarta
+        L.marker([-6.2088, 106.8456], { icon: companyIcon }).addTo(map)
+            .bindPopup("<b class='text-slate-900'>Foundry Level 5</b><br class='text-slate-900'>Pemilik: Sultan_Betawi");
 
-  <section class="sec"><h2>Offers statistics</h2><div class="card pad" style="display:flex;align-items:center;gap:14px">
-    <div style="flex:1"><b>Completed:</b> —<br><b>Total paid:</b> <span class="gold">—</span></div>
-    <a class="btn red" href="https://gloryverse.id/fund_offers.html">GO</a></div></section>
-
-  <!-- ===== KORAN ===== -->
-  <section class="sec"><h2>Latest newspapers</h2><div class="card">
-    <div class="empty">No articles yet.</div>
-    <a class="row chev" href="https://gloryverse.id/newspapers.html"><span class="grow">View all newspapers</span></a>
-  </div></section>
-
-  <!-- ===== BONUS & INFRASTRUKTUR ===== -->
-  <section class="sec"><h2>Region bonuses</h2><div class="card"><div class="row"><span class="grow">Productivity bonus</span><span class="val">—</span></div><div class="row"><span class="grow">War damage bonus</span><span class="val">—</span></div><div class="row"><span class="grow">Offers payout bonus</span><span class="val">—</span></div></div></section>
-
-  <section class="sec"><h2>Infrastructure</h2><div class="card"><div class="row"><span class="grow">Homeless shelter</span><span class="val">—</span></div><div class="row"><span class="grow">Public transport</span><span class="val">—</span></div><div class="row"><span class="grow">Central Intelligence Agency</span><span class="val">—</span></div></div></section>
-
-  <section class="sec"><h2>Country bonuses</h2><div class="card"><div class="row"><span class="grow">Work bonus</span><span class="val">—</span></div><div class="row"><span class="grow">Army wage</span><span class="val">—</span></div><div class="row"><span class="grow">Minimum wage</span><span class="val">—</span></div></div></section>
-
-  <!-- ===== TEMAN & WORLDWIDE SHOUT ===== -->
-  <section class="sec"><h2>My friends</h2><div class="card"><div class="empty">No friends added yet.</div>
-    <a class="row chev" href="https://gloryverse.id/my_friends.html"><span class="grow">View all</span></a></div></section>
-
-  <section class="sec"><h2>Worldwide shouts</h2>
-    <form class="card pad" action="https://gloryverse.id/dashboard.html" method="post" onsubmit="return confirm('Shouts are non refundable if rejected. English only and no small talk.')">
-      <input name="acn" type="hidden" value="newworldshout">
-      <textarea maxlength="255" name="user_shout_text" rows="3" placeholder="Message"></textarea>
-      <button class="btn full" type="submit">Send shout (2 gold)</button></form></section>
-
-  <p class="foot">Copyright 2026 © gloryverse.id · <a href="https://gloryverse.id/privacy_policy.html">Privacy</a> · <a href="https://gloryverse.id/tos.html">Terms</a></p>
-</main>
-
-<nav class="tabbar"><div class="wrap">
-  <a href="#top" class="on"><b>⌂</b>Home</a>
-  <a href="https://gloryverse.id/workplaces.html"><b>⚒</b>Work</a>
-  <a href="https://gloryverse.id/wars.html"><b>⚔</b>Wars</a>
-  <a href="#" data-menu><b>☰</b>Menu</a>
-</div></nav>
-
-<!-- Lembar geser dari bawah: dipakai untuk menu utama dan isi popup (Income, Alerts, dll) -->
-<div class="shade" id="shade"><div class="sheet" id="sheet"></div></div>
-
-<script src="app.js"></script>
-<script>
-// Daftar "My stuff" (khusus halaman ini). Format: ['Nama','nama_file']
-var MY=[['My Companies','my_companies'],['My Inventory','my_inventory'],['My Companion','my_companion'],['My Vehicles','my_vehicles'],['My Finances','my_financials'],['My Weapons & Info','my_weapons'],['My Clothing','my_clothing'],['My Real Estate','my_real_estate'],['My Recruits','my_recruits'],['My Medals','my_medals'],['My Newspaper Articles','my_newspapers'],['My Regions','my_regions']];
-document.getElementById('mystuff').innerHTML=MY.map(function(m){return '<a class="row chev" href="'+B+m[1]+'.html"><span class="grow">'+m[0]+'</span></a>'}).join('');
-
-// Tombol "+ New" shout
-document.getElementById('toggleShout').addEventListener('click',function(e){
-  e.preventDefault();document.getElementById('new_shout').classList.toggle('hide');
-});
-</script>
+    </script>
 </body>
 </html>
