@@ -174,21 +174,23 @@
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
     </script>
-    <!-- PENTING: Panggil Library Supabase dulu sebelum script utama -->
+    <!-- Library Supabase & Leaflet (Panggil dulu sebelum script utama) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <!-- Leaflet JS (Sudah ada, biarkan) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+
+    <!-- SCRIPT UTAMA GLORYVERSE -->
     <script>
         // ==========================================
-        // 1. INISIALISASI SUPABASE & PETA
+        // 1. SETUP SUPABASE
         // ==========================================
-        const supabaseUrl = 'https://xxxxx.supabase.co'; // GANTI DENGAN URL KAMU
-        const supabaseAnonKey = 'eyJhbGci...'; // GANTI DENGAN KEY KAMU
+        // GANTI DENGAN DATA DARI DASHBOARD SUPABASE KAMU
+        const supabaseUrl = 'https://xxxxx.supabase.co'; 
+        const supabaseAnonKey = 'eyJhbGci...'; 
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-        // Inisialisasi Peta
+        // ==========================================
+        // 2. SETUP PETA (HANYA 1 KALI!)
+        // ==========================================
         const map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; OpenStreetMap & CARTO',
@@ -197,25 +199,22 @@
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         // ==========================================
-        // 2. AUTH GUARD (PENJAGA PINTU)
+        // 3. AUTH GUARD & FETCH DATA
         // ==========================================
         async function checkAuth() {
-            // Cek apakah ada user yang sedang login di Supabase
+            // Cek apakah user masih login
             const { data: { user }, error } = await sb.auth.getUser();
             
             if (error || !user) {
-                // Jika tidak ada user, tendang balik ke halaman login!
+                // Jika tidak, tendang ke halaman login
                 window.location.href = 'index.html';
                 return;
             }
 
-            // Jika ada user, ambil data profilnya dari database
+            // Jika login, ambil data profilnya
             fetchPlayerProfile(user.id);
         }
 
-        // ==========================================
-        // 3. FETCH DATA PLAYER (SOFT REFRESH)
-        // ==========================================
         async function fetchPlayerProfile(userId) {
             const { data, error } = await sb
                 .from('player_profiles')
@@ -228,24 +227,21 @@
                 return;
             }
 
-            // Update UI Navbar dengan data asli dari database
+            // Update UI Navbar dengan data asli
             document.getElementById('stat-gold').innerText = Math.floor(data.gold_balance || 0).toLocaleString();
             document.getElementById('stat-currency').innerText = Math.floor(data.currency_balance || 0).toLocaleString();
             
-            // Update Tampilan Tombol Wallet
+            // Update Tampilan Tombol Wallet di Navbar
             const walletBtn = document.querySelector('button.bg-purple-600, button.bg-slate-700');
-            if (data.solana_wallet_address) {
-                // Jika sudah connect wallet, tampilkan alamat yang dipotong (contoh: 0x8F...3A9)
-                const shortAddr = `${data.solana_wallet_address.substring(0, 6)}...${data.solana_wallet_address.substring(38)}`;
-                walletBtn.innerText = `👻 ${shortAddr}`;
-                walletBtn.className = 'bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
-            } else {
-                // Jika belum connect wallet
-                walletBtn.innerText = '👻 Connect Wallet';
-                walletBtn.className = 'bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
+            if (walletBtn) {
+                if (data.solana_wallet_address) {
+                    const addr = data.solana_wallet_address;
+                    const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
+                    walletBtn.innerText = `👻 ${shortAddr}`;
+                } else {
+                    walletBtn.innerText = ' Connect Wallet';
+                }
             }
-
-            console.log('Data player berhasil dimuat:', data.username);
         }
 
         // ==========================================
@@ -262,13 +258,11 @@
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
 
-        // SOFT REFRESH: Update data saldo setiap 60 detik TANPA reload halaman (Aman untuk Adsterra!)
-        setInterval(() => {
-            checkAuth(); 
-        }, 60000); 
-
-        // JALANKAN SAAT HALAMAN SELESAI DIMUAT
+        // Jalankan Auth Guard saat halaman pertama kali dimuat
         checkAuth();
+        
+        // SOFT REFRESH: Cek ulang data & login setiap 60 detik (Tanpa reload halaman = Aman Adsterra!)
+        setInterval(checkAuth, 60000); 
 
     </script>
 </body>
