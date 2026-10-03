@@ -6,24 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - GloryVerse</title>
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Leaflet CSS (Untuk Peta OSM) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+    <!-- ADSTERRA: SOCIAL BAR (Aman, biarkan di head) -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: {
-                        brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' }
-                    }
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
                 }
             }
         }
@@ -31,57 +26,47 @@
 </head>
 <body class="bg-brand-dark text-slate-200 font-sans overflow-hidden relative">
 
-    <!-- 1. PETA DASAR (OSM) - Full Screen di Belakang -->
+    <!-- 1. PETA DASAR (OSM) -->
     <div id="map" class="absolute inset-0 z-0"></div>
 
-    <!-- 2. UI LAYER (Di Atas Peta) -->
+    <!-- 2. UI LAYER -->
     <div class="relative z-10 flex flex-col h-screen">
         
         <!-- TOP NAVBAR -->
         <nav class="bg-slate-900/90 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
             <div class="flex items-center gap-3">
                 <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</div>
-                <span class="font-bold text-lg tracking-tight">GLORY<span class="text-amber-500">VERSE</span></span>
+                <span class="font-bold text-lg tracking-tight hidden sm:block">GLORY<span class="text-amber-500">VERSE</span></span>
             </div>
 
-            <!-- Player Stats (Nanti di-fetch dari Supabase) -->
-            <div class="hidden md:flex items-center gap-6 text-sm font-semibold">
+            <!-- Player Stats & JAM LONDON -->
+            <div class="flex items-center gap-4 text-sm font-semibold">
+                <!-- JAM LONDON (Real-time) -->
+                <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                    <span>🇬🇧</span> <span id="london-clock">Loading...</span>
+                </div>
+
                 <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                    <span class="text-yellow-400">💰</span> <span>1,250 Gold</span>
+                    <span class="text-yellow-400">💰</span> <span id="stat-gold">1,250</span>
                 </div>
                 <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                    <span class="text-blue-400">🪙</span> <span>5,000 Currency</span>
-                </div>
-                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                    <span class="text-purple-400">💎</span> <span>15 Diamond</span>
+                    <span class="text-blue-400">🪙</span> <span id="stat-currency">5,000</span>
                 </div>
             </div>
 
-            <!-- Profile / Wallet -->
+            <!-- Profile -->
             <div class="flex items-center gap-3">
                 <button class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
                     👻 0x8F...3A9
                 </button>
-                <div class="w-10 h-10 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer">
-                    👤
-                </div>
+                <div class="w-9 h-9 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer">👤</div>
             </div>
         </nav>
 
-        <!-- ADSTERRA: NATIVE BANNER CONTAINER -->
-        <!-- Ditempatkan strategis di bawah navbar, center, agar terlihat tapi tidak menutupi peta -->
-        <div class="w-full flex justify-center py-2 bg-slate-900/50 backdrop-blur-sm border-b border-slate-800">
-            <div class="bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
-                <!-- Script Native Banner Adsterra -->
-                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
-                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-            </div>
-        </div>
-
         <!-- MAIN CONTENT AREA (Floating Panels) -->
-        <div class="flex-1 relative p-4 pointer-events-none"> <!-- pointer-events-none biar bisa klik peta di area kosong -->
+        <div class="flex-1 relative p-4 pointer-events-none">
             
-            <!-- LEFT PANEL: Region Info & Actions -->
+            <!-- LEFT PANEL: Region Info -->
             <div class="absolute top-4 left-4 w-64 bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-xl p-4 shadow-2xl pointer-events-auto">
                 <h3 class="text-amber-500 font-bold text-sm uppercase tracking-wider mb-3">📍 Region Saat Ini</h3>
                 <p class="text-white font-bold text-xl mb-1">DKI Jakarta</p>
@@ -89,80 +74,71 @@
                 
                 <div class="space-y-2">
                     <button class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg text-sm transition">🏗️ Bangun Company</button>
-                    <button class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition">⚔️ Attack Region</button>
                     <button class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition">📊 Local Market</button>
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: Mini Leaderboard / Top Player -->
-            <div class="absolute top-4 right-4 w-64 bg-slate-900/90 backdrop-blur-xl border border-slate-700 rounded-xl p-4 shadow-2xl pointer-events-auto hidden md:block">
-                <h3 class="text-amber-500 font-bold text-sm uppercase tracking-wider mb-3">🏆 Top Player Region</h3>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex justify-between items-center">
-                        <span class="text-white font-semibold">1. Sultan_Betawi</span>
-                        <span class="text-yellow-400 text-xs">Lv. 42</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-slate-300">2. CryptoKing99</span>
-                        <span class="text-slate-400 text-xs">Lv. 38</span>
-                    </li>
-                    <li class="flex justify-between items-center">
-                        <span class="text-slate-300">3. JawaTimur_FTW</span>
-                        <span class="text-slate-400 text-xs">Lv. 35</span>
-                    </li>
-                </ul>
-            </div>
-
         </div>
+
+        <!-- 3. ADSTERRA: NATIVE BANNER (POSISI PALING BAWAH / FIXED BOTTOM) -->
+        <!-- Z-50 memastikan dia di atas peta, tapi tidak menutupi tombol penting -->
+        <div class="fixed bottom-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-t border-slate-700 p-2 flex justify-center items-center shadow-2xl">
+            <div class="w-full max-w-4xl flex justify-center">
+                <!-- Script Native Banner Adsterra -->
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <script>
-        // 1. INISIALISASI PETA OSM
-        // Koordinat default: Tengah Indonesia. Zoom level 5.
-        const map = L.map('map', {
-            zoomControl: false // Kita pindahkan zoom control nanti biar nggak nutupin UI
-        }).setView([-2.5489, 118.0149], 5);
-
-        // 2. TAMBAHKAN TILE LAYER (Tampilan Peta Gelap / Dark Mode biar cocok dengan UI)
-        // Kita pakai CartoDB Dark Matter untuk tampilan peta yang elegan dan nggak norak
+        // ==========================================
+        // 1. INISIALISASI PETA
+        // ==========================================
+        const map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
+            attribution: '&copy; OpenStreetMap & CARTO',
             maxZoom: 19
         }).addTo(map);
+        L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        // 3. PINDAHKAN ZOOM CONTROL KE KANAN BAWAH (Biar rapi)
-        L.control.zoom({
-            position: 'bottomright'
-        }).addTo(map);
+        // ==========================================
+        // 2. JAM LONDON (GMT/UTC) REAL-TIME
+        // ==========================================
+        function updateLondonClock() {
+            const now = new Date();
+            // Format waktu khusus London (en-GB)
+            const londonTime = now.toLocaleString("en-GB", { 
+                timeZone: "Europe/London", 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: false 
+            });
+            document.getElementById('london-clock').innerText = `LON: ${londonTime}`;
+        }
+        setInterval(updateLondonClock, 1000); // Update setiap 1 detik
+        updateLondonClock(); // Jalankan langsung
 
-        // CONTOH: Menambahkan Marker Perusahaan di Peta (Nanti ini dari Database Supabase)
-        const companyIcon = L.divIcon({
-            className: 'custom-div-icon',
-            html: "<div style='background-color: #F59E0B; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px #F59E0B;'></div>",
-            iconSize: [12, 12],
-            iconAnchor: [6, 6]
-        });
-
-        // Marker contoh di Jakarta
-        L.marker([-6.2088, 106.8456], { icon: companyIcon }).addTo(map)
-            .bindPopup("<b class='text-slate-900'>Foundry Level 5</b><br class='text-slate-900'>Pemilik: Sultan_Betawi");
+        // ==========================================
+        // 3. SISTEM "SOFT REFRESH" (ANTI BANNED ADSTERRA)
+        // ==========================================
+        // JANGAN PERNAH gunakan location.reload() secara otomatis!
+        // Sebagai gantinya, kita update data via JavaScript setiap X detik.
+        // Ini membuat halaman tetap "hidup" tanpa memicu deteksi spam refresh Adsterra.
+        
+        setInterval(() => {
+            // Contoh: Simulasi update Gold dari server (nanti diganti fetch ke Supabase)
+            // const currentGold = parseInt(document.getElementById('stat-gold').innerText.replace(',', ''));
+            // document.getElementById('stat-gold').innerText = (currentGold + 1).toLocaleString();
+            
+            console.log("Soft refresh: Data diperbarui tanpa reload halaman. Adsterra Aman.");
+        }, 30000); // Update data setiap 30 detik (Bukan refresh halaman!)
 
     </script>
-
-    <!-- ADSTERRA: NATIVE BANNER CONTAINER -->
-        <!-- Ditempatkan strategis di bawah navbar, center, agar terlihat tapi tidak menutupi peta -->
-        <div class="w-full flex justify-center py-2 bg-slate-900/50 backdrop-blur-sm border-b border-slate-800">
-            <div class="bg-slate-800/50 rounded-lg p-1 border border-slate-700/50">
-                <!-- Script Native Banner Adsterra -->
-                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
-                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-                
-     <!-- ADSTERRA: SOCIAL BAR (Floating Ad) -->
-    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
-    
 </body>
 </html>
