@@ -207,6 +207,50 @@
             });
         });
     </script>
+<!-- 1. Panggil Library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+    <!-- 2. Inisialisasi & Logika Register -->
+    <script>
+        // GANTI DENGAN DATA DARI DASHBOARD SUPABASE KAMU
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'; 
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
+        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+        // Fungsi untuk tombol "MULAI PETUALANGAN"
+        document.querySelector('#form-email button').addEventListener('click', async (e) => {
+            e.preventDefault(); // Mencegah halaman refresh
+            
+            const btn = e.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Memproses...';
+            btn.disabled = true;
+
+            // Ambil data dari input
+            const username = document.querySelector('#form-email input[type="text"]').value;
+            const email = document.querySelector('#form-email input[type="email"]').value;
+            const password = document.querySelector('#form-email input[type="password"]').value;
+
+            // Panggil Supabase Auth
+            const { data, error } = await supabase.auth.signUp({
+                email: email,
+                password: password,
+                options: {
+                    data: {
+                        username: username // Simpan username di metadata Auth
+                    }
+                }
+            });
+
+            if (error) {
+                alert('Gagal Register: ' + error.message);
+                btn.innerText = originalText;
+                btn.disabled = false;
+            } else {
+                alert('Berhasil! Silakan cek email kamu untuk verifikasi akun.');
+                // Nanti di sini kita redirect ke halaman Login atau Dashboard
+            }
+        });
+    </script>
 </body>
 </html>
