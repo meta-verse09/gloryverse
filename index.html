@@ -1,187 +1,95 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Glory Verse - Online Strategy Browser Game</title>
-<meta name="description" content="Glory Verse is a free online strategy game. Work, fight, open companies and start wars right in your browser.">
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-<style>
-/* ===== WARNA: ubah di sini, seluruh halaman ikut berubah ===== */
-:root{
-  --bg:#f1f2f6; --card:#ffffff; --text:#111418; --hint:#7d8590;
-  --line:#e4e6eb; --accent:#3390ec; --accent-text:#ffffff; --gold:#d99a13;
-}
-@media (prefers-color-scheme:dark){
-  :root{--bg:#0f1418; --card:#1a2229; --text:#f2f4f6; --hint:#8b98a5; --line:#2a343d; --accent:#4a9ff5; --gold:#f0b429}
-}
-*{box-sizing:border-box;margin:0}
-html{scroll-behavior:smooth;scroll-padding-top:64px}
-body{background:var(--bg);color:var(--text);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}
-a{color:var(--accent);text-decoration:none}
-.wrap{max-width:520px;margin:0 auto;padding:0 12px}
-
-/* ===== HEADER (atas) ===== */
-.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
-.top .wrap{display:flex;align-items:center;justify-content:space-between;height:52px}
-.top img{height:28px;display:block}
-.top .docs{font-size:15px}
-
-/* ===== KARTU & JUDUL BAGIAN ===== */
-.sec{margin-top:20px}
-.sec h2{font-size:14px;font-weight:600;color:var(--hint);margin:0 4px 8px}
-.card{background:var(--card);border-radius:14px;overflow:hidden}
-
-/* ===== HERO + FORM ===== */
-.hero{padding:22px 18px 18px;margin-top:14px}
-.hero p.small{color:var(--hint);font-size:14px}
-.hero h1{font-size:26px;line-height:1.15;margin:4px 0 10px}
-.hero p.desc{color:var(--hint);font-size:15px;margin-bottom:16px}
-.seg{display:flex;background:var(--bg);border-radius:10px;padding:3px;margin-bottom:14px}
-.seg button{flex:1;border:0;background:none;color:var(--hint);font:inherit;font-weight:600;padding:8px;border-radius:8px;cursor:pointer}
-.seg button.on{background:var(--card);color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.12)}
-input{width:100%;font:inherit;color:var(--text);background:var(--bg);border:1px solid transparent;border-radius:10px;padding:12px 14px;margin-bottom:10px}
-input:focus{outline:none;border-color:var(--accent)}
-.btn{display:block;width:100%;text-align:center;font:inherit;font-weight:600;border:0;border-radius:10px;padding:13px;cursor:pointer;background:var(--accent);color:var(--accent-text)}
-.btn.alt{background:var(--bg);color:var(--text);margin-top:10px}
-.links{text-align:center;font-size:14px;margin-top:12px}
-.panel{display:none}.panel.on{display:block}
-
-/* ===== DAFTAR (ranking) ===== */
-.row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--line)}
-.row:first-child{border-top:0}
-.rank{width:22px;color:var(--hint);font-weight:600}
-.row img{width:28px;height:28px;border-radius:50%;object-fit:cover}
-.row .name{flex:1;min-width:0}
-.row .name b{display:block;font-weight:600}
-.row .name span{font-size:13px;color:var(--hint)}
-.bonus{font-weight:600;color:var(--gold);white-space:nowrap}
-
-/* ===== KURS ===== */
-.rate{padding:14px}
-.rate .big{font-size:22px;font-weight:700;margin-bottom:8px}
-.rate .big span{color:var(--gold)}
-
-/* ===== KOSONG ===== */
-.empty{padding:22px 14px;text-align:center;color:var(--hint);font-size:14px}
-
-/* ===== MENU BAWAH ===== */
-.tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
-.tabbar .wrap{display:flex}
-.tabbar a{flex:1;text-align:center;padding:8px 0 9px;font-size:12px;color:var(--hint)}
-.tabbar a b{display:block;font-size:20px;line-height:1.2;font-weight:400}
-.tabbar a.on{color:var(--accent)}
-.foot{text-align:center;color:var(--hint);font-size:12px;margin:24px 0 8px}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GloryVerse - Conquer The Real World</title>
+    <!-- Nanti kita masukin Tailwind CSS / Custom CSS di sini -->
 </head>
-<body>
+<body class="bg-gray-900 text-white">
 
-<header class="top"><div class="wrap">
-  <a href="https://gloryverse.id"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
-  <a class="docs" href="https://gloryverse.id/documentation.html">Documentation</a>
-</div></header>
+    <!-- CONTAINER UTAMA -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        
+        <!-- BAGIAN 1: LIVE IN-GAME NEWS (Biar kelihatan rame) -->
+        <div class="w-full max-w-md mr-8 hidden md:block">
+            <h2 class="text-2xl font-bold mb-4 text-yellow-400"> LIVE GLOBAL FEED</h2>
+            <div class="space-y-4">
+                <!-- Contoh Berita 1 -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
+                    <p class="text-sm text-gray-400">2 menit lalu • Region: DKI Jakarta</p>
+                    <p class="font-semibold">️ PERANG DIMULAI! Guild "Garuda" menyerang wilayah tambang Uranium!</p>
+                </div>
+                <!-- Contoh Berita 2 -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-green-500">
+                    <p class="text-sm text-gray-400">5 menit lalu • Region: Tokyo</p>
+                    <p class="font-semibold">🏭 Player "Kenji_01" berhasil membangun Nuclear Factory Level 10!</p>
+                </div>
+                <!-- Contoh Berita 3 -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-blue-500">
+                    <p class="text-sm text-gray-400">10 menit lalu • Global Market</p>
+                    <p class="font-semibold"> Harga Steel naik 15%! Trader sedang panen raya.</p>
+                </div>
+            </div>
+        </div>
 
-<main class="wrap">
+        <!-- BAGIAN 2: KARTU REGISTRASI / LOGIN -->
+        <div class="w-full max-w-md bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700">
+            
+            <!-- Header -->
+            <div class="text-center mb-6">
+                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500">
+                    GLORYVERSE
+                </h1>
+                <p class="text-gray-400 text-sm mt-1">Conquer The Real World Map</p>
+            </div>
 
-  <!-- ===== HOME: hero + login/register ===== -->
-  <section id="home" class="card hero">
-    <p class="small">A new world order is forming.</p>
-    <h1>What will be your role?</h1>
-    <p class="desc">Work, fight, open companies and start wars. Free to play, right in your browser.</p>
+            <!-- Tab Pilihan: Web2 vs Web3 -->
+            <div class="flex mb-6 bg-gray-900 rounded-lg p-1">
+                <button class="flex-1 py-2 rounded-md bg-yellow-500 text-black font-bold text-sm">
+                    📧 Email Register
+                </button>
+                <button class="flex-1 py-2 rounded-md text-gray-400 font-bold text-sm hover:text-white">
+                    👻 Phantom Wallet
+                </button>
+            </div>
 
-    <div class="seg">
-      <button type="button" class="on" data-tab="login">Login</button>
-      <button type="button" data-tab="register">Register</button>
+            <!-- Form Registrasi (Web2) -->
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Username (Permanen)</label>
+                    <input type="text" placeholder="Contoh: Sultan_Betawi" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Email</label>
+                    <input type="email" placeholder="kamu@email.com" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm text-gray-400 mb-1">Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                </div>
+
+                <button type="button" class="w-full bg-gradient-to-r from-yellow-500 to-red-500 text-black font-bold py-3 rounded-lg hover:opacity-90 transition">
+                     MULAI PETUALANGAN
+                </button>
+            </form>
+
+            <!-- Tombol Alternatif (Web3) - Nanti diaktifkan kalau tab Phantom diklik -->
+            <div class="mt-4 hidden"> 
+                <button class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-700 transition">
+                    <span>👻</span> Connect Phantom Wallet
+                </button>
+            </div>
+
+            <!-- Footer Link -->
+            <p class="text-center text-gray-500 text-sm mt-6">
+                Sudah punya akun? <a href="#" class="text-yellow-400 hover:underline">Login di sini</a>
+            </p>
+        </div>
+
     </div>
 
-    <!-- Panel LOGIN: name dan action sama seperti aslinya, jangan diubah -->
-    <form id="login" class="panel on" method="post" action="https://gloryverse.id/authys.html">
-      <input type="email" name="user_email" placeholder="Email" autocomplete="email" required>
-      <input type="password" name="user_password" placeholder="Password" autocomplete="current-password" required>
-      <button class="btn" type="submit">Login</button>
-      <a class="btn alt" href="https://gloryverse.id/google_auth.html">Continue with Google</a>
-      <p class="links"><a href="https://gloryverse.id/account_recovery.html">Lost password?</a></p>
-    </form>
-
-    <!-- Panel REGISTER -->
-    <div id="register" class="panel">
-      <a class="btn" href="https://gloryverse.id/register.html">Create free account</a>
-      <p class="links" style="color:var(--hint)">It takes less than a minute.</p>
-    </div>
-  </section>
-
-  <!-- ===== RANKING NEGARA ===== -->
-  <section id="ranking" class="sec">
-    <h2>Countries ranking</h2>
-    <div class="card">
-      <div class="empty">No countries yet.</div>
-    </div>
-    <p class="foot" style="margin:6px 0 0;text-align:left">Bonus shown is the work bonus per job.</p>
-  </section>
-
-  <!-- ===== KURS EURO/GOLD ===== -->
-  <section id="rate" class="sec">
-    <h2>Euro / Gold exchange rate</h2>
-    <div class="card rate">
-      <div class="big">1 Euro = <span>—</span></div>
-      <canvas id="myChart" height="150"></canvas>
-    </div>
-  </section>
-
-  <!-- ===== PERANG AKTIF ===== -->
-  <section id="wars" class="sec">
-    <h2>Active wars</h2>
-    <div class="card"><div class="empty">No active wars right now.</div></div>
-  </section>
-
-  <!-- ===== PENARIKAN TERBARU ===== -->
-  <section class="sec">
-    <h2>Latest withdrawals</h2>
-    <div class="card"><div class="empty">No withdrawals yet.</div></div>
-  </section>
-
-  <p class="foot">Copyright 2026 © gloryverse.id ·
-    <a href="https://gloryverse.id/privacy_policy.html">Privacy</a> ·
-    <a href="https://gloryverse.id/tos.html">Terms</a> ·
-    <a href="https://gloryverse.id/contact.html">Contact</a></p>
-</main>
-
-<!-- ===== MENU BAWAH: 4 tombol yang lompat ke bagian di atas ===== -->
-<nav class="tabbar"><div class="wrap">
-  <a href="#home" class="on"><b>⌂</b>Home</a>
-  <a href="#ranking"><b>★</b>Ranking</a>
-  <a href="#rate"><b>€</b>Rate</a>
-  <a href="#wars"><b>⚔</b>Wars</a>
-</div></nav>
-
-<script>
-// Tab Login / Register
-document.querySelectorAll('.seg button').forEach(function(b){
-  b.addEventListener('click',function(){
-    document.querySelectorAll('.seg button').forEach(function(x){x.classList.toggle('on',x===b)});
-    document.querySelectorAll('.panel').forEach(function(p){p.classList.toggle('on',p.id===b.dataset.tab)});
-  });
-});
-
-// Menu bawah: tandai bagian yang sedang terlihat
-var links=document.querySelectorAll('.tabbar a');
-var io=new IntersectionObserver(function(es){
-  es.forEach(function(e){
-    if(e.isIntersecting){links.forEach(function(a){a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id)})}
-  });
-},{rootMargin:'-40% 0px -55% 0px'});
-['home','ranking','rate','wars'].forEach(function(id){io.observe(document.getElementById(id))});
-
-// Grafik kurs (Chart.js v4). Ganti angka di data untuk memperbarui grafik.
-var rates=[]; // kosong: diisi dari backend
-new Chart(document.getElementById('myChart'),{
-  type:'line',
-  data:{labels:rates.map(function(_,i){return i+1}),
-    datasets:[{label:'Exchange rate',data:rates,borderColor:'#d99a13',backgroundColor:'rgba(217,154,19,.12)',borderWidth:2,pointRadius:0,tension:.3,fill:true}]},
-  options:{plugins:{legend:{display:false}},scales:{x:{display:false},y:{ticks:{maxTicksLimit:4}}}}
-});
-</script>
 </body>
 </html>
