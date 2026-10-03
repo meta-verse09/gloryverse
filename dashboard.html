@@ -37,33 +37,147 @@
 </head>
 <body class="bg-brand-dark text-slate-200 font-sans">
 
-    <!-- NAVBAR -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
-        <div class="flex items-center gap-3">
-            <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</div>
-            <span class="font-bold text-lg tracking-tight hidden sm:block">GLORY<span class="text-amber-500">VERSE</span></span>
-        </div>
-
-        <div class="flex items-center gap-4 text-sm font-semibold">
-            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
-                <span>🇬🇧</span> <span id="london-clock">Loading...</span>
+    <!-- ========================================== -->
+    <!-- NAVBAR GANDA (TOP BAR + MENU DROPDOWN)     -->
+    <!-- ========================================== -->
+    <div class="fixed top-0 left-0 right-0 z-50 flex flex-col shadow-2xl">
+        
+        <!-- BARIS 1: TOP BAR (Logo, Stats, Wallet) -->
+        <nav class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-6 py-2 flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</div>
+                <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
             </div>
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
-            </div>
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
-            </div>
-        </div>
 
-        <div class="flex items-center gap-3">
-            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                👻 Connect Wallet
-            </button>
-            <div class="w-9 h-9 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer">👤</div>
-        </div>
-    </nav>
+            <!-- Stats & Jam London -->
+            <div class="flex items-center gap-3 text-sm font-semibold">
+                <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700 text-blue-300">
+                    <span>🇬🇧</span> <span id="london-clock">Loading...</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+                    <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+                </div>
+                <div class="flex items-center gap-2 bg-slate-800 px-3 py-1 rounded-full border border-slate-700">
+                    <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
+                </div>
+            </div>
 
+            <!-- Wallet & Profile -->
+            <div class="flex items-center gap-3">
+                <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-2">
+                    👻 Connect Wallet
+                </button>
+                <div class="w-8 h-8 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-sm cursor-pointer">👤</div>
+            </div>
+        </nav>
+
+        <!-- BARIS 2: DROPDOWN MENU (8 Kategori) -->
+        <nav class="bg-slate-800/90 backdrop-blur-md border-b border-slate-700 px-4 overflow-x-auto">
+            <div class="max-w-7xl mx-auto flex items-center justify-center min-w-max">
+                
+                <!-- 1. DASHBOARD -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        🗺️ Dashboard
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🌍 World Map</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">📍 My Location</a>
+                    </div>
+                </div>
+
+                <!-- 2. PROFILE & WALLET -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        👤 Profile
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">📊 My Profile</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">👻 Connect Wallet</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🔗 Referral Program</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">🎒 Inventory</a>
+                    </div>
+                </div>
+
+                <!-- 3. ACTIVITIES -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        ️ Activities
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-48 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">💼 Work</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🏋️ Train</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">️ Battle</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">🌲 Gather</a>
+                    </div>
+                </div>
+
+                <!-- 4. BUSINESS -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        🏢 Business
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🏭 My Companies</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🏠 Real Estate</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🌍 Global Market</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">🏪 Local Market</a>
+                    </div>
+                </div>
+
+                <!-- 5. FINANCIAL MARKET -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        📈 Financial
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">💱 Exchange (SOL)</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">📊 Market Chart</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">🧾 Transaction History</a>
+                    </div>
+                </div>
+
+                <!-- 6. POLITICS -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        🏛️ Politics
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">📍 Region Info</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🗳️ Elections</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">⚖️ Laws & Taxes</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">🤝 War & Alliance</a>
+                    </div>
+                </div>
+
+                <!-- 7. EVENTS & RANKING -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        🎉 Events
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🏆 Active Events</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🔮 Predictions</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500"> Leaderboards</a>
+                    </div>
+                </div>
+
+                <!-- 8. COMMUNITY -->
+                <div class="relative group">
+                    <button class="text-slate-300 hover:text-amber-500 px-4 py-3 text-xs font-bold uppercase tracking-wider flex items-center gap-1 transition">
+                        🌐 Community
+                    </button>
+                    <div class="absolute left-0 top-full mt-0 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-b-lg shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">🛡️ Guilds / Parties</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500 border-b border-slate-800">📰 Newspaper / News</a>
+                        <a href="#" class="block px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 hover:text-amber-500">💬 Chat / Forum</a>
+                    </div>
+                </div>
+
+            </div>
+        </nav>
+    </div>
     <!-- MAIN CONTENT -->
     <div class="pt-20 pb-8">
         
