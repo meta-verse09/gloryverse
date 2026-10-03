@@ -1,92 +1,160 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GloryVerse - Conquer The Real World</title>
-    <!-- Nanti kita masukin Tailwind CSS / Custom CSS di sini -->
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Config untuk Warna Brand -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            dark: '#0B0F19',
+                            card: '#151B2B',
+                            accent: '#F59E0B', // Amber/Yellow
+                            danger: '#EF4444'  // Red
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Efek Grid Peta Digital di Background */
+        .map-grid-bg {
+            background-color: #0B0F19;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, transparent 60%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="map-grid-bg text-slate-300 font-sans min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+
+    <!-- Decorative Glow -->
+    <div class="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
     <!-- CONTAINER UTAMA -->
-    <div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-6xl flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
         
-        <!-- BAGIAN 1: LIVE IN-GAME NEWS (Biar kelihatan rame) -->
-        <div class="w-full max-w-md mr-8 hidden md:block">
-            <h2 class="text-2xl font-bold mb-4 text-yellow-400"> LIVE GLOBAL FEED</h2>
+        <!-- BAGIAN 1: LIVE IN-GAME NEWS (Kiri) -->
+        <div class="w-full md:w-1/2 space-y-6">
+            <div class="mb-8">
+                <span class="text-amber-500 font-bold tracking-widest text-sm uppercase">Live Global Feed</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-white mt-2 leading-tight">
+                    Dunia Nyata.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-500">Kekuatanmu.</span>
+                </h2>
+                <p class="text-slate-400 mt-4 text-lg">Bangun kerajaan ekonomi, kuasai wilayah di peta dunia, dan jadilah legenda di GloryVerse.</p>
+            </div>
+
+            <!-- List Berita -->
             <div class="space-y-4">
-                <!-- Contoh Berita 1 -->
-                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
-                    <p class="text-sm text-gray-400">2 menit lalu • Region: DKI Jakarta</p>
-                    <p class="font-semibold">️ PERANG DIMULAI! Guild "Garuda" menyerang wilayah tambang Uranium!</p>
+                <!-- Berita 1 -->
+                <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-amber-500/50 transition-all duration-300 flex gap-4 items-start">
+                    <div class="bg-red-500/20 p-2 rounded-lg text-red-400 text-xl">⚔️</div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold mb-1">2 MENIT LALU • REGION: DKI JAKARTA</p>
+                        <p class="text-white font-medium">Guild "Garuda" mendeklarasikan perang memperebutkan wilayah tambang Uranium!</p>
+                    </div>
                 </div>
-                <!-- Contoh Berita 2 -->
-                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-green-500">
-                    <p class="text-sm text-gray-400">5 menit lalu • Region: Tokyo</p>
-                    <p class="font-semibold">🏭 Player "Kenji_01" berhasil membangun Nuclear Factory Level 10!</p>
+                
+                <!-- Berita 2 -->
+                <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-green-500/50 transition-all duration-300 flex gap-4 items-start">
+                    <div class="bg-green-500/20 p-2 rounded-lg text-green-400 text-xl"></div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold mb-1">5 MENIT LALU • REGION: TOKYO</p>
+                        <p class="text-white font-medium">Player "Kenji_01" berhasil meng-upgrade Nuclear Factory ke Level 10 (NFT Minted)!</p>
+                    </div>
                 </div>
-                <!-- Contoh Berita 3 -->
-                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-blue-500">
-                    <p class="text-sm text-gray-400">10 menit lalu • Global Market</p>
-                    <p class="font-semibold"> Harga Steel naik 15%! Trader sedang panen raya.</p>
+
+                <!-- Berita 3 -->
+                <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-blue-500/50 transition-all duration-300 flex gap-4 items-start">
+                    <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400 text-xl">📈</div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold mb-1">10 MENIT LALU • GLOBAL MARKET</p>
+                        <p class="text-white font-medium">Harga Steel naik 15%! Para trader di region Eropa sedang panen raya.</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- BAGIAN 2: KARTU REGISTRASI / LOGIN -->
-        <div class="w-full max-w-md bg-gray-800 p-8 rounded-xl shadow-2xl border border-gray-700">
-            
-            <!-- Header -->
-            <div class="text-center mb-6">
-                <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500">
-                    GLORYVERSE
-                </h1>
-                <p class="text-gray-400 text-sm mt-1">Conquer The Real World Map</p>
-            </div>
-
-            <!-- Tab Pilihan: Web2 vs Web3 -->
-            <div class="flex mb-6 bg-gray-900 rounded-lg p-1">
-                <button class="flex-1 py-2 rounded-md bg-yellow-500 text-black font-bold text-sm">
-                    📧 Email Register
-                </button>
-                <button class="flex-1 py-2 rounded-md text-gray-400 font-bold text-sm hover:text-white">
-                    👻 Phantom Wallet
-                </button>
-            </div>
-
-            <!-- Form Registrasi (Web2) -->
-            <form class="space-y-4">
-                <div>
-                    <label class="block text-sm text-gray-400 mb-1">Username (Permanen)</label>
-                    <input type="text" placeholder="Contoh: Sultan_Betawi" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
-                </div>
+        <!-- BAGIAN 2: KARTU REGISTRASI / LOGIN (Kanan) -->
+        <div class="w-full md:w-1/2 max-w-md">
+            <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
                 
-                <div>
-                    <label class="block text-sm text-gray-400 mb-1">Email</label>
-                    <input type="email" placeholder="kamu@email.com" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                <!-- Header Card -->
+                <div class="text-center mb-8 relative z-10">
+                    <h1 class="text-3xl font-extrabold text-white tracking-tight">
+                        GLORY<span class="text-amber-500">VERSE</span>
+                    </h1>
+                    <p class="text-slate-400 text-sm mt-2">Masuk ke dalam peta dunia</p>
                 </div>
 
-                <div>
-                    <label class="block text-sm text-gray-400 mb-1">Password</label>
-                    <input type="password" placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-3 text-white focus:outline-none focus:border-yellow-500">
+                <!-- Tab Pilihan: Web2 vs Web3 -->
+                <div class="flex bg-slate-800/50 rounded-lg p-1 mb-6 relative z-10 border border-slate-700/50">
+                    <button id="tab-email" class="flex-1 py-2.5 rounded-md bg-amber-500 text-slate-900 font-bold text-sm transition-all shadow-lg">
+                        📧 Email
+                    </button>
+                    <button id="tab-wallet" class="flex-1 py-2.5 rounded-md text-slate-400 font-bold text-sm hover:text-white transition-all">
+                         Phantom
+                    </button>
                 </div>
 
-                <button type="button" class="w-full bg-gradient-to-r from-yellow-500 to-red-500 text-black font-bold py-3 rounded-lg hover:opacity-90 transition">
-                     MULAI PETUALANGAN
-                </button>
-            </form>
+                <!-- Form Registrasi (Web2) -->
+                <form id="form-email" class="space-y-4 relative z-10">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Username</label>
+                        <input type="text" placeholder="Contoh: Sultan_Betawi" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label>
+                        <input type="email" placeholder="kamu@email.com" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    </div>
 
-            <!-- Tombol Alternatif (Web3) - Nanti diaktifkan kalau tab Phantom diklik -->
-            <div class="mt-4 hidden"> 
-                <button class="w-full bg-purple-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-700 transition">
-                    <span>👻</span> Connect Phantom Wallet
-                </button>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Password</label>
+                        <input type="password" placeholder="••••••••" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                    </div>
+
+                    <button type="button" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 text-slate-900 font-extrabold py-3.5 rounded-lg hover:shadow-lg hover:shadow-amber-500/20 transition-all transform hover:-translate-y-0.5 mt-2">
+                        MULAI PETUALANGAN
+                    </button>
+                </form>
+
+                <!-- Form Web3 (Hidden by default) -->
+                <div id="form-wallet" class="hidden relative z-10 text-center py-8">
+                    <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6 mb-4">
+                        <p class="text-purple-300 text-sm mb-2">Akses penuh ke fitur Web3</p>
+                        <p class="text-white font-bold text-lg">Beli Tanah, Mint NFT, & Cash Out</p>
+                    </div>
+                    <button type="button" class="w-full bg-[#AB9FF2] text-white font-bold py-3.5 rounded-lg hover:bg-[#9b8ee0] transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
+                        Connect Phantom Wallet
+                    </button>
+                </div>
+
+                <!-- Footer Link -->
+                <p class="text-center text-slate-500 text-sm mt-8 relative z-10">
+                    Sudah punya akun? <a href="#" class="text-amber-500 hover:text-amber-400 font-semibold transition-colors">Login di sini</a>
+                </p>
             </div>
-
-            <!-- Footer Link -->
-            <p class="text-center text-gray-500 text-sm mt-6">
-                Sudah punya akun? <a href="#" class="text-yellow-400 hover:underline">Login di sini</a>
-            </p>
         </div>
 
     </div>
