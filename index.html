@@ -22,8 +22,8 @@
                         brand: {
                             dark: '#0B0F19',
                             card: '#151B2B',
-                            accent: '#F59E0B', // Amber/Yellow
-                            danger: '#EF4444'  // Red
+                            accent: '#F59E0B', 
+                            danger: '#EF4444'  
                         }
                     }
                 }
@@ -65,7 +65,6 @@
 
             <!-- List Berita -->
             <div class="space-y-4">
-                <!-- Berita 1 -->
                 <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-amber-500/50 transition-all duration-300 flex gap-4 items-start">
                     <div class="bg-red-500/20 p-2 rounded-lg text-red-400 text-xl">⚔️</div>
                     <div>
@@ -74,7 +73,6 @@
                     </div>
                 </div>
                 
-                <!-- Berita 2 -->
                 <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-green-500/50 transition-all duration-300 flex gap-4 items-start">
                     <div class="bg-green-500/20 p-2 rounded-lg text-green-400 text-xl"></div>
                     <div>
@@ -83,9 +81,8 @@
                     </div>
                 </div>
 
-                <!-- Berita 3 -->
                 <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl hover:border-blue-500/50 transition-all duration-300 flex gap-4 items-start">
-                    <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400 text-xl">📈</div>
+                    <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400 text-xl"></div>
                     <div>
                         <p class="text-xs text-slate-500 font-semibold mb-1">10 MENIT LALU • GLOBAL MARKET</p>
                         <p class="text-white font-medium">Harga Steel naik 15%! Para trader di region Eropa sedang panen raya.</p>
@@ -98,7 +95,6 @@
         <div class="w-full md:w-1/2 max-w-md">
             <div class="bg-slate-900/80 backdrop-blur-xl border border-slate-700 rounded-2xl shadow-2xl p-8 relative overflow-hidden">
                 
-                <!-- Header Card -->
                 <div class="text-center mb-8 relative z-10">
                     <h1 class="text-3xl font-extrabold text-white tracking-tight">
                         GLORY<span class="text-amber-500">VERSE</span>
@@ -106,7 +102,7 @@
                     <p class="text-slate-400 text-sm mt-2">Masuk ke dalam peta dunia</p>
                 </div>
 
-                <!-- Tab Pilihan: Web2 vs Web3 -->
+                <!-- Tab Pilihan -->
                 <div class="flex bg-slate-800/50 rounded-lg p-1 mb-6 relative z-10 border border-slate-700/50">
                     <button id="tab-email" class="flex-1 py-2.5 rounded-md bg-amber-500 text-slate-900 font-bold text-sm transition-all shadow-lg">
                         📧 Email
@@ -120,12 +116,12 @@
                 <form id="form-email" class="space-y-4 relative z-10">
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Username</label>
-                        <input type="text" placeholder="Username" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                        <input type="text" placeholder="Contoh: Sultan_Betawi" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     </div>
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-400 mb-1.5 uppercase tracking-wider">Email</label>
-                        <input type="email" placeholder="**********" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
+                        <input type="email" placeholder="kamu@email.com" class="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-all">
                     </div>
 
                     <div>
@@ -145,12 +141,10 @@
                         <p class="text-white font-bold text-lg">Beli Tanah, Mint NFT, & Cash Out</p>
                     </div>
                     <button type="button" class="w-full bg-[#AB9FF2] text-white font-bold py-3.5 rounded-lg hover:bg-[#9b8ee0] transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9v-2h2v2zm0-4H9V7h2v5zm4 4h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>
                         Connect Phantom Wallet
                     </button>
                 </div>
 
-                <!-- Footer Link -->
                 <p class="text-center text-slate-500 text-sm mt-8 relative z-10">
                     Sudah punya akun? <a href="#" class="text-amber-500 hover:text-amber-400 font-semibold transition-colors">Login di sini</a>
                 </p>
@@ -158,98 +152,82 @@
         </div>
 
     </div>
-<!-- ... (kode HTML sebelumnya) ... -->
 
-    <!-- SCRIPT UNTUK TAB SWITCHER -->
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT (TAB SWITCHER & SUPABASE)       -->
+    <!-- ========================================== -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Ambil elemen-elemen yang dibutuhkan
+            // 1. LOGIKA TAB SWITCHER
             const tabEmail = document.getElementById('tab-email');
             const tabWallet = document.getElementById('tab-wallet');
             const formEmail = document.getElementById('form-email');
             const formWallet = document.getElementById('form-wallet');
 
-            // 2. Fungsi untuk mereset warna tombol ke posisi awal (tidak aktif)
             const resetTabs = () => {
-                // Reset Tab Email
                 tabEmail.classList.remove('bg-amber-500', 'text-slate-900', 'shadow-lg');
                 tabEmail.classList.add('text-slate-400', 'hover:text-white');
                 
-                // Reset Tab Wallet
                 tabWallet.classList.remove('bg-purple-500', 'text-white', 'shadow-lg');
                 tabWallet.classList.add('text-slate-400', 'hover:text-white');
             };
 
-            // 3. Logika saat Tab Email diklik
             tabEmail.addEventListener('click', () => {
-                resetTabs(); // Reset dulu
-                
-                // Aktifkan Tab Email (Warna Kuning/Amber)
+                resetTabs();
                 tabEmail.classList.add('bg-amber-500', 'text-slate-900', 'shadow-lg');
                 tabEmail.classList.remove('text-slate-400', 'hover:text-white');
-                
-                // Tampilkan Form Email, Sembunyikan Form Wallet
                 formEmail.classList.remove('hidden');
                 formWallet.classList.add('hidden');
             });
 
-            // 4. Logika saat Tab Phantom diklik
             tabWallet.addEventListener('click', () => {
-                resetTabs(); // Reset dulu
-                
-                // Aktifkan Tab Wallet (Warna Ungu khas Phantom Wallet)
+                resetTabs();
                 tabWallet.classList.add('bg-purple-500', 'text-white', 'shadow-lg');
                 tabWallet.classList.remove('text-slate-400', 'hover:text-white');
-                
-                // Tampilkan Form Wallet, Sembunyikan Form Email
                 formWallet.classList.remove('hidden');
                 formEmail.classList.add('hidden');
             });
-        });
-    </script>
-<!-- 1. Panggil Library Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!-- 2. Inisialisasi & Logika Register -->
-    <script>
-        // GANTI DENGAN DATA DARI DASHBOARD SUPABASE KAMU
-        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'; 
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
-        const supabase = supabase.createClient(supabaseUrl, supabaseAnonKey);
-
-        // Fungsi untuk tombol "MULAI PETUALANGAN"
-        document.querySelector('#form-email button').addEventListener('click', async (e) => {
-            e.preventDefault(); // Mencegah halaman refresh
+            // 2. LOGIKA SUPABASE REGISTER
+            // GANTI DENGAN DATA DARI DASHBOARD SUPABASE KAMU
+            const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'; 
+            const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
             
-            const btn = e.target;
-            const originalText = btn.innerText;
-            btn.innerText = 'Memproses...';
-            btn.disabled = true;
+            // Kita pakai nama 'sb' biar nggak bentrok dengan library bawaan
+            const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-            // Ambil data dari input
-            const username = document.querySelector('#form-email input[type="text"]').value;
-            const email = document.querySelector('#form-email input[type="email"]').value;
-            const password = document.querySelector('#form-email input[type="password"]').value;
+            document.querySelector('#form-email button').addEventListener('click', async (e) => {
+                e.preventDefault(); 
+                
+                const btn = e.target;
+                const originalText = btn.innerText;
+                btn.innerText = 'Memproses...';
+                btn.disabled = true;
 
-            // Panggil Supabase Auth
-            const { data, error } = await supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        username: username // Simpan username di metadata Auth
+                const username = document.querySelector('#form-email input[type="text"]').value;
+                const email = document.querySelector('#form-email input[type="email"]').value;
+                const password = document.querySelector('#form-email input[type="password"]').value;
+
+                const { data, error } = await sb.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: { username: username }
                     }
+                });
+
+                if (error) {
+                    alert('Gagal Register: ' + error.message);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                } else {
+                    alert('Berhasil! Silakan cek email kamu untuk verifikasi akun.');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
                 }
             });
-
-            if (error) {
-                alert('Gagal Register: ' + error.message);
-                btn.innerText = originalText;
-                btn.disabled = false;
-            } else {
-                alert('Berhasil! Silakan cek email kamu untuk verifikasi akun.');
-                // Nanti di sini kita redirect ke halaman Login atau Dashboard
-            }
         });
     </script>
 </body>
