@@ -158,6 +158,55 @@
         </div>
 
     </div>
+<!-- ... (kode HTML sebelumnya) ... -->
+
+    <!-- SCRIPT UNTUK TAB SWITCHER -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Ambil elemen-elemen yang dibutuhkan
+            const tabEmail = document.getElementById('tab-email');
+            const tabWallet = document.getElementById('tab-wallet');
+            const formEmail = document.getElementById('form-email');
+            const formWallet = document.getElementById('form-wallet');
+
+            // 2. Fungsi untuk mereset warna tombol ke posisi awal (tidak aktif)
+            const resetTabs = () => {
+                // Reset Tab Email
+                tabEmail.classList.remove('bg-amber-500', 'text-slate-900', 'shadow-lg');
+                tabEmail.classList.add('text-slate-400', 'hover:text-white');
+                
+                // Reset Tab Wallet
+                tabWallet.classList.remove('bg-purple-500', 'text-white', 'shadow-lg');
+                tabWallet.classList.add('text-slate-400', 'hover:text-white');
+            };
+
+            // 3. Logika saat Tab Email diklik
+            tabEmail.addEventListener('click', () => {
+                resetTabs(); // Reset dulu
+                
+                // Aktifkan Tab Email (Warna Kuning/Amber)
+                tabEmail.classList.add('bg-amber-500', 'text-slate-900', 'shadow-lg');
+                tabEmail.classList.remove('text-slate-400', 'hover:text-white');
+                
+                // Tampilkan Form Email, Sembunyikan Form Wallet
+                formEmail.classList.remove('hidden');
+                formWallet.classList.add('hidden');
+            });
+
+            // 4. Logika saat Tab Phantom diklik
+            tabWallet.addEventListener('click', () => {
+                resetTabs(); // Reset dulu
+                
+                // Aktifkan Tab Wallet (Warna Ungu khas Phantom Wallet)
+                tabWallet.classList.add('bg-purple-500', 'text-white', 'shadow-lg');
+                tabWallet.classList.remove('text-slate-400', 'hover:text-white');
+                
+                // Tampilkan Form Wallet, Sembunyikan Form Email
+                formWallet.classList.remove('hidden');
+                formEmail.classList.add('hidden');
+            });
+        });
+    </script>
 
 </body>
 </html>
