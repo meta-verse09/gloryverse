@@ -216,6 +216,7 @@
             currentUser = session.user;
             await fetchPlayerProfile(session.user.id);
             await fetchCompaniesFromDB();
+            await loadPlayerCompaniesFromDB(); // ← INI YANG BARU!
         }
 
         async function fetchPlayerProfile(userId) {
