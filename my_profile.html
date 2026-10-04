@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - GloryVerse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ADSTERRA: SOCIAL BAR -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans min-h-screen">
+
+    <!-- ========================================== -->
+    <!-- NAVBAR (TOP BAR)                           -->
+    <!-- ========================================== -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900 hover:bg-amber-400 transition">G</a>
+            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
+        </div>
+
+        <div class="flex items-center gap-3 text-sm font-semibold">
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                <span>🇬🇧</span> <span id="london-clock">Loading...</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-purple-400">💎</span> <span id="stat-diamond">0</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
+                👻 Connect Wallet
+            </button>
+            <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- MENU BAR (8 TOMBOL)                        -->
+    <!-- ========================================== -->
+    <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
+            <button onclick="openPanel('dashboard')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Dashboard</button>
+            <button onclick="openPanel('profile')" class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
+            <button onclick="openPanel('activities')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚔️ Activities</button>
+            <button onclick="openPanel('business')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button onclick="openPanel('financial')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
+            <button onclick="openPanel('politics')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏛️ Politics</button>
+            <button onclick="openPanel('events')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎉 Events</button>
+            <button onclick="openPanel('community')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SIDE PANEL                                 -->
+    <!-- ========================================== -->
+    <div id="side-panel" class="fixed top-[120px] left-4 z-[600] w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl transform -translate-x-[120%] transition-transform duration-300">
+        <div class="flex justify-between items-center p-4 border-b border-slate-700">
+            <h3 id="panel-title" class="text-amber-500 font-bold text-sm uppercase tracking-wider">MENU</h3>
+            <button onclick="closePanel()" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
+        </div>
+        <div id="panel-content" class="p-4 space-y-2 max-h-[70vh] overflow-y-auto"></div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- MAIN CONTENT: MY PROFILE                   -->
+    <!-- ========================================== -->
+    <div class="pt-[130px] pb-8 max-w-5xl mx-auto px-4">
+        
+        <!-- PROFILE HEADER CARD -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 backdrop-blur-sm mb-6 relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row items-center gap-6 relative z-10">
+                <!-- Avatar -->
+                <div class="w-24 h-24 bg-gradient-to-br from-amber-500 to-red-600 rounded-full flex items-center justify-center text-4xl font-bold text-white border-4 border-slate-900 shadow-xl">
+                    👤
+                </div>
+                
+                <!-- Info -->
+                <div class="flex-1 text-center md:text-left">
+                    <h1 class="text-3xl font-extrabold text-white mb-1" id="profile-username">Loading...</h1>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-3 text-sm text-slate-400 mb-3">
+                        <span class="bg-slate-900 px-3 py-1 rounded-full border border-slate-700"> ID: <span id="profile-id" class="text-slate-300 font-mono text-xs">-</span></span>
+                        <span class="bg-slate-900 px-3 py-1 rounded-full border border-slate-700">📍 Region: <span class="text-slate-300">DKI Jakarta</span></span>
+                    </div>
+                    
+                    <!-- Level & XP Bar -->
+                    <div class="w-full max-w-md">
+                        <div class="flex justify-between text-xs font-bold text-slate-300 mb-1">
+                            <span>Level <span id="profile-level" class="text-amber-500 text-base">1</span></span>
+                            <span id="profile-xp-text">0 / 1000 XP</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-3 border border-slate-700 overflow-hidden">
+                            <div id="profile-xp-bar" class="bg-gradient-to-r from-amber-500 to-red-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-2 w-full md:w-auto">
+                    <button onclick="alert('Fitur Edit Profile akan segera hadir!')" class="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-6 rounded-lg transition text-sm">✏️ Edit Profile</button>
+                    <button onclick="logout()" class="bg-red-600/20 hover:bg-red-600/40 text-red-400 hover:text-white border border-red-600/50 font-bold py-2 px-6 rounded-lg transition text-sm">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS GRID -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm text-center">
+                <div class="text-3xl mb-2">💰</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Gold Balance</p>
+                <p class="text-xl font-bold text-yellow-400" id="stat-gold-card">0</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm text-center">
+                <div class="text-3xl mb-2">🪙</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Currency</p>
+                <p class="text-xl font-bold text-blue-400" id="stat-currency-card">0</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm text-center">
+                <div class="text-3xl mb-2">💎</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Diamond</p>
+                <p class="text-xl font-bold text-purple-400" id="stat-diamond-card">0</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm text-center">
+                <div class="text-3xl mb-2">⚡</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Energy</p>
+                <p class="text-xl font-bold text-green-400">100 / 100</p>
+            </div>
+        </div>
+
+        <!-- WEB3 WALLET CARD -->
+        <div class="bg-gradient-to-br from-purple-900/30 to-slate-800/50 border border-purple-500/30 rounded-2xl p-6 backdrop-blur-sm mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">👻 Solana Wallet (Web3)</h3>
+                <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-3 py-1 rounded-full border border-purple-500/30">NFT Minted: <span id="nft-count">0</span></span>
+            </div>
+            
+            <div class="bg-slate-900/80 rounded-xl p-4 border border-slate-700 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 w-full md:w-auto overflow-hidden">
+                    <div class="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center text-xl flex-shrink-0">👻</div>
+                    <div class="truncate">
+                        <p class="text-xs text-slate-400">Alamat Wallet</p>
+                        <p id="wallet-address-display" class="text-white font-mono text-sm truncate">Belum terhubung</p>
+                    </div>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="connectWallet()" class="flex-1 md:flex-none bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition text-sm">Connect</button>
+                    <button onclick="copyWallet()" class="flex-1 md:flex-none bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition text-sm">📋 Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADSTERRA NATIVE BANNER -->
+        <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-6 backdrop-blur-sm mb-6">
+            <p class="text-slate-400 text-sm text-center mb-4">Advertisement</p>
+            <div class="flex justify-center">
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
+        <!-- WATERMARK FOOTER -->
+        <footer class="text-center py-8 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50 rounded-xl">
+            <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
+            <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
+        </footer>
+    </div><!-- Library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // 1. SETUP SUPABASE
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DI AKHIR DENGAN ANON KEY ASLI KAMU!
+        
+        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        let currentUser = null;
+
+        // 2. AUTH GUARD & LOAD DATA
+        async function checkAuth() {
+            const { data: { session }, error } = await sb.auth.getSession();
+            if (error || !session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUser = session.user;
+            await fetchProfileData(session.user.id);
+        }
+
+        async function fetchProfileData(userId) {
+            const { data, error } = await sb
+                .from('player_profiles')
+                .select('*')
+                .eq('id', userId)
+                .single();
+
+            if (error) {
+                console.error('Gagal ambil data profile:', error);
+                document.getElementById('profile-username').innerText = 'Error loading data';
+                return;
+            }
+
+            // Update UI dengan data dari database
+            document.getElementById('profile-username').innerText = data.username || 'Player';
+            document.getElementById('profile-id').innerText = userId.substring(0, 8) + '...';
+            document.getElementById('profile-level').innerText = data.level || 1;
+            
+            // Update Stats di Navbar & Card
+            const gold = Math.floor(data.gold_balance || 0);
+            const currency = Math.floor(data.currency_balance || 0);
+            const diamond = Math.floor(data.diamond_balance || 0);
+            
+            document.getElementById('stat-gold').innerText = gold.toLocaleString();
+            document.getElementById('stat-currency').innerText = currency.toLocaleString();
+            document.getElementById('stat-diamond').innerText = diamond.toLocaleString();
+            
+            document.getElementById('stat-gold-card').innerText = gold.toLocaleString();
+            document.getElementById('stat-currency-card').innerText = currency.toLocaleString();
+            document.getElementById('stat-diamond-card').innerText = diamond.toLocaleString();
+
+            // Update XP Bar (Asumsi max XP per level = 1000)
+            const xp = data.xp || 0;
+            const xpForNextLevel = 1000;
+            const currentLevelXp = xp % xpForNextLevel;
+            const percentage = (currentLevelXp / xpForNextLevel) * 100;
+            
+            document.getElementById('profile-xp-text').innerText = `${currentLevelXp} / ${xpForNextLevel} XP`;
+            document.getElementById('profile-xp-bar').style.width = `${percentage}%`;
+
+            // Update Wallet Info
+            if (data.solana_wallet_address) {
+                document.getElementById('wallet-address-display').innerText = data.solana_wallet_address;
+                document.getElementById('wallet-btn').innerText = `👻 ${data.solana_wallet_address.substring(0, 6)}...`;
+            } else {
+                document.getElementById('wallet-address-display').innerText = 'Belum terhubung';
+            }
+        }
+
+        // 3. JAM LONDON
+        function updateLondonClock() {
+            const now = new Date();
+            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+        }
+        setInterval(updateLondonClock, 1000);
+        updateLondonClock();
+
+        // 4. SIDE PANEL (Sama seperti dashboard)
+        const panelData = {
+            dashboard: { title: '🗺️ DASHBOARD', items: [{ icon: '🌍', label: 'World Map', action: "window.location.href='dashboard.html'" }, { icon: '📍', label: 'My Location', action: "window.location.href='dashboard.html'" }] },
+            profile: { title: '👤 PROFILE', items: [{ icon: '📊', label: 'My Profile', action: 'closePanel()' }, { icon: '👻', label: 'Connect Wallet', action: 'connectWallet()' }, { icon: '🔗', label: 'Referral Program', action: 'closePanel()' }, { icon: '', label: 'Inventory', action: 'closePanel()' }, { icon: '💎', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }] },
+            activities: { title: '⚔️ ACTIVITIES', items: [{ icon: '💼', label: 'Work', action: 'closePanel()' }, { icon: '️', label: 'Train', action: 'closePanel()' }, { icon: '⚔️', label: 'Battle', action: 'closePanel()' }, { icon: '🌲', label: 'Gather', action: 'closePanel()' }] },
+            business: { title: '🏢 BUSINESS', items: [{ icon: '🏭', label: 'My Companies', action: 'closePanel()' }, { icon: '🏠', label: 'Real Estate', action: 'closePanel()' }, { icon: '', label: 'Global Market', action: 'closePanel()' }, { icon: '🏪', label: 'Local Market', action: 'closePanel()' }] },
+            financial: { title: ' FINANCIAL', items: [{ icon: '', label: 'Exchange (SOL)', action: 'closePanel()' }, { icon: '📊', label: 'Market Chart', action: 'closePanel()' }, { icon: '🧾', label: 'Transaction History', action: 'closePanel()' }] },
+            politics: { title: '🏛️ POLITICS', items: [{ icon: '📍', label: 'Region Info', action: 'closePanel()' }, { icon: '🗳️', label: 'Elections', action: 'closePanel()' }, { icon: '⚖️', label: 'Laws & Taxes', action: 'closePanel()' }, { icon: '🤝', label: 'War & Alliance', action: 'closePanel()' }] },
+            events: { title: '🎉 EVENTS', items: [{ icon: '🏆', label: 'Active Events', action: 'closePanel()' }, { icon: '🔮', label: 'Predictions', action: 'closePanel()' }, { icon: '🧠', label: 'Geo Challenge', action: "alert('🧠 Fitur Daily Geo Challenge akan segera hadir!')" }, { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }] },
+            community: { title: ' COMMUNITY', items: [{ icon: '️', label: 'Guilds / Parties', action: 'closePanel()' }, { icon: '', label: 'Newspaper / News', action: 'closePanel()' }, { icon: '', label: 'Chat / Forum', action: 'closePanel()' }] }
+        };
+
+        function openPanel(menuKey) {
+            const panel = document.getElementById('side-panel');
+            const title = document.getElementById('panel-title');
+            const content = document.getElementById('panel-content');
+            const data = panelData[menuKey];
+            if (!data) return;
+            title.innerText = data.title;
+            content.innerHTML = data.items.map(item => `<button onclick="${item.action}" class="w-full flex items-center gap-3 p-3 bg-slate-800 hover:bg-amber-600 rounded-lg transition text-left"><span class="text-xl">${item.icon}</span><span class="text-white font-semibold text-sm">${item.label}</span></button>`).join('');
+            panel.classList.remove('-translate-x-[120%]');
+            panel.classList.add('translate-x-0');
+        }
+
+        function closePanel() {
+            const panel = document.getElementById('side-panel');
+            panel.classList.remove('translate-x-0');
+            panel.classList.add('-translate-x-[120%]');
+        }
+
+        // 5. FITUR WALLET & LOGOUT
+        function connectWallet() {
+            if (window.solana && window.solana.isPhantom) {
+                window.solana.connect().then(resp => {
+                    alert(`✅ Wallet terhubung: ${resp.publicKey.toString()}\n\n(Fitur auto-save ke database akan ditambahkan di tahap berikutnya)`);
+                    document.getElementById('wallet-address-display').innerText = resp.publicKey.toString();
+                }).catch(err => console.error(err));
+            } else {
+                alert(' Phantom Wallet tidak terdeteksi. Silakan install ekstensinya.');
+            }
+        }
+
+        function copyWallet() {
+            const addr = document.getElementById('wallet-address-display').innerText;
+            if (addr && addr !== 'Belum terhubung') {
+                navigator.clipboard.writeText(addr);
+                alert('📋 Alamat wallet berhasil disalin!');
+            } else {
+                alert('️ Belum ada wallet yang terhubung.');
+            }
+        }
+
+        async function logout() {
+            if(confirm('Yakin mau logout dari GloryVerse?')) {
+                await sb.auth.signOut();
+                window.location.href = 'index.html';
+            }
+        }
+
+        // JALANKAN SAAT HALAMAN DIMUAT
+        checkAuth();
+    </script>
+</body>
+</html>
