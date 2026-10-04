@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referral Program - GloryVerse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ADSTERRA: SOCIAL BAR -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+        
+        .glow-box {
+            box-shadow: 0 0 30px rgba(245, 158, 11, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900 hover:bg-amber-400 transition">G</a>
+            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
+        </div>
+        <div class="flex items-center gap-3 text-sm font-semibold">
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                <span>🇬</span> <span id="london-clock">Loading...</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-purple-400"></span> <span id="stat-diamond">0</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">👻 Connect Wallet</button>
+            <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- MENU BAR -->
+    <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
+            <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
+            <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
+            <button onclick="window.location.href='geo_challenge.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🧠 Geo Challenge</button>
+            <button onclick="window.location.href='leaderboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Leaderboard</button>
+            <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🔗 Referral</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Community</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT: REFERRAL -->
+    <div class="pt-[130px] pb-8 max-w-5xl mx-auto px-4">
+        
+        <!-- HEADER -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-white mb-2"> Referral Program</h1>
+            <p class="text-slate-400">Ajak teman, dapat reward! Setiap teman yang join lewat link kamu = <span class="text-amber-500 font-bold">+50 Gold</span></p>
+        </div>
+
+        <!-- REFERRAL CODE CARD -->
+        <div class="bg-gradient-to-br from-amber-600/20 to-orange-600/10 border-2 border-amber-500 rounded-2xl p-8 mb-8 glow-box relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="relative z-10 text-center">
+                <p class="text-amber-500 text-sm font-bold uppercase tracking-widest mb-3">Kode Referral Kamu</p>
+                <div class="bg-slate-900/80 rounded-xl p-6 mb-4 border border-slate-700">
+                    <p class="text-5xl font-extrabold text-white tracking-wider mb-2" id="referral-code">Loading...</p>
+                    <p class="text-slate-400 text-sm">Share kode ini ke teman-teman kamu!</p>
+                </div>
+                
+                <div class="bg-slate-900/80 rounded-xl p-4 mb-6 border border-slate-700">
+                    <p class="text-xs text-slate-500 mb-2">Link Referral</p>
+                    <p class="text-white font-mono text-sm break-all" id="referral-link">https://gloryverse.id/?ref=...</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <button onclick="copyReferralLink()" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
+                        📋 Copy Link
+                    </button>
+                    <button onclick="shareWhatsApp()" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
+                        📱 Share WhatsApp
+                    </button>
+                    <button onclick="shareTwitter()" class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-3 px-6 rounded-lg transition flex items-center justify-center gap-2">
+                        🐦 Share Twitter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS CARDS -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm text-center">
+                <div class="text-4xl mb-2">👥</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Total Referral</p>
+                <p class="text-3xl font-bold text-white" id="stat-total-referrals">0</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm text-center">
+                <div class="text-4xl mb-2">💰</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Reward Didapat</p>
+                <p class="text-3xl font-bold text-amber-500" id="stat-total-rewards">0 Gold</p>
+            </div>
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm text-center">
+                <div class="text-4xl mb-2">🎁</div>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Bonus per Teman</p>
+                <p class="text-3xl font-bold text-green-400">50 Gold</p>
+            </div>
+        </div>
+
+        <!-- REWARD TIERS -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl p-6 mb-8 backdrop-blur-sm">
+            <h3 class="text-xl font-bold text-white mb-4">🎯 Target Reward</h3>
+            <div class="space-y-3">
+                <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl"></span>
+                        <div>
+                            <p class="text-white font-semibold">Ajak 5 Teman</p>
+                            <p class="text-slate-400 text-xs">Dapat Badge "Recruiter"</p>
+                        </div>
+                    </div>
+                    <span class="text-amber-500 font-bold">250 Gold</span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-700">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🥈</span>
+                        <div>
+                            <p class="text-white font-semibold">Ajak 10 Teman</p>
+                            <p class="text-slate-400 text-xs">Dapat Badge "Influencer" + 10 Diamond</p>
+                        </div>
+                    </div>
+                    <span class="text-amber-500 font-bold">500 Gold + 10 </span>
+                </div>
+                <div class="flex items-center justify-between p-4 bg-gradient-to-r from-amber-500/20 to-orange-500/20 rounded-lg border-2 border-amber-500">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">🥇</span>
+                        <div>
+                            <p class="text-white font-semibold">Ajak 25 Teman</p>
+                            <p class="text-slate-400 text-xs">Dapat Badge "Legend" + 50 Diamond + NFT Special</p>
+                        </div>
+                    </div>
+                    <span class="text-amber-500 font-bold">1250 Gold + 50 💎</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT REFERRALS LIST -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-2xl overflow-hidden backdrop-blur-sm mb-8">
+            <div class="p-4 border-b border-slate-700 bg-slate-900/50">
+                <h3 class="text-lg font-bold text-white"> Teman yang Sudah Join</h3>
+            </div>
+            <div id="referrals-list" class="divide-y divide-slate-700">
+                <div class="p-6 text-center text-slate-500">Memuat data referral...</div>
+            </div>
+        </div>
+
+        <!-- ADSTERRA NATIVE BANNER -->
+        <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-4 backdrop-blur-sm mb-6">
+            <p class="text-slate-400 text-xs text-center mb-2">Advertisement</p>
+            <div class="flex justify-center">
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
+        <!-- WATERMARK FOOTER -->
+        <footer class="text-center py-6 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50 rounded-xl">
+            <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
+            <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
+        </footer>
+    </div>
+    <!-- Library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // 1. SETUP SUPABASE
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
+        
+        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        let currentUser = null;
+        let myReferralCode = '';
+
+        // 2. AUTH GUARD & LOAD DATA
+        async function checkAuth() {
+            const { data: { session }, error } = await sb.auth.getSession();
+            if (error || !session) { window.location.href = 'index.html'; return; }
+            currentUser = session.user;
+            await loadReferralData(session.user.id);
+        }
+
+        async function loadReferralData(userId) {
+            // Ambil data profile
+            const { data: profile, error } = await sb.from('player_profiles').select('*').eq('id', userId).single();
+            if (error) { console.error('Gagal load profile:', error); return; }
+
+            // Update Navbar Stats
+            document.getElementById('stat-gold').innerText = Math.floor(profile.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-diamond').innerText = Math.floor(profile.diamond_balance || 0).toLocaleString();
+
+            // Logic Referral Code
+            myReferralCode = profile.referral_code;
+            if (!myReferralCode) {
+                // Generate kode baru jika belum ada (Contoh: GLORY-X8K2P)
+                myReferralCode = 'GLORY-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                await sb.from('player_profiles').update({ referral_code: myReferralCode }).eq('id', userId);
+            }
+
+            // Tampilkan di UI
+            document.getElementById('referral-code').innerText = myReferralCode;
+            const refLink = `https://gloryverse.id/?ref=${myReferralCode}`;
+            document.getElementById('referral-link').innerText = refLink;
+
+            // Ambil data teman yang sudah join lewat kode ini
+            const { data: referrals, error: refError } = await sb
+                .from('player_profiles')
+                .select('username, created_at')
+                .eq('referred_by', myReferralCode)
+                .order('created_at', { ascending: false });
+
+            if (refError) console.error('Gagal load referrals:', refError);
+
+            const totalRefs = referrals ? referrals.length : 0;
+            const totalRewards = totalRefs * 50; // 50 Gold per teman
+
+            document.getElementById('stat-total-referrals').innerText = totalRefs;
+            document.getElementById('stat-total-rewards').innerText = totalRewards + ' Gold';
+
+            // Render List Teman
+            const listContainer = document.getElementById('referrals-list');
+            if (totalRefs === 0) {
+                listContainer.innerHTML = '<div class="p-6 text-center text-slate-500">Belum ada teman yang join. Yuk share link kamu!</div>';
+            } else {
+                listContainer.innerHTML = referrals.map(r => `
+                    <div class="flex items-center justify-between p-4 hover:bg-slate-800/50 transition">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-500 font-bold">👤</div>
+                            <div>
+                                <p class="text-white font-semibold">${r.username}</p>
+                                <p class="text-slate-500 text-xs">Join pada ${new Date(r.created_at).toLocaleDateString('id-ID')}</p>
+                            </div>
+                        </div>
+                        <span class="text-green-400 font-bold text-sm">+50 Gold</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // 3. FITUR SHARE & COPY
+        function copyReferralLink() {
+            const link = document.getElementById('referral-link').innerText;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('📋 Link referral berhasil disalin!');
+            }).catch(() => {
+                alert('Gagal menyalin link.');
+            });
+        }
+
+        function shareWhatsApp() {
+            const link = document.getElementById('referral-link').innerText;
+            const text = `Ayo main GloryVerse! Game strategi peta dunia berbasis Web3. Daftar pakai link ini dan kita bisa dapat bonus: ${link}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function shareTwitter() {
+            const link = document.getElementById('referral-link').innerText;
+            const text = `I'm conquering the real world map in GloryVerse! Join me and get a bonus: ${link} #GloryVerse #Web3Gaming`;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // 4. JAM LONDON
+        function updateLondonClock() {
+            const now = new Date();
+            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+        }
+        setInterval(updateLondonClock, 1000);
+        updateLondonClock();
+
+        // JALANKAN SAAT HALAMAN DIMUAT
+        checkAuth();
+    </script>
+</body>
+</html>
