@@ -194,7 +194,9 @@
             <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
             <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
         </footer>
-    </div><!-- Library Supabase -->
+    </div>
+	
+	<!-- Library Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
@@ -248,25 +250,75 @@
             document.getElementById('stat-currency-card').innerText = currency.toLocaleString();
             document.getElementById('stat-diamond-card').innerText = diamond.toLocaleString();
 
-            // Update XP Bar (Asumsi max XP per level = 1000)
+            // Update XP Bar
             const xp = data.xp || 0;
             const xpForNextLevel = 1000;
             const currentLevelXp = xp % xpForNextLevel;
             const percentage = (currentLevelXp / xpForNextLevel) * 100;
-            
             document.getElementById('profile-xp-text').innerText = `${currentLevelXp} / ${xpForNextLevel} XP`;
             document.getElementById('profile-xp-bar').style.width = `${percentage}%`;
 
-            // Update Wallet Info
+            // Update Wallet Info (Jika sudah pernah connect sebelumnya)
             if (data.solana_wallet_address) {
-                document.getElementById('wallet-address-display').innerText = data.solana_wallet_address;
-                document.getElementById('wallet-btn').innerText = `👻 ${data.solana_wallet_address.substring(0, 6)}...`;
+                const addr = data.solana_wallet_address;
+                const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
+                document.getElementById('wallet-address-display').innerText = addr;
+                document.getElementById('wallet-btn').innerText = ` ${shortAddr}`;
+                document.getElementById('wallet-btn').className = 'bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
             } else {
                 document.getElementById('wallet-address-display').innerText = 'Belum terhubung';
+                document.getElementById('wallet-btn').innerText = '👻 Connect Wallet';
             }
         }
 
-        // 3. JAM LONDON
+        // 3. FUNGSI CONNECT WALLET (FRONTEND + DB SAVE)
+        async function connectWallet() {
+            const btn = document.getElementById('wallet-btn');
+            const display = document.getElementById('wallet-address-display');
+            
+            // Cek apakah Phantom terinstall
+            if (!window.solana || !window.solana.isPhantom) {
+                alert('👻 Phantom Wallet tidak terdeteksi!\n\nSilakan install ekstensi Phantom di browser kamu.');
+                window.open('https://phantom.app/', '_blank');
+                return;
+            }
+
+            try {
+                btn.innerText = '⏳ Connecting...';
+                
+                // Minta user approve di Phantom
+                const resp = await window.solana.connect();
+                const address = resp.publicKey.toString();
+                
+                // Format alamat pendek (contoh: 7xK...9pQ)
+                const shortAddr = `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+                
+                // Update UI
+                display.innerText = address;
+                btn.innerText = ` ${shortAddr}`;
+                btn.className = 'bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
+                
+                // Simpan ke Database Supabase
+                if (currentUser) {
+                    const { error } = await sb
+                        .from('player_profiles')
+                        .update({ solana_wallet_address: address })
+                        .eq('id', currentUser.id);
+                        
+                    if (error) throw error;
+                    alert(`✅ Wallet Berhasil Terhubung!\n\nAlamat: ${shortAddr}\n\nData tersimpan di profil kamu.`);
+                }
+            } catch (err) {
+                console.error(err);
+                btn.innerText = '👻 Connect Wallet';
+                if (err.code === 4001) {
+                    alert('❌ Kamu menolak permintaan koneksi.');
+                } else {
+                    alert('❌ Gagal menghubungkan wallet: ' + err.message);
+                }
+            }
+        }
+		// 4. JAM LONDON
         function updateLondonClock() {
             const now = new Date();
             document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
@@ -274,16 +326,16 @@
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
 
-        // 4. SIDE PANEL (Sama seperti dashboard)
+        // 5. SIDE PANEL
         const panelData = {
-            dashboard: { title: '🗺️ DASHBOARD', items: [{ icon: '🌍', label: 'World Map', action: "window.location.href='dashboard.html'" }, { icon: '📍', label: 'My Location', action: "window.location.href='dashboard.html'" }] },
-            profile: { title: '👤 PROFILE', items: [{ icon: '📊', label: 'My Profile', action: 'closePanel()' }, { icon: '👻', label: 'Connect Wallet', action: 'connectWallet()' }, { icon: '🔗', label: 'Referral Program', action: 'closePanel()' }, { icon: '', label: 'Inventory', action: 'closePanel()' }, { icon: '💎', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }] },
-            activities: { title: '⚔️ ACTIVITIES', items: [{ icon: '💼', label: 'Work', action: 'closePanel()' }, { icon: '️', label: 'Train', action: 'closePanel()' }, { icon: '⚔️', label: 'Battle', action: 'closePanel()' }, { icon: '🌲', label: 'Gather', action: 'closePanel()' }] },
-            business: { title: '🏢 BUSINESS', items: [{ icon: '🏭', label: 'My Companies', action: 'closePanel()' }, { icon: '🏠', label: 'Real Estate', action: 'closePanel()' }, { icon: '', label: 'Global Market', action: 'closePanel()' }, { icon: '🏪', label: 'Local Market', action: 'closePanel()' }] },
-            financial: { title: ' FINANCIAL', items: [{ icon: '', label: 'Exchange (SOL)', action: 'closePanel()' }, { icon: '📊', label: 'Market Chart', action: 'closePanel()' }, { icon: '🧾', label: 'Transaction History', action: 'closePanel()' }] },
+            dashboard: { title: '️ DASHBOARD', items: [{ icon: '', label: 'World Map', action: "window.location.href='dashboard.html'" }, { icon: '📍', label: 'My Location', action: "window.location.href='dashboard.html'" }] },
+            profile: { title: '👤 PROFILE', items: [{ icon: '📊', label: 'My Profile', action: 'closePanel()' }, { icon: '👻', label: 'Connect Wallet', action: 'connectWallet()' }, { icon: '', label: 'Referral Program', action: 'closePanel()' }, { icon: '🎒', label: 'Inventory', action: 'closePanel()' }, { icon: '💎', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }] },
+            activities: { title: '⚔️ ACTIVITIES', items: [{ icon: '💼', label: 'Work', action: 'closePanel()' }, { icon: '🏋️', label: 'Train', action: 'closePanel()' }, { icon: '⚔️', label: 'Battle', action: 'closePanel()' }, { icon: '🌲', label: 'Gather', action: 'closePanel()' }] },
+            business: { title: '🏢 BUSINESS', items: [{ icon: '🏭', label: 'My Companies', action: 'closePanel()' }, { icon: '🏠', label: 'Real Estate', action: 'closePanel()' }, { icon: '🌍', label: 'Global Market', action: 'closePanel()' }, { icon: '🏪', label: 'Local Market', action: 'closePanel()' }] },
+            financial: { title: '📈 FINANCIAL', items: [{ icon: '💱', label: 'Exchange (SOL)', action: 'closePanel()' }, { icon: '📊', label: 'Market Chart', action: 'closePanel()' }, { icon: '🧾', label: 'Transaction History', action: 'closePanel()' }] },
             politics: { title: '🏛️ POLITICS', items: [{ icon: '📍', label: 'Region Info', action: 'closePanel()' }, { icon: '🗳️', label: 'Elections', action: 'closePanel()' }, { icon: '⚖️', label: 'Laws & Taxes', action: 'closePanel()' }, { icon: '🤝', label: 'War & Alliance', action: 'closePanel()' }] },
-            events: { title: '🎉 EVENTS', items: [{ icon: '🏆', label: 'Active Events', action: 'closePanel()' }, { icon: '🔮', label: 'Predictions', action: 'closePanel()' }, { icon: '🧠', label: 'Geo Challenge', action: "alert('🧠 Fitur Daily Geo Challenge akan segera hadir!')" }, { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }] },
-            community: { title: ' COMMUNITY', items: [{ icon: '️', label: 'Guilds / Parties', action: 'closePanel()' }, { icon: '', label: 'Newspaper / News', action: 'closePanel()' }, { icon: '', label: 'Chat / Forum', action: 'closePanel()' }] }
+            events: { title: '🎉 EVENTS', items: [{ icon: '🏆', label: 'Active Events', action: 'closePanel()' }, { icon: '🔮', label: 'Predictions', action: 'closePanel()' }, { icon: '', label: 'Geo Challenge', action: "alert('🧠 Fitur Daily Geo Challenge akan segera hadir!')" }, { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }] },
+            community: { title: '🌐 COMMUNITY', items: [{ icon: '🛡️', label: 'Guilds / Parties', action: 'closePanel()' }, { icon: '📰', label: 'Newspaper / News', action: 'closePanel()' }, { icon: '💬', label: 'Chat / Forum', action: 'closePanel()' }] }
         };
 
         function openPanel(menuKey) {
@@ -304,25 +356,14 @@
             panel.classList.add('-translate-x-[120%]');
         }
 
-        // 5. FITUR WALLET & LOGOUT
-        function connectWallet() {
-            if (window.solana && window.solana.isPhantom) {
-                window.solana.connect().then(resp => {
-                    alert(`✅ Wallet terhubung: ${resp.publicKey.toString()}\n\n(Fitur auto-save ke database akan ditambahkan di tahap berikutnya)`);
-                    document.getElementById('wallet-address-display').innerText = resp.publicKey.toString();
-                }).catch(err => console.error(err));
-            } else {
-                alert(' Phantom Wallet tidak terdeteksi. Silakan install ekstensinya.');
-            }
-        }
-
+        // 6. UTILITIES (COPY & LOGOUT)
         function copyWallet() {
             const addr = document.getElementById('wallet-address-display').innerText;
             if (addr && addr !== 'Belum terhubung') {
                 navigator.clipboard.writeText(addr);
                 alert('📋 Alamat wallet berhasil disalin!');
             } else {
-                alert('️ Belum ada wallet yang terhubung.');
+                alert('⚠️ Belum ada wallet yang terhubung.');
             }
         }
 
