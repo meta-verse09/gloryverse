@@ -357,16 +357,67 @@
         
         // Data contoh company yang bisa dibangun (nanti dari database)
         const availableCompanies = [
-            { id: 1, name: 'Cereal Farm', icon: '', tier: 1, cost: 100, currency: 'gold' },
-            { id: 2, name: 'Coffee Plantation', icon: '☕', tier: 1, cost: 150, currency: 'gold' },
-            { id: 3, name: 'Iron Mine', icon: '⛏️', tier: 1, cost: 200, currency: 'gold' },
-            { id: 4, name: 'Solar Panel Farm', icon: '⚡', tier: 0, cost: 0, currency: 'free' },
-            { id: 5, name: 'Water Well Drilling', icon: '💧', tier: 0, cost: 0, currency: 'free' },
-            { id: 6, name: 'Restaurant', icon: '🍽️', tier: 3, cost: 500, currency: 'gold' },
-            { id: 7, name: 'Foundry', icon: '🏭', tier: 2, cost: 800, currency: 'gold' },
-            { id: 8, name: 'Vehicles Factory', icon: '🚗', tier: 2, cost: 1500, currency: 'gold' }
-        ];
+            // TIER 0 - UTILITY (GRATIS)
+            { id: 1, name: 'Solar Panel Farm', icon: '⚡', tier: 0, cost: 0, currency: 'free' },
+            { id: 2, name: 'Water Well Drilling', icon: '💧', tier: 0, cost: 0, currency: 'free' },
 
+            // TIER 1 - GATHERING (100-300 Gold)
+            { id: 3, name: 'Cereal Farm', icon: '🌾', tier: 1, cost: 100, currency: 'gold' },
+            { id: 4, name: 'Coffee Plantation', icon: '☕', tier: 1, cost: 150, currency: 'gold' },
+            { id: 5, name: 'Cotton Plantation', icon: '🌿', tier: 1, cost: 200, currency: 'gold' },
+            { id: 6, name: 'Herbs Plantation', icon: '', tier: 1, cost: 100, currency: 'gold' },
+            { id: 7, name: 'Vegetables Farm', icon: '🥕', tier: 1, cost: 100, currency: 'gold' },
+            { id: 8, name: 'Vineyard', icon: '🍇', tier: 1, cost: 250, currency: 'gold' },
+            { id: 9, name: 'Wood Cutter', icon: '🪓', tier: 1, cost: 150, currency: 'gold' },
+            { id: 10, name: 'Coal Mine', icon: '', tier: 1, cost: 150, currency: 'gold' },
+            { id: 11, name: 'Iron Mine', icon: '⛏️', tier: 1, cost: 150, currency: 'gold' },
+            { id: 12, name: 'Oil Extraction', icon: '🛢️', tier: 1, cost: 200, currency: 'gold' },
+            { id: 13, name: 'Sand Pit', icon: '🏖️', tier: 1, cost: 150, currency: 'gold' },
+            { id: 14, name: 'Stone Quarry', icon: '🗿', tier: 1, cost: 150, currency: 'gold' },
+            { id: 15, name: 'Uranium Mine', icon: '☢️', tier: 1, cost: 300, currency: 'gold' },
+
+            // TIER 2 - PROCESSING (500-1500 Gold)
+            { id: 16, name: 'Bakery', icon: '🍞', tier: 2, cost: 500, currency: 'gold' },
+            { id: 17, name: 'Cow Farm', icon: '🐄', tier: 2, cost: 600, currency: 'gold' },
+            { id: 18, name: 'Foundry', icon: '', tier: 2, cost: 800, currency: 'gold' },
+            { id: 19, name: 'Glass Factory', icon: '🪟', tier: 2, cost: 700, currency: 'gold' },
+            { id: 20, name: 'Milk Factory', icon: '🥛', tier: 2, cost: 500, currency: 'gold' },
+            { id: 21, name: 'Mill', icon: '', tier: 2, cost: 500, currency: 'gold' },
+            { id: 22, name: 'Paper Mill', icon: '📄', tier: 2, cost: 600, currency: 'gold' },
+            { id: 23, name: 'Pig Farm', icon: '🐖', tier: 2, cost: 600, currency: 'gold' },
+            { id: 24, name: 'Recycling Center', icon: '♻️', tier: 2, cost: 800, currency: 'gold' },
+            { id: 25, name: 'Laboratory', icon: '🔬', tier: 2, cost: 1000, currency: 'gold' },
+            { id: 26, name: 'Parts Factory', icon: '️', tier: 2, cost: 1200, currency: 'gold' },
+            { id: 27, name: 'Plastics Factory', icon: '🧪', tier: 2, cost: 1000, currency: 'gold' },
+            { id: 28, name: 'Refinery', icon: '🏗️', tier: 2, cost: 1500, currency: 'gold' },
+            { id: 29, name: 'Fabrics Factory', icon: '🧵', tier: 2, cost: 800, currency: 'gold' },
+
+            // TIER 3 - FINAL GOODS (2000-5000 Gold)
+            { id: 30, name: 'House Construction', icon: '', tier: 3, cost: 3000, currency: 'gold' },
+            { id: 31, name: 'Brewery', icon: '🍺', tier: 3, cost: 2000, currency: 'gold' },
+            { id: 32, name: 'Cheese Shop', icon: '', tier: 3, cost: 2500, currency: 'gold' },
+            { id: 33, name: 'Filling Station', icon: '⛽', tier: 3, cost: 2000, currency: 'gold' },
+            { id: 34, name: 'Milk and Coffee Shop', icon: '☕', tier: 3, cost: 2500, currency: 'gold' },
+            { id: 35, name: 'Pharmacy', icon: '💊', tier: 3, cost: 3000, currency: 'gold' },
+            { id: 36, name: 'Restaurant', icon: '🍽️', tier: 3, cost: 3500, currency: 'gold' },
+            { id: 37, name: 'Winery', icon: '🍷', tier: 3, cost: 2500, currency: 'gold' },
+            { id: 38, name: 'Bank', icon: '🏦', tier: 3, cost: 4000, currency: 'gold' },
+            { id: 39, name: 'Clothes Factory', icon: '👕', tier: 3, cost: 3000, currency: 'gold' },
+            { id: 40, name: 'Knowledge Academy', icon: '🎓', tier: 3, cost: 5000, currency: 'gold' },
+            { id: 41, name: 'Newspaper', icon: '📰', tier: 3, cost: 2000, currency: 'gold' },
+            { id: 42, name: 'Notary', icon: '📝', tier: 3, cost: 3500, currency: 'gold' },
+
+            // TIER 3 SPECIAL - MILITARY (Gold + Diamond)
+            { id: 43, name: 'Attack Weapons Factory', icon: '⚔️', tier: 3, cost: 5000, currency: 'gold+diamond', diamondCost: 10 },
+            { id: 44, name: 'Defense Weapons Factory', icon: '🛡️', tier: 3, cost: 5000, currency: 'gold+diamond', diamondCost: 10 },
+            { id: 45, name: 'Fertilizing Factory', icon: '🌱', tier: 3, cost: 8000, currency: 'gold' },
+            { id: 46, name: 'Military Factory', icon: '🚀', tier: 3, cost: 10000, currency: 'gold+diamond', diamondCost: 50 },
+            { id: 47, name: 'Vehicles Factory', icon: '', tier: 3, cost: 8000, currency: 'gold+diamond', diamondCost: 20 },
+
+            // SPECIAL
+            { id: 48, name: 'Medal Shop', icon: '🏅', tier: 0, cost: 0, currency: 'achievement' }
+        ];
+        
         let selectedCoordinates = null;
 
         // Event listener saat peta diklik
@@ -422,14 +473,20 @@
             const company = availableCompanies.find(c => c.id === companyId);
             if (!company || !selectedCoordinates) return;
             
-            // Konfirmasi sebelum bangun
-            const confirmBuild = confirm(`Bangun ${company.name} di koordinat ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}?`);
+            let message = `Bangun ${company.name} di koordinat ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}?\n\n`;
+            
+            if (company.cost === 0) {
+                message += "Biaya: GRATIS";
+            } else if (company.currency === 'gold+diamond') {
+                message += `Biaya: ${company.cost} Gold + ${company.diamondCost} Diamond`;
+            } else {
+                message += `Biaya: ${company.cost} Gold`;
+            }
+
+            const confirmBuild = confirm(message);
             
             if (confirmBuild) {
-                // TODO: Nanti di sini kita simpan ke database Supabase
-                alert(`✅ ${company.name} berhasil dibangun!\n\nKoordinat: ${selectedCoordinates.lat.toFixed(6)}, ${selectedCoordinates.lng.toFixed(6)}\n\n(Data akan disimpan ke database)`);
-                
-                // Tambahkan marker di peta (visual feedback)
+                // Tambahkan marker di peta
                 const markerIcon = L.divIcon({
                     className: 'custom-div-icon',
                     html: `<div style="background-color: #F59E0B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px #F59E0B;"></div>`,
@@ -441,6 +498,7 @@
                     .addTo(map)
                     .bindPopup(`<b>${company.name}</b><br>Tier ${company.tier}`);
                 
+                alert(`✅ ${company.name} berhasil dibangun!`);
                 closeBuildModal();
             }
         }
