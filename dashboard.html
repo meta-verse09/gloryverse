@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -349,8 +350,132 @@
         }
 
         // JALANKAN
+        // ==========================================
+        // 6. LOGIKA KLIK PETA (BUILD COMPANY)
+        // ==========================================
+        
+        // Data contoh company yang bisa dibangun (nanti dari database)
+        const availableCompanies = [
+            { id: 1, name: 'Cereal Farm', icon: '', tier: 1, cost: 100, currency: 'gold' },
+            { id: 2, name: 'Coffee Plantation', icon: '☕', tier: 1, cost: 150, currency: 'gold' },
+            { id: 3, name: 'Iron Mine', icon: '⛏️', tier: 1, cost: 200, currency: 'gold' },
+            { id: 4, name: 'Solar Panel Farm', icon: '⚡', tier: 0, cost: 0, currency: 'free' },
+            { id: 5, name: 'Water Well Drilling', icon: '💧', tier: 0, cost: 0, currency: 'free' },
+            { id: 6, name: 'Restaurant', icon: '🍽️', tier: 3, cost: 500, currency: 'gold' },
+            { id: 7, name: 'Foundry', icon: '🏭', tier: 2, cost: 800, currency: 'gold' },
+            { id: 8, name: 'Vehicles Factory', icon: '🚗', tier: 2, cost: 1500, currency: 'gold' }
+        ];
+
+        let selectedCoordinates = null;
+
+        // Event listener saat peta diklik
+        map.on('click', function(e) {
+            selectedCoordinates = {
+                lat: e.latlng.lat,
+                lng: e.latlng.lng
+            };
+            
+            openBuildModal(selectedCoordinates);
+        });
+
+        function openBuildModal(coords) {
+            const modal = document.getElementById('build-modal');
+            const coordDisplay = document.getElementById('selected-coords');
+            const companyList = document.getElementById('company-list');
+            
+            // Tampilkan koordinat
+            coordDisplay.innerText = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
+            
+            // Generate list company
+            companyList.innerHTML = availableCompanies.map(company => `
+                <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500" onclick="selectCompany(${company.id})">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">${company.icon}</span>
+                        <div>
+                            <p class="text-white font-semibold text-sm">${company.name}</p>
+                            <p class="text-slate-400 text-xs">Tier ${company.tier}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        ${company.cost === 0 
+                            ? '<span class="text-green-400 text-xs font-bold">GRATIS</span>' 
+                            : `<span class="text-amber-500 text-xs font-bold">${company.cost} ${company.currency}</span>`
+                        }
+                    </div>
+                </div>
+            `).join('');
+            
+            // Tampilkan modal
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeBuildModal() {
+            const modal = document.getElementById('build-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            selectedCoordinates = null;
+        }
+
+        function selectCompany(companyId) {
+            const company = availableCompanies.find(c => c.id === companyId);
+            if (!company || !selectedCoordinates) return;
+            
+            // Konfirmasi sebelum bangun
+            const confirmBuild = confirm(`Bangun ${company.name} di koordinat ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}?`);
+            
+            if (confirmBuild) {
+                // TODO: Nanti di sini kita simpan ke database Supabase
+                alert(`✅ ${company.name} berhasil dibangun!\n\nKoordinat: ${selectedCoordinates.lat.toFixed(6)}, ${selectedCoordinates.lng.toFixed(6)}\n\n(Data akan disimpan ke database)`);
+                
+                // Tambahkan marker di peta (visual feedback)
+                const markerIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color: #F59E0B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px #F59E0B;"></div>`,
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 8]
+                });
+                
+                L.marker([selectedCoordinates.lat, selectedCoordinates.lng], { icon: markerIcon })
+                    .addTo(map)
+                    .bindPopup(`<b>${company.name}</b><br>Tier ${company.tier}`);
+                
+                closeBuildModal();
+            }
+        }
         checkAuth();
         setInterval(checkAuth, 60000);
     </script>
+    <!-- ========================================== -->
+    <!-- MODAL BANGUN COMPANY                       -->
+    <!-- ========================================== -->
+    <div id="build-modal" class="hidden fixed inset-0 z-[1000] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-slate-700 bg-slate-800/50">
+                <div>
+                    <h3 class="text-amber-500 font-bold text-lg">🏗️ Bangun Company Baru</h3>
+                    <p class="text-slate-400 text-sm mt-1">Koordinat: <span id="selected-coords" class="text-white font-mono">-</span></p>
+                </div>
+                <button onclick="closeBuildModal()" class="text-slate-400 hover:text-white text-2xl font-bold">✕</button>
+            </div>
+
+            <!-- List Company -->
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <p class="text-slate-300 text-sm mb-4">Pilih company yang ingin dibangun di lokasi ini:</p>
+                <div id="company-list" class="space-y-2">
+                    <!-- Company items akan di-generate oleh JavaScript -->
+                </div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="p-6 border-t border-slate-700 bg-slate-800/50 flex justify-end gap-3">
+                <button onclick="closeBuildModal()" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition">
+                    Batal
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
