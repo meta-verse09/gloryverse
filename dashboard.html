@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -398,37 +399,7 @@
             openBuildModal(selectedCoordinates);
         });
 
-        function openBuildModal(coords) {
-            const modal = document.getElementById('build-modal');
-            const coordDisplay = document.getElementById('selected-coords');
-            const companyList = document.getElementById('company-list');
-            
-            // Tampilkan koordinat
-            coordDisplay.innerText = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
-            
-            // Generate list company
-            companyList.innerHTML = availableCompanies.map(company => `
-                <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500" onclick="selectCompany(${company.id})">
-                    <div class="flex items-center gap-3">
-                        <span class="text-2xl">${company.icon}</span>
-                        <div>
-                            <p class="text-white font-semibold text-sm">${company.name}</p>
-                            <p class="text-slate-400 text-xs">Tier ${company.tier}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        ${company.cost === 0 
-                            ? '<span class="text-green-400 text-xs font-bold">GRATIS</span>' 
-                            : `<span class="text-amber-500 text-xs font-bold">${company.cost} ${company.currency}</span>`
-                        }
-                    </div>
-                </div>
-            `).join('');
-            
-            // Tampilkan modal
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-        }
+        
 
         function closeBuildModal() {
             const modal = document.getElementById('build-modal');
@@ -437,39 +408,127 @@
             selectedCoordinates = null;
         }
 
-        function selectCompany(companyId) {
-            const company = availableCompanies.find(c => c.id === companyId);
-            if (!company || !selectedCoordinates) return;
+        async function openBuildModal(coords) {
+            await fetchCurrentUserData();
             
-            let message = `Bangun ${company.name} di koordinat ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}?\n\n`;
+            const modal = document.getElementById('build-modal');
+            const coordDisplay = document.getElementById('selected-coords');
+            const companyList = document.getElementById('company-list');
             
-            if (company.cost === 0) {
-                message += "Biaya: GRATIS";
-            } else if (company.currency === 'gold+diamond') {
-                message += `Biaya: ${company.cost} Gold + ${company.diamondCost} Diamond`;
-            } else {
-                message += `Biaya: ${company.cost} Gold`;
-            }
-
-            const confirmBuild = confirm(message);
+            coordDisplay.innerText = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
             
-            if (confirmBuild) {
-                // Tambahkan marker di peta
-                const markerIcon = L.divIcon({
-                    className: 'custom-div-icon',
-                    html: `<div style="background-color: #F59E0B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px #F59E0B;"></div>`,
-                    iconSize: [16, 16],
-                    iconAnchor: [8, 8]
-                });
+            companyList.innerHTML = availableCompanies.map(company => {
+                let costDisplay = '';
+                if (company.base_cost_gold === 0 && company.base_cost_diamond === 0) {
+                    costDisplay = '<span class="text-green-400 text-xs font-bold">GRATIS</span>';
+                } else if (company.base_cost_diamond > 0) {
+                    costDisplay = `<span class="text-amber-500 text-xs font-bold">${company.base_cost_gold} Gold + ${company.base_cost_diamond} Diamond</span>`;
+                } else {
+                    costDisplay = `<span class="text-amber-500 text-xs font-bold">${company.base_cost_gold} Gold</span>`;
+                }
                 
-                L.marker([selectedCoordinates.lat, selectedCoordinates.lng], { icon: markerIcon })
-                    .addTo(map)
-                    .bindPopup(`<b>${company.name}</b><br>Tier ${company.tier}`);
-                
-                alert(`✅ ${company.name} berhasil dibangun!`);
-                closeBuildModal();
-            }
+                return `
+                    <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500" onclick="selectCompany('${company.id}')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${company.icon || '🏭'}</span>
+                            <div>
+                                <p class="text-white font-semibold text-sm">${company.name}</p>
+                                <p class="text-slate-400 text-xs">Tier ${company.tier} • Storage: ${company.storage_capacity}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">${costDisplay}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
+
+        async function selectCompany(companyId) {
+            const company = availableCompanies.find(c => c.id === companyId);
+            if (!company || !selectedCoordinates || !currentUser) return;
+            
+            const goldCost = parseFloat(company.base_cost_gold || 0);
+            const diamondCost = parseFloat(company.base_cost_diamond || 0);
+            const playerGold = parseFloat(currentUserData?.gold_balance || 0);
+            const playerDiamond = parseFloat(currentUserData?.diamond_balance || 0);
+            
+            let message = `Bangun ${company.name}?\n\nKoordinat: ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}\n\n`;
+            
+            if (goldCost === 0 && diamondCost === 0) {
+                message += "Biaya: GRATIS";
+            } else {
+                message += `Biaya: ${goldCost} Gold`;
+                if (diamondCost > 0) message += ` + ${diamondCost} Diamond`;
+            }
+            
+            if (goldCost > playerGold || diamondCost > playerDiamond) {
+                alert(`❌ Saldo tidak cukup!\n\nKamu punya:\n${playerGold} Gold, ${playerDiamond} Diamond\n\nButuh:\n${goldCost} Gold${diamondCost > 0 ? ', ' + diamondCost + ' Diamond' : ''}`);
+                return;
+            }
+            
+            const confirmBuild = confirm(message + '\n\nLanjutkan?');
+            if (!confirmBuild) return;
+            
+            await buildCompany(company);
+        }
+
+        async function buildCompany(company) {
+            const goldCost = parseFloat(company.base_cost_gold || 0);
+            const diamondCost = parseFloat(company.base_cost_diamond || 0);
+            
+            const { data, error } = await sb
+                .from('player_companies')
+                .insert([{
+                    player_id: currentUser.id,
+                    company_id: company.id,
+                    latitude: selectedCoordinates.lat,
+                    longitude: selectedCoordinates.lng,
+                    region_name: 'Unknown Region',
+                    country_code: 'ID',
+                    level: 1,
+                    current_license_uses: company.license_uses,
+                    is_active: true,
+                    is_nft: false
+                }])
+                .select()
+                .single();
+            
+            if (error) {
+                console.error('Gagal simpan company:', error);
+                alert('❌ Gagal membangun company: ' + error.message);
+                return;
+            }
+            
+            const { error: updateError } = await sb
+                .from('player_profiles')
+                .update({
+                    gold_balance: (currentUserData.gold_balance || 0) - goldCost,
+                    diamond_balance: (currentUserData.diamond_balance || 0) - diamondCost
+                })
+                .eq('id', currentUser.id);
+            
+            if (updateError) {
+                console.error('Gagal update saldo:', updateError);
+            }
+            
+            const markerIcon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color: #F59E0B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px #F59E0B;"></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+            
+            L.marker([selectedCoordinates.lat, selectedCoordinates.lng], { icon: markerIcon })
+                .addTo(map)
+                .bindPopup(`<b>${company.name}</b><br>Tier ${company.tier}<br>Level 1`);
+            
+            alert(`✅ ${company.name} berhasil dibangun!\n\nData tersimpan di database.`);
+            closeBuildModal();
+            fetchPlayerProfile(currentUser.id);
+        }
+		
         checkAuth();
         setInterval(checkAuth, 60000);
     </script>
