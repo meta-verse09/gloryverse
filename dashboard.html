@@ -326,6 +326,22 @@
             
             coordDisplay.innerText = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
             
+            // Tampilkan loading
+            companyList.innerHTML = '<div class="text-center py-8 text-slate-400">⏳ Memuat daftar company...</div>';
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            
+            // Fetch companies jika belum ada
+            if (availableCompanies.length === 0) {
+                await fetchCompaniesFromDB();
+            }
+            
+            if (availableCompanies.length === 0) {
+                companyList.innerHTML = '<div class="text-center py-8 text-red-400"> Gagal memuat data company. Silakan refresh halaman.</div>';
+                return;
+            }
+            
             companyList.innerHTML = availableCompanies.map(company => {
                 let costDisplay = '';
                 if (company.base_cost_gold === 0 && company.base_cost_diamond === 0) {
@@ -338,9 +354,6 @@
                 
                 return `<div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500" onclick="selectCompany('${company.id}')"><div class="flex items-center gap-3"><span class="text-2xl">${company.icon || '🏭'}</span><div><p class="text-white font-semibold text-sm">${company.name}</p><p class="text-slate-400 text-xs">Tier ${company.tier} • Storage: ${company.storage_capacity}</p></div></div><div class="text-right">${costDisplay}</div></div>`;
             }).join('');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
         }
 
         function closeBuildModal() {
