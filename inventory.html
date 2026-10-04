@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory - GloryVerse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ADSTERRA: SOCIAL BAR -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+        
+        .item-card { transition: all 0.2s ease; }
+        .item-card:hover { transform: translateY(-4px); }
+        
+        .rarity-common { border-color: #6B7280; }
+        .rarity-uncommon { border-color: #10B981; }
+        .rarity-rare { border-color: #3B82F6; }
+        .rarity-epic { border-color: #8B5CF6; }
+        .rarity-legendary { border-color: #F59E0B; box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900 hover:bg-amber-400 transition">G</a>
+            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
+        </div>
+        <div class="flex items-center gap-3 text-sm font-semibold">
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                <span></span> <span id="london-clock">Loading...</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-purple-400"></span> <span id="stat-diamond">0</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition"> Connect Wallet</button>
+            <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- MENU BAR -->
+    <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
+            <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
+            <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
+            <button onclick="window.location.href='geo_challenge.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Geo Challenge</button>
+            <button onclick="window.location.href='leaderboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏆 Leaderboard</button>
+            <button onclick="window.location.href='referral.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🔗 Referral</button>
+            <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎒 Inventory</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT: INVENTORY -->
+    <div class="pt-[130px] pb-8 max-w-7xl mx-auto px-4">
+        
+        <!-- HEADER & STATS -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-extrabold text-white mb-2">🎒 My Inventory</h1>
+            <p class="text-slate-400">Kelola semua item, resources, dan NFT kamu</p>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <p class="text-slate-400 text-xs uppercase font-bold mb-1">Total Items</p>
+                    <p class="text-2xl font-bold text-white" id="stat-total-items">0</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <p class="text-slate-400 text-xs uppercase font-bold mb-1">NFT Owned</p>
+                    <p class="text-2xl font-bold text-purple-400" id="stat-nft-count">0</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <p class="text-slate-400 text-xs uppercase font-bold mb-1">Rarest Item</p>
+                    <p class="text-lg font-bold text-amber-500 truncate" id="stat-rarest">-</p>
+                </div>
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <p class="text-slate-400 text-xs uppercase font-bold mb-1">Inventory Value</p>
+                    <p class="text-2xl font-bold text-green-400" id="stat-total-value">0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTER & SEARCH -->
+        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-6 backdrop-blur-sm flex flex-col md:flex-row gap-4">
+            <div class="flex-1">
+                <input type="text" id="search-input" placeholder="🔍 Cari item..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500">
+            </div>
+            <div class="flex gap-2 overflow-x-auto">
+                <button onclick="filterItems('all')" class="filter-btn active bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">All</button>
+                <button onclick="filterItems('resource')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Resources</button>
+                <button onclick="filterItems('equipment')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Equipment</button>
+                <button onclick="filterItems('nft')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎨 NFT</button>
+                <button onclick="filterItems('consumable')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🧪 Consumables</button>
+            </div>
+        </div>
+
+        <!-- INVENTORY GRID -->
+        <div id="inventory-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
+            <!-- Items will be injected by JS -->
+            <div class="col-span-full text-center py-12 text-slate-500">📦 Memuat inventory...</div>
+        </div>
+
+        <!-- EMPTY STATE (Hidden by default) -->
+        <div id="empty-state" class="hidden text-center py-16">
+            <div class="text-6xl mb-4">🎒</div>
+            <p class="text-slate-400 text-lg">Inventory kamu masih kosong</p>
+            <p class="text-slate-500 text-sm mt-2">Mulai kumpulkan item dengan bermain Geo Challenge atau bangun Company!</p>
+        </div>
+
+        <!-- ADSTERRA NATIVE BANNER -->
+        <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-4 backdrop-blur-sm mb-6">
+            <p class="text-slate-400 text-xs text-center mb-2">Advertisement</p>
+            <div class="flex justify-center">
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
+        <!-- WATERMARK FOOTER -->
+        <footer class="text-center py-6 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50 rounded-xl">
+            <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
+            <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- ITEM DETAIL MODAL -->
+    <div id="item-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex justify-between items-start mb-4">
+                <div class="text-6xl" id="modal-icon"></div>
+                <button onclick="closeItemModal()" class="text-slate-400 hover:text-white text-2xl font-bold">✕</button>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-2" id="modal-name">Item Name</h3>
+            <p class="text-sm font-bold uppercase tracking-wider mb-4" id="modal-rarity">Common</p>
+            <p class="text-slate-400 mb-6" id="modal-description">Description here.</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Quantity</p>
+                    <p class="text-xl font-bold text-white" id="modal-quantity">0</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Category</p>
+                    <p class="text-xl font-bold text-white capitalize" id="modal-category">-</p>
+                </div>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="btn-use-item" onclick="useItem()" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">Use Item</button>
+                <button onclick="closeItemModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-lg transition">Close</button>
+            </div>
+        </div>
+    </div>
+    <!-- Library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // 1. SETUP SUPABASE
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
+        
+        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        let currentUser = null;
+
+        // 2. MOCK DATA INVENTORY (Nanti diganti dengan fetch dari Database)
+        const mockInventory = [
+            { id: 1, name: 'Wheat', icon: '🌾', category: 'resource', rarity: 'common', quantity: 150, description: 'Bahan dasar untuk membuat roti di Bakery.' },
+            { id: 2, name: 'Iron Ore', icon: '⛏️', category: 'resource', rarity: 'uncommon', quantity: 45, description: 'Bijih besi mentah, bahan utama Foundry.' },
+            { id: 3, name: 'Crude Oil', icon: '🛢️', category: 'resource', rarity: 'rare', quantity: 12, description: 'Minyak mentah, sangat berharga di industri energi.' },
+            { id: 4, name: 'Health Potion', icon: '🧪', category: 'consumable', rarity: 'common', quantity: 5, description: 'Mengembalikan 50 HP saat digunakan.' },
+            { id: 5, name: 'Energy Drink', icon: '⚡', category: 'consumable', rarity: 'uncommon', quantity: 2, description: 'Mengembalikan 100 Energy untuk bekerja.' },
+            { id: 6, name: 'Bronze Sword', icon: '⚔️', category: 'equipment', rarity: 'rare', quantity: 1, description: 'Senjata dasar untuk berperang memperebutkan region.' },
+            { id: 7, name: 'Steel Shield', icon: '🛡️', category: 'equipment', rarity: 'epic', quantity: 1, description: 'Perisai kuat yang mengurangi damage serangan musuh.' },
+            { id: 8, name: 'Ancient Map of Java', icon: '🗺️', category: 'nft', rarity: 'legendary', quantity: 1, description: 'NFT Langka! Menunjukkan lokasi tambang tersembunyi di Jawa.' }
+        ];
+
+        let currentFilter = 'all';
+        let selectedItem = null;
+
+        // 3. AUTH GUARD & LOAD DATA
+        async function checkAuth() {
+            const { data: { session }, error } = await sb.auth.getSession();
+            if (error || !session) { window.location.href = 'index.html'; return; }
+            currentUser = session.user;
+            
+            // Load profile untuk update navbar
+            const { data: profile } = await sb.from('player_profiles').select('gold_balance, diamond_balance').eq('id', currentUser.id).single();
+            if (profile) {
+                document.getElementById('stat-gold').innerText = Math.floor(profile.gold_balance || 0).toLocaleString();
+                document.getElementById('stat-diamond').innerText = Math.floor(profile.diamond_balance || 0).toLocaleString();
+            }
+
+            renderInventory(mockInventory);
+            updateStats(mockInventory);
+        }
+
+        // 4. RENDER GRID
+        function renderInventory(items) {
+            const grid = document.getElementById('inventory-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            grid.innerHTML = items.map(item => `
+                <div class="item-card bg-slate-800/50 border-2 rarity-${item.rarity} rounded-xl p-4 cursor-pointer hover:bg-slate-800" onclick="openItemModal(${item.id})">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-4xl">${item.icon}</span>
+                        <span class="bg-slate-900 text-xs font-bold px-2 py-1 rounded text-white">x${item.quantity}</span>
+                    </div>
+                    <h4 class="text-white font-bold text-sm truncate">${item.name}</h4>
+                    <p class="text-slate-500 text-xs uppercase font-bold mt-1">${item.rarity}</p>
+                </div>
+            `).join('');
+        }
+
+        // 5. UPDATE STATS HEADER
+        function updateStats(items) {
+            document.getElementById('stat-total-items').innerText = items.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('stat-nft-count').innerText = items.filter(i => i.category === 'nft').length;
+            
+            const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+            const rarest = items.reduce((prev, current) => (rarities.indexOf(prev.rarity) > rarities.indexOf(current.rarity)) ? prev : current, items[0]);
+            document.getElementById('stat-rarest').innerText = rarest ? rarest.name : '-';
+            
+            // Mock value calculation
+            document.getElementById('stat-total-value').innerText = (items.length * 150).toLocaleString() + ' Gold';
+        }
+
+        // 6. FILTER & SEARCH LOGIC
+        function filterItems(category) {
+            currentFilter = category;
+            
+            // Update tombol aktif
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-600');
+                btn.classList.add('bg-slate-700');
+            });
+            event.target.classList.remove('bg-slate-700');
+            event.target.classList.add('bg-amber-600');
+
+            applyFilters();
+        }
+
+        document.getElementById('search-input').addEventListener('input', applyFilters);
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            let filtered = mockInventory;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(item => item.category === currentFilter);
+            }
+            if (searchTerm) {
+                filtered = filtered.filter(item => item.name.toLowerCase().includes(searchTerm));
+            }
+
+            renderInventory(filtered);
+        }
+
+        // 7. MODAL LOGIC
+        function openItemModal(itemId) {
+            selectedItem = mockInventory.find(i => i.id === itemId);
+            if (!selectedItem) return;
+
+            document.getElementById('modal-icon').innerText = selectedItem.icon;
+            document.getElementById('modal-name').innerText = selectedItem.name;
+            document.getElementById('modal-rarity').innerText = selectedItem.rarity;
+            document.getElementById('modal-description').innerText = selectedItem.description;
+            document.getElementById('modal-quantity').innerText = selectedItem.quantity;
+            document.getElementById('modal-category').innerText = selectedItem.category;
+
+            // Warna teks rarity di modal
+            const rarityColors = { common: 'text-slate-400', uncommon: 'text-green-400', rare: 'text-blue-400', epic: 'text-purple-400', legendary: 'text-amber-500' };
+            document.getElementById('modal-rarity').className = `text-sm font-bold uppercase tracking-wider mb-4 ${rarityColors[selectedItem.rarity]}`;
+
+            const modal = document.getElementById('item-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeItemModal() {
+            const modal = document.getElementById('item-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            selectedItem = null;
+        }
+
+        function useItem() {
+            if (!selectedItem) return;
+            alert(`✅ Kamu menggunakan ${selectedItem.name}!\n\n(Efek item akan diterapkan ke status player di tahap selanjutnya)`);
+            closeItemModal();
+        }
+
+        // 8. JAM LONDON
+        function updateLondonClock() {
+            const now = new Date();
+            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+        }
+        setInterval(updateLondonClock, 1000);
+        updateLondonClock();
+
+        // JALANKAN SAAT HALAMAN DIMUAT
+        checkAuth();
+    </script>
+</body>
+</html>
