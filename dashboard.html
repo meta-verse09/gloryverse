@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -30,6 +29,7 @@
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
         
+        /* Trik membuat peta OSM jadi Dark Mode */
         .leaflet-tile {
             filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
         }
@@ -38,7 +38,7 @@
 <body class="bg-brand-dark text-slate-200 font-sans">
 
     <!-- ========================================== -->
-    <!-- NAVBAR (TOP BAR SAJA - SIMPLE)             -->
+    <!-- NAVBAR (TOP BAR)                           -->
     <!-- ========================================== -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3">
@@ -48,7 +48,7 @@
 
         <div class="flex items-center gap-3 text-sm font-semibold">
             <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
-                <span>🇧</span> <span id="london-clock">Loading...</span>
+                <span>🇬</span> <span id="london-clock">Loading...</span>
             </div>
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                 <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
@@ -62,41 +62,23 @@
             <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
                 👻 Connect Wallet
             </button>
-            <div class="w-9 h-9 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer">👤</div>
+            <div class="w-9 h-9 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-lg cursor-pointer"></div>
         </div>
     </nav>
 
     <!-- ========================================== -->
-    <!-- MENU BAR (8 TOMBOL, TANPA DROPDOWN)        -->
+    <!-- MENU BAR (8 TOMBOL)                        -->
     <!-- ========================================== -->
     <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
         <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
-            
-            <button onclick="openPanel('dashboard')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                🗺️ Dashboard
-            </button>
-            <button onclick="openPanel('profile')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                👤 Profile
-            </button>
-            <button onclick="openPanel('activities')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                ⚔️ Activities
-            </button>
-            <button onclick="openPanel('business')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                🏢 Business
-            </button>
-            <button onclick="openPanel('financial')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                📈 Financial
-            </button>
-            <button onclick="openPanel('politics')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                ️ Politics
-            </button>
-            <button onclick="openPanel('events')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                🎉 Events
-            </button>
-            <button onclick="openPanel('community')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">
-                🌐 Community
-            </button>
-
+            <button onclick="openPanel('dashboard')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
+            <button onclick="openPanel('profile')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
+            <button onclick="openPanel('activities')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚔️ Activities</button>
+            <button onclick="openPanel('business')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button onclick="openPanel('financial')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Financial</button>
+            <button onclick="openPanel('politics')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Politics</button>
+            <button onclick="openPanel('events')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎉 Events</button>
+            <button onclick="openPanel('community')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Community</button>
         </div>
     </div>
 
@@ -104,21 +86,15 @@
     <!-- SIDE PANEL (MUNCUL SAAT TOMBOL DIKLIK)     -->
     <!-- ========================================== -->
     <div id="side-panel" class="fixed top-[120px] left-4 z-[600] w-72 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl shadow-2xl transform -translate-x-[120%] transition-transform duration-300">
-        
-        <!-- Header Panel -->
         <div class="flex justify-between items-center p-4 border-b border-slate-700">
             <h3 id="panel-title" class="text-amber-500 font-bold text-sm uppercase tracking-wider">MENU</h3>
             <button onclick="closePanel()" class="text-slate-400 hover:text-white text-xl font-bold">✕</button>
         </div>
-
-        <!-- Content Panel (Dinamis) -->
-        <div id="panel-content" class="p-4 space-y-2 max-h-[70vh] overflow-y-auto">
-            <!-- Konten akan diisi oleh JavaScript -->
-        </div>
+        <div id="panel-content" class="p-4 space-y-2 max-h-[70vh] overflow-y-auto"></div>
     </div>
 
     <!-- ========================================== -->
-    <!-- MAIN CONTENT (PETA + PANEL REGION)         -->
+    <!-- MAIN CONTENT                               -->
     <!-- ========================================== -->
     <div class="pt-[120px] pb-8">
         
@@ -126,15 +102,14 @@
         <div class="relative h-[600px] w-full bg-slate-800/50">
             <div id="map" class="h-full w-full"></div>
             
-            <!-- Panel Region Saat Ini (Sudah ada, tidak diubah) -->
+            <!-- Panel Region Saat Ini -->
             <div class="absolute top-4 left-4 z-[400] w-64 bg-slate-900/95 backdrop-blur-xl border border-slate-700 rounded-xl p-4 shadow-2xl">
                 <h3 class="text-amber-500 font-bold text-sm uppercase tracking-wider mb-3">📍 Region Saat Ini</h3>
                 <p class="text-white font-bold text-xl mb-1">DKI Jakarta</p>
                 <p class="text-slate-400 text-xs mb-4">Indonesia (ID)</p>
-                
                 <div class="space-y-2">
                     <button onclick="openPanel('business')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg text-sm transition">🏗️ Bangun Company</button>
-                    <button onclick="openPanel('business')" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition">📊 Local Market</button>
+                    <button onclick="openPanel('business')" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-lg text-sm transition"> Local Market</button>
                 </div>
             </div>
         </div>
@@ -144,18 +119,18 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm">
                     <h4 class="text-amber-500 font-bold mb-2">🏭 Total Companies</h4>
-                    <p class="text-3xl font-bold text-white">12</p>
-                    <p class="text-slate-400 text-sm mt-2">3 di region ini</p>
+                    <p class="text-3xl font-bold text-white" id="stat-total-companies">0</p>
+                    <p class="text-slate-400 text-sm mt-2">Di seluruh dunia</p>
                 </div>
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm">
-                    <h4 class="text-amber-500 font-bold mb-2">⚔️ Wars Won</h4>
-                    <p class="text-3xl font-bold text-white">5</p>
-                    <p class="text-slate-400 text-sm mt-2">Ranking #142 Global</p>
+                    <h4 class="text-amber-500 font-bold mb-2">️ Wars Won</h4>
+                    <p class="text-3xl font-bold text-white">0</p>
+                    <p class="text-slate-400 text-sm mt-2">Ranking Global</p>
                 </div>
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6 backdrop-blur-sm">
                     <h4 class="text-amber-500 font-bold mb-2">💎 Net Worth</h4>
-                    <p class="text-3xl font-bold text-white">$12,450</p>
-                    <p class="text-slate-400 text-sm mt-2">+15% this week</p>
+                    <p class="text-3xl font-bold text-white" id="stat-net-worth">$0</p>
+                    <p class="text-slate-400 text-sm mt-2">Aset Total</p>
                 </div>
             </div>
         </div>
@@ -171,16 +146,36 @@
             </div>
         </div>
 
-        <!-- FOOTER -->
-        <footer class="text-center py-8 text-slate-500 text-sm border-t border-slate-800">
-            <p>&copy; 2024 GloryVerse. All rights reserved.</p>
-            <p class="mt-2">Conquer The Real World Map</p>
+        <!-- ========================================== -->
+        <!-- WATERMARK FOOTER (GLOBAL)                  -->
+        <!-- ========================================== -->
+        <footer class="text-center py-8 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50">
+            <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
+            <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
         </footer>
     </div>
 
     <!-- ========================================== -->
-    <!-- SCRIPT UTAMA                               -->
+    <!-- MODAL BANGUN COMPANY                       -->
     <!-- ========================================== -->
+    <div id="build-modal" class="hidden fixed inset-0 z-[1000] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div class="flex justify-between items-center p-6 border-b border-slate-700 bg-slate-800/50">
+                <div>
+                    <h3 class="text-amber-500 font-bold text-lg">🏗️ Bangun Company Baru</h3>
+                    <p class="text-slate-400 text-sm mt-1">Koordinat: <span id="selected-coords" class="text-white font-mono">-</span></p>
+                </div>
+                <button onclick="closeBuildModal()" class="text-slate-400 hover:text-white text-2xl font-bold"></button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <p class="text-slate-300 text-sm mb-4">Pilih company yang ingin dibangun di lokasi ini:</p>
+                <div id="company-list" class="space-y-2"></div>
+            </div>
+            <div class="p-6 border-t border-slate-700 bg-slate-800/50 flex justify-end gap-3">
+                <button onclick="closeBuildModal()" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition">Batal</button>
+            </div>
+        </div>
+    </div><!-- Library Supabase & Leaflet -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
@@ -188,7 +183,7 @@
         // 1. SETUP SUPABASE
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
-        // ⚠️ GANTI DENGAN ANON KEY ASLI KAMU!
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DI AKHIR DENGAN ANON KEY ASLI KAMU!
         
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
@@ -206,7 +201,7 @@
         }).addTo(map);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-        // 4. AUTH GUARD
+        // 4. AUTH GUARD & LOADING DATA
         async function checkAuth() {
             const { data: { session }, error } = await sb.auth.getSession();
             if (error || !session) {
@@ -216,7 +211,7 @@
             currentUser = session.user;
             await fetchPlayerProfile(session.user.id);
             await fetchCompaniesFromDB();
-            await loadPlayerCompaniesFromDB(); // ← INI YANG BARU!
+            await loadPlayerCompaniesFromDB(); // Load marker permanen dari DB
         }
 
         async function fetchPlayerProfile(userId) {
@@ -226,14 +221,8 @@
                 .eq('id', userId)
                 .single();
 
-            if (error) {
-                console.error('Gagal mengambil data profile:', error);
-                // Fallback: tampilkan 0
-                document.getElementById('stat-gold').innerText = '0';
-                document.getElementById('stat-currency').innerText = '0';
-                return;
-            }
-
+            if (error) { console.error('Gagal ambil profile:', error); return; }
+            
             currentUserData = data;
             document.getElementById('stat-gold').innerText = Math.floor(data.gold_balance || 0).toLocaleString();
             document.getElementById('stat-currency').innerText = Math.floor(data.currency_balance || 0).toLocaleString();
@@ -242,17 +231,13 @@
             if (walletBtn) {
                 if (data.solana_wallet_address) {
                     const addr = data.solana_wallet_address;
-                    const shortAddr = `${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
-                    walletBtn.innerText = ` ${shortAddr}`;
-                    walletBtn.className = 'bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
+                    walletBtn.innerText = ` ${addr.substring(0, 6)}...${addr.substring(addr.length - 4)}`;
                 } else {
-                    walletBtn.innerText = '👻 Connect Wallet';
-                    walletBtn.className = 'bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2';
+                    walletBtn.innerText = ' Connect Wallet';
                 }
             }
         }
 
-        // 5. FETCH COMPANIES DARI DATABASE
         async function fetchCompaniesFromDB() {
             const { data, error } = await sb
                 .from('companies')
@@ -260,36 +245,117 @@
                 .order('tier', { ascending: true })
                 .order('base_cost_gold', { ascending: true });
             
-            if (error) {
-                console.error('Gagal ambil company:', error);
-                return;
-            }
+            if (error) { console.error('Gagal ambil company:', error); return; }
             availableCompanies = data;
             console.log('Berhasil load', data.length, 'companies dari database');
         }
 
-        // 6. JAM LONDON
+        // FUNGSI BARU: LOAD MARKER PERMANEN DARI DATABASE
+        async function loadPlayerCompaniesFromDB() {
+            if (!currentUser) return;
+            const { data, error } = await sb
+                .from('player_companies')
+                .select(`id, level, latitude, longitude, company_id, companies(name, tier, icon)`)
+                .eq('player_id', currentUser.id);
+            
+            if (error) { console.error('Gagal load company player:', error); return; }
+            console.log('Load', data.length, 'company player dari DB');
+            
+            data.forEach(pc => {
+                const markerIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color: #F59E0B; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 10px #F59E0B;"></div>`,
+                    iconSize: [16, 16],
+                    iconAnchor: [8, 8]
+                });
+                const cName = pc.companies?.name || 'Unknown';
+                const cTier = pc.companies?.tier || 0;
+                const cIcon = pc.companies?.icon || '';
+                L.marker([pc.latitude, pc.longitude], { icon: markerIcon })
+                    .addTo(map)
+                    .bindPopup(`<b>${cIcon} ${cName}</b><br>Tier ${cTier} • Level ${pc.level}`);
+            });
+        }
+
+        // 5. JAM LONDON
         function updateLondonClock() {
             const now = new Date();
-            const londonTime = now.toLocaleString("en-GB", { 
-                timeZone: "Europe/London", 
-                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
-            });
-            document.getElementById('london-clock').innerText = `LON: ${londonTime}`;
+            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
         }
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
 
-        // 7. SIDE PANEL
+        // 6. SIDE PANEL (SUDAH DITAMBAH GEO CHALLENGE)
         const panelData = {
-            dashboard: { title: '🗺️ DASHBOARD', items: [{ icon: '🌍', label: 'World Map', action: 'closePanel()' }, { icon: '', label: 'My Location', action: 'closePanel()' }] },
-            profile: { title: '👤 PROFILE', items: [{ icon: '', label: 'My Profile', action: 'closePanel()' }, { icon: '👻', label: 'Connect Wallet', action: 'closePanel()' }, { icon: '🔗', label: 'Referral Program', action: 'closePanel()' }, { icon: '🎒', label: 'Inventory', action: 'closePanel()' }, { icon: '', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }] },
-            activities: { title: '⚔️ ACTIVITIES', items: [{ icon: '💼', label: 'Work', action: 'closePanel()' }, { icon: '🏋️', label: 'Train', action: 'closePanel()' }, { icon: '️', label: 'Battle', action: 'closePanel()' }, { icon: '🌲', label: 'Gather', action: 'closePanel()' }] },
-            business: { title: ' BUSINESS', items: [{ icon: '🏭', label: 'My Companies', action: 'closePanel()' }, { icon: '🏠', label: 'Real Estate', action: 'closePanel()' }, { icon: '🌍', label: 'Global Market', action: 'closePanel()' }, { icon: '🏪', label: 'Local Market', action: 'closePanel()' }] },
-            financial: { title: '📈 FINANCIAL', items: [{ icon: '💱', label: 'Exchange (SOL)', action: 'closePanel()' }, { icon: '📊', label: 'Market Chart', action: 'closePanel()' }, { icon: '', label: 'Transaction History', action: 'closePanel()' }] },
-            politics: { title: '🏛️ POLITICS', items: [{ icon: '📍', label: 'Region Info', action: 'closePanel()' }, { icon: '️', label: 'Elections', action: 'closePanel()' }, { icon: '⚖️', label: 'Laws & Taxes', action: 'closePanel()' }, { icon: '🤝', label: 'War & Alliance', action: 'closePanel()' }] },
-            events: { title: ' EVENTS', items: [{ icon: '', label: 'Active Events', action: 'closePanel()' }, { icon: '🔮', label: 'Predictions', action: 'closePanel()' }, { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }] },
-            community: { title: '🌐 COMMUNITY', items: [{ icon: '🛡️', label: 'Guilds / Parties', action: 'closePanel()' }, { icon: '📰', label: 'Newspaper / News', action: 'closePanel()' }, { icon: '💬', label: 'Chat / Forum', action: 'closePanel()' }] }
+            dashboard: { 
+                title: '🗺️ DASHBOARD', 
+                items: [
+                    { icon: '🌍', label: 'World Map', action: 'closePanel()' },
+                    { icon: '📍', label: 'My Location', action: 'closePanel()' }
+                ] 
+            },
+            profile: { 
+                title: '👤 PROFILE', 
+                items: [
+                    { icon: '📊', label: 'My Profile', action: 'closePanel()' },
+                    { icon: '👻', label: 'Connect Wallet', action: 'closePanel()' },
+                    { icon: '🔗', label: 'Referral Program', action: 'closePanel()' },
+                    { icon: '🎒', label: 'Inventory', action: 'closePanel()' },
+                    { icon: '💎', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }
+                ] 
+            },
+            activities: { 
+                title: '⚔️ ACTIVITIES', 
+                items: [
+                    { icon: '💼', label: 'Work', action: 'closePanel()' },
+                    { icon: '🏋️', label: 'Train', action: 'closePanel()' },
+                    { icon: '⚔️', label: 'Battle', action: 'closePanel()' },
+                    { icon: '🌲', label: 'Gather', action: 'closePanel()' }
+                ] 
+            },
+            business: { 
+                title: '🏢 BUSINESS', 
+                items: [
+                    { icon: '🏭', label: 'My Companies', action: 'closePanel()' },
+                    { icon: '🏠', label: 'Real Estate', action: 'closePanel()' },
+                    { icon: '🌍', label: 'Global Market', action: 'closePanel()' },
+                    { icon: '🏪', label: 'Local Market', action: 'closePanel()' }
+                ] 
+            },
+            financial: { 
+                title: ' FINANCIAL', 
+                items: [
+                    { icon: '💱', label: 'Exchange (SOL)', action: 'closePanel()' },
+                    { icon: '📊', label: 'Market Chart', action: 'closePanel()' },
+                    { icon: '🧾', label: 'Transaction History', action: 'closePanel()' }
+                ] 
+            },
+            politics: { 
+                title: '🏛️ POLITICS', 
+                items: [
+                    { icon: '📍', label: 'Region Info', action: 'closePanel()' },
+                    { icon: '🗳️', label: 'Elections', action: 'closePanel()' },
+                    { icon: '⚖️', label: 'Laws & Taxes', action: 'closePanel()' },
+                    { icon: '🤝', label: 'War & Alliance', action: 'closePanel()' }
+                ] 
+            },
+            events: { 
+                title: '🎉 EVENTS', 
+                items: [
+                    { icon: '🏆', label: 'Active Events', action: 'closePanel()' },
+                    { icon: '🔮', label: 'Predictions', action: 'closePanel()' },
+                    { icon: '🧠', label: 'Geo Challenge', action: "alert('️ Fitur Daily Geo Challenge akan segera hadir! Persiapkan strategi peta kamu.')" },
+                    { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }
+                ] 
+            },
+            community: { 
+                title: '🌐 COMMUNITY', 
+                items: [
+                    { icon: '🛡️', label: 'Guilds / Parties', action: 'closePanel()' },
+                    { icon: '📰', label: 'Newspaper / News', action: 'closePanel()' },
+                    { icon: '💬', label: 'Chat / Forum', action: 'closePanel()' }
+                ] 
+            }
         };
 
         function openPanel(menuKey) {
@@ -298,8 +364,15 @@
             const content = document.getElementById('panel-content');
             const data = panelData[menuKey];
             if (!data) return;
+            
             title.innerText = data.title;
-            content.innerHTML = data.items.map(item => `<button onclick="${item.action}" class="w-full flex items-center gap-3 p-3 bg-slate-800 hover:bg-amber-600 rounded-lg transition text-left"><span class="text-xl">${item.icon}</span><span class="text-white font-semibold text-sm">${item.label}</span></button>`).join('');
+            content.innerHTML = data.items.map(item => `
+                <button onclick="${item.action}" class="w-full flex items-center gap-3 p-3 bg-slate-800 hover:bg-amber-600 rounded-lg transition text-left">
+                    <span class="text-xl">${item.icon}</span>
+                    <span class="text-white font-semibold text-sm">${item.label}</span>
+                </button>
+            `).join('');
+            
             panel.classList.remove('-translate-x-[120%]');
             panel.classList.add('translate-x-0');
         }
@@ -310,12 +383,9 @@
             panel.classList.add('-translate-x-[120%]');
         }
 
-        // 8. LOGIKA KLIK PETA & BUILD COMPANY
+        // 7. LOGIKA KLIK PETA & BUILD COMPANY
         map.on('click', function(e) {
-            if (!currentUser) {
-                alert('Silakan login terlebih dahulu!');
-                return;
-            }
+            if (!currentUser) { alert('Silakan login terlebih dahulu!'); return; }
             selectedCoordinates = { lat: e.latlng.lat, lng: e.latlng.lng };
             openBuildModal(selectedCoordinates);
         });
@@ -326,20 +396,14 @@
             const companyList = document.getElementById('company-list');
             
             coordDisplay.innerText = `${coords.lat.toFixed(6)}, ${coords.lng.toFixed(6)}`;
-            
-            // Tampilkan loading
             companyList.innerHTML = '<div class="text-center py-8 text-slate-400">⏳ Memuat daftar company...</div>';
             
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             
-            // Fetch companies jika belum ada
+            if (availableCompanies.length === 0) await fetchCompaniesFromDB();
             if (availableCompanies.length === 0) {
-                await fetchCompaniesFromDB();
-            }
-            
-            if (availableCompanies.length === 0) {
-                companyList.innerHTML = '<div class="text-center py-8 text-red-400"> Gagal memuat data company. Silakan refresh halaman.</div>';
+                companyList.innerHTML = '<div class="text-center py-8 text-red-400">❌ Gagal memuat data.</div>';
                 return;
             }
             
@@ -353,14 +417,24 @@
                     costDisplay = `<span class="text-amber-500 text-xs font-bold">${company.base_cost_gold} Gold</span>`;
                 }
                 
-                return `<div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500" onclick="selectCompany('${company.id}')"><div class="flex items-center gap-3"><span class="text-2xl">${company.icon || '🏭'}</span><div><p class="text-white font-semibold text-sm">${company.name}</p><p class="text-slate-400 text-xs">Tier ${company.tier} • Storage: ${company.storage_capacity}</p></div></div><div class="text-right">${costDisplay}</div></div>`;
+                return `
+                    <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500 mb-2" onclick="selectCompany('${company.id}')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">${company.icon || '🏭'}</span>
+                            <div>
+                                <p class="text-white font-semibold text-sm">${company.name}</p>
+                                <p class="text-slate-400 text-xs">Tier ${company.tier} • Storage: ${company.storage_capacity}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">${costDisplay}</div>
+                    </div>
+                `;
             }).join('');
         }
 
         function closeBuildModal() {
-            const modal = document.getElementById('build-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            document.getElementById('build-modal').classList.add('hidden');
+            document.getElementById('build-modal').classList.remove('flex');
             selectedCoordinates = null;
         }
 
@@ -374,28 +448,14 @@
             const playerDiamond = parseFloat(currentUserData?.diamond_balance || 0);
             
             let message = `Bangun ${company.name}?\n\nKoordinat: ${selectedCoordinates.lat.toFixed(4)}, ${selectedCoordinates.lng.toFixed(4)}\n\n`;
-            
-            if (goldCost === 0 && diamondCost === 0) {
-                message += "Biaya: GRATIS";
-            } else {
-                message += `Biaya: ${goldCost} Gold`;
-                if (diamondCost > 0) message += ` + ${diamondCost} Diamond`;
-            }
+            message += (goldCost === 0 && diamondCost === 0) ? "Biaya: GRATIS" : `Biaya: ${goldCost} Gold${diamondCost > 0 ? ' + ' + diamondCost + ' Diamond' : ''}`;
             
             if (goldCost > playerGold || diamondCost > playerDiamond) {
-                alert(`❌ Saldo tidak cukup!\n\nKamu punya:\n${playerGold} Gold, ${playerDiamond} Diamond\n\nButuh:\n${goldCost} Gold${diamondCost > 0 ? ', ' + diamondCost + ' Diamond' : ''}`);
+                alert(`❌ Saldo tidak cukup!\nKamu: ${playerGold} Gold, ${playerDiamond} Diamond\nButuh: ${goldCost} Gold${diamondCost > 0 ? ', ' + diamondCost + ' Diamond' : ''}`);
                 return;
             }
             
-            const confirmBuild = confirm(message + '\n\nLanjutkan?');
-            if (!confirmBuild) return;
-            
-            await buildCompany(company);
-        }
-
-        async function buildCompany(company) {
-            const goldCost = parseFloat(company.base_cost_gold || 0);
-            const diamondCost = parseFloat(company.base_cost_diamond || 0);
+            if (!confirm(message + '\n\nLanjutkan?')) return;
             
             const { data, error } = await sb
                 .from('player_companies')
@@ -414,22 +474,13 @@
                 .select()
                 .single();
             
-            if (error) {
-                console.error('Gagal simpan company:', error);
-                alert('❌ Gagal membangun company: ' + error.message);
-                return;
-            }
+            if (error) { alert(' Gagal membangun: ' + error.message); return; }
             
             if (goldCost > 0 || diamondCost > 0) {
-                const { error: updateError } = await sb
-                    .from('player_profiles')
-                    .update({
-                        gold_balance: (currentUserData.gold_balance || 0) - goldCost,
-                        diamond_balance: (currentUserData.diamond_balance || 0) - diamondCost
-                    })
-                    .eq('id', currentUser.id);
-                
-                if (updateError) console.error('Gagal update saldo:', updateError);
+                await sb.from('player_profiles').update({
+                    gold_balance: playerGold - goldCost,
+                    diamond_balance: playerDiamond - diamondCost
+                }).eq('id', currentUser.id);
             }
             
             const markerIcon = L.divIcon({
@@ -441,9 +492,9 @@
             
             L.marker([selectedCoordinates.lat, selectedCoordinates.lng], { icon: markerIcon })
                 .addTo(map)
-                .bindPopup(`<b>${company.name}</b><br>Tier ${company.tier}<br>Level 1`);
+                .bindPopup(`<b>${company.icon || ''} ${company.name}</b><br>Tier ${company.tier} • Level 1`);
             
-            alert(`✅ ${company.name} berhasil dibangun!\n\nData tersimpan di database.`);
+            alert(`✅ ${company.name} berhasil dibangun!`);
             closeBuildModal();
             fetchPlayerProfile(currentUser.id);
         }
@@ -452,36 +503,5 @@
         checkAuth();
         setInterval(checkAuth, 60000);
     </script>
-    <!-- ========================================== -->
-    <!-- MODAL BANGUN COMPANY                       -->
-    <!-- ========================================== -->
-    <div id="build-modal" class="hidden fixed inset-0 z-[1000] bg-black/70 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
-            
-            <!-- Header Modal -->
-            <div class="flex justify-between items-center p-6 border-b border-slate-700 bg-slate-800/50">
-                <div>
-                    <h3 class="text-amber-500 font-bold text-lg">🏗️ Bangun Company Baru</h3>
-                    <p class="text-slate-400 text-sm mt-1">Koordinat: <span id="selected-coords" class="text-white font-mono">-</span></p>
-                </div>
-                <button onclick="closeBuildModal()" class="text-slate-400 hover:text-white text-2xl font-bold">✕</button>
-            </div>
-
-            <!-- List Company -->
-            <div class="p-6 overflow-y-auto max-h-[60vh]">
-                <p class="text-slate-300 text-sm mb-4">Pilih company yang ingin dibangun di lokasi ini:</p>
-                <div id="company-list" class="space-y-2">
-                    <!-- Company items akan di-generate oleh JavaScript -->
-                </div>
-            </div>
-
-            <!-- Footer Modal -->
-            <div class="p-6 border-t border-slate-700 bg-slate-800/50 flex justify-end gap-3">
-                <button onclick="closeBuildModal()" class="px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-lg transition">
-                    Batal
-                </button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
