@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Work - GloryVerse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- ADSTERRA: SOCIAL BAR -->
+    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+        
+        .energy-bar-bg { background-color: #1e293b; }
+        .energy-fill { transition: width 0.5s ease-in-out; }
+        .energy-low { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .energy-mid { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .energy-high { background: linear-gradient(90deg, #10b981, #34d399); }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900 hover:bg-amber-400 transition">G</a>
+            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
+        </div>
+        <div class="flex items-center gap-3 text-sm font-semibold">
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                <span>🇬🇧</span> <span id="london-clock">Loading...</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-purple-400">💎</span> <span id="stat-diamond">0</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">👻 Connect Wallet</button>
+            <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- MENU BAR -->
+    <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
+        <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
+            <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
+            <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
+            <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Activity Work</button>
+            <button onclick="window.location.href='inventory.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎒 Inventory</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏛️ Politics</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="pt-[130px] pb-8 max-w-7xl mx-auto px-4">
+        
+        <!-- HEADER -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-extrabold text-white mb-1">⚒️ Daily Work & Gathering</h1>
+            <p class="text-slate-400 text-sm">Kerja keras, tingkatkan skill, dan kumpulkan resource. Reset shift setiap jam 00:00 London.</p>
+        </div>
+
+        <!-- PLAYER STATS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <!-- Energy Bar -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm col-span-1 md:col-span-2">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-slate-400 text-xs uppercase font-bold flex items-center gap-2">⚡ Energy Level</p>
+                    <p class="text-white font-bold text-lg"><span id="stat-energy">100</span>%</p>
+                </div>
+                <div class="w-full bg-slate-900 rounded-full h-4 border border-slate-700 overflow-hidden relative">
+                    <div id="energy-bar" class="energy-fill energy-high h-full rounded-full" style="width: 100%"></div>
+                    <!-- 52% Threshold Line -->
+                    <div class="absolute top-0 bottom-0 w-0.5 bg-red-500 z-10" style="left: 52%"></div>
+                </div>
+                <p class="text-red-400 text-xs mt-2 font-semibold">⚠️ Minimum 52% Energy dibutuhkan untuk bekerja!</p>
+            </div>
+
+            <!-- Economic Score -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm text-center">
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">📈 Economic Score</p>
+                <p class="text-3xl font-bold text-blue-400" id="stat-es">100</p>
+                <p class="text-slate-500 text-xs mt-1">-1 per hari, +1 per shift</p>
+            </div>
+
+            <!-- Gathering Skill & Shifts -->
+            <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                <div class="flex justify-between items-center mb-2">
+                    <p class="text-slate-400 text-xs uppercase font-bold">🛠️ Gather Skill</p>
+                    <p class="text-amber-500 font-bold text-xl" id="stat-skill">0</p>
+                </div>
+                <div class="border-t border-slate-700 pt-2 mt-2 flex justify-between items-center">
+                    <p class="text-slate-400 text-xs uppercase font-bold">⏰ Shifts Hari Ini</p>
+                    <p class="text-white font-bold text-lg"><span id="stat-shifts">0</span> / 3</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TWO COLUMN LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- KOLOM KIRI: DAFTAR PEKERJAAN (2/3 LAYAR) -->
+            <div class="lg:col-span-2 space-y-4">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2">️ Available Jobs (Region Resources)</h2>
+                
+                <!-- Job List Container -->
+                <div id="job-list" class="space-y-3">
+                    <!-- Job cards will be injected by JS -->
+                    <div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">⏳ Memuat daftar pekerjaan...</div>
+                </div>
+            </div>
+
+            <!-- KOLOM KANAN: QUICK SHOP & LOG (1/3 LAYAR) -->
+            <div class="space-y-6">
+                <!-- Quick Shop (Beli Energi) -->
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2"> Quick Shop (Pulihkan Energi)</h3>
+                    <div class="space-y-2">
+                        <button onclick="buyItem('Energy Drink', 50, 20)" class="w-full flex items-center justify-between p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">⚡</span>
+                                <div class="text-left">
+                                    <p class="text-white font-semibold text-sm">Energy Drink</p>
+                                    <p class="text-slate-500 text-xs">+30 Energy</p>
+                                </div>
+                            </div>
+                            <span class="text-blue-400 font-bold text-sm">50 </span>
+                        </button>
+                        <button onclick="buyItem('Bread', 20, 10)" class="w-full flex items-center justify-between p-3 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🍞</span>
+                                <div class="text-left">
+                                    <p class="text-white font-semibold text-sm">Bread</p>
+                                    <p class="text-slate-500 text-xs">+15 Energy</p>
+                                </div>
+                            </div>
+                            <span class="text-blue-400 font-bold text-sm">20 </span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Work Log -->
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+                    <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2"> Work Log Hari Ini</h3>
+                    <div id="work-log" class="space-y-2 max-h-60 overflow-y-auto text-sm">
+                        <p class="text-slate-500 text-center py-4">Belum ada aktivitas kerja hari ini.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADSTERRA NATIVE BANNER -->
+        <div class="mt-8 bg-slate-800/30 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
+            <p class="text-slate-400 text-xs text-center mb-2">Advertisement</p>
+            <div class="flex justify-center">
+                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+            </div>
+        </div>
+
+        <!-- WATERMARK FOOTER -->
+        <footer class="text-center py-6 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50 mt-8 rounded-xl">
+            <p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p>
+            <p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- MODAL HASIL KERJA -->
+    <div id="work-result-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6 text-center">
+            <div class="text-6xl mb-4">️</div>
+            <h3 class="text-2xl font-bold text-white mb-2">Shift Selesai!</h3>
+            <p class="text-slate-400 mb-6">Kamu telah bekerja selama 4 jam.</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Produktivitas</p>
+                    <p class="text-xl font-bold text-amber-500" id="result-prod">0%</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Resource Didapat</p>
+                    <p class="text-xl font-bold text-green-400" id="result-resource">0</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Energi Tersisa</p>
+                    <p class="text-xl font-bold text-blue-400" id="result-energy">0%</p>
+                </div>
+                <div class="bg-slate-800 p-3 rounded-lg">
+                    <p class="text-xs text-slate-500">Shift Tersisa</p>
+                    <p class="text-xl font-bold text-white" id="result-shifts">0/3</p>
+                </div>
+            </div>
+            
+            <button onclick="closeWorkModal()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">Lanjutkan</button>
+        </div>
+    </div>
+    <!-- Library Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // 1. SETUP SUPABASE
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
+        
+        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+        let currentUser = null;
+        let playerData = null;
+        let availableJobs = [];
+
+        // 2. AUTH GUARD & LOAD DATA
+        async function checkAuth() {
+            const { data: { session }, error } = await sb.auth.getSession();
+            if (error || !session) { window.location.href = 'index.html'; return; }
+            currentUser = session.user;
+            
+            // Load data player & jobs secara paralel biar cepat
+            await Promise.all([loadPlayerData(), loadRegionResources()]);
+            
+            updateUIStats();
+            renderJobs();
+        }
+
+        async function loadPlayerData() {
+            const { data, error } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
+            if (error) { console.error(error); return; }
+            playerData = data;
+            
+            // Update Navbar Saldo
+            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-diamond').innerText = Math.floor(playerData.diamond_balance || 0).toLocaleString();
+        }
+
+        async function loadRegionResources() {
+            // Ambil resource yang masih aktif dan stoknya > 0
+            const { data, error } = await sb
+                .from('region_resources')
+                .select('*')
+                .eq('is_active', true)
+                .gt('current_stock', 0);
+            
+            if (error) { console.error(error); return; }
+            availableJobs = data;
+        }
+
+        // 3. UPDATE UI STATS (ENERGY BAR, SKILL, DLL)
+        function updateUIStats() {
+            if (!playerData) return;
+
+            // Stats Text
+            document.getElementById('stat-energy').innerText = playerData.energy;
+            document.getElementById('stat-es').innerText = playerData.economic_score;
+            document.getElementById('stat-skill').innerText = playerData.gathering_skill;
+            document.getElementById('stat-shifts').innerText = playerData.shifts_used_today;
+
+            // Energy Bar Color Logic
+            const energyBar = document.getElementById('energy-bar');
+            energyBar.style.width = `${playerData.energy}%`;
+            
+            energyBar.classList.remove('energy-low', 'energy-mid', 'energy-high');
+            if (playerData.energy < 52) {
+                energyBar.classList.add('energy-low'); // Merah
+            } else if (playerData.energy < 80) {
+                energyBar.classList.add('energy-mid'); // Kuning
+            } else {
+                energyBar.classList.add('energy-high'); // Hijau
+            }
+        }
+
+        // 4. RENDER DAFTAR PEKERJAAN (JOB LIST)
+        function renderJobs() {
+            const jobList = document.getElementById('job-list');
+            
+            if (availableJobs.length === 0) {
+                jobList.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">📭 Tidak ada stok resource di region manapun saat ini.</div>';
+                return;
+            }
+
+            jobList.innerHTML = availableJobs.map(job => `
+                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-amber-500 transition">
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl">
+                            ${job.resource_type === 'Wheat' ? '🌾' : job.resource_type === 'Coal' ? '⚫' : job.resource_type === 'Iron Ore' ? '⛏️' : '📦'}
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-lg">${job.resource_type}</h4>
+                            <p class="text-slate-400 text-sm">📍 ${job.region_name} (${job.country_code})</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                        <div class="text-right">
+                            <p class="text-xs text-slate-500 uppercase">Sisa Stok</p>
+                            <p class="text-amber-500 font-bold">${job.current_stock} / ${job.max_stock}</p>
+                        </div>
+                        <button onclick="startWork('${job.id}', '${job.resource_type}', '${job.region_name}')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-6 rounded-lg transition text-sm">
+                            Kerja (4 Jam)
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 5. LOGIKA KERJA (RUMUS PRODUKTIVITAS & SHIFT)
+        async function startWork(jobId, resourceName, regionName) {
+            // A. Cek Syarat Energi
+            if (playerData.energy < 52) {
+                alert('️ Energi kamu di bawah 52%! Kamu terlalu lelah untuk bekerja. Beli Energy Drink atau Bread dulu di Quick Shop!');
+                return;
+            }
+
+            // B. Cek Batas Shift
+            if (playerData.shifts_used_today >= 3) {
+                alert('⏰ Kamu sudah bekerja 3 shift hari ini (Maksimum). Istirahatlah dan kembali besok jam 00:00 London!');
+                return;
+            }
+
+            // C. Cek Stok (Double check biar aman)
+            const job = availableJobs.find(j => j.id === jobId);
+            if (!job || job.current_stock <= 0) {
+                alert('📭 Stok resource di region ini baru saja habis!');
+                loadRegionResources(); // Refresh list
+                renderJobs();
+                return;
+            }
+
+            // D. Hitung Produktivitas
+            // Rumus: (E*0.45) + (ES*0.30) + (SKILL*0.25) + Country(0) + Org(10)
+            const prod = (playerData.energy * 0.45) + (playerData.economic_score * 0.30) + (playerData.gathering_skill * 0.25) + 10;
+            const prodPercent = Math.min(prod, 150).toFixed(2); // Cap di 150%
+
+            // E. Hitung Resource Didapat (Base 1 unit, bonus jika prod > 100%)
+            let resourceGained = 1;
+            if (prod > 100) resourceGained = 2; // Bonus 1 unit kalau produktivitas tinggi
+
+            // F. Update State Lokal (Biar UI langsung responsif)
+            playerData.energy -= 20; // Kurangi 20 energi per shift
+            playerData.economic_score += 1; // ES naik 1 per shift
+            playerData.gathering_skill += 1; // Skill naik 1 per shift
+            playerData.shifts_used_today += 1;
+            job.current_stock -= 1;
+
+            updateUIStats();
+            renderJobs();
+
+            // G. Update Database (Supabase)
+            await sb.from('player_profiles').update({
+                energy: playerData.energy,
+                economic_score: playerData.economic_score,
+                gathering_skill: playerData.gathering_skill,
+                shifts_used_today: playerData.shifts_used_today
+            }).eq('id', currentUser.id);
+
+            await sb.from('region_resources').update({
+                current_stock: job.current_stock
+            }).eq('id', jobId);
+
+            // H. Tampilkan Modal Hasil
+            showWorkResult(prodPercent, resourceGained, resourceName, regionName);
+        }
+
+        // 6. MODAL HASIL KERJA
+        function showWorkResult(prod, gained, resourceName, regionName) {
+            document.getElementById('result-prod').innerText = `${prod}%`;
+            document.getElementById('result-resource').innerText = `+${gained} ${resourceName}`;
+            document.getElementById('result-energy').innerText = `${playerData.energy}%`;
+            document.getElementById('result-shifts').innerText = `${playerData.shifts_used_today}/3`;
+            
+            const modal = document.getElementById('work-result-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeWorkModal() {
+            const modal = document.getElementById('work-result-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // 7. QUICK SHOP (BELI ENERGI)
+        async function buyItem(itemName, price, energyBoost) {
+            if (playerData.gold_balance < price) {
+                alert(`❌ Gold tidak cukup! Kamu butuh ${price} Gold untuk membeli ${itemName}.`);
+                return;
+            }
+
+            // Kurangi Gold, Tambah Energi
+            playerData.gold_balance -= price;
+            playerData.energy = Math.min(playerData.energy + energyBoost, 100); // Max 100
+
+            // Update UI
+            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance).toLocaleString();
+            updateUIStats();
+
+            // Update DB
+            await sb.from('player_profiles').update({
+                gold_balance: playerData.gold_balance,
+                energy: playerData.energy
+            }).eq('id', currentUser.id);
+
+            alert(`✅ Berhasil membeli ${itemName}! Energi bertambah +${energyBoost}%.`);
+        }
+
+        // 8. JAM LONDON
+        function updateLondonClock() {
+            const now = new Date();
+            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
+        }
+        setInterval(updateLondonClock, 1000);
+        updateLondonClock();
+
+        // JALANKAN SAAT HALAMAN DIMUAT
+        checkAuth();
+    </script>
+</body>
+</html>
