@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
+
+        /* --- PERBAIKAN Z-INDEX SEMALAM --- */
+        /* Paksa Peta Leaflet tetap di lapisan paling bawah */
+        #map, .leaflet-container, .leaflet-pane {
+            z-index: 1 !important;
+        }
+    </style>
+    
+    <style>
     /* Custom scrollbar */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #0B0F19; }
