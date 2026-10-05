@@ -21,7 +21,7 @@
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
         <div class="flex items-center gap-3"><a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</a><span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span></div>
         <div class="flex items-center gap-3 text-sm font-semibold">
-            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300"><span>🇬</span> <span id="london-clock">Loading...</span></div>
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300"><span>🇬🇧</span> <span id="london-clock">Loading...</span></div>
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700"><span class="text-yellow-400">💰</span> <span id="stat-gold">0</span></div>
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700"><span class="text-blue-400">🪙</span> <span id="stat-currency">0</span></div>
         </div>
@@ -35,23 +35,21 @@
             <button onclick="window.location.href='activity_work.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚒️ Activity</button>
             <button onclick="window.location.href='inventory.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎒 Inventory</button>
             <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏪 Marketplace</button>
-            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
+            <button onclick="window.location.href='financial.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
         </div>
     </div>
 
     <div class="pt-[130px] pb-8 max-w-7xl mx-auto px-4">
         <div class="mb-6">
             <h1 class="text-3xl font-extrabold text-white mb-1">🏪 Unified Marketplace</h1>
-            <p class="text-slate-400 text-sm">Beli dan jual resource. Pilih mode Local (Currency) atau Global (Gold).</p>
+            <p class="text-slate-400 text-sm">Beli dan jual resource real-time dengan player lain.</p>
             
-            <!-- TOGGLE LOCAL / GLOBAL -->
             <div class="flex items-center gap-4 mt-6 bg-slate-800/50 border border-slate-700 rounded-xl p-2 w-fit">
-                <button onclick="setMarketMode('local')" id="btn-local" class="toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2">🪙 Local Market</button>
+                <button onclick="setMarketMode('local')" id="btn-local" class="toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2"> Local Market</button>
                 <button onclick="setMarketMode('global')" id="btn-global" class="toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2">💰 Global Market</button>
             </div>
         </div>
 
-        <!-- TABS & FILTER -->
         <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-6 backdrop-blur-sm flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex gap-2 w-full md:w-auto overflow-x-auto">
                 <button onclick="switchTab('buy')" id="tab-buy" class="tab-active text-xs font-bold px-6 py-2 rounded-lg transition whitespace-nowrap">🛒 Beli Resource</button>
@@ -73,209 +71,138 @@
     <div id="buy-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
             <div class="flex justify-between items-start mb-4"><h3 class="text-xl font-bold text-white">Konfirmasi Pembelian</h3><button onclick="closeBuyModal()" class="text-slate-400 hover:text-white text-2xl">✕</button></div>
-            <div class="bg-slate-800 rounded-lg p-4 mb-4">
-                <div class="flex justify-between mb-2"><span class="text-slate-400">Item:</span><span class="text-white font-bold" id="buy-item-name">-</span></div>
-                <div class="flex justify-between mb-2"><span class="text-slate-400">Jumlah:</span><span class="text-white" id="buy-item-qty">-</span></div>
+            <div class="bg-slate-800 rounded-lg p-4 mb-4 space-y-2">
+                <div class="flex justify-between"><span class="text-slate-400">Item:</span><span class="text-white font-bold" id="buy-item-name">-</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">Penjual:</span><span class="text-white" id="buy-seller-name">-</span></div>
+                <div class="flex justify-between"><span class="text-slate-400">Jumlah:</span><span class="text-white" id="buy-item-qty">-</span></div>
                 <div class="flex justify-between border-t border-slate-700 pt-2 mt-2"><span class="text-slate-400">Total Harga:</span><span class="font-bold text-lg" id="buy-total-price">-</span></div>
             </div>
             <button onclick="confirmPurchase()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">✅ Beli Sekarang</button>
+        </div>
+    </div>
+
+    <!-- MODAL JUAL -->
+    <div id="sell-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex justify-between items-start mb-4"><h3 class="text-xl font-bold text-white">Pasang Iklan Jual</h3><button onclick="closeSellModal()" class="text-slate-400 hover:text-white text-2xl">✕</button></div>
+            <div class="space-y-3">
+                <div><label class="text-xs text-slate-400 mb-1 block">Item</label><input type="text" id="sell-item-name" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"></div>
+                <div><label class="text-xs text-slate-400 mb-1 block">Stok Tersedia</label><input type="text" id="sell-max-qty" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-400"></div>
+                <div><label class="text-xs text-slate-400 mb-1 block">Jumlah yang dijual</label><input type="number" id="sell-qty" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500"></div>
+                <div><label class="text-xs text-slate-400 mb-1 block">Harga per Unit (<span id="sell-currency-label">Gold</span>)</label><input type="number" id="sell-price" value="100" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500"></div>
+            </div>
+            <button onclick="confirmListing()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition mt-6">📢 Pasang di Marketplace</button>
         </div>
     </div>
     <!-- Library Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <script>
-        // 1. SETUP SUPABASE
+        // 1. SETUP SUPABASE & VARIABLES
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
         // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
         
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
-        let currentUser = null;
-        let playerData = null;
-        let currentTab = 'buy';
-        let marketMode = 'global'; // Default: Global Market (Gold)
-        let selectedListing = null;
+        let currentUser = null, playerData = null, myInventory = [], allListings = [], sellerNameMap = {}, myTransactions = [];
+        let currentTab = 'buy', marketMode = 'global', selectedListing = null, selectedInventoryItem = null;
+        const MARKET_FEE = 0.025;
 
-        // 2. MOCK DATA
-        // Kita buat 1 daftar barang, nanti harganya disesuaikan saat di-render berdasarkan mode
-        const baseItems = [
-            { id: 1, seller: 'MinerPro99', name: 'Iron Ore', icon: '⛏️', qty: 15, base_price: 25, region: 'Kalimantan Timur' },
-            { id: 2, seller: 'FarmerJoe', name: 'Wheat', icon: '🌾', qty: 50, base_price: 8, region: 'DKI Jakarta' },
-            { id: 3, seller: 'CoalKing', name: 'Coal', icon: '', qty: 30, base_price: 15, region: 'Sumatra Utara' },
-            { id: 4, seller: 'Herbalist', name: 'Herbs', icon: '🌱', qty: 20, base_price: 12, region: 'Amazon' },
-            { id: 5, seller: 'OilBaron', name: 'Crude Oil', icon: '🛢️', qty: 10, base_price: 50, region: 'Persian Gulf' }
-        ];
-
-        // Simulasi Listing yang sudah ada di pasar
-        let mockListings = baseItems.map(item => ({
-            ...item,
-            currency: 'gold', // Default listing di global market
-            price: item.base_price * 1 // Harga Gold
-        }));
-
-        // Tambahkan beberapa listing Local Market (Currency)
-        mockListings.push(
-            { id: 6, seller: 'BakeryOwner', name: 'Bread', icon: '🍞', qty: 100, base_price: 5, region: 'DKI Jakarta', currency: 'currency', price: 50 },
-            { id: 7, seller: 'CafeOwner', name: 'Coffee', icon: '☕', qty: 40, base_price: 10, region: 'Paris', currency: 'currency', price: 100 }
-        );
-
-        const mockPlayerInventory = [
-            { id: 1, name: 'Wheat', icon: '🌾', quantity: 45 },
-            { id: 2, name: 'Iron Ore', icon: '⛏️', quantity: 12 },
-            { id: 3, name: 'Coal', icon: '', quantity: 8 }
-        ];
-
-        // 3. AUTH GUARD & LOAD DATA
+        // 2. AUTH GUARD & LOAD DATA
         async function checkAuth() {
             const { data: { session }, error } = await sb.auth.getSession();
             if (error || !session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
-            
-            const { data } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
-            playerData = data;
-            
-            if (playerData) {
-                document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
-                document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance || 0).toLocaleString();
-            }
+            await Promise.all([loadPlayerProfile(), loadMarketData(), loadMyInventory(), loadMyTransactions()]);
+            updateNavbarStats();
             switchTab('buy');
         }
+        async function loadPlayerProfile() {
+            const { data } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
+            playerData = data;
+        }
+        async function loadMarketData() {
+            const { data: listings } = await sb.from('marketplace_listings').select('*').order('created_at', { ascending: false });
+            allListings = listings || [];
+            const sellerIds = [...new Set(allListings.map(l => l.seller_id))];
+            if (sellerIds.length > 0) {
+                const { data: profiles } = await sb.from('player_profiles').select('id, username').in('id', sellerIds);
+                if (profiles) profiles.forEach(p => sellerNameMap[p.id] = p.username || 'Anonymous');
+            }
+        }
+        async function loadMyInventory() {
+            const { data } = await sb.from('player_inventory').select('*').eq('player_id', currentUser.id);
+            myInventory = data || [];
+        }
+        async function loadMyTransactions() {
+            const { data } = await sb.from('transactions').select('*').eq('player_id', currentUser.id).order('created_at', { ascending: false }).limit(20);
+            myTransactions = data || [];
+        }
+        function updateNavbarStats() {
+            if (!playerData) return;
+            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance || 0).toLocaleString();
+        }
 
-        // 4. MARKET MODE TOGGLE (LOCAL vs GLOBAL)
+        // 3. MARKET MODE & TABS
         function setMarketMode(mode) {
             marketMode = mode;
-            const btnLocal = document.getElementById('btn-local');
-            const btnGlobal = document.getElementById('btn-global');
-            
-            if (mode === 'local') {
-                btnLocal.className = 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-                btnGlobal.className = 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-            } else {
-                btnGlobal.className = 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-                btnLocal.className = 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-            }
-            
-            // Re-render tab aktif agar harga & mata uang update
-            if (currentTab === 'buy') renderBuyTab();
-            else if (currentTab === 'sell') renderSellTab();
+            document.getElementById('btn-local').className = mode === 'local' ? 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2' : 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
+            document.getElementById('btn-global').className = mode === 'global' ? 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2' : 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
+            if (currentTab === 'buy') renderBuyTab(); else if (currentTab === 'sell') renderSellTab();
         }
-
-        // 5. TAB SWITCHING
         function switchTab(tabName) {
             currentTab = tabName;
-            document.querySelectorAll('[id^="tab-"]').forEach(btn => {
-                btn.classList.remove('tab-active'); btn.classList.add('tab-inactive');
-            });
+            document.querySelectorAll('[id^="tab-"]').forEach(btn => { btn.classList.remove('tab-active'); btn.classList.add('tab-inactive'); });
             document.getElementById(`tab-${tabName}`).classList.remove('tab-inactive');
             document.getElementById(`tab-${tabName}`).classList.add('tab-active');
-
-            if (tabName === 'buy') renderBuyTab();
-            else if (tabName === 'sell') renderSellTab();
-            else if (tabName === 'history') renderHistoryTab();
+            if (tabName === 'buy') renderBuyTab(); else if (tabName === 'sell') renderSellTab(); else if (tabName === 'history') renderHistoryTab();
         }
 
-        // 6. RENDER TAB BELI
+        // 4. RENDER FUNCTIONS
         function renderBuyTab() {
             const content = document.getElementById('content-area');
             const search = document.getElementById('search-input').value.toLowerCase();
-            
-            // Filter listing berdasarkan marketMode yang aktif
-            let filtered = mockListings.filter(l => l.currency === marketMode);
-            if (search) filtered = filtered.filter(l => l.name.toLowerCase().includes(search));
-
-            const currencyIcon = marketMode === 'global' ? '💰' : '🪙';
-            const currencyName = marketMode === 'global' ? 'Gold' : 'Currency';
-
-            if (filtered.length === 0) {
-                content.innerHTML = `<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">📭 Tidak ada listing di ${marketMode === 'global' ? 'Global Market' : 'Local Market'}.</div>`;
-                return;
-            }
-
-            content.innerHTML = `
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    ${filtered.map(listing => `
-                        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 hover:border-amber-500 transition">
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl">${listing.icon}</div>
-                                <div>
-                                    <h4 class="text-white font-bold">${listing.name}</h4>
-                                    <p class="text-slate-400 text-xs">📍 ${listing.region} • Penjual: ${listing.seller}</p>
-                                </div>
-                            </div>
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm"><span class="text-slate-400">Stok:</span><span class="text-amber-500 font-bold">${listing.qty} unit</span></div>
-                                <div class="flex justify-between text-sm border-t border-slate-700 pt-2">
-                                    <span class="text-slate-400">Harga/unit:</span>
-                                    <span class="font-bold text-lg ${marketMode === 'global' ? 'text-yellow-400' : 'text-blue-400'}">${listing.price} ${currencyIcon}</span>
-                                </div>
-                            </div>
-                            <button onclick="openBuyModal(${listing.id})" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg transition text-sm"> Beli Semua</button>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+            let filtered = allListings.filter(l => l.currency_type === marketMode);
+            if (search) filtered = filtered.filter(l => l.item_name.toLowerCase().includes(search));
+            if (filtered.length === 0) { content.innerHTML = `<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">Tidak ada listing di ${marketMode === 'global' ? 'Global' : 'Local'} Market.</div>`; return; }
+            content.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${filtered.map(listing => {
+                const sellerName = sellerNameMap[listing.seller_id] || 'Unknown Player';
+                const total = listing.price_per_unit * listing.quantity;
+                return `<div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 hover:border-amber-500 transition">
+                    <div class="flex items-center gap-3 mb-3"><div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl">${listing.item_icon || '📦'}</div><div><h4 class="text-white font-bold">${listing.item_name}</h4><p class="text-slate-400 text-xs">📍 ${listing.region || 'Global'} • Penjual: ${sellerName}</p></div></div>
+                    <div class="space-y-2 mb-4"><div class="flex justify-between text-sm"><span class="text-slate-400">Stok:</span><span class="text-amber-500 font-bold">${listing.quantity} unit</span></div><div class="flex justify-between text-sm border-t border-slate-700 pt-2"><span class="text-slate-400">Total Harga:</span><span class="font-bold text-lg ${marketMode === 'global' ? 'text-yellow-400' : 'text-blue-400'}">${total.toLocaleString()} ${marketMode === 'global' ? '💰' : '🪙'}</span></div></div>
+                    <button onclick='openBuyModal(${JSON.stringify(listing).replace(/'/g, "&apos;")})' class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg transition text-sm">🛒 Beli Semua</button></div>`;
+            }).join('')}</div>`;
         }
-
-        // 7. RENDER TAB JUAL
         function renderSellTab() {
             const content = document.getElementById('content-area');
-            const currencyIcon = marketMode === 'global' ? '💰 Gold' : '🪙 Currency';
-            
-            if (mockPlayerInventory.length === 0) {
-                content.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">🎒 Inventory kamu kosong.</div>';
-                return;
-            }
-
-            content.innerHTML = `
-                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xl font-bold text-white">📦 Jual dari Inventory</h3>
-                        <span class="text-xs bg-amber-500/20 text-amber-500 px-3 py-1 rounded-full">Mode: ${marketMode === 'global' ? '💰 Global (Gold)' : '🪙 Local (Currency)'}</span>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        ${mockPlayerInventory.map(item => `
-                            <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 flex items-center justify-between">
-                                <div class="flex items-center gap-3">
-                                    <span class="text-3xl">${item.icon}</span>
-                                    <div><p class="text-white font-bold">${item.name}</p><p class="text-slate-400 text-xs">Stok: ${item.quantity}</p></div>
-                                </div>
-                                <button onclick="openSellModal('${item.name}', ${item.quantity})" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">Jual</button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
+            if (myInventory.length === 0) { content.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700"> Inventory kamu kosong. Kerja dulu di Activity Work!</div>'; return; }
+            content.innerHTML = `<div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold text-white">📦 Jual dari Inventory</h3><span class="text-xs bg-amber-500/20 text-amber-500 px-3 py-1 rounded-full">Mode: ${marketMode === 'global' ? 'Gold 💰' : 'Currency '}</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${myInventory.map(item => `<div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div class="flex items-center gap-3"><span class="text-3xl">${item.item_icon || ''}</span><div><p class="text-white font-bold">${item.item_name}</p><p class="text-slate-400 text-xs">Stok: ${item.quantity}</p></div></div><button onclick='openSellModal(${JSON.stringify(item).replace(/'/g, "&apos;")})' class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">Jual</button></div>`).join('')}</div></div>`;
         }
-
-        // 8. RENDER TAB RIWAYAT (Dummy)
         function renderHistoryTab() {
-            document.getElementById('content-area').innerHTML = `
-                <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-8 text-center text-slate-500">
-                    🧾 Fitur Riwayat Transaksi akan menampilkan semua aktivitas jual beli kamu di Local & Global Market.
-                </div>
-            `;
+            const content = document.getElementById('content-area');
+            if (myTransactions.length === 0) { content.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">🧾 Belum ada riwayat transaksi.</div>'; return; }
+            content.innerHTML = `<div class="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-900/80 text-slate-400 uppercase text-xs"><tr><th class="px-6 py-3">Tanggal</th><th class="px-6 py-3">Tipe</th><th class="px-6 py-3">Deskripsi</th><th class="px-6 py-3 text-right">Jumlah</th><th class="px-6 py-3 text-center">Status</th></tr></thead><tbody class="divide-y divide-slate-700">${myTransactions.map(tx => { const date = new Date(tx.created_at).toLocaleString('id-ID'); const color = tx.amount < 0 ? 'text-red-400' : 'text-green-400'; return `<tr class="hover:bg-slate-800/50 transition"><td class="px-6 py-4 text-slate-400 whitespace-nowrap">${date}</td><td class="px-6 py-4 text-white font-semibold uppercase">${tx.type}</td><td class="px-6 py-4 text-slate-300">${tx.description}</td><td class="px-6 py-4 text-right font-bold ${color}">${tx.amount} ${tx.currency_type}</td><td class="px-6 py-4 text-center"><span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">${tx.status}</span></td></tr>`; }).join('')}</tbody></table></div>`;
         }
-
         function applyFilters() { if (currentTab === 'buy') renderBuyTab(); }
 
-        // 9. MODAL BELI
-        function openBuyModal(listingId) {
-            selectedListing = mockListings.find(l => l.id === listingId);
-            if (!selectedListing) return;
+        // 5. MODAL BELI & LOGIKA TRANSAKSI
+        function openBuyModal(listing) {
+            selectedListing = listing;
+            const total = listing.price_per_unit * listing.quantity;
+            const currencyIcon = listing.currency_type === 'gold' ? '💰 Gold' : '🪙 Currency';
+            const sellerName = sellerNameMap[listing.seller_id] || 'Unknown Player';
 
-            const currencyIcon = selectedListing.currency === 'gold' ? '💰' : '🪙';
-            const totalPrice = selectedListing.price * selectedListing.qty;
-
-            document.getElementById('buy-item-name').innerText = `${selectedListing.icon} ${selectedListing.name}`;
-            document.getElementById('buy-item-qty').innerText = `${selectedListing.qty} unit`;
-            document.getElementById('buy-total-price').innerText = `${totalPrice} ${currencyIcon}`;
-            document.getElementById('buy-total-price').className = `font-bold text-lg ${selectedListing.currency === 'gold' ? 'text-yellow-400' : 'text-blue-400'}`;
+            document.getElementById('buy-item-name').innerText = `${listing.item_icon || '📦'} ${listing.item_name}`;
+            document.getElementById('buy-seller-name').innerText = sellerName;
+            document.getElementById('buy-item-qty').innerText = `${listing.quantity} unit`;
+            document.getElementById('buy-total-price').innerText = `${total.toLocaleString()} ${currencyIcon}`;
+            document.getElementById('buy-total-price').className = `font-bold text-lg ${listing.currency_type === 'gold' ? 'text-yellow-400' : 'text-blue-400'}`;
 
             const modal = document.getElementById('buy-modal');
             modal.classList.remove('hidden'); modal.classList.add('flex');
         }
-
         function closeBuyModal() {
             document.getElementById('buy-modal').classList.add('hidden');
             document.getElementById('buy-modal').classList.remove('flex');
@@ -284,71 +211,103 @@
 
         async function confirmPurchase() {
             if (!selectedListing) return;
-            const totalPrice = selectedListing.price * selectedListing.qty;
-            const isGold = selectedListing.currency === 'gold';
+            const totalCost = selectedListing.price_per_unit * selectedListing.quantity;
+            const isGold = selectedListing.currency_type === 'gold';
             const currentBalance = isGold ? playerData.gold_balance : playerData.currency_balance;
 
-            if (currentBalance < totalPrice) {
-                alert(`❌ Saldo ${isGold ? 'Gold' : 'Currency'} tidak cukup!`);
-                return;
-            }
+            if (currentBalance < totalCost) { alert(`❌ Saldo ${isGold ? 'Gold' : 'Currency'} tidak cukup!`); return; }
 
-            // Kurangi saldo
-            if (isGold) playerData.gold_balance -= totalPrice;
-            else playerData.currency_balance -= totalPrice;
-
-            // Update UI & DB
-            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance).toLocaleString();
-            document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance).toLocaleString();
-            await sb.from('player_profiles').update({ 
-                gold_balance: playerData.gold_balance, 
-                currency_balance: playerData.currency_balance 
-            }).eq('id', currentUser.id);
-
-            // Hapus listing
-            mockListings = mockListings.filter(l => l.id !== selectedListing.id);
-
-            alert(`✅ Pembelian berhasil!\n${selectedListing.qty} ${selectedListing.name} masuk Inventory.`);
+            // Update UI Lokal Dulu (Biar Cepat)
+            if (isGold) playerData.gold_balance -= totalCost;
+            else playerData.currency_balance -= totalCost;
+            allListings = allListings.filter(l => l.id !== selectedListing.id);
+            updateNavbarStats();
             closeBuyModal();
             renderBuyTab();
+
+            // Simpan ke Database
+            try {
+                const sellerNetAmount = totalCost * (1 - MARKET_FEE);
+                const sellerName = sellerNameMap[selectedListing.seller_id] || 'Unknown';
+                
+                // Ambil saldo penjual saat ini
+                const { data: sellerData } = await sb.from('player_profiles').select(isGold ? 'gold_balance' : 'currency_balance').eq('id', selectedListing.seller_id).single();
+                const sellerNewBalance = (sellerData[isGold ? 'gold_balance' : 'currency_balance'] || 0) + sellerNetAmount;
+
+                await Promise.all([
+                    sb.from('player_profiles').update({ [isGold ? 'gold_balance' : 'currency_balance']: playerData[isGold ? 'gold_balance' : 'currency_balance'] }).eq('id', currentUser.id),
+                    sb.from('player_profiles').update({ [isGold ? 'gold_balance' : 'currency_balance']: sellerNewBalance }).eq('id', selectedListing.seller_id),
+                    sb.from('player_inventory').upsert({ player_id: currentUser.id, item_name: selectedListing.item_name, item_icon: selectedListing.item_icon, category: selectedListing.category, rarity: 'common', quantity: selectedListing.quantity }, { onConflict: 'player_id, item_name' }),
+                    sb.from('marketplace_listings').delete().eq('id', selectedListing.id),
+                    sb.from('transactions').insert({ player_id: currentUser.id, type: 'market_buy', description: `Beli ${selectedListing.quantity} ${selectedListing.item_name} dari ${sellerName}`, amount: -totalCost, currency_type: selectedListing.currency_type, status: 'success' }),
+                    sb.from('transactions').insert({ player_id: selectedListing.seller_id, type: 'market_sell', description: `Jual ${selectedListing.quantity} ${selectedListing.item_name} (Fee 2.5%)`, amount: sellerNetAmount, currency_type: selectedListing.currency_type, status: 'success' })
+                ]);
+                alert(`✅ Pembelian berhasil! ${selectedListing.item_name} masuk Inventory.`);
+            } catch (err) {
+                console.error('Gagal transaksi:', err);
+                alert('❌ Terjadi kesalahan. Silakan refresh.');
+                await loadMarketData(); await loadPlayerProfile(); updateNavbarStats(); renderBuyTab();
+            }
         }
 
-        // 10. MODAL JUAL
-        function openSellModal(itemName, maxQty) {
-            // Kita pakai prompt sederhana untuk demo, bisa diupgrade jadi modal custom
-            const qty = prompt(`Jual ${itemName} (Max ${maxQty}). Masukkan jumlah:`, 1);
-            if (!qty || qty <= 0 || qty > maxQty) return;
-            
-            const price = prompt(`Masukkan harga per unit (${marketMode === 'global' ? 'Gold 💰' : 'Currency 🪙'}):`, 100);
-            if (!price || price <= 0) return;
+        // 6. MODAL JUAL & LOGIKA LISTING
+        function openSellModal(item) {
+            selectedInventoryItem = item;
+            const currencyName = marketMode === 'global' ? 'Gold' : 'Currency';
+            document.getElementById('sell-item-name').value = item.item_name;
+            document.getElementById('sell-max-qty').value = item.quantity;
+            document.getElementById('sell-qty').value = 1;
+            document.getElementById('sell-qty').max = item.quantity;
+            document.getElementById('sell-price').value = 100;
+            document.getElementById('sell-currency-label').innerText = currencyName;
+            const modal = document.getElementById('sell-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+        }
+        function closeSellModal() {
+            document.getElementById('sell-modal').classList.add('hidden');
+            document.getElementById('sell-modal').classList.remove('flex');
+            selectedInventoryItem = null;
+        }
 
-            // Tambah listing baru
-            mockListings.unshift({
-                id: Date.now(),
-                seller: playerData.username || 'You',
-                name: itemName,
-                icon: itemName === 'Wheat' ? '🌾' : itemName === 'Iron Ore' ? '️' : '⚫',
-                qty: parseInt(qty),
-                base_price: parseInt(price),
-                region: 'DKI Jakarta',
-                currency: marketMode, // Ikut mode yang sedang aktif
-                price: parseInt(price)
-            });
+        async function confirmListing() {
+            if (!selectedInventoryItem) return;
+            const qty = parseInt(document.getElementById('sell-qty').value);
+            const price = parseFloat(document.getElementById('sell-price').value);
+            const maxQty = selectedInventoryItem.quantity;
 
-            // Kurangi inventory
-            const invItem = mockPlayerInventory.find(i => i.name === itemName);
-            if (invItem) invItem.quantity -= parseInt(qty);
+            if (qty <= 0 || qty > maxQty) return alert('❌ Jumlah tidak valid!');
+            if (price <= 0) return alert('❌ Harga harus lebih dari 0!');
 
-            alert(`✅ Listing berhasil dipasang di ${marketMode === 'global' ? 'Global Market' : 'Local Market'}!`);
+            // Update UI Lokal
+            selectedInventoryItem.quantity -= qty;
+            if (selectedInventoryItem.quantity === 0) myInventory = myInventory.filter(i => i.id !== selectedInventoryItem.id);
+            const newListing = { seller_id: currentUser.id, item_name: selectedInventoryItem.item_name, item_icon: selectedInventoryItem.item_icon, category: selectedInventoryItem.category, quantity: qty, price_per_unit: price, currency_type: marketMode, region: 'Global' };
+            allListings.unshift(newListing);
+            closeSellModal();
             switchTab('buy');
+
+            // Simpan ke Database
+            try {
+                await Promise.all([
+                    sb.from('player_inventory').update({ quantity: selectedInventoryItem.quantity }).eq('id', selectedInventoryItem.id),
+                    sb.from('marketplace_listings').insert(newListing),
+                    sb.from('transactions').insert({ player_id: currentUser.id, type: 'market_listing', description: `Pasang iklan jual ${qty} ${selectedInventoryItem.item_name} @ ${price}`, amount: 0, currency_type: marketMode, status: 'listed' })
+                ]);
+                alert(`✅ Listing berhasil dipasang di ${marketMode === 'global' ? 'Global' : 'Local'} Market!`);
+            } catch (err) {
+                console.error('Gagal pasang listing:', err);
+                alert(' Gagal memasang listing.');
+                await loadMyInventory(); await loadMarketData(); renderSellTab();
+            }
         }
 
-        // 11. JAM LONDON
+        // 7. JAM LONDON & INIT
         function updateLondonClock() {
             const now = new Date();
             document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
         }
-        setInterval(updateLondonClock, 1000); updateLondonClock();
+        setInterval(updateLondonClock, 1000);
+        updateLondonClock();
 
         checkAuth();
     </script>
