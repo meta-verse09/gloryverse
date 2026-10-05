@@ -128,14 +128,14 @@
 
     <!-- SCRIPT UTAMA -->
     <script>
-        // 1. SETUP SUPABASE (GANTI DENGAN DATA KAMU)
+        // 1. SETUP SUPABASE
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
-        // ️ GANTI 'xxxxx' DI AKHIR DENGAN ANON KEY ASLI KAMU!
+        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
         
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
 
-        // 2. LOGIKA TAB SWITCHER (EMAIL/PHANTOM & REGISTER/LOGIN)
+        // 2. LOGIKA TAB SWITCHER
         const tabEmail = document.getElementById('tab-email');
         const tabWallet = document.getElementById('tab-wallet');
         const formEmail = document.getElementById('form-email');
@@ -146,9 +146,8 @@
         const inputUsername = document.getElementById('input-username');
         const btnSubmit = document.getElementById('btn-submit-auth');
 
-        let isLoginMode = false; // Default ke mode Register
+        let isLoginMode = false;
 
-        // Tab Email vs Wallet
         tabEmail.addEventListener('click', () => {
             tabEmail.className = 'flex-1 py-2.5 rounded-md bg-amber-500 text-slate-900 font-bold text-sm transition-all shadow-lg';
             tabWallet.className = 'flex-1 py-2.5 rounded-md text-slate-400 font-bold text-sm hover:text-white transition-all';
@@ -163,7 +162,6 @@
             formEmail.classList.add('hidden');
         });
 
-        // Sub-Tab Register vs Login
         subtabRegister.addEventListener('click', () => {
             isLoginMode = false;
             subtabRegister.className = 'flex-1 pb-2 text-amber-500 border-b-2 border-amber-500 font-bold text-sm';
@@ -176,18 +174,18 @@
             isLoginMode = true;
             subtabLogin.className = 'flex-1 pb-2 text-amber-500 border-b-2 border-amber-500 font-bold text-sm';
             subtabRegister.className = 'flex-1 pb-2 text-slate-400 hover:text-white font-bold text-sm';
-            inputUsername.classList.add('hidden'); // Sembunyikan input username saat login
+            inputUsername.classList.add('hidden');
             btnSubmit.innerText = 'MASUK KE DASHBOARD';
         });
 
-        // 3. LOGIKA SUBMIT FORM (REGISTER & LOGIN)
+        // 3. LOGIKA SUBMIT FORM (REGISTER & LOGIN) - PRODUCTION READY
         btnSubmit.addEventListener('click', async () => {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const username = document.getElementById('reg-username').value;
 
             if (!email || !password) {
-                alert('Email dan Password wajib diisi!');
+                alert(' Email dan Password wajib diisi!');
                 return;
             }
 
@@ -198,38 +196,84 @@
                 // LOGIKA LOGIN
                 const { data, error } = await sb.auth.signInWithPassword({ email, password });
                 if (error) {
-                    alert('Login Gagal: ' + error.message);
+                    alert(' Login Gagal: ' + error.message);
                     btnSubmit.innerText = 'MASUK KE DASHBOARD';
                     btnSubmit.disabled = false;
                 } else {
-                    // Login berhasil, langsung lempar ke dashboard
                     window.location.href = 'dashboard.html';
                 }
             } else {
-                // LOGIKA REGISTER
+                // LOGIKA REGISTER - AUTO CREATE PROFILE
                 if (!username) {
-                    alert('Username wajib diisi untuk mendaftar!');
+                    alert(' Username wajib diisi untuk mendaftar!');
                     btnSubmit.innerText = 'MULAI PETUALANGAN';
                     btnSubmit.disabled = false;
                     return;
                 }
-                const { data, error } = await sb.auth.signUp({
+
+                // 1. Buat user di auth.users
+                const { data: authData, error: authError } = await sb.auth.signUp({
                     email, password,
                     options: { data: { username } }
                 });
-                if (error) {
-                    alert('Daftar Gagal: ' + error.message);
+
+                if (authError) {
+                    alert('❌ Daftar Gagal: ' + authError.message);
                     btnSubmit.innerText = 'MULAI PETUALANGAN';
                     btnSubmit.disabled = false;
-                } else {
-                    alert('Berhasil! Silakan cek email untuk verifikasi, atau langsung klik Masuk.');
-                    // Otomatis pindah ke tab login
-                    subtabLogin.click();
-                    btnSubmit.innerText = 'MASUK KE DASHBOARD';
-                    btnSubmit.disabled = false;
+                    return;
                 }
+
+                // 2. Auto Create Profile di player_profiles
+                const referralCode = 'GLORY-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                
+                const { error: profileError } = await sb.from('player_profiles').insert({
+                    id: authData.user.id,
+                    username: username,
+                    avatar_url: null,
+                    solana_wallet_address: null,
+                    is_web3_verified: false,
+                    gold_balance: 100, // Modal awal
+                    currency_balance: 500, // Modal awal
+                    diamond_balance: 0,
+                    level: 1,
+                    xp: 0,
+                    energy: 100,
+                    health: 100,
+                    current_region: 'DKI Jakarta', // Default region
+                    country_code: 'ID',
+                    main_role: 'Explorer',
+                    referral_code: referralCode,
+                    referred_by: null,
+                    economic_score: 100,
+                    gathering_skill: 0,
+                    shifts_used_today: 0,
+                    last_work_date: new Date().toISOString().split('T')[0]
+                });
+
+                if (profileError) {
+                    console.error('Gagal buat profile:', profileError);
+                    alert('⚠️ Akun berhasil dibuat, tapi ada masalah membuat profile. Silakan hubungi admin.');
+                    // Tetap arahkan ke login
+                    subtabLogin.click();
+                } else {
+                    alert('✅ Registrasi Berhasil! Username: ' + username + '\nKode Referral kamu: ' + referralCode + '\n\nSilakan login dengan email dan password.');
+                    subtabLogin.click();
+                }
+
+                btnSubmit.innerText = 'MULAI PETUALANGAN';
+                btnSubmit.disabled = false;
             }
         });
+
+        // 4. CHECK IF USER ALREADY LOGGED IN
+        async function checkSession() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+        checkSession();
     </script>
 </body>
 </html>
