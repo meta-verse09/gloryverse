@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -297,61 +298,61 @@
             profile: { 
                 title: '👤 PROFILE', 
                 items: [
-                    { icon: '📊', label: 'My Profile', action: 'closePanel()' },
-                    { icon: '👻', label: 'Connect Wallet', action: 'closePanel()' },
-                    { icon: '🔗', label: 'Referral Program', action: 'closePanel()' },
-                    { icon: '🎒', label: 'Inventory', action: 'closePanel()' },
+                    { icon: '📊', label: 'My Profile', action: "window.location.href='my_profile.html'" },
+                    { icon: '👻', label: 'Connect Wallet', action: "window.location.href='my_profile.html'" },
+                    { icon: '🔗', label: 'Referral Program', action: "window.location.href='referral.html'" },
+                    { icon: '🎒', label: 'Inventory', action: "window.location.href='inventory.html'" },
                     { icon: '💎', label: 'Top Up Diamond', action: "window.location.href='topup.html'" }
                 ] 
             },
             activities: { 
                 title: '⚔️ ACTIVITIES', 
                 items: [
-                    { icon: '💼', label: 'Work', action: 'closePanel()' },
+                    { icon: '⚒️', label: 'Work / Gather', action: "window.location.href='activity_work.html'" },
                     { icon: '🏋️', label: 'Train', action: 'closePanel()' },
                     { icon: '⚔️', label: 'Battle', action: 'closePanel()' },
-                    { icon: '🌲', label: 'Gather', action: 'closePanel()' }
+                    { icon: '🌲', label: 'Gather', action: "window.location.href='activity_work.html'" }
                 ] 
             },
             business: { 
                 title: '🏢 BUSINESS', 
                 items: [
-                    { icon: '🏭', label: 'My Companies', action: 'closePanel()' },
+                    { icon: '', label: 'My Companies', action: 'closePanel()' },
                     { icon: '🏠', label: 'Real Estate', action: 'closePanel()' },
-                    { icon: '🌍', label: 'Global Market', action: 'closePanel()' },
-                    { icon: '🏪', label: 'Local Market', action: 'closePanel()' }
+                    { icon: '🌍', label: 'Global Market', action: "window.location.href='marketplace.html'" },
+                    { icon: '🏪', label: 'Local Market', action: "window.location.href='marketplace.html'" }
                 ] 
             },
             financial: { 
-                title: ' FINANCIAL', 
+                title: '📈 FINANCIAL', 
                 items: [
-                    { icon: '💱', label: 'Exchange (SOL)', action: 'closePanel()' },
-                    { icon: '📊', label: 'Market Chart', action: 'closePanel()' },
-                    { icon: '🧾', label: 'Transaction History', action: 'closePanel()' }
+                    { icon: '💱', label: 'Exchange (SOL)', action: "window.location.href='financial.html'" },
+                    { icon: '📊', label: 'Market Chart', action: "window.location.href='financial.html'" },
+                    { icon: '🧾', label: 'Transaction History', action: "window.location.href='financial.html'" }
                 ] 
             },
             politics: { 
                 title: '🏛️ POLITICS', 
                 items: [
-                    { icon: '📍', label: 'Region Info', action: 'closePanel()' },
-                    { icon: '🗳️', label: 'Elections', action: 'closePanel()' },
-                    { icon: '⚖️', label: 'Laws & Taxes', action: 'closePanel()' },
+                    { icon: '', label: 'Region Info', action: 'closePanel()' },
+                    { icon: '️', label: 'Elections', action: 'closePanel()' },
+                    { icon: '️', label: 'Laws & Taxes', action: 'closePanel()' },
                     { icon: '🤝', label: 'War & Alliance', action: 'closePanel()' }
                 ] 
             },
             events: { 
-                title: '🎉 EVENTS', 
+                title: ' EVENTS', 
                 items: [
                     { icon: '🏆', label: 'Active Events', action: 'closePanel()' },
                     { icon: '🔮', label: 'Predictions', action: 'closePanel()' },
-                    { icon: '🧠', label: 'Geo Challenge', action: "alert('️ Fitur Daily Geo Challenge akan segera hadir! Persiapkan strategi peta kamu.')" },
-                    { icon: '📊', label: 'Leaderboards', action: 'closePanel()' }
+                    { icon: '🧠', label: 'Geo Challenge', action: "window.location.href='geo_challenge.html'" },
+                    { icon: '📊', label: 'Leaderboards', action: "window.location.href='leaderboard.html'" }
                 ] 
             },
             community: { 
                 title: '🌐 COMMUNITY', 
                 items: [
-                    { icon: '🛡️', label: 'Guilds / Parties', action: 'closePanel()' },
+                    { icon: '️', label: 'Guilds / Parties', action: 'closePanel()' },
                     { icon: '📰', label: 'Newspaper / News', action: 'closePanel()' },
                     { icon: '💬', label: 'Chat / Forum', action: 'closePanel()' }
                 ] 
