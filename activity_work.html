@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -236,9 +237,7 @@
             if (error || !session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
             
-            // Load data player & jobs secara paralel biar cepat
             await Promise.all([loadPlayerData(), loadRegionResources()]);
-            
             updateUIStats();
             renderJobs();
         }
@@ -247,52 +246,35 @@
             const { data, error } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
             if (error) { console.error(error); return; }
             playerData = data;
-            
-            // Update Navbar Saldo
             document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
             document.getElementById('stat-diamond').innerText = Math.floor(playerData.diamond_balance || 0).toLocaleString();
         }
 
         async function loadRegionResources() {
-            // Ambil resource yang masih aktif dan stoknya > 0
-            const { data, error } = await sb
-                .from('region_resources')
-                .select('*')
-                .eq('is_active', true)
-                .gt('current_stock', 0);
-            
+            const { data, error } = await sb.from('region_resources').select('*').eq('is_active', true).gt('current_stock', 0);
             if (error) { console.error(error); return; }
             availableJobs = data;
         }
 
-        // 3. UPDATE UI STATS (ENERGY BAR, SKILL, DLL)
+        // 3. UPDATE UI STATS
         function updateUIStats() {
             if (!playerData) return;
-
-            // Stats Text
             document.getElementById('stat-energy').innerText = playerData.energy;
             document.getElementById('stat-es').innerText = playerData.economic_score;
             document.getElementById('stat-skill').innerText = playerData.gathering_skill;
             document.getElementById('stat-shifts').innerText = playerData.shifts_used_today;
 
-            // Energy Bar Color Logic
             const energyBar = document.getElementById('energy-bar');
             energyBar.style.width = `${playerData.energy}%`;
-            
             energyBar.classList.remove('energy-low', 'energy-mid', 'energy-high');
-            if (playerData.energy < 52) {
-                energyBar.classList.add('energy-low'); // Merah
-            } else if (playerData.energy < 80) {
-                energyBar.classList.add('energy-mid'); // Kuning
-            } else {
-                energyBar.classList.add('energy-high'); // Hijau
-            }
+            if (playerData.energy < 52) energyBar.classList.add('energy-low');
+            else if (playerData.energy < 80) energyBar.classList.add('energy-mid');
+            else energyBar.classList.add('energy-high');
         }
 
-        // 4. RENDER DAFTAR PEKERJAAN (JOB LIST)
+        // 4. RENDER JOB LIST
         function renderJobs() {
             const jobList = document.getElementById('job-list');
-            
             if (availableJobs.length === 0) {
                 jobList.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">📭 Tidak ada stok resource di region manapun saat ini.</div>';
                 return;
@@ -302,83 +284,91 @@
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-amber-500 transition">
                     <div class="flex items-center gap-4 w-full md:w-auto">
                         <div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl">
-                            ${job.resource_type === 'Wheat' ? '🌾' : job.resource_type === 'Coal' ? '⚫' : job.resource_type === 'Iron Ore' ? '⛏️' : '📦'}
+                            ${job.resource_type === 'Wheat' ? '' : job.resource_type === 'Coal' ? '⚫' : job.resource_type === 'Iron Ore' ? '⛏️' : ''}
                         </div>
                         <div>
                             <h4 class="text-white font-bold text-lg">${job.resource_type}</h4>
                             <p class="text-slate-400 text-sm">📍 ${job.region_name} (${job.country_code})</p>
                         </div>
                     </div>
-                    
                     <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
                         <div class="text-right">
                             <p class="text-xs text-slate-500 uppercase">Sisa Stok</p>
                             <p class="text-amber-500 font-bold">${job.current_stock} / ${job.max_stock}</p>
                         </div>
-                        <button onclick="startWork('${job.id}', '${job.resource_type}', '${job.region_name}')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-6 rounded-lg transition text-sm">
-                            Kerja (4 Jam)
-                        </button>
+                        <button onclick="startWork('${job.id}', '${job.resource_type}', '${job.region_name}')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-6 rounded-lg transition text-sm">Kerja (4 Jam)</button>
                     </div>
                 </div>
             `).join('');
         }
 
-        // 5. LOGIKA KERJA (RUMUS PRODUKTIVITAS & SHIFT)
+        // 5. LOGIKA KERJA (PRODUCTION READY - MENYIMPAN KE DB)
         async function startWork(jobId, resourceName, regionName) {
-            // A. Cek Syarat Energi
-            if (playerData.energy < 52) {
-                alert('️ Energi kamu di bawah 52%! Kamu terlalu lelah untuk bekerja. Beli Energy Drink atau Bread dulu di Quick Shop!');
-                return;
-            }
+            if (playerData.energy < 52) return alert('️ Energi di bawah 52%! Beli Energy Drink dulu.');
+            if (playerData.shifts_used_today >= 3) return alert('⏰ Sudah 3 shift hari ini. Istirahat dulu!');
 
-            // B. Cek Batas Shift
-            if (playerData.shifts_used_today >= 3) {
-                alert('⏰ Kamu sudah bekerja 3 shift hari ini (Maksimum). Istirahatlah dan kembali besok jam 00:00 London!');
-                return;
-            }
-
-            // C. Cek Stok (Double check biar aman)
             const job = availableJobs.find(j => j.id === jobId);
             if (!job || job.current_stock <= 0) {
-                alert('📭 Stok resource di region ini baru saja habis!');
-                loadRegionResources(); // Refresh list
-                renderJobs();
+                alert('📭 Stok habis!');
+                await loadRegionResources(); renderJobs();
                 return;
             }
 
-            // D. Hitung Produktivitas
-            // Rumus: (E*0.45) + (ES*0.30) + (SKILL*0.25) + Country(0) + Org(10)
+            // Hitung Produktivitas & Hasil
             const prod = (playerData.energy * 0.45) + (playerData.economic_score * 0.30) + (playerData.gathering_skill * 0.25) + 10;
-            const prodPercent = Math.min(prod, 150).toFixed(2); // Cap di 150%
+            const resourceGained = prod > 100 ? 2 : 1;
 
-            // E. Hitung Resource Didapat (Base 1 unit, bonus jika prod > 100%)
-            let resourceGained = 1;
-            if (prod > 100) resourceGained = 2; // Bonus 1 unit kalau produktivitas tinggi
-
-            // F. Update State Lokal (Biar UI langsung responsif)
-            playerData.energy -= 20; // Kurangi 20 energi per shift
-            playerData.economic_score += 1; // ES naik 1 per shift
-            playerData.gathering_skill += 1; // Skill naik 1 per shift
+            // Update State Lokal (Biar UI langsung responsif)
+            playerData.energy -= 20;
+            playerData.economic_score += 1;
+            playerData.gathering_skill += 1;
             playerData.shifts_used_today += 1;
-            job.current_stock -= 1;
+            job.current_stock -= resourceGained;
 
             updateUIStats();
             renderJobs();
 
-            // G. Update Database (Supabase)
-            await sb.from('player_profiles').update({
-                energy: playerData.energy,
-                economic_score: playerData.economic_score,
-                gathering_skill: playerData.gathering_skill,
-                shifts_used_today: playerData.shifts_used_today
-            }).eq('id', currentUser.id);
+            // SIMPAN KE DATABASE (SECARA PARALEL)
+            try {
+                await Promise.all([
+                    // 1. Update Player Profile
+                    sb.from('player_profiles').update({
+                        energy: playerData.energy,
+                        economic_score: playerData.economic_score,
+                        gathering_skill: playerData.gathering_skill,
+                        shifts_used_today: playerData.shifts_used_today
+                    }).eq('id', currentUser.id),
 
-            await sb.from('region_resources').update({
-                current_stock: job.current_stock
-            }).eq('id', jobId);
+                    // 2. Kurangi Stok Region
+                    sb.from('region_resources').update({ current_stock: job.current_stock }).eq('id', jobId),
 
-            // H. Tampilkan Modal Hasil
-            showWorkResult(prodPercent, resourceGained, resourceName, regionName);
+                    // 3. Tambah ke Inventory (Upsert: kalau ada nambah, kalau belum ada bikin baru)
+                    sb.from('player_inventory').upsert({
+                        player_id: currentUser.id,
+                        item_name: resourceName,
+                        item_icon: resourceName === 'Wheat' ? '🌾' : resourceName === 'Coal' ? '⚫' : '⛏️',
+                        category: resourceName === 'Wheat' ? 'food' : 'raw',
+                        rarity: 'common',
+                        quantity: resourceGained
+                    }, { onConflict: 'player_id, item_name' }),
+
+                    // 4. Catat di Transaksi
+                    sb.from('transactions').insert({
+                        player_id: currentUser.id,
+                        type: 'work_reward',
+                        description: `Gathered ${resourceGained} ${resourceName} at ${regionName}`,
+                        amount: resourceGained,
+                        currency_type: 'item',
+                        status: 'success'
+                    })
+                ]);
+            } catch (err) {
+                console.error('Gagal simpan ke DB:', err);
+                alert('Terjadi kesalahan saat menyimpan data. Silakan refresh.');
+                return;
+            }
+
+            showWorkResult(prod.toFixed(2), resourceGained, resourceName, regionName);
         }
 
         // 6. MODAL HASIL KERJA
@@ -394,33 +384,26 @@
         }
 
         function closeWorkModal() {
-            const modal = document.getElementById('work-result-modal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
+            document.getElementById('work-result-modal').classList.add('hidden');
+            document.getElementById('work-result-modal').classList.remove('flex');
         }
 
         // 7. QUICK SHOP (BELI ENERGI)
         async function buyItem(itemName, price, energyBoost) {
-            if (playerData.gold_balance < price) {
-                alert(`❌ Gold tidak cukup! Kamu butuh ${price} Gold untuk membeli ${itemName}.`);
-                return;
-            }
+            if (playerData.gold_balance < price) return alert(`❌ Gold tidak cukup! Butuh ${price} Gold.`);
 
-            // Kurangi Gold, Tambah Energi
             playerData.gold_balance -= price;
-            playerData.energy = Math.min(playerData.energy + energyBoost, 100); // Max 100
+            playerData.energy = Math.min(playerData.energy + energyBoost, 100);
 
-            // Update UI
             document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance).toLocaleString();
             updateUIStats();
 
-            // Update DB
             await sb.from('player_profiles').update({
                 gold_balance: playerData.gold_balance,
                 energy: playerData.energy
             }).eq('id', currentUser.id);
 
-            alert(`✅ Berhasil membeli ${itemName}! Energi bertambah +${energyBoost}%.`);
+            alert(`✅ Berhasil membeli ${itemName}! Energi +${energyBoost}%.`);
         }
 
         // 8. JAM LONDON
@@ -431,7 +414,6 @@
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
 
-        // JALANKAN SAAT HALAMAN DIMUAT
         checkAuth();
     </script>
 </body>
