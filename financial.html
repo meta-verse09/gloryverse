@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -48,9 +49,11 @@
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                 <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
             </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-purple-400">💎</span> <span id="stat-diamond">0</span>
+            </div>
         </div>
         <div class="flex items-center gap-3">
-            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">👻 Connect Wallet</button>
             <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
         </div>
     </nav>
@@ -59,13 +62,13 @@
     <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
         <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
             <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
-            <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Profile</button>
+            <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
             <button onclick="window.location.href='activity_work.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚒️ Activity</button>
-            <button onclick="window.location.href='inventory.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎒 Inventory</button>
+            <button onclick="window.location.href='inventory.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Inventory</button>
             <button onclick="window.location.href='marketplace.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏪 Marketplace</button>
             <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
             <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏛️ Politics</button>
-            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Community</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
         </div>
     </div>
 
@@ -74,26 +77,26 @@
         
         <!-- HEADER -->
         <div class="mb-6">
-            <h1 class="text-3xl font-extrabold text-white mb-1">📈 Financial Center</h1>
-            <p class="text-slate-400 text-sm">Pantau nilai aset, tukar mata uang, dan lihat riwayat transaksi kamu.</p>
+            <h1 class="text-3xl font-extrabold text-white mb-1"> Financial Center</h1>
+            <p class="text-slate-400 text-sm">Pantau nilai aset real-time, tukar mata uang, dan lihat riwayat transaksi.</p>
         </div>
 
         <!-- NET WORTH STATS -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div class="bg-gradient-to-br from-amber-600/20 to-slate-800/50 border border-amber-500/30 rounded-xl p-5 backdrop-blur-sm">
-                <p class="text-amber-500 text-xs uppercase font-bold mb-1">Total Net Worth</p>
-                <p class="text-3xl font-bold text-white" id="stat-net-worth">$0.00</p>
-                <p class="text-green-400 text-xs mt-2 flex items-center gap-1">📈 +2.4% dari kemarin</p>
+                <p class="text-amber-500 text-xs uppercase font-bold mb-1">Total Gold Balance</p>
+                <p class="text-3xl font-bold text-white" id="stat-net-worth">0</p>
+                <p class="text-slate-500 text-xs mt-2">Aset utama untuk Global Market</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 backdrop-blur-sm">
-                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Gold Value (in SOL)</p>
-                <p class="text-2xl font-bold text-yellow-400" id="stat-gold-sol">0.00 SOL</p>
-                <p class="text-slate-500 text-xs mt-2">Rate: 10,000 Gold = 1 SOL</p>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Currency Balance</p>
+                <p class="text-2xl font-bold text-blue-400" id="stat-currency-display">0</p>
+                <p class="text-slate-500 text-xs mt-2">Mata uang lokal untuk kebutuhan harian</p>
             </div>
             <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-5 backdrop-blur-sm">
-                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Currency Value (in SOL)</p>
-                <p class="text-2xl font-bold text-blue-400" id="stat-currency-sol">0.00 SOL</p>
-                <p class="text-slate-500 text-xs mt-2">Rate: 50,000 Currency = 1 SOL</p>
+                <p class="text-slate-400 text-xs uppercase font-bold mb-1">Diamond Balance</p>
+                <p class="text-2xl font-bold text-purple-400" id="stat-diamond-display">0</p>
+                <p class="text-slate-500 text-xs mt-2">Aset premium (Web3)</p>
             </div>
         </div>
 
@@ -133,7 +136,7 @@
                     </div>
 
                     <div class="flex justify-center">
-                        <div class="bg-slate-700 rounded-full p-2 cursor-pointer hover:bg-amber-600 transition" onclick="alert('Fitur swap arah akan segera hadir!')">
+                        <div class="bg-slate-700 rounded-full p-2 cursor-pointer hover:bg-amber-600 transition">
                             <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                         </div>
                     </div>
@@ -146,13 +149,13 @@
                             </select>
                             <div class="absolute right-3 top-2 text-slate-500 pointer-events-none">▼</div>
                         </div>
-                        <input type="text" id="exchange-result" readonly value="1.00 SOL" class="w-full mt-2 bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-amber-500 text-lg font-bold cursor-not-allowed">
+                        <input type="text" id="exchange-result" readonly value="0.00 SOL" class="w-full mt-2 bg-slate-900/50 border border-slate-700 rounded-lg px-3 py-2 text-amber-500 text-lg font-bold cursor-not-allowed">
                     </div>
 
                     <button onclick="processExchange()" class="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold py-3 rounded-lg transition shadow-lg shadow-amber-500/20">
                         ⚡ Tukar Sekarang
                     </button>
-                    <p class="text-center text-xs text-slate-500">Fee transaksi: 1% • Via Solana Blockchain</p>
+                    <p class="text-center text-xs text-slate-500">Fee transaksi: 1% • Via Solana Blockchain (Simulasi)</p>
                 </div>
             </div>
         </div>
@@ -160,8 +163,8 @@
         <!-- TRANSACTION HISTORY -->
         <div class="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden backdrop-blur-sm mb-8">
             <div class="p-4 border-b border-slate-700 bg-slate-900/50 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-white flex items-center gap-2">🧾 Transaction History</h3>
-                <button class="text-xs text-amber-500 hover:text-amber-400 font-bold">Export CSV</button>
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">🧾 Transaction History (Real-time)</h3>
+                <button onclick="loadTransactions()" class="text-xs text-amber-500 hover:text-amber-400 font-bold">🔄 Refresh</button>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
@@ -210,49 +213,67 @@
         let currentUser = null;
         let playerData = null;
 
-        // Rates Konversi (Mock untuk demo)
+        // Rates Konversi
         const RATE_GOLD_TO_SOL = 10000; 
         const RATE_CURRENCY_TO_SOL = 50000;
         const EXCHANGE_FEE = 0.01; // 1%
 
-        // 2. AUTH GUARD & LOAD DATA
+        // 2. AUTH GUARD & INIT
         async function checkAuth() {
             const { data: { session }, error } = await sb.auth.getSession();
             if (error || !session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
             
-            const { data } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
-            playerData = data;
-            
-            if (playerData) {
-                const gold = playerData.gold_balance || 0;
-                const currency = playerData.currency_balance || 0;
-                const diamond = playerData.diamond_balance || 0;
-
-                // Update Navbar
-                document.getElementById('stat-gold').innerText = Math.floor(gold).toLocaleString();
-                document.getElementById('stat-currency').innerText = Math.floor(currency).toLocaleString();
-
-                // Update Stats Cards
-                const goldInSol = gold / RATE_GOLD_TO_SOL;
-                const currencyInSol = currency / RATE_CURRENCY_TO_SOL;
-                const totalSol = goldInSol + currencyInSol + (diamond * 0.01); // Asumsi 1 Diamond = 0.01 SOL
-                
-                document.getElementById('stat-net-worth').innerText = `$${(totalSol * 150).toLocaleString(undefined, {maximumFractionDigits: 2})}`; // Mock harga SOL $150
-                document.getElementById('stat-gold-sol').innerText = `${goldInSol.toFixed(4)} SOL`;
-                document.getElementById('stat-currency-sol').innerText = `${currencyInSol.toFixed(4)} SOL`;
-            }
-
+            await loadPlayerData();
             initChart();
-            renderTransactions();
+            await loadTransactions();
             calculateExchange();
         }
 
-        // 3. CHART.JS INTEGRATION
+        // 3. LOAD DATA DARI DATABASE
+        async function loadPlayerData() {
+            const { data, error } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
+            if (error) { console.error(error); return; }
+            playerData = data;
+            
+            // Update UI Stats Real-time
+            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance || 0).toLocaleString();
+            document.getElementById('stat-diamond').innerText = Math.floor(playerData.diamond_balance || 0).toLocaleString();
+            
+            document.getElementById('stat-net-worth').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString() + ' G';
+            document.getElementById('stat-currency-display').innerText = Math.floor(playerData.currency_balance || 0).toLocaleString() + ' C';
+            document.getElementById('stat-diamond-display').innerText = Math.floor(playerData.diamond_balance || 0).toLocaleString() + ' D';
+        }
+
+        async function loadTransactions() {
+            const tbody = document.getElementById('transaction-body');
+            const { data, error } = await sb.from('transactions').select('*').eq('player_id', currentUser.id).order('created_at', { ascending: false }).limit(50);
+            
+            if (error || !data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-500"> Belum ada riwayat transaksi.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(tx => {
+                const date = new Date(tx.created_at).toLocaleString('id-ID');
+                const color = tx.amount < 0 ? 'text-red-400' : (tx.amount > 0 ? 'text-green-400' : 'text-slate-300');
+                const sign = tx.amount > 0 ? '+' : '';
+                
+                return `
+                <tr class="hover:bg-slate-800/50 transition">
+                    <td class="px-6 py-4 text-slate-400 whitespace-nowrap">${date}</td>
+                    <td class="px-6 py-4 text-white font-semibold uppercase">${tx.type.replace('_', ' ')}</td>
+                    <td class="px-6 py-4 text-slate-300">${tx.description}</td>
+                    <td class="px-6 py-4 text-right font-bold ${color}">${sign}${tx.amount} ${tx.currency_type}</td>
+                    <td class="px-6 py-4 text-center"><span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">${tx.status}</span></td>
+                </tr>`;
+            }).join('');
+        }
+
+        // 4. CHART.JS (Global Index - Data Simulasi Tren Pasar Global)
         function initChart() {
             const ctx = document.getElementById('marketChart').getContext('2d');
-            
-            // Buat Gradient Amber
             let gradient = ctx.createLinearGradient(0, 0, 0, 300);
             gradient.addColorStop(0, 'rgba(245, 158, 11, 0.4)'); 
             gradient.addColorStop(1, 'rgba(245, 158, 11, 0.0)');
@@ -263,20 +284,15 @@
                     labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
                     datasets: [{
                         label: 'Gold Index',
-                        data: [120, 125, 122, 130, 128, 135, 132], // Data dummy
+                        data: [120, 125, 122, 130, 128, 135, 132], 
                         borderColor: '#F59E0B',
                         backgroundColor: gradient,
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4, // Membuat garis melengkung smooth
-                        pointBackgroundColor: '#F59E0B',
-                        pointBorderColor: '#fff',
-                        pointRadius: 4
+                        borderWidth: 3, fill: true, tension: 0.4,
+                        pointBackgroundColor: '#F59E0B', pointBorderColor: '#fff', pointRadius: 4
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
                         x: { grid: { display: false, drawBorder: false }, ticks: { color: '#94a3b8' } },
@@ -286,14 +302,14 @@
             });
         }
 
-        // 4. EXCHANGE LOGIC
+        // 5. EXCHANGE LOGIC
         function calculateExchange() {
             const fromType = document.getElementById('exchange-from').value;
             const amount = parseFloat(document.getElementById('exchange-amount').value) || 0;
             
             let rate = fromType === 'gold' ? RATE_GOLD_TO_SOL : RATE_CURRENCY_TO_SOL;
             let rawSol = amount / rate;
-            let finalSol = rawSol * (1 - EXCHANGE_FEE); // Potong fee 1%
+            let finalSol = rawSol * (1 - EXCHANGE_FEE);
 
             document.getElementById('exchange-result').value = `${finalSol.toFixed(6)} SOL`;
         }
@@ -303,54 +319,38 @@
             const fromType = document.getElementById('exchange-from').value;
             const resultText = document.getElementById('exchange-result').value;
 
-            if (!amount || amount <= 0) { alert('Masukkan jumlah yang valid!'); return; }
+            if (!amount || amount <= 0) return alert('Masukkan jumlah yang valid!');
 
             const currentBalance = fromType === 'gold' ? playerData.gold_balance : playerData.currency_balance;
-            if (currentBalance < amount) {
-                alert(`❌ Saldo ${fromType === 'gold' ? 'Gold' : 'Currency'} tidak cukup!`);
-                return;
+            if (currentBalance < amount) return alert(`❌ Saldo ${fromType === 'gold' ? 'Gold' : 'Currency'} tidak cukup!`);
+
+            if(!confirm(`Tukar ${amount} ${fromType} menjadi ${resultText}?\n\nFee 1% akan dipotong.`)) return;
+
+            // Kurangi saldo
+            const newBalance = currentBalance - amount;
+            const updateObj = fromType === 'gold' ? { gold_balance: newBalance } : { currency_balance: newBalance };
+
+            try {
+                await Promise.all([
+                    sb.from('player_profiles').update(updateObj).eq('id', currentUser.id),
+                    sb.from('transactions').insert({
+                        player_id: currentUser.id,
+                        type: 'exchange',
+                        description: `Exchange ${amount} ${fromType} to ${resultText}`,
+                        amount: -amount,
+                        currency_type: fromType,
+                        status: 'success'
+                    })
+                ]);
+
+                alert(`✅ Exchange Berhasil!\n\n${resultText} akan diproses ke Phantom Wallet kamu.`);
+                await loadPlayerData();
+                await loadTransactions();
+                calculateExchange();
+            } catch (err) {
+                console.error(err);
+                alert('❌ Terjadi kesalahan saat exchange.');
             }
-
-            // Simulasi proses (Di production ini akan trigger Smart Contract Solana)
-            if(confirm(`Tukar ${amount} ${fromType} menjadi ${resultText}?\n\nFee 1% akan dipotong.`)) {
-                // Kurangi saldo lokal
-                if (fromType === 'gold') playerData.gold_balance -= amount;
-                else playerData.currency_balance -= amount;
-
-                // Update UI
-                document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance).toLocaleString();
-                document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance).toLocaleString();
-                
-                // Update DB
-                await sb.from('player_profiles').update({ 
-                    gold_balance: playerData.gold_balance, 
-                    currency_balance: playerData.currency_balance 
-                }).eq('id', currentUser.id);
-
-                alert(`✅ Exchange Berhasil!\n\n${resultText} akan dikirim ke Phantom Wallet kamu setelah konfirmasi blockchain.`);
-                calculateExchange(); // Reset kalkulator
-            }
-        }
-
-        // 5. TRANSACTION HISTORY (MOCK DATA)
-        function renderTransactions() {
-            const tbody = document.getElementById('transaction-body');
-            const mockTx = [
-                { date: '04 Okt 2026, 14:30', type: 'Exchange', desc: 'Gold to SOL', amount: '-10,000 G', status: 'Success', color: 'text-amber-500' },
-                { date: '03 Okt 2026, 09:15', type: 'Market Buy', desc: 'Beli 15 Iron Ore', amount: '-375 G', status: 'Success', color: 'text-red-400' },
-                { date: '02 Okt 2026, 18:45', type: 'Market Sell', desc: 'Jual 50 Wheat', amount: '+400 G', status: 'Success', color: 'text-green-400' },
-                { date: '01 Okt 2026, 10:00', type: 'Top Up', desc: 'Phantom Wallet Deposit', amount: '+100 💎', status: 'Confirmed', color: 'text-purple-400' }
-            ];
-
-            tbody.innerHTML = mockTx.map(tx => `
-                <tr class="hover:bg-slate-800/50 transition">
-                    <td class="px-6 py-4 text-slate-400 whitespace-nowrap">${tx.date}</td>
-                    <td class="px-6 py-4 text-white font-semibold">${tx.type}</td>
-                    <td class="px-6 py-4 text-slate-300">${tx.desc}</td>
-                    <td class="px-6 py-4 text-right font-bold ${tx.color}">${tx.amount}</td>
-                    <td class="px-6 py-4 text-center"><span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">${tx.status}</span></td>
-                </tr>
-            `).join('');
         }
 
         // 6. JAM LONDON
@@ -361,7 +361,7 @@
         setInterval(updateLondonClock, 1000);
         updateLondonClock();
 
-        // JALANKAN SAAT HALAMAN DIMUAT
+        // JALANKAN
         checkAuth();
     </script>
 </body>
