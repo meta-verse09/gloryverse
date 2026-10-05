@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -47,17 +48,17 @@
         </div>
         <div class="flex items-center gap-3 text-sm font-semibold">
             <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
-                <span></span> <span id="london-clock">Loading...</span>
+                <span>🇬🇧</span> <span id="london-clock">Loading...</span>
             </div>
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
                 <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
             </div>
             <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-purple-400"></span> <span id="stat-diamond">0</span>
+                <span class="text-purple-400">💎</span> <span id="stat-diamond">0</span>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition"> Connect Wallet</button>
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">👻 Connect Wallet</button>
             <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
         </div>
     </nav>
@@ -65,13 +66,13 @@
     <!-- MENU BAR -->
     <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
         <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
-            <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🗺️ Dashboard</button>
+            <button onclick="window.location.href='dashboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Dashboard</button>
             <button onclick="window.location.href='my_profile.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
-            <button onclick="window.location.href='geo_challenge.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Geo Challenge</button>
-            <button onclick="window.location.href='leaderboard.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏆 Leaderboard</button>
-            <button onclick="window.location.href='referral.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🔗 Referral</button>
+            <button onclick="window.location.href='activity_work.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚒️ Activity</button>
             <button class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎒 Inventory</button>
-            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
+            <button onclick="window.location.href='marketplace.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏪 Marketplace</button>
+            <button onclick="window.location.href='financial.html'" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
+            <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Politics</button>
             <button class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
         </div>
     </div>
@@ -82,7 +83,7 @@
         <!-- HEADER & STATS -->
         <div class="mb-8">
             <h1 class="text-4xl font-extrabold text-white mb-2">🎒 My Inventory</h1>
-            <p class="text-slate-400">Kelola semua item, resources, dan NFT kamu</p>
+            <p class="text-slate-400">Kelola semua item, resources, dan NFT kamu secara real-time.</p>
             
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
@@ -99,7 +100,7 @@
                 </div>
                 <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 backdrop-blur-sm">
                     <p class="text-slate-400 text-xs uppercase font-bold mb-1">Inventory Value</p>
-                    <p class="text-2xl font-bold text-green-400" id="stat-total-value">0</p>
+                    <p class="text-2xl font-bold text-green-400" id="stat-total-value">0 G</p>
                 </div>
             </div>
         </div>
@@ -111,24 +112,25 @@
             </div>
             <div class="flex gap-2 overflow-x-auto">
                 <button onclick="filterItems('all')" class="filter-btn active bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">All</button>
-                <button onclick="filterItems('resource')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Resources</button>
-                <button onclick="filterItems('equipment')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Equipment</button>
+                <button onclick="filterItems('food')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap"> Food</button>
+                <button onclick="filterItems('raw')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🪨 Raw Materials</button>
+                <button onclick="filterItems('fuel')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🛢️ Fuel</button>
+                <button onclick="filterItems('equipment')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚔️ Equipment</button>
                 <button onclick="filterItems('nft')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎨 NFT</button>
-                <button onclick="filterItems('consumable')" class="filter-btn bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🧪 Consumables</button>
             </div>
         </div>
 
         <!-- INVENTORY GRID -->
         <div id="inventory-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8">
             <!-- Items will be injected by JS -->
-            <div class="col-span-full text-center py-12 text-slate-500">📦 Memuat inventory...</div>
         </div>
 
         <!-- EMPTY STATE (Hidden by default) -->
-        <div id="empty-state" class="hidden text-center py-16">
+        <div id="empty-state" class="hidden text-center py-16 bg-slate-800/30 border border-dashed border-slate-700 rounded-2xl">
             <div class="text-6xl mb-4">🎒</div>
-            <p class="text-slate-400 text-lg">Inventory kamu masih kosong</p>
-            <p class="text-slate-500 text-sm mt-2">Mulai kumpulkan item dengan bermain Geo Challenge atau bangun Company!</p>
+            <p class="text-slate-400 text-lg font-bold">Inventory kamu masih kosong</p>
+            <p class="text-slate-500 text-sm mt-2 mb-6">Mulai kumpulkan item dengan bekerja di Activity Work!</p>
+            <button onclick="window.location.href='activity_work.html'" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-6 rounded-lg transition">️ Mulai Bekerja</button>
         </div>
 
         <!-- ADSTERRA NATIVE BANNER -->
@@ -170,7 +172,7 @@
             </div>
             
             <div class="flex gap-3">
-                <button id="btn-use-item" onclick="useItem()" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">Use Item</button>
+                <button onclick="alert('Fitur jual ke Marketplace akan segera diintegrasikan!')" class="flex-1 bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">Jual di Market</button>
                 <button onclick="closeItemModal()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-3 rounded-lg transition">Close</button>
             </div>
         </div>
@@ -186,37 +188,82 @@
         
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
         let currentUser = null;
-
-        // 2. MOCK DATA INVENTORY (Nanti diganti dengan fetch dari Database)
-        const mockInventory = [
-            { id: 1, name: 'Wheat', icon: '🌾', category: 'resource', rarity: 'common', quantity: 150, description: 'Bahan dasar untuk membuat roti di Bakery.' },
-            { id: 2, name: 'Iron Ore', icon: '⛏️', category: 'resource', rarity: 'uncommon', quantity: 45, description: 'Bijih besi mentah, bahan utama Foundry.' },
-            { id: 3, name: 'Crude Oil', icon: '🛢️', category: 'resource', rarity: 'rare', quantity: 12, description: 'Minyak mentah, sangat berharga di industri energi.' },
-            { id: 4, name: 'Health Potion', icon: '🧪', category: 'consumable', rarity: 'common', quantity: 5, description: 'Mengembalikan 50 HP saat digunakan.' },
-            { id: 5, name: 'Energy Drink', icon: '⚡', category: 'consumable', rarity: 'uncommon', quantity: 2, description: 'Mengembalikan 100 Energy untuk bekerja.' },
-            { id: 6, name: 'Bronze Sword', icon: '⚔️', category: 'equipment', rarity: 'rare', quantity: 1, description: 'Senjata dasar untuk berperang memperebutkan region.' },
-            { id: 7, name: 'Steel Shield', icon: '🛡️', category: 'equipment', rarity: 'epic', quantity: 1, description: 'Perisai kuat yang mengurangi damage serangan musuh.' },
-            { id: 8, name: 'Ancient Map of Java', icon: '🗺️', category: 'nft', rarity: 'legendary', quantity: 1, description: 'NFT Langka! Menunjukkan lokasi tambang tersembunyi di Jawa.' }
-        ];
-
+        let playerData = null;
+        let inventoryItems = [];
         let currentFilter = 'all';
-        let selectedItem = null;
 
-        // 3. AUTH GUARD & LOAD DATA
+        // Kamus Deskripsi Item (Hanya untuk UI flavor text, data asli tetap dari DB)
+        const itemDescriptions = {
+            'Wheat': 'Bahan dasar untuk membuat roti di Bakery.',
+            'Iron Ore': 'Bijih besi mentah, bahan utama Foundry.',
+            'Coal': 'Sumber energi fosil untuk pembangkit listrik.',
+            'Crude Oil': 'Minyak mentah, sangat berharga di industri energi.',
+            'Herbs': 'Tumbuhan langka untuk bahan obat-obatan.',
+            'Sand': 'Material dasar untuk pembuatan kaca.',
+            'Ancient Map of Java': 'NFT Langka! Menunjukkan lokasi tambang tersembunyi di Jawa.'
+        };
+
+        // 2. AUTH GUARD & LOAD DATA
         async function checkAuth() {
             const { data: { session }, error } = await sb.auth.getSession();
             if (error || !session) { window.location.href = 'index.html'; return; }
             currentUser = session.user;
             
-            // Load profile untuk update navbar
-            const { data: profile } = await sb.from('player_profiles').select('gold_balance, diamond_balance').eq('id', currentUser.id).single();
-            if (profile) {
-                document.getElementById('stat-gold').innerText = Math.floor(profile.gold_balance || 0).toLocaleString();
-                document.getElementById('stat-diamond').innerText = Math.floor(profile.diamond_balance || 0).toLocaleString();
-            }
+            // Load data secara paralel biar cepat
+            await Promise.all([loadPlayerProfile(), loadInventory()]);
+            
+            updateStatsHeader();
+            renderInventory(inventoryItems);
+        }
 
-            renderInventory(mockInventory);
-            updateStats(mockInventory);
+        async function loadPlayerProfile() {
+            const { data, error } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
+            if (error) { console.error('Gagal load profile:', error); return; }
+            playerData = data;
+            
+            // Update Navbar
+            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-diamond').innerText = Math.floor(playerData.diamond_balance || 0).toLocaleString();
+        }
+
+        async function loadInventory() {
+            const { data, error } = await sb
+                .from('player_inventory')
+                .select('*')
+                .eq('player_id', currentUser.id)
+                .order('rarity', { ascending: false }) // Legendary di atas
+                .order('item_name', { ascending: true });
+            
+            if (error) { console.error('Gagal load inventory:', error); return; }
+            inventoryItems = data || [];
+        }
+
+        // 3. UPDATE STATS HEADER
+        function updateStatsHeader() {
+            const totalItems = inventoryItems.reduce((sum, item) => sum + item.quantity, 0);
+            const nftCount = inventoryItems.filter(i => i.category === 'nft').length;
+            
+            // Cari item paling langka
+            const rarityOrder = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+            let rarestItem = null;
+            let highestRarityIndex = -1;
+
+            inventoryItems.forEach(item => {
+                const index = rarityOrder.indexOf(item.rarity);
+                if (index > highestRarityIndex) {
+                    highestRarityIndex = index;
+                    rarestItem = item;
+                }
+            });
+
+            // Hitung estimasi nilai (Mock logic untuk UI: common=10, uncommon=50, rare=150, epic=500, legendary=2000)
+            const rarityValues = { 'common': 10, 'uncommon': 50, 'rare': 150, 'epic': 500, 'legendary': 2000 };
+            const totalValue = inventoryItems.reduce((sum, item) => sum + (item.quantity * (rarityValues[item.rarity] || 10)), 0);
+
+            document.getElementById('stat-total-items').innerText = totalItems;
+            document.getElementById('stat-nft-count').innerText = nftCount;
+            document.getElementById('stat-rarest').innerText = rarestItem ? rarestItem.item_name : '-';
+            document.getElementById('stat-total-value').innerText = totalValue.toLocaleString() + ' G';
         }
 
         // 4. RENDER GRID
@@ -226,37 +273,27 @@
             
             if (items.length === 0) {
                 grid.innerHTML = '';
+                grid.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
             }
             
             emptyState.classList.add('hidden');
+            grid.classList.remove('hidden');
+            
             grid.innerHTML = items.map(item => `
-                <div class="item-card bg-slate-800/50 border-2 rarity-${item.rarity} rounded-xl p-4 cursor-pointer hover:bg-slate-800" onclick="openItemModal(${item.id})">
+                <div class="item-card bg-slate-800/50 border-2 rarity-${item.rarity} rounded-xl p-4 cursor-pointer hover:bg-slate-800" onclick='openItemModal(${JSON.stringify(item)})'>
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-4xl">${item.icon}</span>
+                        <span class="text-4xl">${item.item_icon || '📦'}</span>
                         <span class="bg-slate-900 text-xs font-bold px-2 py-1 rounded text-white">x${item.quantity}</span>
                     </div>
-                    <h4 class="text-white font-bold text-sm truncate">${item.name}</h4>
+                    <h4 class="text-white font-bold text-sm truncate">${item.item_name}</h4>
                     <p class="text-slate-500 text-xs uppercase font-bold mt-1">${item.rarity}</p>
                 </div>
             `).join('');
         }
 
-        // 5. UPDATE STATS HEADER
-        function updateStats(items) {
-            document.getElementById('stat-total-items').innerText = items.reduce((sum, item) => sum + item.quantity, 0);
-            document.getElementById('stat-nft-count').innerText = items.filter(i => i.category === 'nft').length;
-            
-            const rarities = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
-            const rarest = items.reduce((prev, current) => (rarities.indexOf(prev.rarity) > rarities.indexOf(current.rarity)) ? prev : current, items[0]);
-            document.getElementById('stat-rarest').innerText = rarest ? rarest.name : '-';
-            
-            // Mock value calculation
-            document.getElementById('stat-total-value').innerText = (items.length * 150).toLocaleString() + ' Gold';
-        }
-
-        // 6. FILTER & SEARCH LOGIC
+        // 5. FILTER & SEARCH LOGIC
         function filterItems(category) {
             currentFilter = category;
             
@@ -275,33 +312,33 @@
 
         function applyFilters() {
             const searchTerm = document.getElementById('search-input').value.toLowerCase();
-            let filtered = mockInventory;
+            let filtered = inventoryItems;
 
             if (currentFilter !== 'all') {
                 filtered = filtered.filter(item => item.category === currentFilter);
             }
             if (searchTerm) {
-                filtered = filtered.filter(item => item.name.toLowerCase().includes(searchTerm));
+                filtered = filtered.filter(item => item.item_name.toLowerCase().includes(searchTerm));
             }
 
             renderInventory(filtered);
         }
 
-        // 7. MODAL LOGIC
-        function openItemModal(itemId) {
-            selectedItem = mockInventory.find(i => i.id === itemId);
-            if (!selectedItem) return;
-
-            document.getElementById('modal-icon').innerText = selectedItem.icon;
-            document.getElementById('modal-name').innerText = selectedItem.name;
-            document.getElementById('modal-rarity').innerText = selectedItem.rarity;
-            document.getElementById('modal-description').innerText = selectedItem.description;
-            document.getElementById('modal-quantity').innerText = selectedItem.quantity;
-            document.getElementById('modal-category').innerText = selectedItem.category;
+        // 6. MODAL LOGIC
+        function openItemModal(item) {
+            document.getElementById('modal-icon').innerText = item.item_icon || '📦';
+            document.getElementById('modal-name').innerText = item.item_name;
+            document.getElementById('modal-quantity').innerText = item.quantity;
+            document.getElementById('modal-category').innerText = item.category;
+            
+            // Deskripsi (Pakai kamus lokal, kalau nggak ada pakai generic)
+            const desc = itemDescriptions[item.item_name] || `Sebuah item ${item.rarity} yang berguna untuk aktivitas di GloryVerse.`;
+            document.getElementById('modal-description').innerText = desc;
 
             // Warna teks rarity di modal
             const rarityColors = { common: 'text-slate-400', uncommon: 'text-green-400', rare: 'text-blue-400', epic: 'text-purple-400', legendary: 'text-amber-500' };
-            document.getElementById('modal-rarity').className = `text-sm font-bold uppercase tracking-wider mb-4 ${rarityColors[selectedItem.rarity]}`;
+            document.getElementById('modal-rarity').innerText = item.rarity;
+            document.getElementById('modal-rarity').className = `text-sm font-bold uppercase tracking-wider mb-4 ${rarityColors[item.rarity] || 'text-slate-400'}`;
 
             const modal = document.getElementById('item-modal');
             modal.classList.remove('hidden');
@@ -312,16 +349,9 @@
             const modal = document.getElementById('item-modal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
-            selectedItem = null;
         }
 
-        function useItem() {
-            if (!selectedItem) return;
-            alert(`✅ Kamu menggunakan ${selectedItem.name}!\n\n(Efek item akan diterapkan ke status player di tahap selanjutnya)`);
-            closeItemModal();
-        }
-
-        // 8. JAM LONDON
+        // 7. JAM LONDON
         function updateLondonClock() {
             const now = new Date();
             document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
