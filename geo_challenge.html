@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -190,15 +191,29 @@
         }
 
         async function loadDailyQuestions() {
-            // Untuk testing, kita load soal Hari ke-1 dulu
+            // 1. Hitung hari ke berapa secara otomatis berdasarkan tanggal hari ini
+            const today = new Date();
+            const dayOfMonth = today.getDate(); // Ambil tanggal (1 - 31)
+            
+            // Kita buat sistem perputaran 25 hari. 
+            // Tanggal 1 = Hari 1, Tanggal 25 = Hari 25, Tanggal 26 = Hari 1 lagi, dst.
+            let dayNumber = (dayOfMonth % 25);
+            if (dayNumber === 0) dayNumber = 25;
+
+            // 2. Tarik soal dari database sesuai hari yang dihitung
             const { data, error } = await sb
                 .from('geo_questions')
                 .select('*')
-                .eq('day_number', 1) 
+                .eq('day_number', dayNumber) // <-- INI YANG KITA UBAH JADI DINAMIS
                 .order('question_number', { ascending: true });
             
             if (error) { console.error('Gagal load soal:', error); return; }
+            
             currentQuestions = data;
+            
+            // Update tampilan nomor hari di UI
+            document.getElementById('current-day-display').innerText = dayNumber;
+            
             renderQuestions();
         }
 
