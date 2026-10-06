@@ -154,7 +154,8 @@
     </div>
 
     <!-- SCRIPT UTAMA -->
-    <script>// 1. SETUP SUPABASE
+    <script>
+        // 1. SETUP SUPABASE
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
@@ -201,7 +202,7 @@
             }
         }
 
-        // 3. MAP & LIVING WORLD
+        // 3. MAP & LIVING WORLD (THE MIRACLE)
         async function initMap() {
             map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
             L.control.zoom({ position: 'topright' }).addTo(map);
@@ -214,14 +215,40 @@
             liveLayers.earthquakes.addTo(map);
             liveLayers.flights.addTo(map);
 
-            // Load Regions
+            // Load Regions + CUACA LIVE
             const { data: regions } = await sb.from('regions').select('*');
             if (regions) {
-                regions.forEach(region => {
-                    L.marker([region.latitude, region.longitude])
-                     .bindPopup(`<b>${region.name}</b><br>${region.region_type} | ${region.weather_modifier}`)
-                     .addTo(map);
-                });
+                for (const region of regions) {
+                    // Fetch Cuaca Real-time dari Open-Meteo (GRATIS, TANPA API KEY)
+                    let weatherText = "Memuat cuaca...";
+                    try {
+                        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${region.latitude}&longitude=${region.longitude}&current_weather=true`);
+                        const wData = await res.json();
+                        if (wData.current_weather) {
+                            const temp = wData.current_weather.temperature;
+                            const wind = wData.current_weather.windspeed;
+                            const code = wData.current_weather.weathercode;
+                            let icon = "☀️";
+                            if (code > 3) icon = "⛅";
+                            if (code > 45) icon = "🌫️";
+                            if (code > 50) icon = "🌧️";
+                            if (code > 70) icon = "❄️";
+                            if (code > 90) icon = "⛈️";
+                            weatherText = `${icon} ${temp}°C | Angin: ${wind} km/h`;
+                        }
+                    } catch (e) { weatherText = "Cuaca tidak tersedia"; }
+
+                    const marker = L.marker([region.latitude, region.longitude]).addTo(map);
+                    marker.bindPopup(`
+                        <div style="color: #1e293b; min-width: 150px;">
+                            <h3 style="font-weight: bold; font-size: 16px; margin-bottom: 5px;">${region.name}</h3>
+                            <p style="font-size: 12px; color: #64748b; margin-bottom: 8px;">${region.region_type} | ${region.weather_modifier}</p>
+                            <div style="background: #f1f5f9; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold;">
+                                🌦️ Cuaca Live: ${weatherText}
+                            </div>
+                        </div>
+                    `);
+                }
             }
 
             // Load Player Assets
@@ -249,14 +276,15 @@
             fetchEarthquakes();
             fetchFlights();
             fetchISS();
+            // Update setiap 30 detik
             setInterval(() => {
-                if (!document.getElementById('map').offsetParent) return;
                 fetchEarthquakes();
                 fetchFlights();
                 fetchISS();
             }, 30000);
         }
 
+        // --- FITUR 1: GEMPA BUMI LIVE (USGS) ---
         async function fetchEarthquakes() {
             liveLayers.earthquakes.clearLayers();
             try {
@@ -273,12 +301,14 @@
             } catch (e) { console.error('Gempa error', e); }
         }
 
+        // --- FITUR 2: PESAWAT LIVE (OpenSky) ---
         async function fetchFlights() {
             liveLayers.flights.clearLayers();
             const bounds = map.getBounds();
             const url = `https://opensky-network.org/api/states/all?lamin=${bounds.getSouth()}&lomin=${bounds.getWest()}&lamax=${bounds.getNorth()}&lomax=${bounds.getEast()}`;
             try {
                 const response = await fetch(url);
+                if (!response.ok) return; // Abaikan jika diblokir CORS/Rate limit
                 const data = await response.json();
                 if (data.states) {
                     data.states.slice(0, 30).forEach(flight => {
@@ -286,16 +316,17 @@
                         if (lat && lon) {
                             const icon = L.divIcon({
                                 className: 'custom-plane-icon',
-                                html: `<div style="transform: rotate(${flight[10] || 0}deg); color: #00ffff; font-size: 14px;">✈️</div>`,
+                                html: `<div style="transform: rotate(${flight[10] || 0}deg); color: #00ffff; font-size: 14px; text-shadow: 0 0 5px #000;">✈️</div>`,
                                 iconSize: [20, 20]
                             });
                             L.marker([lat, lon], { icon }).bindPopup(`✈️ ${flight[1].trim() || 'Unknown'}<br>${flight[2]}`).addTo(liveLayers.flights);
                         }
                     });
                 }
-            } catch (e) { /* Rate limit */ }
+            } catch (e) { /* Abaikan error CORS */ }
         }
 
+        // --- FITUR 3: ISS LIVE ---
         async function fetchISS() {
             if (liveLayers.iss) map.removeLayer(liveLayers.iss);
             try {
@@ -303,21 +334,21 @@
                 const data = await res.json();
                 const icon = L.divIcon({
                     className: 'iss-icon',
-                    html: `<div style="color: #fff; font-size: 18px; animation: pulse 2s infinite;">🛰️</div>`,
+                    html: `<div style="color: #fff; font-size: 18px; animation: pulse 2s infinite; text-shadow: 0 0 10px #fff;">🛰️</div>`,
                     iconSize: [20, 20]
                 });
                 liveLayers.iss = L.marker([data.latitude, data.longitude], { icon })
-                    .bindPopup(`<b>ISS</b><br>Speed: ${Math.round(data.velocity)} km/h`).addTo(map);
+                    .bindPopup(`<b>ISS (Stasiun Luar Angkasa)</b><br>Speed: ${Math.round(data.velocity)} km/h<br>Alt: ${Math.round(data.altitude)} km`).addTo(map);
             } catch (e) {}
         }
 
         // 4. PANEL & MODAL LOGIC
         const panelData = {
-            dashboard: { title: '🗺️ DASHBOARD', items: [{ icon: '🌍', label: 'World Map', action: 'closePanel()' }] },
+            dashboard: { title: '🗺️ DASHBOARD', items: [{ icon: '', label: 'World Map', action: 'closePanel()' }] },
             profile: { title: '👤 PROFILE', items: [{ icon: '', label: 'Inventory', action: 'closePanel()' }, { icon: '💎', label: 'Top Up', action: 'closePanel()' }] },
             activities: { title: '⚔️ ACTIVITIES', items: [{ icon: '⚒️', label: 'Work / Gather', action: 'closePanel()' }] },
-            business: { title: '🏢 BUSINESS', items: [{ icon: '🌍', label: 'Global Market', action: 'closePanel()' }] },
-            financial: { title: '📈 FINANCIAL', items: [{ icon: '💱', label: 'Exchange', action: 'closePanel()' }] }
+            business: { title: ' BUSINESS', items: [{ icon: '🌍', label: 'Global Market', action: 'closePanel()' }] },
+            financial: { title: ' FINANCIAL', items: [{ icon: '💱', label: 'Exchange', action: 'closePanel()' }] }
         };
 
         function openPanel(key) {
@@ -337,6 +368,7 @@
             document.getElementById('side-panel').classList.add('translate-x-[120%]');
         }
 
+        // Klik Peta untuk Bangun
         map?.on('click', function(e) {
             if (!currentUser) { alert('Silakan login terlebih dahulu!'); return; }
             selectedCoordinates = { lat: e.latlng.lat, lng: e.latlng.lng };
@@ -347,11 +379,11 @@
             document.getElementById('selected-coords').innerText = `${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`;
             document.getElementById('company-list').innerHTML = `
                 <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500 mb-2" onclick="selectCompany('Pabrik Pengolahan', 500, 0)">
-                    <div><p class="text-white font-semibold text-sm">🏭 Pabrik Pengolahan</p><p class="text-slate-400 text-xs">Level 1 • Mengolah resource</p></div>
+                    <div><p class="text-white font-semibold text-sm"> Pabrik Pengolahan</p><p class="text-slate-400 text-xs">Level 1 • Mengolah resource</p></div>
                     <span class="text-amber-500 text-xs font-bold">500 Currency</span>
                 </div>
                 <div class="flex items-center justify-between p-3 bg-slate-800 hover:bg-slate-700 rounded-lg transition cursor-pointer border border-slate-700 hover:border-amber-500 mb-2" onclick="selectCompany('Kantor Perdagangan', 0, 10)">
-                    <div><p class="text-white font-semibold text-sm"> Kantor Perdagangan</p><p class="text-slate-400 text-xs">Level 1 • Bonus market</p></div>
+                    <div><p class="text-white font-semibold text-sm">🏢 Kantor Perdagangan</p><p class="text-slate-400 text-xs">Level 1 • Bonus market</p></div>
                     <span class="text-amber-500 text-xs font-bold">10 Gold</span>
                 </div>
             `;
