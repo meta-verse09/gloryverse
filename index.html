@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GloryVerse - Conquer The Real World</title>
-
     <meta property="og:image" content="https://gloryverse.id/og-image.png" />
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -51,7 +50,7 @@
                 <p class="text-slate-400 mt-4 text-lg">Bangun kerajaan ekonomi, kuasai wilayah di peta dunia, dan jadilah legenda di GloryVerse.</p>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-4 hidden md:block">
                 <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl flex gap-4 items-start">
                     <div class="bg-red-500/20 p-2 rounded-lg text-red-400 text-xl">️</div>
                     <div>
@@ -60,7 +59,7 @@
                     </div>
                 </div>
                 <div class="bg-brand-card/60 backdrop-blur-md border border-slate-700/50 p-4 rounded-xl flex gap-4 items-start">
-                    <div class="bg-green-500/20 p-2 rounded-lg text-green-400 text-xl"></div>
+                    <div class="bg-green-500/20 p-2 rounded-lg text-green-400 text-xl">💎</div>
                     <div>
                         <p class="text-xs text-slate-500 font-semibold mb-1">5 MENIT LALU • REGION: TOKYO</p>
                         <p class="text-white font-medium">Player "Kenji_01" berhasil meng-upgrade Nuclear Factory ke Level 10 (NFT Minted)!</p>
@@ -82,13 +81,12 @@
 
                 <!-- Tab Email vs Phantom -->
                 <div class="flex bg-slate-800/50 rounded-lg p-1 mb-6 relative z-10 border border-slate-700/50">
-                    <button id="tab-email" class="flex-1 py-2.5 rounded-md bg-amber-500 text-slate-900 font-bold text-sm transition-all shadow-lg">📧 Email</button>
-                    <button id="tab-wallet" class="flex-1 py-2.5 rounded-md text-slate-400 font-bold text-sm hover:text-white transition-all"> Phantom</button>
+                    <button id="tab-email" class="flex-1 py-2.5 rounded-md bg-amber-500 text-slate-900 font-bold text-sm transition-all shadow-lg"> Email</button>
+                    <button id="tab-wallet" class="flex-1 py-2.5 rounded-md text-slate-400 font-bold text-sm hover:text-white transition-all">👻 Phantom</button>
                 </div>
 
                 <!-- Form Email (Register & Login) -->
                 <div id="form-email" class="space-y-4 relative z-10">
-                    <!-- Sub-Tab Register vs Login -->
                     <div class="flex border-b border-slate-700 mb-2">
                         <button id="subtab-register" class="flex-1 pb-2 text-amber-500 border-b-2 border-amber-500 font-bold text-sm">Daftar</button>
                         <button id="subtab-login" class="flex-1 pb-2 text-slate-400 hover:text-white font-bold text-sm">Masuk</button>
@@ -114,15 +112,18 @@
                     </button>
                 </div>
 
-                <!-- Form Phantom (Placeholder) -->
-                <div id="form-wallet" class="hidden relative z-10 text-center py-8">
+                <!-- Form Phantom (REAL CONNECTION - UNIVERSAL) -->
+                <div id="form-wallet" class="hidden relative z-10 text-center py-4">
                     <div class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6 mb-4">
                         <p class="text-purple-300 text-sm mb-2">Akses penuh ke fitur Web3</p>
-                        <p class="text-white font-bold text-lg">Beli Tanah, Mint NFT, & Cash Out</p>
+                        <p id="wallet-status" class="text-white font-bold text-lg">Hubungkan Wallet untuk Lanjut</p>
+                        <p class="text-xs text-slate-500 mt-2 italic">💡 Tips Mobile: Buka situs ini di dalam browser aplikasi Phantom agar bisa connect otomatis.</p>
                     </div>
-                    <button class="w-full bg-[#AB9FF2] text-white font-bold py-3.5 rounded-lg hover:bg-[#9b8ee0] transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
-                        Connect Phantom Wallet
+                    <button id="btn-connect-phantom" class="w-full bg-[#AB9FF2] text-white font-bold py-3.5 rounded-lg hover:bg-[#9b8ee0] transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/20">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 32 32"><path d="M26.998 10.782c-.145-.485-.526-.866-1.011-1.011-3.275-.982-6.734-1.497-10.208-1.513h-.558c-3.474.016-6.933.531-10.208 1.513-.485.145-.866.526-1.011 1.011-.982 3.275-1.497 6.734-1.513 10.208v.558c.016 3.474.531 6.933 1.513 10.208.145.485.526.866 1.011 1.011 3.275.982 6.734 1.497 10.208 1.513h.558c3.474-.016 6.933-.531 10.208-1.513.485-.145.866-.526 1.011-1.011.982-3.275 1.497-6.734 1.513-10.208v-.558c-.016-3.474-.531-6.933-1.513-10.208zM16 26.5c-5.799 0-10.5-4.701-10.5-10.5S10.201 5.5 16 5.5 26.5 10.201 26.5 16 21.799 26.5 16 26.5z"/></svg>
+                        Connect Phantom
                     </button>
+                    <p id="wallet-address-display" class="text-xs text-slate-500 mt-3 font-mono"></p>
                 </div>
             </div>
         </div>
@@ -133,20 +134,24 @@
         // 1. SETUP SUPABASE
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
-        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
         
         const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+        // Variabel global untuk menyimpan alamat wallet player
+        let connectedWalletAddress = '';
 
         // 2. LOGIKA TAB SWITCHER
         const tabEmail = document.getElementById('tab-email');
         const tabWallet = document.getElementById('tab-wallet');
         const formEmail = document.getElementById('form-email');
         const formWallet = document.getElementById('form-wallet');
-        
         const subtabRegister = document.getElementById('subtab-register');
         const subtabLogin = document.getElementById('subtab-login');
         const inputUsername = document.getElementById('input-username');
         const btnSubmit = document.getElementById('btn-submit-auth');
+        const btnConnectPhantom = document.getElementById('btn-connect-phantom');
+        const walletStatus = document.getElementById('wallet-status');
+        const walletAddressDisplay = document.getElementById('wallet-address-display');
 
         let isLoginMode = false;
 
@@ -180,14 +185,63 @@
             btnSubmit.innerText = 'MASUK KE DASHBOARD';
         });
 
-        // 3. LOGIKA SUBMIT FORM (REGISTER & LOGIN) - PRODUCTION READY
+        // 3. LOGIKA PHANTOM WALLET ASLI (UNIVERSAL)
+        btnConnectPhantom.addEventListener('click', async () => {
+            // Cek apakah ada provider Solana (Phantom Extension atau Phantom Mobile Browser)
+            if ("solana" in window) {
+                const provider = window.solana;
+                // Pastikan itu Phantom
+                if (provider.isPhantom) {
+                    try {
+                        btnConnectPhantom.innerText = 'Menghubungkan...';
+                        // Meminta izin connect ke wallet player
+                        const response = await provider.connect();
+                        connectedWalletAddress = response.publicKey.toString();
+                        
+                        // Update UI
+                        walletStatus.innerText = 'Wallet Terhubung!';
+                        walletStatus.classList.remove('text-white');
+                        walletStatus.classList.add('text-green-400');
+                        btnConnectPhantom.innerText = '✅ Terhubung';
+                        btnConnectPhantom.classList.remove('bg-[#AB9FF2]');
+                        btnConnectPhantom.classList.add('bg-green-600');
+                        
+                        // Tampilkan alamat wallet player (format: 32eN...QFc9)
+                        const shortAddr = `${connectedWalletAddress.slice(0, 4)}...${connectedWalletAddress.slice(-4)}`;
+                        walletAddressDisplay.innerText = `Active: ${shortAddr}`;
+                        
+                        // Jika user sudah login email, update profilnya langsung dengan wallet ini
+                        const { data: { user } } = await sb.auth.getUser();
+                        if (user) {
+                            await sb.from('profiles').update({ 
+                                wallet_address: connectedWalletAddress,
+                                is_wallet_verified: true 
+                            }).eq('id', user.id);
+                        }
+
+                    } catch (err) {
+                        console.error(err);
+                        alert("Gagal menghubungkan wallet atau dibatalkan.");
+                        btnConnectPhantom.innerText = 'Connect Phantom';
+                    }
+                } else {
+                    alert("Wallet terdeteksi bukan Phantom. Silakan gunakan ekstensi/browser Phantom.");
+                }
+            } else {
+                // Jika tidak ada wallet terdeteksi (misal buka di Chrome biasa tanpa ekstensi)
+                alert("Phantom Wallet tidak terdeteksi!\n\n💡 Untuk HP: Buka situs ini di dalam aplikasi Phantom (Menu Browser).\n💡 Untuk PC: Install ekstensi Phantom di Chrome/Brave.");
+                window.open("https://phantom.app/", "_blank");
+            }
+        });
+
+        // 4. LOGIKA SUBMIT FORM (REGISTER & LOGIN)
         btnSubmit.addEventListener('click', async () => {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const username = document.getElementById('reg-username').value;
 
             if (!email || !password) {
-                alert(' Email dan Password wajib diisi!');
+                alert('⚠️ Email dan Password wajib diisi!');
                 return;
             }
 
@@ -198,16 +252,16 @@
                 // LOGIKA LOGIN
                 const { data, error } = await sb.auth.signInWithPassword({ email, password });
                 if (error) {
-                    alert(' Login Gagal: ' + error.message);
+                    alert('❌ Login Gagal: ' + error.message);
                     btnSubmit.innerText = 'MASUK KE DASHBOARD';
                     btnSubmit.disabled = false;
                 } else {
                     window.location.href = 'dashboard.html';
                 }
             } else {
-                // LOGIKA REGISTER - AUTO CREATE PROFILE
+                // LOGIKA REGISTER
                 if (!username) {
-                    alert(' Username wajib diisi untuk mendaftar!');
+                    alert('⚠️ Username wajib diisi untuk mendaftar!');
                     btnSubmit.innerText = 'MULAI PETUALANGAN';
                     btnSubmit.disabled = false;
                     return;
@@ -226,40 +280,29 @@
                     return;
                 }
 
-                // 2. Auto Create Profile di player_profiles
-                const referralCode = 'GLORY-' + Math.random().toString(36).substring(2, 8).toUpperCase();
-                
-                const { error: profileError } = await sb.from('player_profiles').insert({
+                // 2. Auto Create Profile di tabel 'profiles'
+                const { error: profileError } = await sb.from('profiles').upsert({
                     id: authData.user.id,
                     username: username,
-                    avatar_url: null,
-                    solana_wallet_address: null,
-                    is_web3_verified: false,
-                    gold_balance: 100, // Modal awal
-                    currency_balance: 500, // Modal awal
+                    email: email,
+                    wallet_address: connectedWalletAddress || null, 
                     diamond_balance: 0,
-                    level: 1,
-                    xp: 0,
+                    gold_balance: 100, 
+                    currency_balance: 500, 
                     energy: 100,
-                    health: 100,
-                    current_region: 'DKI Jakarta', // Default region
-                    country_code: 'ID',
-                    main_role: 'Explorer',
-                    referral_code: referralCode,
-                    referred_by: null,
-                    economic_score: 100,
-                    gathering_skill: 0,
-                    shifts_used_today: 0,
-                    last_work_date: new Date().toISOString().split('T')[0]
+                    max_energy: 100,
+                    level: 1,
+                    is_email_verified: true,
+                    is_wallet_verified: connectedWalletAddress ? true : false, 
+                    is_kyc_verified: false 
                 });
 
                 if (profileError) {
                     console.error('Gagal buat profile:', profileError);
                     alert('⚠️ Akun berhasil dibuat, tapi ada masalah membuat profile. Silakan hubungi admin.');
-                    // Tetap arahkan ke login
                     subtabLogin.click();
                 } else {
-                    alert('✅ Registrasi Berhasil! Username: ' + username + '\nKode Referral kamu: ' + referralCode + '\n\nSilakan login dengan email dan password.');
+                    alert('✅ Registrasi Berhasil!\nUsername: ' + username + '\n\nSilakan login.');
                     subtabLogin.click();
                 }
 
@@ -268,7 +311,7 @@
             }
         });
 
-        // 4. CHECK IF USER ALREADY LOGGED IN
+        // 5. CHECK IF USER ALREADY LOGGED IN
         async function checkSession() {
             const { data: { session } } = await sb.auth.getSession();
             if (session) {
