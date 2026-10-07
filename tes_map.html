@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashboard - GloryVerse</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0B0F19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        
+        .leaflet-tile { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
+        .hillshade-layer .leaflet-tile, .rain-layer .leaflet-tile { filter: none !important; }
+
+        @keyframes pulse-alert { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes float-weather { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        @keyframes pulse-iss { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        .disaster-icon { font-size: 28px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); animation: pulse-alert 1.5s infinite; background: transparent; border: none; }
+        .weather-icon { font-size: 24px; text-shadow: 0 0 8px rgba(255, 255, 255, 0.9); animation: float-weather 3s ease-in-out infinite; background: transparent; border: none; }
+        .iss-icon { font-size: 24px; text-shadow: 0 0 10px #fff; animation: pulse-iss 2s infinite; background: transparent; border: none; }
+        .flight-icon { font-size: 16px; text-shadow: 0 0 5px #00ffff; background: transparent; border: none; }
+
+        #map { height: calc(100vh - 120px); width: 100%; z-index: 1; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Dropdown Layer Control */
+        .layer-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.98);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            min-width: 220px;
+            display: none;
+        }
+        .layer-dropdown.active { display: block; }
+        .layer-dropdown label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            margin: 8px 0;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .layer-dropdown label:hover { background: rgba(245, 158, 11, 0.1); }
+        .layer-dropdown input[type="checkbox"] {
+            accent-color: #F59E0B;
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-slate-200 font-sans">
+
+    <!-- NAVBAR -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-4 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900">G</div>
+            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
+        </div>
+
+        <div class="flex items-center gap-2 text-sm font-semibold">
+            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
+                <span>🇧</span> <span id="london-clock">Loading...</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
+            </div>
+            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
+                <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- DROPDOWN LAYER CONTROL BUTTON -->
+            <button id="layer-toggle-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition flex items-center gap-1">
+                🎛️ Layers
+            </button>
+            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-3 py-2 rounded-lg transition flex items-center gap-1">
+                👻 Connect
+            </button>
+            <div class="w-8 h-8 bg-slate-700 rounded-full border-2 border-amber-500 flex items-center justify-center text-sm font-bold cursor-pointer" id="user-avatar">U</div>
+        </div>
+    </nav>
+
+    <!-- DROPDOWN LAYER CONTROL -->
+    <div id="layer-dropdown" class="layer-dropdown">
+        <div style="font-weight: bold; margin-bottom: 8px; color: #F59E0B; border-bottom: 1px solid #334155; padding-bottom: 6px;">🎛️ Layer Control</div>
+        <label><input type="checkbox" id="toggle-hillshade" checked> ️ Topografi (SRTM)</label>
+        <label><input type="checkbox" id="toggle-rain" checked> 🌧️ Rain Radar (Live)</label>
+        <label><input type="checkbox" id="toggle-disaster" checked> ️ Bencana (GDACS)</label>
+        <label><input type="checkbox" id="toggle-weather" checked> 🌦️ Cuaca Live (Kota)</label>
+        <label><input type="checkbox" id="toggle-iss" checked> 🛰️ ISS (Stasiun Luar Angkasa)</label>
+        <label><input type="checkbox" id="toggle-flights" checked> ✈️ Pesawat (OpenSky)</label>
+    </div>
+
+    <!-- MAIN CONTENT: FULLSCREEN MAP -->
+    <div class="pt-[60px]">
+        <div id="map"></div>
+    </div>
+
+    <!-- SCRIPT UTAMA -->
+    <script>
+        // 1. SETUP SUPABASE
+        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
+        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+
+        let currentUser = null;
+        let currentUserData = null;
+        let map = null;
+        
+        const disasterLayer = L.layerGroup();
+        const weatherLayer = L.layerGroup();
+        const flightLayer = L.layerGroup();
+        let rainLayer = null;
+        let issMarker = null;
+        let hillshadeLayer = null;
+
+        // 2. TOGGLE DROPDOWN
+        document.getElementById('layer-toggle-btn').addEventListener('click', () => {
+            document.getElementById('layer-dropdown').classList.toggle('active');
+        });
+
+        // Close dropdown saat klik di luar
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#layer-dropdown') && !e.target.closest('#layer-toggle-btn')) {
+                document.getElementById('layer-dropdown').classList.remove('active');
+            }
+        });
+
+        // 3. AUTH GUARD & INIT
+        async function initDashboard() {
+            const { data: { session } } = await sb.auth.getSession();
+            if (!session) {
+                window.location.href = 'index.html';
+                return;
+            }
+            currentUser = session.user;
+            await fetchPlayerProfile();
+            await initMap();
+            updateLondonClock();
+            setInterval(updateLondonClock, 1000);
+        }
+
+        async function fetchPlayerProfile() {
+            const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+            if (error) { console.error('Gagal ambil profile:', error); return; }
+            
+            currentUserData = data;
+            document.getElementById('user-avatar').innerText = (data.username || 'U')[0].toUpperCase();
+            document.getElementById('stat-gold').innerText = Math.floor(data.gold_balance || 0).toLocaleString();
+            document.getElementById('stat-currency').innerText = Math.floor(data.currency_balance || 0).toLocaleString();
+            
+            const walletBtn = document.getElementById('wallet-btn');
+            if (data.wallet_address) {
+                const addr = data.wallet_address;
+                walletBtn.innerText = `👻 ${addr.substring(0, 4)}...${addr.substring(addr.length - 4)}`;
+            }
+        }
+
+        // 4. MAP & LIVING WORLD
+        async function initMap() {
+            map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
+            L.control.zoom({ position: 'topright' }).addTo(map);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap',
+                maxZoom: 19
+            }).addTo(map);
+
+            // Topografi
+            hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17, className: 'hillshade-layer', opacity: 0.5
+            }).addTo(map);
+
+            disasterLayer.addTo(map);
+            weatherLayer.addTo(map);
+            flightLayer.addTo(map);
+
+            // Toggle Layers
+            document.getElementById('toggle-hillshade').addEventListener('change', (e) => {
+                e.target.checked ? hillshadeLayer.addTo(map) : map.removeLayer(hillshadeLayer);
+            });
+            document.getElementById('toggle-rain').addEventListener('change', (e) => {
+                if (rainLayer) e.target.checked ? rainLayer.addTo(map) : map.removeLayer(rainLayer);
+            });
+            document.getElementById('toggle-disaster').addEventListener('change', (e) => {
+                e.target.checked ? disasterLayer.addTo(map) : map.removeLayer(disasterLayer);
+            });
+            document.getElementById('toggle-weather').addEventListener('change', (e) => {
+                e.target.checked ? weatherLayer.addTo(map) : map.removeLayer(weatherLayer);
+            });
+            document.getElementById('toggle-iss').addEventListener('change', (e) => {
+                if (issMarker) e.target.checked ? issMarker.addTo(map) : map.removeLayer(issMarker);
+            });
+            document.getElementById('toggle-flights').addEventListener('change', (e) => {
+                e.target.checked ? flightLayer.addTo(map) : map.removeLayer(flightLayer);
+            });
+
+            // Load semua data real-time
+            await loadRainRadar();
+            await loadGDACSDisasters();
+            await loadWeatherIcons();
+            await loadISS();
+            await loadFlights();
+
+            // Auto refresh setiap 30 detik
+            setInterval(() => {
+                loadGDACSDisasters();
+                loadWeatherIcons();
+                loadISS();
+                loadFlights();
+            }, 30000);
+        }
+
+        async function loadRainRadar() {
+            try {
+                const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+                const data = await res.json();
+                const latest = data.radar.past[data.radar.past.length - 1];
+                if (latest && !rainLayer) {
+                    rainLayer = L.tileLayer(`https://tilecache.rainviewer.com${latest.path}/256/{z}/{x}/{y}/2/1_1.png`, {
+                        opacity: 0.7, className: 'rain-layer'
+                    }).addTo(map);
+                }
+            } catch (e) { console.error('Rain error', e); }
+        }
+
+        async function loadGDACSDisasters() {
+            try {
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent('https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7')}`);
+                const data = await res.json();
+                disasterLayer.clearLayers();
+                const icons = { 'EQ': '🌍', 'TC': '🌀', 'FL': '', 'VO': '🌋', 'WF': '🔥', 'DR': '️' };
+                data.forEach(ev => {
+                    const color = ev.severity === 3 ? 'red' : (ev.severity === 2 ? 'orange' : 'green');
+                    L.marker([ev.latitude, ev.longitude], {
+                        icon: L.divIcon({ className: 'disaster-icon', html: `<div style="color:white; text-shadow:0 0 15px ${color};">${icons[ev.eventtype]||'⚠️'}</div>`, iconSize:[30,30] })
+                    }).bindPopup(`<b>${ev.eventtype}</b><br>${ev.name}<br><span style="color:${color}">Severity: ${ev.severity}</span>`).addTo(disasterLayer);
+                });
+            } catch (e) {}
+        }
+
+        async function loadWeatherIcons() {
+            const cities = [ {n:'Jakarta', lat:-6.2, lng:106.8}, {n:'Padang', lat:-0.94, lng:100.4}, {n:'Bandung', lat:-6.91, lng:107.6}, {n:'Tokyo', lat:35.68, lng:139.69} ];
+            const getEmoji = c => c===0?'☀️':c<=3?'':c<=48?'🌫️':c<=67?'🌧️':c<=77?'❄️':c<=82?'🌦️':c>=95?'️':'🌤️';
+            weatherLayer.clearLayers();
+            for (let c of cities) {
+                try {
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current_weather=true`);
+                    const d = await res.json();
+                    if (d.current_weather) {
+                        L.marker([c.lat, c.lng], {
+                            icon: L.divIcon({ className: 'weather-icon', html: `${getEmoji(d.current_weather.weathercode)}<br><b style="font-size:10px;color:white;text-shadow:0 0 5px black">${d.current_weather.temperature}°C</b>`, iconSize:[40,40] })
+                        }).bindPopup(`<b>${c.n}</b><br>${d.current_weather.temperature}°C`).addTo(weatherLayer);
+                    }
+                } catch (e) {}
+            }
+        }
+
+        async function loadISS() {
+            try {
+                const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+                const d = await res.json();
+                if (issMarker) map.removeLayer(issMarker);
+                issMarker = L.marker([d.latitude, d.longitude], {
+                    icon: L.divIcon({ className: 'iss-icon', html: '🛰️', iconSize:[24,24] })
+                }).bindPopup(`<b>ISS</b><br>Speed: ${Math.round(d.velocity)} km/h<br>Alt: ${Math.round(d.altitude)} km`).addTo(map);
+            } catch (e) {}
+        }
+
+        async function loadFlights() {
+            flightLayer.clearLayers();
+            const b = map.getBounds();
+            try {
+                const res = await fetch(`https://opensky-network.org/api/states/all?lamin=${b.getSouth()}&lomin=${b.getWest()}&lamax=${b.getNorth()}&lomax=${b.getEast()}`);
+                if(!res.ok) return;
+                const d = await res.json();
+                if (d.states) {
+                    d.states.slice(0, 40).forEach(f => {
+                        if (f[6] && f[5]) {
+                            L.marker([f[6], f[5]], {
+                                icon: L.divIcon({ className: 'flight-icon', html: `<div style="transform:rotate(${f[10]||0}deg);color:#00ffff">️</div>`, iconSize:[20,20] })
+                            }).bindPopup(`✈️ ${f[1].trim()||'Unknown'}<br>${f[2]}`).addTo(flightLayer);
+                        }
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function updateLondonClock() {
+            const now = new Date();
+            document.getElementById('london-clock').innerText = now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+        }
+
+        initDashboard();
+    </script>
+</body>
+</html>
