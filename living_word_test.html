@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GloryVerse - Living World Test</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background: #0f172a; }
+        #map { height: 100vh; width: 100%; }
+        
+        /* Trik Dark Mode untuk Peta OSM */
+        .leaflet-tile {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+
+        /* Animasi untuk Ikon Bencana (Pulse/Alert) */
+        @keyframes pulse-alert {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .disaster-icon {
+            font-size: 28px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+            animation: pulse-alert 1.5s infinite;
+            background: transparent;
+            border: none;
+        }
+
+        /* Animasi untuk Ikon Cuaca (Float) */
+        @keyframes float-weather {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        .weather-icon {
+            font-size: 24px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+            animation: float-weather 3s ease-in-out infinite;
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <script>
+        // 1. INISIALISASI PETA
+        const map = L.map('map', { zoomControl: false }).setView([-2.5, 118], 5);
+        L.control.zoom({ position: 'topright' }).addTo(map);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Layer Group untuk merapikan
+        const disasterLayer = L.layerGroup().addTo(map);
+        const weatherLayer = L.layerGroup().addTo(map);
+
+        // ==========================================
+        // 2. FUNGSI LOAD DATA BENCANA (GDACS)
+        // ==========================================
+        async function loadGDACSDisasters() {
+            // GDACS API (Kita pakai CORS Proxy agar bisa jalan di browser langsung)
+            const gdacsUrl = 'https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7';
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(gdacsUrl)}`;
+
+            try {
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                
+                console.log(`✅ Berhasil load ${data.length} data bencana dari GDACS!`);
+
+                // Mapping Tipe Bencana ke Emoji Game
+                const disasterIcons = {
+                    'EQ': '🌍', // Gempa
+                    'TC': '', // Badai Tropis
+                    'FL': '🌊', // Banjir
+                    'VO': '🌋', // Gunung Meletus
+                    'WF': '🔥', // Kebakaran Hutan
+                    'DR': '🏜️'  // Kekeringan
+                };
+
+                data.forEach(event => {
+                    const iconEmoji = disasterIcons[event.eventtype] || '⚠️';
+                    const lat = event.latitude;
+                    const lng = event.longitude;
+                    const severity = event.severity || 1; // 1=Green, 2=Orange, 3=Red
+                    
+                    // Warna glow berdasarkan tingkat keparahan
+                    let glowColor = 'rgba(0, 255, 0, 0.8)'; // Hijau (Aman/Rendah)
+                    if (severity === 2) glowColor = 'rgba(255, 165, 0, 0.9)'; // Oranye
+                    if (severity === 3) glowColor = 'rgba(255, 0, 0, 1)'; // Merah (Bahaya!)
+
+                    const customIcon = L.divIcon({
+                        className: 'disaster-icon',
+                        html: `<div style="color: white; text-shadow: 0 0 15px ${glowColor};">${iconEmoji}</div>`,
+                        iconSize: [30, 30],
+                        iconAnchor: [15, 15]
+                    });
+
+                    L.marker([lat, lng], { icon: customIcon })
+                        .bindPopup(`
+                            <div style="color: #1e293b; font-family: sans-serif;">
+                                <h3 style="margin: 0; font-size: 16px;">${iconEmoji} ${event.eventtype} Alert</h3>
+                                <p style="margin: 5px 0; font-size: 12px;"><b>Lokasi:</b> ${event.country || 'Unknown'}</p>
+                                <p style="margin: 0; font-size: 12px;"><b>Nama:</b> ${event.name}</p>
+                                <p style="margin: 5px 0 0 0; font-size: 11px; color: ${severity===3?'red':severity===2?'orange':'green'}; font-weight: bold;">
+                                    Severity: ${severity === 3 ? 'HIGH (RED)' : severity === 2 ? 'MEDIUM (ORANGE)' : 'LOW (GREEN)'}
+                                </p>
+                            </div>
+                        `)
+                        .addTo(disasterLayer);
+                });
+            } catch (error) {
+                console.error('❌ Gagal load GDACS:', error);
+            }
+        }
+
+        // ==========================================
+        // 3. FUNGSI LOAD IKON CUACA (OPEN-METEO)
+        // ==========================================
+        async function loadWeatherIcons() {
+            // Kita test di 6 titik kota besar (Nanti bisa diganti dengan data dari tabel 'regions' Supabase)
+            const cities = [
+                { name: 'Jakarta', lat: -6.2088, lng: 106.8456 },
+                { name: 'Padang', lat: -0.9471, lng: 100.4172 },
+                { name: 'Tokyo', lat: 35.6895, lng: 139.6917 },
+                { name: 'London', lat: 51.5074, lng: -0.1278 },
+                { name: 'New York', lat: 40.7128, lng: -74.0060 },
+                { name: 'Sydney', lat: -33.8688, lng: 151.2093 }
+            ];
+
+            // Mapping Kode Cuaca WMO ke Emoji
+            function getWeatherEmoji(code) {
+                if (code === 0) return '☀️';
+                if (code >= 1 && code <= 3) return '';
+                if (code >= 45 && code <= 48) return '🌫️';
+                if (code >= 51 && code <= 67) return '🌧️';
+                if (code >= 71 && code <= 77) return '❄️';
+                if (code >= 80 && code <= 82) return '🌦️';
+                if (code >= 95) return '️';
+                return '🌤️';
+            }
+
+            for (const city of cities) {
+                try {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+                    
+                    if (data.current_weather) {
+                        const temp = data.current_weather.temperature;
+                        const code = data.current_weather.weathercode;
+                        const emoji = getWeatherEmoji(code);
+
+                        const weatherIcon = L.divIcon({
+                            className: 'weather-icon',
+                            html: `<div style="color: white;">${emoji}<br><span style="font-size: 10px; font-weight: bold; text-shadow: 0 0 5px black;">${temp}°C</span></div>`,
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 20]
+                        });
+
+                        L.marker([city.lat, city.lng], { icon: weatherIcon })
+                            .bindPopup(`<b>${city.name}</b><br>Cuaca Live: ${emoji} ${temp}°C`)
+                            .addTo(weatherLayer);
+                    }
+                } catch (e) {
+                    console.error(`Gagal load cuaca untuk ${city.name}`);
+                }
+            }
+        }
+
+        // ==========================================
+        // 4. JALANKAN SEMUA
+        // ==========================================
+        loadGDACSDisasters();
+        loadWeatherIcons();
+
+        // Auto refresh data bencana setiap 5 menit (300000 ms)
+        setInterval(loadGDACSDisasters, 300000);
+        
+    </script>
+</body>
+</html>
