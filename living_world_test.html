@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GloryVerse - Living World (Full Radar)</title>
+    <title>GloryVerse - Living World (FULL 6 LAYERS)</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
@@ -12,84 +12,45 @@
         #map { height: 100vh; width: 100%; }
         
         /* Dark Mode untuk Peta Dasar OSM */
-        .leaflet-tile {
-            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-        }
+        .leaflet-tile { filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%); }
         
-        /* Layer Hillshade & Rain TIDAK di-invert (biar warna asli tetap keluar) */
-        .hillshade-layer .leaflet-tile,
-        .rain-layer .leaflet-tile {
-            filter: none !important;
-        }
+        /* Layer Hillshade & Rain TIDAK di-invert */
+        .hillshade-layer .leaflet-tile, .rain-layer .leaflet-tile { filter: none !important; }
 
-        /* Animasi Ikon Bencana */
-        @keyframes pulse-alert {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.3); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .disaster-icon {
-            font-size: 28px;
-            text-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
-            animation: pulse-alert 1.5s infinite;
-            background: transparent;
-            border: none;
-        }
+        /* Animasi Ikon */
+        @keyframes pulse-alert { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.3); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes float-weather { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
+        @keyframes pulse-iss { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        
+        .disaster-icon { font-size: 28px; text-shadow: 0 0 10px rgba(255, 0, 0, 0.8); animation: pulse-alert 1.5s infinite; background: transparent; border: none; }
+        .weather-icon { font-size: 24px; text-shadow: 0 0 8px rgba(255, 255, 255, 0.9); animation: float-weather 3s ease-in-out infinite; background: transparent; border: none; }
+        .iss-icon { font-size: 24px; text-shadow: 0 0 10px #fff; animation: pulse-iss 2s infinite; background: transparent; border: none; }
+        .flight-icon { font-size: 16px; text-shadow: 0 0 5px #00ffff; background: transparent; border: none; }
 
-        /* Animasi Ikon Cuaca */
-        @keyframes float-weather {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0px); }
-        }
-        .weather-icon {
-            font-size: 24px;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
-            animation: float-weather 3s ease-in-out infinite;
-            background: transparent;
-            border: none;
-        }
-
-        /* Tombol Toggle Layer */
+        /* Layer Control UI */
         .layer-toggle {
-            position: absolute;
-            top: 80px;
-            left: 10px;
-            z-index: 1000;
-            background: rgba(15, 23, 42, 0.95);
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 10px 14px;
-            color: white;
-            font-family: sans-serif;
-            font-size: 13px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: absolute; top: 80px; left: 10px; z-index: 1000;
+            background: rgba(15, 23, 42, 0.95); border: 1px solid #334155;
+            border-radius: 8px; padding: 10px 14px; color: white;
+            font-family: sans-serif; font-size: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            max-height: 80vh; overflow-y: auto;
         }
-        .layer-toggle label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            margin: 6px 0;
-        }
-        .layer-toggle input[type="checkbox"] {
-            accent-color: #F59E0B;
-            width: 16px;
-            height: 16px;
-        }
+        .layer-toggle label { display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 6px 0; }
+        .layer-toggle input[type="checkbox"] { accent-color: #F59E0B; width: 14px; height: 14px; }
     </style>
 </head>
 <body>
 
     <div id="map"></div>
 
-    <!-- Tombol Toggle Layer -->
     <div class="layer-toggle">
-        <div style="font-weight: bold; margin-bottom: 8px; color: #F59E0B; border-bottom: 1px solid #334155; padding-bottom: 4px;"> Layer Control</div>
+        <div style="font-weight: bold; margin-bottom: 8px; color: #F59E0B; border-bottom: 1px solid #334155; padding-bottom: 4px;">🎛️ Layer Control</div>
         <label><input type="checkbox" id="toggle-hillshade" checked> 🏔️ Topografi (SRTM)</label>
         <label><input type="checkbox" id="toggle-rain" checked> 🌧️ Rain Radar (Live)</label>
         <label><input type="checkbox" id="toggle-disaster" checked> ⚠️ Bencana (GDACS)</label>
-        <label><input type="checkbox" id="toggle-weather" checked> 🌦️ Cuaca Live (Kota)</label>
+        <label><input type="checkbox" id="toggle-weather" checked> ️ Cuaca Live (Kota)</label>
+        <label><input type="checkbox" id="toggle-iss" checked> 🛰️ ISS (Stasiun Luar Angkasa)</label>
+        <label><input type="checkbox" id="toggle-flights" checked> ✈️ Pesawat (OpenSky)</label>
     </div>
 
     <script>
@@ -97,163 +58,109 @@
         const map = L.map('map', { zoomControl: false }).setView([-2.5, 118], 5);
         L.control.zoom({ position: 'topright' }).addTo(map);
 
-        // Layer Dasar OSM
-        const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap',
-            maxZoom: 19
-        }).addTo(map);
+        const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        const hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17, className: 'hillshade-layer', opacity: 0.5 }).addTo(map);
 
-        // Layer Topografi (Hillshade)
-        const hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenTopoMap',
-            maxZoom: 17,
-            className: 'hillshade-layer',
-            opacity: 0.5
-        }).addTo(map);
-
-        // Layer Group
         const disasterLayer = L.layerGroup().addTo(map);
         const weatherLayer = L.layerGroup().addTo(map);
-        let rainLayer = null; // Akan diisi setelah fetch API
+        const flightLayer = L.layerGroup().addTo(map);
+        let rainLayer = null;
+        let issMarker = null;
 
-        // ==========================================
-        // 2. FUNGSI LOAD RADAR HUJAN (RAINVIEWER)  BARU
-        // ==========================================
+        // 2. TOGGLE LAYERS
+        const toggles = {
+            'toggle-hillshade': hillshadeLayer, 'toggle-disaster': disasterLayer,
+            'toggle-weather': weatherLayer, 'toggle-flights': flightLayer
+        };
+        for (let id in toggles) {
+            document.getElementById(id).addEventListener('change', (e) => {
+                e.target.checked ? toggles[id].addTo(map) : map.removeLayer(toggles[id]);
+            });
+        }
+        document.getElementById('toggle-rain').addEventListener('change', (e) => { if(rainLayer) e.target.checked ? rainLayer.addTo(map) : map.removeLayer(rainLayer); });
+        document.getElementById('toggle-iss').addEventListener('change', (e) => { if(issMarker) e.target.checked ? issMarker.addTo(map) : map.removeLayer(issMarker); });
+
+        // 3. LOAD RADAR HUJAN
         async function loadRainRadar() {
             try {
-                // Ambil data terbaru dari RainViewer API
-                const response = await fetch('https://api.rainviewer.com/public/weather-maps.json');
-                const data = await response.json();
-                
-                // Ambil frame radar terakhir yang tersedia
-                const latestFrame = data.radar.past[data.radar.past.length - 1];
-                
-                if (latestFrame && !rainLayer) {
-                    // Buat Tile Layer untuk Radar
-                    rainLayer = L.tileLayer(`https://tilecache.rainviewer.com${latestFrame.path}/256/{z}/{x}/{y}/2/1_1.png`, {
-                        attribution: '© RainViewer',
-                        opacity: 0.75, // Transparansi agar peta bawah tetap terlihat
-                        className: 'rain-layer'
-                    }).addTo(map);
-                    console.log('✅ Rain Radar berhasil dimuat!');
+                const res = await fetch('https://api.rainviewer.com/public/weather-maps.json');
+                const data = await res.json();
+                const latest = data.radar.past[data.radar.past.length - 1];
+                if (latest && !rainLayer) {
+                    rainLayer = L.tileLayer(`https://tilecache.rainviewer.com${latest.path}/256/{z}/{x}/{y}/2/1_1.png`, { opacity: 0.7, className: 'rain-layer' }).addTo(map);
                 }
-            } catch (error) {
-                console.error('❌ Gagal load Rain Radar:', error);
-            }
+            } catch (e) { console.error('Rain error', e); }
         }
 
-        // ==========================================
-        // 3. TOGGLE LAYER CONTROL
-        // ==========================================
-        document.getElementById('toggle-hillshade').addEventListener('change', function(e) {
-            e.target.checked ? hillshadeLayer.addTo(map) : map.removeLayer(hillshadeLayer);
-        });
-
-        document.getElementById('toggle-rain').addEventListener('change', function(e) {
-            if (rainLayer) {
-                e.target.checked ? rainLayer.addTo(map) : map.removeLayer(rainLayer);
-            }
-        });
-
-        document.getElementById('toggle-disaster').addEventListener('change', function(e) {
-            e.target.checked ? disasterLayer.addTo(map) : map.removeLayer(disasterLayer);
-        });
-
-        document.getElementById('toggle-weather').addEventListener('change', function(e) {
-            e.target.checked ? weatherLayer.addTo(map) : map.removeLayer(weatherLayer);
-        });
-
-        // ==========================================
-        // 4. FUNGSI LOAD DATA BENCANA (GDACS)
-        // ==========================================
+        // 4. LOAD BENCANA (GDACS)
         async function loadGDACSDisasters() {
-            const gdacsUrl = 'https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7';
-            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(gdacsUrl)}`;
-
             try {
-                const response = await fetch(proxyUrl);
-                const data = await response.json();
-                disasterLayer.clearLayers(); // Clear layer lama sebelum load baru
-                
-                const disasterIcons = { 'EQ': '', 'TC': '🌀', 'FL': '🌊', 'VO': '', 'WF': '🔥', 'DR': '🏜️' };
-
-                data.forEach(event => {
-                    const iconEmoji = disasterIcons[event.eventtype] || '️';
-                    const lat = event.latitude;
-                    const lng = event.longitude;
-                    const severity = event.severity || 1;
-                    
-                    let glowColor = 'rgba(0, 255, 0, 0.8)';
-                    if (severity === 2) glowColor = 'rgba(255, 165, 0, 0.9)';
-                    if (severity === 3) glowColor = 'rgba(255, 0, 0, 1)';
-
-                    const customIcon = L.divIcon({
-                        className: 'disaster-icon',
-                        html: `<div style="color: white; text-shadow: 0 0 15px ${glowColor};">${iconEmoji}</div>`,
-                        iconSize: [30, 30], iconAnchor: [15, 15]
-                    });
-
-                    L.marker([lat, lng], { icon: customIcon })
-                        .bindPopup(`<div style="color:#1e293b;"><h3 style="margin:0;">${iconEmoji} ${event.eventtype}</h3><p style="margin:5px 0; font-size:12px;"><b>${event.name}</b><br>${event.country}</p></div>`)
-                        .addTo(disasterLayer);
+                const res = await fetch(`https://corsproxy.io/?${encodeURIComponent('https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7')}`);
+                const data = await res.json();
+                disasterLayer.clearLayers();
+                const icons = { 'EQ': '🌍', 'TC': '🌀', 'FL': '🌊', 'VO': '', 'WF': '🔥', 'DR': '🏜️' };
+                data.forEach(ev => {
+                    const color = ev.severity === 3 ? 'red' : (ev.severity === 2 ? 'orange' : 'green');
+                    L.marker([ev.latitude, ev.longitude], {
+                        icon: L.divIcon({ className: 'disaster-icon', html: `<div style="color:white; text-shadow:0 0 15px ${color};">${icons[ev.eventtype]||'⚠️'}</div>`, iconSize:[30,30] })
+                    }).bindPopup(`<b>${ev.eventtype}</b><br>${ev.name}<br><span style="color:${color}">Severity: ${ev.severity}</span>`).addTo(disasterLayer);
                 });
-            } catch (error) { console.error('Gagal load GDACS:', error); }
+            } catch (e) {}
         }
 
-        // ==========================================
-        // 5. FUNGSI LOAD IKON CUACA (OPEN-METEO)
-        // ==========================================
+        // 5. LOAD CUACA KOTA
         async function loadWeatherIcons() {
-            const cities = [
-                { name: 'Jakarta', lat: -6.2088, lng: 106.8456 },
-                { name: 'Padang', lat: -0.9471, lng: 100.4172 },
-                { name: 'Bandung', lat: -6.9175, lng: 107.6191 },
-                { name: 'Tokyo', lat: 35.6895, lng: 139.6917 },
-                { name: 'London', lat: 51.5074, lng: -0.1278 },
-                { name: 'New York', lat: 40.7128, lng: -74.0060 }
-            ];
-
-            function getWeatherEmoji(code) {
-                if (code === 0) return '☀️'; if (code >= 1 && code <= 3) return '⛅';
-                if (code >= 45 && code <= 48) return '🌫️'; if (code >= 51 && code <= 67) return '️';
-                if (code >= 71 && code <= 77) return '❄️'; if (code >= 80 && code <= 82) return '🌦️';
-                if (code >= 95) return '️'; return '🌤️';
-            }
-
+            const cities = [ {n:'Jakarta', lat:-6.2, lng:106.8}, {n:'Padang', lat:-0.94, lng:100.4}, {n:'Bandung', lat:-6.91, lng:107.6}, {n:'Tokyo', lat:35.68, lng:139.69} ];
+            const getEmoji = c => c===0?'☀️':c<=3?'⛅':c<=48?'️':c<=67?'🌧️':c<=77?'❄️':c<=82?'🌦️':c>=95?'⛈️':'🌤️';
             weatherLayer.clearLayers();
-            for (const city of cities) {
+            for (let c of cities) {
                 try {
-                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true`);
-                    const data = await res.json();
-                    if (data.current_weather) {
-                        const temp = data.current_weather.temperature;
-                        const code = data.current_weather.weathercode;
-                        const emoji = getWeatherEmoji(code);
-                        const weatherIcon = L.divIcon({
-                            className: 'weather-icon',
-                            html: `<div style="color: white;">${emoji}<br><span style="font-size: 10px; font-weight: bold; text-shadow: 0 0 5px black;">${temp}°C</span></div>`,
-                            iconSize: [40, 40], iconAnchor: [20, 20]
-                        });
-                        L.marker([city.lat, city.lng], { icon: weatherIcon }).addTo(weatherLayer);
+                    const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current_weather=true`);
+                    const d = await res.json();
+                    if (d.current_weather) {
+                        L.marker([c.lat, c.lng], {
+                            icon: L.divIcon({ className: 'weather-icon', html: `${getEmoji(d.current_weather.weathercode)}<br><b style="font-size:10px;color:white;text-shadow:0 0 5px black">${d.current_weather.temperature}°C</b>`, iconSize:[40,40] })
+                        }).bindPopup(`<b>${c.n}</b><br>${d.current_weather.temperature}°C`).addTo(weatherLayer);
                     }
-                } catch (e) { console.error(e); }
+                } catch (e) {}
             }
         }
 
-        // ==========================================
-        // 6. JALANKAN SEMUA SAAT LOAD
-        // ==========================================
-        loadRainRadar();
-        loadGDACSDisasters();
-        loadWeatherIcons();
+        // 6. LOAD ISS (DIKEMBALIKAN!)
+        async function loadISS() {
+            try {
+                const res = await fetch('https://api.wheretheiss.at/v1/satellites/25544');
+                const d = await res.json();
+                if (issMarker) map.removeLayer(issMarker);
+                issMarker = L.marker([d.latitude, d.longitude], {
+                    icon: L.divIcon({ className: 'iss-icon', html: '🛰️', iconSize:[24,24] })
+                }).bindPopup(`<b>ISS (Stasiun Luar Angkasa)</b><br>Speed: ${Math.round(d.velocity)} km/h<br>Alt: ${Math.round(d.altitude)} km`).addTo(map);
+            } catch (e) {}
+        }
 
-        // Auto refresh setiap 5 menit
-        setInterval(() => {
-            loadRainRadar();
-            loadGDACSDisasters();
-            loadWeatherIcons();
-        }, 300000);
-        
+        // 7. LOAD PESAWAT (DIKEMBALIKAN!)
+        async function loadFlights() {
+            flightLayer.clearLayers();
+            const b = map.getBounds();
+            try {
+                const res = await fetch(`https://opensky-network.org/api/states/all?lamin=${b.getSouth()}&lomin=${b.getWest()}&lamax=${b.getNorth()}&lomax=${b.getEast()}`);
+                if(!res.ok) return;
+                const d = await res.json();
+                if (d.states) {
+                    d.states.slice(0, 40).forEach(f => {
+                        if (f[6] && f[5]) {
+                            L.marker([f[6], f[5]], {
+                                icon: L.divIcon({ className: 'flight-icon', html: `<div style="transform:rotate(${f[10]||0}deg);color:#00ffff">✈️</div>`, iconSize:[20,20] })
+                            }).bindPopup(`✈️ ${f[1].trim()||'Unknown'}<br>${f[2]}`).addTo(flightLayer);
+                        }
+                    });
+                }
+            } catch (e) {}
+        }
+
+        // JALANKAN SEMUA
+        loadRainRadar(); loadGDACSDisasters(); loadWeatherIcons(); loadISS(); loadFlights();
+        setInterval(() => { loadGDACSDisasters(); loadWeatherIcons(); loadISS(); loadFlights(); }, 30000);
     </script>
 </body>
 </html>
