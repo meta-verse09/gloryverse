@@ -157,7 +157,7 @@
                 document.getElementById('layer-dropdown').classList.remove('active');
             }
         });
-
+ 
         // 3. AUTH GUARD & INIT
         async function initDashboard() {
             const { data: { session } } = await sb.auth.getSession();
