@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -197,6 +198,65 @@
                 maxZoom: 19
             }).addTo(map);
 
+            // --- TEMPEL DARI SINI KE PETA LU YANG UDAH ADA ---
+
+map.on('click', async function(e) {
+  let lat = e.latlng.lat;
+  let lon = e.latlng.lng;
+
+  L.popup().setLatLng(e.latlng).setContent("Cek lahan... ⏳").openOn(map);
+
+  let query = `
+    [out:json];
+    (
+      nwr(around:100,${lat},${lon})["landuse"];
+      nwr(around:100,${lat},${lon})["natural"];
+      nwr(around:100,${lat},${lon})["amenity"];
+      nwr(around:100,${lat},${lon})["leisure"];
+    );
+    out center tags 1;
+  `;
+
+  let url = "https://overpass.kumi.systems/api/interpreter?data=" + encodeURIComponent(query);
+
+  try {
+    let res = await fetch(url);
+    let data = await res.json();
+
+    let html = "";
+
+    if (data.elements.length > 0) {
+      let tags = data.elements[0].tags;
+      let landuse = tags.landuse || tags.natural || tags.amenity || "unknown";
+      let crop = tags.crop || tags.resource || "";
+
+      if (landuse == "farmland" || landuse == "paddy" || landuse == "paddies") {
+        html = `🌾 <b>LAHAN PERTANIAN</b><br>Potensi: ${crop || 'Padi / Palawija'}<br><button onclick="beliLahan(${lat},${lon},'farm')">Beli 500 coin</button> <button onclick="sewaLahan(${lat},${lon})">Sewa 50/bulan</button>`;
+      } else if (landuse == "orchard" || landuse == "plantation") {
+        html = `🌴 <b>PERKEBUNAN</b><br>Jenis: ${crop || 'Sawit / Karet'}<br><button onclick="beliLahan(${lat},${lon},'orchard')">Beli 800 coin</button>`;
+      } else if (landuse == "quarry" || tags.man_made == "mineshaft") {
+        html = `⛏️ <b>LAHAN TAMBANG</b><br>Resource: ${crop || 'Batu/Bara'}<br><button onclick="beliLahan(${lat},${lon},'mine')">Beli 2000 coin</button>`;
+      } else if (landuse == "residential") {
+        html = `🏘️ <b>PERKAMPUNGAN</b><br>Bisa bangun Toko/Rumah`;
+      } else {
+        html = `📍 <b>${landuse.toUpperCase()}</b><br>Tag: ${crop}<br><button onclick="beliLahan(${lat},${lon},'kosong')">Klaim 300 coin</button>`;
+      }
+    } else {
+      // INI ANTI ZONK - KALAU OSM KOSONG, TETAP JADI LAHAN KOSONG YANG BISA DIKLAIM
+      html = `🌿 <b>LAHAN KOSONG</b><br>${lat.toFixed(5)}, ${lon.toFixed(5)}<br>Belum ada pemilik<br><button onclick="beliLahan(${lat},${lon},'kosong')" style="background:green;color:white;padding:5px">Klaim 300 coin</button>`;
+    }
+
+    L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
+
+  } catch (err) {
+    L.popup().setLatLng(e.latlng).setContent("Gagal cek OSM, coba lagi Bray.").openOn(map);
+  }
+});
+
+// Fungsi dummy biar gak error - nanti lu ganti sama fungsi beli lu
+function beliLahan(lat,lon,tipe){ alert("Beli lahan " + tipe + " di " + lat + "," + lon); }
+function sewaLahan(lat,lon){ alert("Sewa lahan di " + lat + "," + lon); }
+            
             // Topografi
             hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
                 maxZoom: 17, className: 'hillshade-layer', opacity: 0.5
