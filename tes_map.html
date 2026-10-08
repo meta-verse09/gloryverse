@@ -242,7 +242,6 @@
     L.popup().setLatLng(e.latlng).setContent(`Jenis lahan: <b>${jenis}</b>`).openOn(map);
   });
 </script>
-            <script type="module" src="lahan.js"></script>
             
             // Topografi
             hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -371,5 +370,7 @@
 
         initDashboard();
     </script>
+                <script type="module" src="./lahan.js"></script>
+</body>
 </body>
 </html>
