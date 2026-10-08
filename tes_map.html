@@ -242,7 +242,8 @@
 map.on('click', async (e) => {
   const hasil = await cekLahanOSM(e.latlng.lat, e.latlng.lng);
   L.popup().setLatLng(e.latlng).setContent(`Jenis lahan: <b>${hasil}</b>`).openOn(map);
-});
+});          
+            <script type="module" src="lahan.js"></script>
             
             // Topografi
             hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
