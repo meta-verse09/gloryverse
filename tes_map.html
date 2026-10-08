@@ -200,49 +200,48 @@
 
             // --- TEMPEL DARI SINI KE PETA LU YANG UDAH ADA ---
 
-            async function cekLahanOSM(lat, lon) {
-  // Query kecil aja, radius 100m, biar gak berat
-  const query = `
-    [out:json][timeout:10];
-    (
-      way["landuse"="farmland"](around:100,${lat},${lon});
-      way["landuse"="farmyard"](around:100,${lat},${lon});
-      way["natural"="wood"](around:100,${lat},${lon});
-      relation["landuse"="farmland"](around:100,${lat},${lon});
-    );
-    out tags center 1;
-  `;
+            <script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-  const url = "https://overpass-api.de/api/interpreter";
+  // GANTI DENGAN PUNYA LU BRAY
+  const SUPABASE_URL = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
+  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      body: "data=" + encodeURIComponent(query)
-    });
+  var map = L.map('map').setView([-0.9, 100.3], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-    if (!res.ok) throw new Error("Overpass sibuk Bray, status: " + res.status);
+  async function cekLahanSupabase(lat, lon) {
+    const latKey = lat.toFixed(3);
+    const lonKey = lon.toFixed(3);
 
-    const data = await res.json();
+    // 1. Cek gudang dulu
+    let { data } = await supabase.from('lahan_cache').select('jenis_lahan').eq('lat_key', latKey).eq('lon_key', lonKey).limit(1).single();
+    if (data) return data.jenis_lahan + " (cache)";
 
-    if (data.elements.length === 0) {
-      return "Lahan kosong / permukiman";
-    } else {
-      return data.elements[0].tags.landuse || data.elements[0].tags.natural;
+    // 2. Kalau gak ada, baru ke Overpass
+    const q = `[out:json][timeout:10];way["landuse"](around:50,${lat},${lon});out tags center 1;`;
+    let hasil = "permukiman";
+    try {
+      const res = await fetch("https://overpass-api.de/api/interpreter", { method: "POST", body: "data=" + q });
+      const json = await res.json();
+      hasil = json.elements[0]?.tags?.landuse || "permukiman";
+    } catch(e) { hasil = "gagal OSM, coba lagi"; }
+
+    // 3. Simpen ke gudang
+    if (hasil!= "gagal OSM, coba lagi") {
+      await supabase.from('lahan_cache').insert({ lat, lon, lat_key: latKey, lon_key: lonKey, jenis_lahan: hasil });
     }
-
-  } catch (err) {
-    console.error(err);
-    // Jangan alert "Gagal cek OSM" doang, kasih tau kenapa
-    return "GAGAL: " + err.message + " - coba klik lagi 5 detik";
+    return hasil;
   }
-}
 
-// Pasang di map lu (Leaflet contohnya)
-map.on('click', async (e) => {
-  const hasil = await cekLahanOSM(e.latlng.lat, e.latlng.lng);
-  L.popup().setLatLng(e.latlng).setContent(`Jenis lahan: <b>${hasil}</b>`).openOn(map);
-});          
+  // Pas klik peta
+  map.on('click', async function(e) {
+    L.popup().setLatLng(e.latlng).setContent("Ngecek lahan...").openOn(map);
+    let jenis = await cekLahanSupabase(e.latlng.lat, e.latlng.lng);
+    L.popup().setLatLng(e.latlng).setContent(`Jenis lahan: <b>${jenis}</b>`).openOn(map);
+  });
+</script>
             <script type="module" src="lahan.js"></script>
             
             // Topografi
