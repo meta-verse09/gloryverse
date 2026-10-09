@@ -135,294 +135,177 @@
 
     <!-- SCRIPT BAGIAN 2 AKAN DITEMPEL DI SINI -->
       <script>
-        // ==========================================
-        // 1. SETUP SUPABASE
-        // ==========================================
-        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
-        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
+    const SUPABASE_URL = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
+    const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const MONEYTAG_LINK = 'https://uplcm.com/4/11989761';
 
-        let currentUser = null;
-        let currentUserData = null;
-        let map = null;
-        let disasterLayer = L.layerGroup();
-        let hillshadeLayer = null;
-        const MONEYTAG_LINK = 'https://uplcm.com/4/11989761';
+    let currentUser = null;
+    let currentUserData = null;
+    let map = null;
+    let disasterLayer = null;
 
-        // ==========================================
-        // 2. INIT
-        // ==========================================
-        async function initDashboard() {
-            const { data: { session } } = await sb.auth.getSession();
-            if (!session) {
-                window.location.href = 'index.html';
-                return;
-            }
-            currentUser = session.user;
-            await fetchPlayerProfile();
-            await initMap();
-            updateLondonClock();
-            setInterval(updateLondonClock, 1000);
-        }
+    async function init() {
+        const { data: { session } } = await sb.auth.getSession();
+        if (!session) { window.location.href = 'index.html'; return; }
+        currentUser = session.user;
+        await loadProfile();
+        await initMap();
+        setInterval(updateClock, 1000);
+        updateClock();
+    }
 
-        async function fetchPlayerProfile() {
-            const { data, error } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
-            if (error) { console.error('Gagal ambil profile:', error); return; }
-            
+    async function loadProfile() {
+        const { data } = await sb.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (data) {
             currentUserData = data;
-            document.getElementById('stat-diamond').innerText = Math.floor(data.diamond_balance || 0).toLocaleString();
-            document.getElementById('stat-gold').innerText = Math.floor(data.gold_balance || 0).toLocaleString();
-            document.getElementById('stat-currency').innerText = Math.floor(data.currency_balance || 0).toLocaleString();
-            
-            const walletBtn = document.getElementById('wallet-btn');
-            if (data.wallet_address) {
-                walletBtn.innerHTML = `👻 ${data.wallet_address.substring(0, 4)}...${data.wallet_address.substring(data.wallet_address.length - 4)}`;
-                walletBtn.classList.replace('bg-amber-600', 'bg-purple-600');
-                walletBtn.classList.replace('hover:bg-amber-500', 'hover:bg-purple-500');
-            }
+            document.getElementById('stat-diamond').innerText = Math.floor(data.diamond_balance || 0);
+            document.getElementById('stat-gold').innerText = Math.floor(data.gold_balance || 0);
+            document.getElementById('stat-currency').innerText = Math.floor(data.currency_balance || 0);
         }
+    }
 
-        // ==========================================
-        // 3. MAP INIT
-        // ==========================================
-        async function initMap() {
-            map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
-            L.control.zoom({ position: 'topright' }).addTo(map);
+    async function initMap() {
+        map = L.map('map', { zoomControl: false }).setView([-2.5, 118], 5);
+        L.control.zoom({ position: 'topright' }).addTo(map);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap',
-                maxZoom: 19
-            }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19, attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-            hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenTopoMap',
-                maxZoom: 17,
-                className: 'hillshade-layer'
-            }).addTo(map);
+        L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17, opacity: 0.5
+        }).addTo(map);
 
-            disasterLayer.addTo(map);
-            
-            // Load gempa dulu
-            await loadEarthquakesUSGS();
+        disasterLayer = L.layerGroup().addTo(map);
+        await loadEarthquakes();
 
-            // ==========================================
-            // CLICK HANDLER PETA (DENGAN BOUNDING BOX)
-            // ==========================================
-            map.on('click', async function(e) {
-                const lat = e.latlng.lat;
-                const lng = e.latlng.lng;
-                
-                console.log(`📍 Klik di: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
-                
-                // 1. Cek zona gempa (radius 100km)
-                const inDisasterZone = window.activeEarthquakes?.some(quake => {
-                    const distance = map.distance([lat, lng], [quake.lat, quake.lng]);
-                    return distance < 100000;
-                });
+        // CLICK HANDLER
+        map.on('click', async (e) => {
+            const { lat, lng } = e.latlng;
+            console.log('Klik:', lat, lng);
+            await handleLandClick(lat, lng);
+        });
+    }
 
-                if (inDisasterZone) {
-                    showLandModal(lat, lng, 'disaster');
-                    return;
-                }
-
-                // 2. Cari lahan dalam radius ~50 meter (bounding box)
-                const latRange = 0.0005;
-                const lngRange = 0.0005;
-                
-                const { data: landData, error } = await sb
-                    .from('lands')
-                    .select('id, status, owner_id, latitude, longitude')
-                    .gte('latitude', lat - latRange)
-                    .lte('latitude', lat + latRange)
-                    .gte('longitude', lng - lngRange)
-                    .lte('longitude', lng + lngRange)
-                    .maybeSingle();
-
-                console.log('🔍 Hasil pencarian lahan:', landData, error);
-
-                if (landData) {
-                    showLandModal(lat, lng, landData.status, landData);
-                } else {
-                    showLandModal(lat, lng, 'unknown');
-                }
+    async function loadEarthquakes() {
+        try {
+            const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+            const data = await res.json();
+            disasterLayer.clearLayers();
+            window.activeQuakes = [];
+            data.features.forEach(q => {
+                const [qlng, qlat, depth] = q.geometry.coordinates;
+                const mag = q.properties.mag;
+                const color = mag >= 5 ? 'red' : mag >= 4 ? 'orange' : 'yellow';
+                L.marker([qlat, qlng], {
+                    icon: L.divIcon({
+                        className: '',
+                        html: `<div style="font-size:28px;text-shadow:0 0 15px ${color};animation:pulse 1.5s infinite;"></div>`,
+                        iconSize: [30, 30]
+                    })
+                }).bindPopup(`<b>Gempa ${mag} SR</b><br>${q.properties.place}`).addTo(disasterLayer);
+                window.activeQuakes.push({ lat: qlat, lng: qlng, mag });
             });
+            console.log('Gempa loaded:', data.features.length);
+        } catch (e) { console.error(e); }
+    }
+
+    async function handleLandClick(lat, lng) {
+        // Cek gempa (radius 100km)
+        const nearQuake = window.activeQuakes?.some(q => {
+            return map.distance([lat, lng], [q.lat, q.lng]) < 100000;
+        });
+        if (nearQuake) {
+            showModal('disaster', lat, lng);
+            return;
         }
 
-        // ==========================================
-        // 4. LOAD GEMPA USGS
-        // ==========================================
-        async function loadEarthquakesUSGS() {
-            try {
-                console.log('🔄 Fetching gempa dari USGS...');
-                
-                const response = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
-                
-                if (!response.ok) {
-                    console.error('❌ USGS gagal:', response.status);
-                    return;
-                }
-                
-                const data = await response.json();
-                console.log(`✅ USGS berhasil: ${data.features.length} gempa!`);
-                
-                disasterLayer.clearLayers();
-                const earthquakes = [];
-                
-                data.features.forEach(quake => {
-                    const coords = quake.geometry.coordinates;
-                    const lng = coords[0];
-                    const lat = coords[1];
-                    const magnitude = quake.properties.mag;
-                    const place = quake.properties.place;
-                    
-                    const color = magnitude >= 5 ? '#ff0000' : (magnitude >= 4 ? '#ff8800' : '#ffff00');
-                    
-                    const marker = L.marker([lat, lng], {
-                        icon: L.divIcon({
-                            className: 'disaster-icon',
-                            html: `<div style="font-size: 32px; text-shadow: 0 0 20px ${color}; animation: pulse-alert 1.5s infinite; background: transparent; border: none;"></div>`,
-                            iconSize: [40, 40],
-                            iconAnchor: [20, 20]
-                        })
-                    });
-                    
-                    marker.bindPopup(`
-                        <div style="color:#1e293b; font-family:sans-serif; min-width:200px;">
-                            <h3 style="margin:0; font-size:18px; color:${color};">🌍 GEMPA TERDETEKSI</h3>
-                            <p style="margin:8px 0; font-size:14px;"><b>Magnitudo:</b> ${magnitude.toFixed(1)} SR</p>
-                            <p style="margin:8px 0; font-size:12px;"><b>Lokasi:</b> ${place}</p>
-                            <p style="margin:8px 0; font-size:11px; color:#666;"><b>Kedalaman:</b> ${coords[2]} km</p>
-                        </div>
-                    `);
-                    
-                    marker.addTo(disasterLayer);
-                    earthquakes.push({ lat, lng, magnitude });
-                });
-                
-                window.activeEarthquakes = earthquakes;
-                console.log(`️ ${earthquakes.length} gempa siap!`);
-                
-                setInterval(loadEarthquakesUSGS, 300000);
-                
-            } catch (e) { 
-                console.error(' Gagal load USGS:', e);
-            }
+        // Cari lahan dalam radius 100 meter
+        const range = 0.001;
+        const { data: land } = await sb
+            .from('lands')
+            .select('*')
+            .gte('latitude', lat - range)
+            .lte('latitude', lat + range)
+            .gte('longitude', lng - range)
+            .lte('longitude', lng + range)
+            .maybeSingle();
+
+        if (land) {
+            showModal(land.status, lat, lng, land);
+        } else {
+            showModal('unknown', lat, lng);
         }
+    }
 
-        // ==========================================
-        // 5. MODAL LAHAN
-        // ==========================================
-        function showLandModal(lat, lng, status, landData = null) {
-            const modal = document.getElementById('land-modal');
-            const infoText = document.getElementById('land-info-text');
-            const actionsDiv = document.getElementById('land-actions');
-            
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
+    function showModal(status, lat, lng, land = null) {
+        const modal = document.getElementById('land-modal');
+        const info = document.getElementById('land-info-text');
+        const actions = document.getElementById('land-actions');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
 
-            if (status === 'disaster') {
-                infoText.innerHTML = `⚠️ <b>PERINGATAN GEMPA!</b><br>Area ini berada dalam zona gempa aktif. Lahan tidak stabil dan <b>tidak bisa ditanami</b> hingga kondisi aman.`;
-                actionsDiv.innerHTML = `<button onclick="closeModal('land-modal')" class="w-full bg-slate-700 text-white font-bold py-3 rounded-lg">Tutup</button>`;
-            } else if (status === 'kosong') {
-                infoText.innerHTML = `🌱 <b>Lahan Pertanian Subur</b><br>Status: Tersedia (Platform)<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                actionsDiv.innerHTML = `
-                    <button onclick="watchAdAndReward('tanam_kosong')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">🌾 Sewa & Tanam (Tonton Iklan)</button>
-                    <button onclick="watchAdAndReward('beli_lahan')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition"> Beli Lahan (5 USDT)</button>
-                `;
-            } else if (status === 'sultan') {
-                infoText.innerHTML = ` <b>Lahan Sultan</b><br>Dimiliki oleh Player lain.<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                actionsDiv.innerHTML = `<button onclick="watchAdAndReward('tanam_sultan')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition">🤝 Sewa dari Sultan (Tonton Iklan)</button>`;
-            } else {
-                infoText.innerHTML = `❓ <b>Lokasi Tidak Dikenal</b><br>Area ini bukan lahan pertanian yang terdaftar (misal: jalan, gedung, atau laut).`;
-                actionsDiv.innerHTML = `<button onclick="closeModal('land-modal')" class="w-full bg-slate-700 text-white font-bold py-3 rounded-lg">Tutup</button>`;
-            }
+        if (status === 'disaster') {
+            info.innerHTML = '⚠️ <b>ZONA GEMPA!</b><br>Tidak bisa ditanami sampai kondisi aman.';
+            actions.innerHTML = '<button onclick="closeModal()" class="w-full bg-slate-700 text-white py-3 rounded-lg font-bold">Tutup</button>';
+        } else if (status === 'kosong') {
+            info.innerHTML = ` <b>Lahan Tersedia</b><br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            actions.innerHTML = `
+                <button onclick="doAction('tanam')" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold mb-2">🌾 Sewa & Tanam (Tonton Iklan)</button>
+                <button onclick="doAction('beli')" class="w-full bg-amber-600 text-white py-3 rounded-lg font-bold">💎 Beli Lahan (5 USDT)</button>
+            `;
+        } else if (status === 'sultan') {
+            info.innerHTML = `👑 <b>Lahan Sultan</b><br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            actions.innerHTML = '<button onclick="doAction(\'tanam_sultan\')" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">🤝 Sewa dari Sultan</button>';
+        } else {
+            info.innerHTML = '❓ <b>Lokasi Tidak Dikenal</b><br>Bukan lahan pertanian terdaftar.';
+            actions.innerHTML = '<button onclick="closeModal()" class="w-full bg-slate-700 text-white py-3 rounded-lg font-bold">Tutup</button>';
         }
+    }
 
-        // ==========================================
-        // 6. IKLAN MONEYTAG & REWARD
-        // ==========================================
-        async function watchAdAndReward(actionType) {
-            if (actionType.includes('tanam') && currentUserData.daily_harvest_count >= 10) {
-                alert('⚠️ Batas panen harian (10x) tercapai!');
+    async function doAction(type) {
+        if (type.includes('tanam') && (currentUserData.daily_harvest_count || 0) >= 10) {
+            alert('Batas harian 10x tercapai!');
+            return;
+        }
+        if (currentUserData.last_harvest_time) {
+            const last = new Date(currentUserData.last_harvest_time).getTime();
+            if (Date.now() - last < 3600000) {
+                const mins = Math.ceil((3600000 - (Date.now() - last)) / 60000);
+                alert(`Cooldown: ${mins} menit lagi`);
                 return;
             }
+        }
 
-            if (currentUserData.last_harvest_time) {
-                const lastHarvest = new Date(currentUserData.last_harvest_time).getTime();
-                const now = Date.now();
-                if ((now - lastHarvest) < 3600000) {
-                    const minsLeft = Math.ceil((3600000 - (now - lastHarvest)) / 60000);
-                    alert(`⏳ Cooldown: Tunggu ${minsLeft} menit lagi.`);
-                    return;
-                }
+        window.open(MONEYTAG_LINK, '_blank');
+        setTimeout(async () => {
+            const { error } = await sb.from('profiles').update({
+                currency_balance: (currentUserData.currency_balance || 0) + 10,
+                daily_harvest_count: (currentUserData.daily_harvest_count || 0) + 1,
+                last_harvest_time: new Date().toISOString()
+            }).eq('id', currentUser.id);
+
+            if (!error) {
+                alert('✅ +10 Currency!');
+                closeModal();
+                loadProfile();
             }
+        }, 5000);
+    }
 
-            // Buka Moneytag
-            window.open(MONEYTAG_LINK, '_blank');
-            
-            // Beri reward setelah 5 detik
-            setTimeout(async () => {
-                const rewardCurrency = 10;
-                const { error } = await sb.from('profiles').update({
-                    currency_balance: currentUserData.currency_balance + rewardCurrency,
-                    daily_harvest_count: (currentUserData.daily_harvest_count || 0) + 1,
-                    last_harvest_time: new Date().toISOString()
-                }).eq('id', currentUser.id);
+    function closeModal() {
+        document.getElementById('land-modal').classList.add('hidden');
+        document.getElementById('land-modal').classList.remove('flex');
+    }
 
-                if (!error) {
-                    alert(`✅ +${rewardCurrency} Currency!`);
-                    closeModal('land-modal');
-                    fetchPlayerProfile();
-                } else {
-                    console.error('Gagal update saldo:', error);
-                }
-            }, 5000);
-        }
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('london-clock').innerText = 
+            now.toLocaleString('en-GB', { timeZone: 'Europe/London', hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' GMT';
+    }
 
-        // ==========================================
-        // 7. HELPERS
-        // ==========================================
-        async function connectWallet() {
-            if (window.solana && window.solana.isPhantom) {
-                try {
-                    const resp = await window.solana.connect();
-                    const publicKey = resp.publicKey.toString();
-                    await sb.from('profiles').update({ wallet_address: publicKey }).eq('id', currentUser.id);
-                    alert('✅ Phantom Wallet terhubung!');
-                    fetchPlayerProfile();
-                } catch (err) { console.error(err); }
-            } else {
-                alert('⚠️ Instal Phantom Wallet dulu!');
-                window.open('https://phantom.app/', '_blank');
-            }
-        }
-
-        function showSection(section) {
-            if (section === 'profile') {
-                if (currentUserData.currency_balance >= 75000 && !currentUserData.wallet_address) {
-                    document.getElementById('withdraw-modal').classList.remove('hidden');
-                    document.getElementById('withdraw-modal').classList.add('flex');
-                } else {
-                    alert('Profile & Withdraw dalam pengembangan.');
-                }
-            } else if (section === 'event') {
-                window.location.href = 'geo_challenge.html';
-            }
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.getElementById(modalId).classList.remove('flex');
-        }
-
-        function updateLondonClock() {
-            const now = new Date();
-            document.getElementById('london-clock').innerText = now.toLocaleString("en-GB", { 
-                timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false 
-            }) + ' GMT';
-        }
-
-        document.addEventListener('DOMContentLoaded', initDashboard);
-    </script>
+    document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
