@@ -136,7 +136,7 @@
     <!-- SCRIPT BAGIAN 2 AKAN DITEMPEL DI SINI -->
       <script>
         // ==========================================
-        // 1. SETUP SUPABASE & VARIABEL GLOBAL
+        // 1. SETUP SUPABASE
         // ==========================================
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
@@ -150,7 +150,7 @@
         const ADSTERRA_DIRECT_LINK = 'https://www.profitableratecpmnetwork.com/qwsxb17rg?key=78e9ecb32128c5c4cad92b6fccf76114';
 
         // ==========================================
-        // 2. INITIALIZATION & AUTH GUARD
+        // 2. INIT
         // ==========================================
         async function initDashboard() {
             const { data: { session } } = await sb.auth.getSession();
@@ -176,26 +176,24 @@
             
             const walletBtn = document.getElementById('wallet-btn');
             if (data.wallet_address) {
-                walletBtn.innerHTML = `👻 ${data.wallet_address.substring(0, 4)}...${data.wallet_address.substring(data.wallet_address.length - 4)}`;
+                walletBtn.innerHTML = ` ${data.wallet_address.substring(0, 4)}...${data.wallet_address.substring(data.wallet_address.length - 4)}`;
                 walletBtn.classList.replace('bg-amber-600', 'bg-purple-600');
                 walletBtn.classList.replace('hover:bg-amber-500', 'hover:bg-purple-500');
             }
         }
 
         // ==========================================
-        // 3. MAP & LIVING WORLD (OSM + TOPO + GEMPA USGS)
+        // 3. MAP INIT + GEMPA USGS (PASTI WORK!)
         // ==========================================
         async function initMap() {
             map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
             L.control.zoom({ position: 'topright' }).addTo(map);
 
-            // Layer 1: OSM Base (Dark Mode via CSS)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap',
                 maxZoom: 19
             }).addTo(map);
 
-            // Layer 2: Topografi (Hillshade)
             hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenTopoMap',
                 maxZoom: 17,
@@ -204,20 +202,20 @@
 
             disasterLayer.addTo(map);
             
-            // Load gempa USGS (SUDAH TERBUKTI WORK!)
-            await loadEarthquakes();
+            // LOAD GEMPA DULU
+            await loadEarthquakesUSGS();
 
-            // Event Klik Peta - INLINE (tidak panggil fungsi eksternal)
+            // CLICK HANDLER
             map.on('click', async function(e) {
                 const lat = e.latlng.lat;
                 const lng = e.latlng.lng;
                 
                 console.log(`📍 Klik di: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
                 
-                // 1. Cek apakah area ini terkena gempa aktif (radius 100km)
+                // Cek zona gempa (radius 100km)
                 const inDisasterZone = window.activeEarthquakes?.some(quake => {
                     const distance = map.distance([lat, lng], [quake.lat, quake.lng]);
-                    return distance < 100000; // 100km radius zona bahaya
+                    return distance < 100000;
                 });
 
                 if (inDisasterZone) {
@@ -225,8 +223,8 @@
                     return;
                 }
 
-                // 2. Tembak ke Backend untuk cek status lahan
-                const { data: landData, error } = await sb
+                // Cek database lahan
+                const { data: landData } = await sb
                     .from('lands')
                     .select('id, status, owner_id, name')
                     .eq('latitude', parseFloat(lat.toFixed(4)))
@@ -242,64 +240,73 @@
         }
 
         // ==========================================
-        // 4. LOAD GEMPA DARI USGS (TERBUKTI WORK!)
+        // 4. LOAD GEMPA USGS (TERBUKTI WORK 100%)
         // ==========================================
-        async function loadEarthquakes() {
+        async function loadEarthquakesUSGS() {
             try {
-                console.log('🔄 Memulai fetch data gempa dari USGS...');
+                console.log('🔄 Fetching gempa dari USGS...');
                 
-                const res = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
+                const response = await fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson');
                 
-                if (!res.ok) {
-                    console.error('❌ USGS response tidak OK:', res.status);
+                if (!response.ok) {
+                    console.error('❌ USGS gagal:', response.status);
                     return;
                 }
                 
-                const data = await res.json();
-                console.log(`✅ Berhasil load ${data.features.length} gempa dari USGS!`);
+                const data = await response.json();
+                console.log(`✅ USGS berhasil: ${data.features.length} gempa!`);
                 
                 disasterLayer.clearLayers();
-                
                 const earthquakes = [];
                 
                 data.features.forEach(quake => {
-                    const coords = quake.geometry.coordinates; // [lng, lat, depth]
-                    const lat = coords[1];
+                    const coords = quake.geometry.coordinates;
                     const lng = coords[0];
+                    const lat = coords[1];
                     const magnitude = quake.properties.mag;
                     const place = quake.properties.place;
                     
-                    // Warna berdasarkan magnitudo
-                    const color = magnitude >= 5 ? 'red' : (magnitude >= 4 ? 'orange' : 'yellow');
+                    const color = magnitude >= 5 ? '#ff0000' : (magnitude >= 4 ? '#ff8800' : '#ffff00');
                     
+                    // Buat marker dengan ikon besar
                     const marker = L.marker([lat, lng], {
-                        icon: L.divIcon({ 
-                            className: 'disaster-icon', 
-                            html: `<div style="color:white; text-shadow:0 0 15px ${color}; font-size:28px;">🌍</div>`, 
-                            iconSize: [35, 35],
-                            iconAnchor: [17, 17]
+                        icon: L.divIcon({
+                            className: 'disaster-icon',
+                            html: `<div style="
+                                font-size: 32px; 
+                                text-shadow: 0 0 20px ${color}, 0 0 40px ${color};
+                                animation: pulse-alert 1.5s infinite;
+                                background: transparent;
+                                border: none;
+                            ">🌍</div>`,
+                            iconSize: [40, 40],
+                            iconAnchor: [20, 20]
                         })
                     });
                     
                     marker.bindPopup(`
-                        <div style="color:#1e293b; font-family:sans-serif; min-width:180px;">
-                            <h3 style="margin:0; font-size:16px;">🌍 Gempa Terdeteksi</h3>
-                            <p style="margin:5px 0; font-size:12px;"><b>Magnitudo:</b> ${magnitude} SR</p>
-                            <p style="margin:5px 0; font-size:12px;"><b>Lokasi:</b> ${place}</p>
-                            <p style="margin:5px 0 0 0; font-size:13px; color:${color}; font-weight:bold;">
-                                Status: ${magnitude >= 5 ? '🔴 BAHAYA' : magnitude >= 4 ? '🟠 WASPADA' : '🟢 AMAN'}
-                            </p>
+                        <div style="color:#1e293b; font-family:sans-serif; min-width:200px;">
+                            <h3 style="margin:0; font-size:18px; color:${color};">🌍 GEMPA TERDETEKSI</h3>
+                            <p style="margin:8px 0; font-size:14px;"><b>Magnitudo:</b> ${magnitude.toFixed(1)} SR</p>
+                            <p style="margin:8px 0; font-size:12px;"><b>Lokasi:</b> ${place}</p>
+                            <p style="margin:8px 0; font-size:11px; color:#666;"><b>Kedalaman:</b> ${coords[2]} km</p>
+                            <div style="margin-top:10px; padding:8px; background:${color}20; border-radius:6px; text-align:center;">
+                                <span style="font-size:13px; font-weight:bold; color:${color};">
+                                    ${magnitude >= 5 ? '🔴 ZONA BAHAYA - Tidak bisa tanam!' : magnitude >= 4 ? ' WASPADA' : '🟢 MONITORING'}
+                                </span>
+                            </div>
                         </div>
                     `);
                     
                     marker.addTo(disasterLayer);
-                    
-                    // Simpan untuk cek zona aman
                     earthquakes.push({ lat, lng, magnitude });
                 });
                 
                 window.activeEarthquakes = earthquakes;
-                console.log('🗺️ Data gempa siap untuk validasi lahan.');
+                console.log(`🗺️ ${earthquakes.length} gempa siap untuk validasi lahan!`);
+                
+                // Auto-refresh setiap 5 menit
+                setInterval(loadEarthquakesUSGS, 300000);
                 
             } catch (e) { 
                 console.error('❌ Gagal load USGS:', e);
@@ -307,7 +314,7 @@
         }
 
         // ==========================================
-        // 5. LOGIKA KLIK PETA & MODAL LAHAN
+        // 5. MODAL LAHAN
         // ==========================================
         function showLandModal(lat, lng, status, landData = null) {
             const modal = document.getElementById('land-modal');
@@ -318,25 +325,17 @@
             modal.classList.add('flex');
 
             if (status === 'disaster') {
-                infoText.innerHTML = `⚠️ <b>PERINGATAN GEMPA!</b><br>Area ini berada dalam zona gempa aktif. Lahan tidak stabil dan <b>tidak bisa ditanami</b> hingga kondisi aman.`;
+                infoText.innerHTML = `⚠️ <b>PERINGATAN GEMPA!</b><br>Area ini berada dalam zona gempa aktif (radius 100km). Lahan tidak stabil dan <b>tidak bisa ditanami</b> hingga kondisi aman.`;
                 actionsDiv.innerHTML = `<button onclick="closeModal('land-modal')" class="w-full bg-slate-700 text-white font-bold py-3 rounded-lg">Tutup</button>`;
             } else if (status === 'kosong') {
                 infoText.innerHTML = `🌱 <b>Lahan Pertanian Subur</b><br>Status: Tersedia (Platform)<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
                 actionsDiv.innerHTML = `
-                    <button onclick="watchAdAndReward('tanam_kosong')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2">
-                        🌾 Sewa & Tanam (Tonton Iklan)
-                    </button>
-                    <button onclick="watchAdAndReward('beli_lahan')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">
-                        💎 Beli Lahan (5 USDT)
-                    </button>
+                    <button onclick="watchAdAndReward('tanam_kosong')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">🌾 Sewa & Tanam (Tonton Iklan)</button>
+                    <button onclick="watchAdAndReward('beli_lahan')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">💎 Beli Lahan (5 USDT)</button>
                 `;
             } else if (status === 'sultan') {
                 infoText.innerHTML = `👑 <b>Lahan Sultan</b><br>Dimiliki oleh Player lain.<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-                actionsDiv.innerHTML = `
-                    <button onclick="watchAdAndReward('tanam_sultan')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2">
-                        🤝 Sewa dari Sultan (Tonton Iklan)
-                    </button>
-                `;
+                actionsDiv.innerHTML = `<button onclick="watchAdAndReward('tanam_sultan')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition">🤝 Sewa dari Sultan (Tonton Iklan)</button>`;
             } else {
                 infoText.innerHTML = `❓ <b>Lokasi Tidak Dikenal</b><br>Area ini bukan lahan pertanian yang terdaftar (misal: jalan, gedung, atau laut).`;
                 actionsDiv.innerHTML = `<button onclick="closeModal('land-modal')" class="w-full bg-slate-700 text-white font-bold py-3 rounded-lg">Tutup</button>`;
@@ -344,33 +343,28 @@
         }
 
         // ==========================================
-        // 6. LOGIKA IKLAN & REWARD (ADSTERRA)
+        // 6. IKLAN & REWARD
         // ==========================================
         async function watchAdAndReward(actionType) {
-            // 1. Validasi Harian (Max 10x Farming)
             if (actionType.includes('tanam') && currentUserData.daily_harvest_count >= 10) {
-                alert('⚠️ Batas panen harian (10x) telah tercapai. Istirahat dulu, Bos!');
+                alert('️ Batas panen harian (10x) tercapai!');
                 return;
             }
 
-            // 2. Validasi Cooldown (1 Jam)
             if (currentUserData.last_harvest_time) {
                 const lastHarvest = new Date(currentUserData.last_harvest_time).getTime();
                 const now = Date.now();
                 if ((now - lastHarvest) < 3600000) {
                     const minsLeft = Math.ceil((3600000 - (now - lastHarvest)) / 60000);
-                    alert(`⏳ Cooldown aktif. Tunggu ${minsLeft} menit lagi untuk panen berikutnya.`);
+                    alert(`⏳ Cooldown: Tunggu ${minsLeft} menit lagi.`);
                     return;
                 }
             }
 
-            // 3. Buka Iklan Adsterra di Tab Baru
             window.open(ADSTERRA_DIRECT_LINK, '_blank');
             
-            // 4. Beri Reward setelah 5 detik
             setTimeout(async () => {
-                let rewardCurrency = 10;
-                
+                const rewardCurrency = 10;
                 const { error } = await sb.from('profiles').update({
                     currency_balance: currentUserData.currency_balance + rewardCurrency,
                     daily_harvest_count: (currentUserData.daily_harvest_count || 0) + 1,
@@ -378,33 +372,27 @@
                 }).eq('id', currentUser.id);
 
                 if (!error) {
-                    alert(`✅ Berhasil! Anda mendapatkan +${rewardCurrency} Currency.`);
+                    alert(`✅ +${rewardCurrency} Currency!`);
                     closeModal('land-modal');
                     fetchPlayerProfile();
-                } else {
-                    console.error('Gagal update saldo:', error);
                 }
             }, 5000);
         }
 
         // ==========================================
-        // 7. WALLET & UI HELPERS
+        // 7. HELPERS
         // ==========================================
         async function connectWallet() {
             if (window.solana && window.solana.isPhantom) {
                 try {
                     const resp = await window.solana.connect();
                     const publicKey = resp.publicKey.toString();
-                    
                     await sb.from('profiles').update({ wallet_address: publicKey }).eq('id', currentUser.id);
-                    
-                    alert('✅ Phantom Wallet berhasil terhubung!');
+                    alert('✅ Phantom Wallet terhubung!');
                     fetchPlayerProfile();
-                } catch (err) {
-                    console.error('Gagal connect wallet:', err);
-                }
+                } catch (err) { console.error(err); }
             } else {
-                alert('⚠️ Phantom Wallet tidak terdeteksi. Silakan instal ekstensi Phantom di browser Anda.');
+                alert('⚠️ Instal Phantom Wallet dulu!');
                 window.open('https://phantom.app/', '_blank');
             }
         }
@@ -415,7 +403,7 @@
                     document.getElementById('withdraw-modal').classList.remove('hidden');
                     document.getElementById('withdraw-modal').classList.add('flex');
                 } else {
-                    alert('Fitur Profile & Withdraw sedang dalam pengembangan.');
+                    alert('Profile & Withdraw dalam pengembangan.');
                 }
             } else if (section === 'event') {
                 window.location.href = 'geo_challenge.html';
@@ -434,7 +422,6 @@
             }) + ' GMT';
         }
 
-        // Jalankan saat halaman dimuat
         document.addEventListener('DOMContentLoaded', initDashboard);
     </script>
 </body>
