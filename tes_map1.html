@@ -214,62 +214,62 @@
         }
 
         async function loadGDACSDisasters() {
-            try {
-                const proxyUrl = `https://corsproxy.io/?${encodeURIComponent('https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7')}`;
-                const res = await fetch(proxyUrl);
-                const data = await res.json();
-                disasterLayer.clearLayers();
-                
-                const icons = { 'EQ': '🌍', 'TC': '🌀', 'FL': '🌊', 'VO': '🌋', 'WF': '🔥', 'DR': '🏜️' };
-                
-                data.forEach(ev => {
-                    const color = ev.severity === 3 ? 'red' : (ev.severity === 2 ? 'orange' : 'green');
-                    L.marker([ev.latitude, ev.longitude], {
-                        icon: L.divIcon({ 
-                            className: 'disaster-icon', 
-                            html: `<div style="color:white; text-shadow:0 0 15px ${color};">${icons[ev.eventtype] || '⚠️'}</div>`, 
-                            iconSize: [30, 30] 
-                        })
-                    }).bindPopup(`<b>${ev.eventtype}</b><br>${ev.name}<br><span style="color:${color}">Severity: ${ev.severity}</span>`).addTo(disasterLayer);
-                });
-                
-                // Simpan data gempa global untuk cek zona aman/tidak saat klik
-                window.activeDisasters = data;
-            } catch (e) { console.error('Gagal load bencana:', e); }
+    try {
+        // GDACS sekarang support CORS langsung, tidak perlu proxy
+        const gdacsUrl = 'https://www.gdacs.org/gdacsapi/api/events/getevents?eventtype=EQ,FL,DR,VO,TC,WF&period=7';
+        
+        console.log('🔄 Memulai fetch data bencana dari GDACS...');
+        const res = await fetch(gdacsUrl);
+        
+        if (!res.ok) {
+            console.error('❌ GDACS response tidak OK:', res.status);
+            return;
         }
-
-        // ==========================================
-        // 4. LOGIKA KLIK PETA & CEK LAHAN (BACKEND READY)
-        // ==========================================
-        async function handleMapClick(lat, lng) {
-            // 1. Cek apakah area ini terkena bencana aktif (Radius ~50km dari pusat gempa sebagai contoh)
-            const inDisasterZone = window.activeDisasters?.some(ev => {
-                const distance = map.distance([lat, lng], [ev.latitude, ev.longitude]);
-                return ev.eventtype === 'EQ' && distance < 50000; // 50km radius aman
+        
+        const data = await res.json();
+        console.log(`✅ Berhasil load ${data.length} data bencana dari GDACS!`);
+        
+        disasterLayer.clearLayers();
+        
+        const icons = { 'EQ': '🌍', 'TC': '🌀', 'FL': '🌊', 'VO': '🌋', 'WF': '🔥', 'DR': '🏜️' };
+        
+        data.forEach(ev => {
+            const color = ev.severity === 3 ? 'red' : (ev.severity === 2 ? 'orange' : 'green');
+            const iconEmoji = icons[ev.eventtype] || '⚠️';
+            
+            const marker = L.marker([ev.latitude, ev.longitude], {
+                icon: L.divIcon({ 
+                    className: 'disaster-icon', 
+                    html: `<div style="color:white; text-shadow:0 0 15px ${color}; font-size:28px;">${iconEmoji}</div>`, 
+                    iconSize: [35, 35],
+                    iconAnchor: [17, 17]
+                })
             });
-
-            if (inDisasterZone) {
-                showLandModal(lat, lng, 'disaster');
-                return;
-            }
-
-            // 2. Tembak ke Backend untuk cek status Hexagon 100x100m di koordinat ini
-            // (Nanti di backend: SELECT * FROM lands WHERE ST_DWithin(geom, ST_MakePoint(lng, lat), 0.01))
-            const { data: landData, error } = await sb
-                .from('lands')
-                .select('id, status, owner_id, name')
-                .eq('latitude', parseFloat(lat.toFixed(4))) // Simplifikasi matching untuk tes
-                .eq('longitude', parseFloat(lng.toFixed(4)))
-                .maybeSingle();
-
-            if (landData) {
-                showLandModal(lat, lng, landData.status, landData);
-            } else {
-                // Fallback jika data lahan belum di-seed ke backend
-                showLandModal(lat, lng, 'unknown');
-            }
-        }
-
+            
+            marker.bindPopup(`
+                <div style="color:#1e293b; font-family:sans-serif; min-width:180px;">
+                    <h3 style="margin:0; font-size:16px;">${iconEmoji} ${ev.eventtype} Alert</h3>
+                    <p style="margin:5px 0; font-size:12px;"><b>Nama:</b> ${ev.name || 'Unknown'}</p>
+                    <p style="margin:5px 0; font-size:12px;"><b>Lokasi:</b> ${ev.country || 'Unknown'}</p>
+                    <p style="margin:5px 0; font-size:12px;"><b>Tanggal:</b> ${ev.date || '-'}</p>
+                    <p style="margin:5px 0 0 0; font-size:13px; color:${color}; font-weight:bold;">
+                        Severity: ${ev.severity === 3 ? '🔴 HIGH (RED)' : ev.severity === 2 ? '🟠 MEDIUM (ORANGE)' : '🟢 LOW (GREEN)'}
+                    </p>
+                </div>
+            `);
+            
+            marker.addTo(disasterLayer);
+        });
+        
+        // Simpan untuk cek zona aman saat klik peta
+        window.activeDisasters = data;
+        console.log('🗺️ Data bencana siap digunakan untuk validasi lahan.');
+        
+    } catch (e) { 
+        console.error('❌ Gagal load GDACS:', e);
+        console.log('💡 Coba buka console browser (F12) untuk lihat detail error.');
+    }
+}
         function showLandModal(lat, lng, status, landData = null) {
             const modal = document.getElementById('land-modal');
             const infoText = document.getElementById('land-info-text');
