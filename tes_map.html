@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -200,77 +201,62 @@
 
             // --- TEMPEL DARI SINI KE PETA LU YANG UDAH ADA ---
 
-            // lahan.js - Otak OSM anti-504 buat gloryverse.id/tes_map
-// Taruh file ini di folder tes_map/ sebelah index.html
-// Cara pakai: <script type="module" src="lahan.js"></script>
+map.on('click', async function(e) {
+  let lat = e.latlng.lat;
+  let lon = e.latlng.lng;
 
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+  L.popup().setLatLng(e.latlng).setContent("Cek lahan... ⏳").openOn(map);
 
-// GANTI INI BRAY
-const SUPABASE_URL = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+  let query = `
+    [out:json];
+    (
+      nwr(around:100,${lat},${lon})["landuse"];
+      nwr(around:100,${lat},${lon})["natural"];
+      nwr(around:100,${lat},${lon})["amenity"];
+      nwr(around:100,${lat},${lon})["leisure"];
+    );
+    out center tags 1;
+  `;
 
-// Cache di HP player biar gak nembak terus
-const getKey = (lat, lon) => `lahan_${lat.toFixed(3)}_${lon.toFixed(3)}`;
+  let url = "https://overpass.kumi.systems/api/interpreter?data=" + encodeURIComponent(query);
 
-async function cekLahan(lat, lon) {
-  const key = getKey(lat, lon);
-  const latKey = lat.toFixed(3);
-  const lonKey = lon.toFixed(3);
-
-  // 1. Cek localStorage HP dulu
-  let cached = localStorage.getItem(key);
-  if (cached) return cached + " (HP cache)";
-
-  // 2. Cek Supabase
   try {
-    let { data } = await supabase.from('lahan_cache').select('jenis_lahan').eq('lat_key', latKey).eq('lon_key', lonKey).limit(1).single();
-    if (data) {
-      localStorage.setItem(key, data.jenis_lahan);
-      return data.jenis_lahan + " (Supabase)";
+    let res = await fetch(url);
+    let data = await res.json();
+
+    let html = "";
+
+    if (data.elements.length > 0) {
+      let tags = data.elements[0].tags;
+      let landuse = tags.landuse || tags.natural || tags.amenity || "unknown";
+      let crop = tags.crop || tags.resource || "";
+
+      if (landuse == "farmland" || landuse == "paddy" || landuse == "paddies") {
+        html = `🌾 <b>LAHAN PERTANIAN</b><br>Potensi: ${crop || 'Padi / Palawija'}<br><button onclick="beliLahan(${lat},${lon},'farm')">Beli 500 coin</button> <button onclick="sewaLahan(${lat},${lon})">Sewa 50/bulan</button>`;
+      } else if (landuse == "orchard" || landuse == "plantation") {
+        html = `🌴 <b>PERKEBUNAN</b><br>Jenis: ${crop || 'Sawit / Karet'}<br><button onclick="beliLahan(${lat},${lon},'orchard')">Beli 800 coin</button>`;
+      } else if (landuse == "quarry" || tags.man_made == "mineshaft") {
+        html = `⛏️ <b>LAHAN TAMBANG</b><br>Resource: ${crop || 'Batu/Bara'}<br><button onclick="beliLahan(${lat},${lon},'mine')">Beli 2000 coin</button>`;
+      } else if (landuse == "residential") {
+        html = `🏘️ <b>PERKAMPUNGAN</b><br>Bisa bangun Toko/Rumah`;
+      } else {
+        html = `📍 <b>${landuse.toUpperCase()}</b><br>Tag: ${crop}<br><button onclick="beliLahan(${lat},${lon},'kosong')">Klaim 300 coin</button>`;
+      }
+    } else {
+      // INI ANTI ZONK - KALAU OSM KOSONG, TETAP JADI LAHAN KOSONG YANG BISA DIKLAIM
+      html = `🌿 <b>LAHAN KOSONG</b><br>${lat.toFixed(5)}, ${lon.toFixed(5)}<br>Belum ada pemilik<br><button onclick="beliLahan(${lat},${lon},'kosong')" style="background:green;color:white;padding:5px">Klaim 300 coin</button>`;
     }
-  } catch(e) {}
 
-  // 3. Kalau gak ada, baru ke OSM dengan failover
-  const query = `[out:json][timeout:10];way["landuse"](around:50,${lat},${lon});out tags center 1;`;
-  const servers = ["https://overpass-api.de/api/interpreter", "https://overpass.kumi.systems/api/interpreter"];
-  let hasil = "permukiman";
+    L.popup().setLatLng(e.latlng).setContent(html).openOn(map);
 
-  for (let server of servers) {
-    try {
-      let res = await fetch(server, { method: "POST", body: "data=" + encodeURIComponent(query) });
-      if (!res.ok) continue;
-      let json = await res.json();
-      hasil = json.elements[0]?.tags?.landuse || json.elements[0]?.tags?.natural || "permukiman";
-      break;
-    } catch(e) { continue; }
+  } catch (err) {
+    L.popup().setLatLng(e.latlng).setContent("Gagal cek OSM, coba lagi Bray.").openOn(map);
   }
+});
 
-  // 4. Simpen ke dua-duanya
-  localStorage.setItem(key, hasil);
-  try {
-    await supabase.from('lahan_cache').insert({ lat, lon, lat_key: latKey, lon_key: lonKey, jenis_lahan: hasil });
-  } catch(e) {}
-
-  return hasil;
-}
-
-// Pasang ke map global (jangan edit file lain)
-window.cekLahanOSM = cekLahan;
-console.log("lahan.js siap Bray!");
-
-// Auto-attach kalau map udah ada
-setTimeout(() => {
-  if (window.map) {
-    window.map.on('click', async (e) => {
-      const popup = L.popup().setLatLng(e.latlng).setContent("Ngecek lahan...").openOn(window.map);
-      let jenis = await cekLahan(e.latlng.lat, e.latlng.lng);
-      popup.setContent(`Jenis lahan: <b>${jenis}</b>`);
-    });
-  }
-}, 1000);
-
+// Fungsi dummy biar gak error - nanti lu ganti sama fungsi beli lu
+function beliLahan(lat,lon,tipe){ alert("Beli lahan " + tipe + " di " + lat + "," + lon); }
+function sewaLahan(lat,lon){ alert("Sewa lahan di " + lat + "," + lon); }
             
             // Topografi
             hillshadeLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -399,7 +385,5 @@ setTimeout(() => {
 
         initDashboard();
     </script>
-                <script type="module" src="./lahan.js"></script>
-</body>
 </body>
 </html>
