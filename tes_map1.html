@@ -147,7 +147,7 @@
         let map = null;
         let disasterLayer = L.layerGroup();
         let hillshadeLayer = null;
-        const ADSTERRA_DIRECT_LINK = 'https://www.profitableratecpmnetwork.com/qwsxb17rg?key=78e9ecb32128c5c4cad92b6fccf76114';
+        const MONEYTAG_LINK = 'https://uplcm.com/4/11989761';
 
         // ==========================================
         // 2. INIT
@@ -176,14 +176,14 @@
             
             const walletBtn = document.getElementById('wallet-btn');
             if (data.wallet_address) {
-                walletBtn.innerHTML = ` ${data.wallet_address.substring(0, 4)}...${data.wallet_address.substring(data.wallet_address.length - 4)}`;
+                walletBtn.innerHTML = `👻 ${data.wallet_address.substring(0, 4)}...${data.wallet_address.substring(data.wallet_address.length - 4)}`;
                 walletBtn.classList.replace('bg-amber-600', 'bg-purple-600');
                 walletBtn.classList.replace('hover:bg-amber-500', 'hover:bg-purple-500');
             }
         }
 
         // ==========================================
-        // 3. MAP INIT + GEMPA USGS (PASTI WORK!)
+        // 3. MAP INIT
         // ==========================================
         async function initMap() {
             map = L.map('map', { zoomControl: false }).setView([-2.5489, 118.0149], 5);
@@ -202,17 +202,19 @@
 
             disasterLayer.addTo(map);
             
-            // LOAD GEMPA DULU
+            // Load gempa dulu
             await loadEarthquakesUSGS();
 
-            // CLICK HANDLER
+            // ==========================================
+            // CLICK HANDLER PETA (DENGAN BOUNDING BOX)
+            // ==========================================
             map.on('click', async function(e) {
                 const lat = e.latlng.lat;
                 const lng = e.latlng.lng;
                 
-                console.log(`📍 Klik di: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
+                console.log(`📍 Klik di: ${lat.toFixed(6)}, ${lng.toFixed(6)}`);
                 
-                // Cek zona gempa (radius 100km)
+                // 1. Cek zona gempa (radius 100km)
                 const inDisasterZone = window.activeEarthquakes?.some(quake => {
                     const distance = map.distance([lat, lng], [quake.lat, quake.lng]);
                     return distance < 100000;
@@ -223,13 +225,20 @@
                     return;
                 }
 
-                // Cek database lahan
-                const { data: landData } = await sb
+                // 2. Cari lahan dalam radius ~50 meter (bounding box)
+                const latRange = 0.0005;
+                const lngRange = 0.0005;
+                
+                const { data: landData, error } = await sb
                     .from('lands')
-                    .select('id, status, owner_id, name')
-                    .eq('latitude', parseFloat(lat.toFixed(4)))
-                    .eq('longitude', parseFloat(lng.toFixed(4)))
+                    .select('id, status, owner_id, latitude, longitude')
+                    .gte('latitude', lat - latRange)
+                    .lte('latitude', lat + latRange)
+                    .gte('longitude', lng - lngRange)
+                    .lte('longitude', lng + lngRange)
                     .maybeSingle();
+
+                console.log('🔍 Hasil pencarian lahan:', landData, error);
 
                 if (landData) {
                     showLandModal(lat, lng, landData.status, landData);
@@ -240,7 +249,7 @@
         }
 
         // ==========================================
-        // 4. LOAD GEMPA USGS (TERBUKTI WORK 100%)
+        // 4. LOAD GEMPA USGS
         // ==========================================
         async function loadEarthquakesUSGS() {
             try {
@@ -268,17 +277,10 @@
                     
                     const color = magnitude >= 5 ? '#ff0000' : (magnitude >= 4 ? '#ff8800' : '#ffff00');
                     
-                    // Buat marker dengan ikon besar
                     const marker = L.marker([lat, lng], {
                         icon: L.divIcon({
                             className: 'disaster-icon',
-                            html: `<div style="
-                                font-size: 32px; 
-                                text-shadow: 0 0 20px ${color}, 0 0 40px ${color};
-                                animation: pulse-alert 1.5s infinite;
-                                background: transparent;
-                                border: none;
-                            ">🌍</div>`,
+                            html: `<div style="font-size: 32px; text-shadow: 0 0 20px ${color}; animation: pulse-alert 1.5s infinite; background: transparent; border: none;"></div>`,
                             iconSize: [40, 40],
                             iconAnchor: [20, 20]
                         })
@@ -290,11 +292,6 @@
                             <p style="margin:8px 0; font-size:14px;"><b>Magnitudo:</b> ${magnitude.toFixed(1)} SR</p>
                             <p style="margin:8px 0; font-size:12px;"><b>Lokasi:</b> ${place}</p>
                             <p style="margin:8px 0; font-size:11px; color:#666;"><b>Kedalaman:</b> ${coords[2]} km</p>
-                            <div style="margin-top:10px; padding:8px; background:${color}20; border-radius:6px; text-align:center;">
-                                <span style="font-size:13px; font-weight:bold; color:${color};">
-                                    ${magnitude >= 5 ? '🔴 ZONA BAHAYA - Tidak bisa tanam!' : magnitude >= 4 ? ' WASPADA' : '🟢 MONITORING'}
-                                </span>
-                            </div>
                         </div>
                     `);
                     
@@ -303,13 +300,12 @@
                 });
                 
                 window.activeEarthquakes = earthquakes;
-                console.log(`🗺️ ${earthquakes.length} gempa siap untuk validasi lahan!`);
+                console.log(`️ ${earthquakes.length} gempa siap!`);
                 
-                // Auto-refresh setiap 5 menit
                 setInterval(loadEarthquakesUSGS, 300000);
                 
             } catch (e) { 
-                console.error('❌ Gagal load USGS:', e);
+                console.error(' Gagal load USGS:', e);
             }
         }
 
@@ -325,16 +321,16 @@
             modal.classList.add('flex');
 
             if (status === 'disaster') {
-                infoText.innerHTML = `⚠️ <b>PERINGATAN GEMPA!</b><br>Area ini berada dalam zona gempa aktif (radius 100km). Lahan tidak stabil dan <b>tidak bisa ditanami</b> hingga kondisi aman.`;
+                infoText.innerHTML = `⚠️ <b>PERINGATAN GEMPA!</b><br>Area ini berada dalam zona gempa aktif. Lahan tidak stabil dan <b>tidak bisa ditanami</b> hingga kondisi aman.`;
                 actionsDiv.innerHTML = `<button onclick="closeModal('land-modal')" class="w-full bg-slate-700 text-white font-bold py-3 rounded-lg">Tutup</button>`;
             } else if (status === 'kosong') {
                 infoText.innerHTML = `🌱 <b>Lahan Pertanian Subur</b><br>Status: Tersedia (Platform)<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
                 actionsDiv.innerHTML = `
                     <button onclick="watchAdAndReward('tanam_kosong')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition">🌾 Sewa & Tanam (Tonton Iklan)</button>
-                    <button onclick="watchAdAndReward('beli_lahan')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">💎 Beli Lahan (5 USDT)</button>
+                    <button onclick="watchAdAndReward('beli_lahan')" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition"> Beli Lahan (5 USDT)</button>
                 `;
             } else if (status === 'sultan') {
-                infoText.innerHTML = `👑 <b>Lahan Sultan</b><br>Dimiliki oleh Player lain.<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+                infoText.innerHTML = ` <b>Lahan Sultan</b><br>Dimiliki oleh Player lain.<br>Koordinat: ${lat.toFixed(4)}, ${lng.toFixed(4)}`;
                 actionsDiv.innerHTML = `<button onclick="watchAdAndReward('tanam_sultan')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-lg transition">🤝 Sewa dari Sultan (Tonton Iklan)</button>`;
             } else {
                 infoText.innerHTML = `❓ <b>Lokasi Tidak Dikenal</b><br>Area ini bukan lahan pertanian yang terdaftar (misal: jalan, gedung, atau laut).`;
@@ -343,11 +339,11 @@
         }
 
         // ==========================================
-        // 6. IKLAN & REWARD
+        // 6. IKLAN MONEYTAG & REWARD
         // ==========================================
         async function watchAdAndReward(actionType) {
             if (actionType.includes('tanam') && currentUserData.daily_harvest_count >= 10) {
-                alert('️ Batas panen harian (10x) tercapai!');
+                alert('⚠️ Batas panen harian (10x) tercapai!');
                 return;
             }
 
@@ -361,8 +357,10 @@
                 }
             }
 
-            window.open(ADSTERRA_DIRECT_LINK, '_blank');
+            // Buka Moneytag
+            window.open(MONEYTAG_LINK, '_blank');
             
+            // Beri reward setelah 5 detik
             setTimeout(async () => {
                 const rewardCurrency = 10;
                 const { error } = await sb.from('profiles').update({
@@ -375,6 +373,8 @@
                     alert(`✅ +${rewardCurrency} Currency!`);
                     closeModal('land-modal');
                     fetchPlayerProfile();
+                } else {
+                    console.error('Gagal update saldo:', error);
                 }
             }, 5000);
         }
