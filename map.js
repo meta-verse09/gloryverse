@@ -15,7 +15,7 @@ map.on('click', async function(e) {
   const lng = e.latlng.lng;
 
   // KLIK -> JADI HEX ID (Ini 11 juta lahan nya bray, tanpa bikin 11 juta baris!)
-  const hexId = h3.latLngToCell(lat, lng, 9); // Level 18 = sekitar 0.1 hektar / lahan
+  const hexId = h3.latLngToCell(lat, lng, 9); // Level 15 = sekitar 0.1 hektar / lahan
 
   // Cek udah diklaim belum (sekarang pasti belum karena masih 0)
   if(claimedLands[hexId]) {
