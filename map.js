@@ -1,46 +1,43 @@
-// gloryverse.id - Peta Klik 11 Juta Lahan Jawa
-// Taruh file ini di folder repo GitHub lu, misal: /public/map.js
 
-// Pakai H3 dari 【entity-Uber¦canonical_name=Uber】 - 1 hex = 1 lahan
-import * as h3 from 'https://cdn.jsdelivr.net/npm/h3-js@4.1.0/+esm';
+// GLORY-HEX 100x100 METER - PUNYA LU SENDIRI, BUKAN UBER
+// 1 hex = 100m x 100m = 1 hektar real di Jawa
 
-const map = L.map('map').setView([-6.2, 106.8], 7); // Tengah Jawa
+const HEX_SIZE = 0.0005; // 100m di equator Jawa (-6 deg)
+const JAWA = { minLat: -8.2, minLng: 105 };
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+// Klik peta -> jadi ID Hex 100m
+function latLngToGloryHex(lat, lng) {
+  // Rumus sarang lebah sederhana
+  const x = (lng - JAWA.minLng) / (HEX_SIZE * 1.5);
+  const y = (lat - JAWA.minLat) / (HEX_SIZE * 1.732);
+  
+  const col = Math.round(x);
+  const row = Math.round(y - (col % 2) * 0.5);
+  
+  return `GLORY-HEX-${col}-${row}`; // Contoh: GLORY-HEX-1234-5678
+}
 
-let claimedLands = {}; // Nanti ini dari Cloudflare D1 lu, sekarang 0 dulu
-
-map.on('click', async function(e) {
-  const lat = e.latlng.lat;
-  const lng = e.latlng.lng;
-
-  // KLIK -> JADI HEX ID (Ini 11 juta lahan nya bray, tanpa bikin 11 juta baris!)
-  const hexId = h3.latLngToCell(lat, lng, 9); // Level 15 = sekitar 0.1 hektar / lahan
-
-  // Cek udah diklaim belum (sekarang pasti belum karena masih 0)
-  if(claimedLands[hexId]) {
-    alert(`Lahan ${hexId} udah punya ${claimedLands[hexId]}`);
-    return;
+// ID Hex -> jadi segi 6 di peta (100x100m)
+function gloryHexToPolygon(id) {
+  const [_, col, row] = id.split('-').slice(2).map(Number);
+  const centerLng = JAWA.minLng + col * HEX_SIZE * 1.5;
+  const centerLat = JAWA.minLat + (row + (col % 2) * 0.5) * HEX_SIZE * 1.732;
+  
+  const points = [];
+  for(let i=0; i<6; i++){
+    const angle = Math.PI / 3 * i;
+    points.push([
+      centerLat + HEX_SIZE * Math.sin(angle),
+      centerLng + HEX_SIZE * Math.cos(angle)
+    ]);
   }
+  return points; // 6 titik = 1 hex 100x100m
+}
 
-  // Kalau belum, tawarin klaim
-  const boundary = h3.cellToBoundary(hexId);
-  const polygon = L.polygon(boundary, {color: 'cyan'}).addTo(map);
-
-  const ok = confirm(`Mau klaim lahan ini?\nID: ${hexId}\nLokasi: ${lat.toFixed(4)}, ${lng.toFixed(4)}`);
-
-  if(ok) {
-    // SIMPAN 1 BARIS DOANG KE CLOUDFLARE WORKER gv-mi lu yang di foto tadi
-    // Ini nanti yang jadi 40/40/20 pas nonton iklan $0.01 Adscend
-    await fetch('https://gv-mi.your-worker.workers.dev/claim', {
-      method: 'POST',
-      body: JSON.stringify({ hexId, lat, lng, owner: 'player_jawa_01' })
-    });
-
-    claimedLands[hexId] = 'player_jawa_01';
-    polygon.setStyle({color: 'gold'});
-    alert('Lahan berhasil diklaim bray!');
-  } else {
-    map.removeLayer(polygon);
-  }
+// Pasang di map:
+map.on('click', e => {
+  const id = latLngToGloryHex(e.latlng.lat, e.latlng.lng);
+  const hexPoints = gloryHexToPolygon(id);
+  L.polygon(hexPoints, {color: 'cyan'}).addTo(map);
+  console.log("Klaim lahan 1 hektar:", id);
 });
