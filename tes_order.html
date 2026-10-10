@@ -1,0 +1,252 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse - Tes Order</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+  html,body{ height:100%; margin:0; background:#0b1630; color:#f3efe3; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  #map{ height:100%; }
+  button{ background:#1b2a4d; color:#f3efe3; border:1px solid #3a4b76; border-radius:8px; padding:7px 11px; font-size:13px; }
+  button.go{ background:#f2a516; color:#0b1630; border-color:#f2a516; font-weight:700; }
+  #hud{ position:fixed; z-index:1000; left:10px; right:10px; top:10px; background:rgba(11,22,48,.92); border:1px solid #f2a516; border-radius:10px; padding:8px 10px; font-size:13px; }
+  .row{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .sp{ flex:1; }
+  #gc{ color:#f2a516; font-size:16px; }
+  #status{ margin-top:6px; line-height:1.4; }
+  #sheet{ position:fixed; z-index:1001; left:0; right:0; bottom:0; max-height:62%; overflow:auto; background:#0f1d3d; border-top:2px solid #f2a516; border-radius:14px 14px 0 0; padding:10px 12px 18px; }
+  #sheet[hidden]{ display:none; }
+  .card{ background:#16264b; border:1px solid #2a3b66; border-radius:10px; padding:10px; margin:8px 0; font-size:13px; line-height:1.45; }
+  .card b{ color:#f2a516; }
+  .pos{ color:#7fd37f; } .neg{ color:#ff8a7a; }
+  .veh{ transition:transform .25s linear; filter:drop-shadow(0 3px 3px rgba(0,0,0,.5)); }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="hud">
+  <div class="row"><b id="gc">0 G</b><span id="here"></span><span class="sp"></span><label><input type="checkbox" id="fast"> Uji cepat</label></div>
+  <div class="row" style="margin-top:6px"><button id="bOrder" class="go">Order</button><button id="bResi">Resi</button></div>
+  <div id="status"></div>
+</div>
+<div id="sheet" hidden><div class="row"><b id="sTitle"></b><span class="sp"></span><button id="sClose">Tutup</button></div><div id="sBody"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+// ====== 1. DATA NYATA: kota dan koordinatnya. Jarak antar kota diambil dari data jalan OSM lewat OSRM (bukan angka karangan). ======
+const CITIES = [
+  {n:'Medan',p:[3.5952,98.6722]},{n:'Pekanbaru',p:[0.5071,101.4478]},{n:'Padang',p:[-0.9471,100.4172]},
+  {n:'Jambi',p:[-1.6101,103.6131]},{n:'Bengkulu',p:[-3.8004,102.2655]},{n:'Palembang',p:[-2.9761,104.7754]},
+  {n:'Bandar Lampung',p:[-5.3971,105.2668]},{n:'Jakarta',p:[-6.2088,106.8456]},{n:'Bandung',p:[-6.9175,107.6191]},
+  {n:'Cirebon',p:[-6.7320,108.5523]},{n:'Semarang',p:[-6.9667,110.4167]},{n:'Yogyakarta',p:[-7.7956,110.3695]},
+  {n:'Surabaya',p:[-7.2575,112.7521]}
+];
+
+// ====== 2. ATURAN GAME (angka ini aturan permainan, bukan data dunia nyata; ubah sesuai rasa game) ======
+const CFG = {
+  KMH_JAWA:60, KMH_LUAR:50,     // kecepatan rata-rata pickup (km/jam), luar Jawa dikurangi 10
+  KMPL:10,                      // konsumsi: km per liter
+  FUEL_G:7,                     // harga BBM: G-Coin per liter
+  MAINT_G:0.15,                 // perawatan: G-Coin per km
+  MEAL_G:8, MEAL_H:4,           // makan sopir: 8 G tiap 4 jam perjalanan
+  MARGIN:[1.3,1.6],             // bayaran = biaya muatan x margin ini
+  START_G:500, FAST:100         // modal awal; pengali waktu saat "Uji cepat"
+};
+const KEY = 'gv_order_v1';
+
+// ====== 3. STATE (tersimpan di browser) ======
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)); } catch(e){ return null; } }
+let ST = load() || { gc:CFG.START_G, here:null, job:null, ledger:[], taken:{slot:0, ids:[]} };
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch(e){} }
+const $ = id => document.getElementById(id);
+const fmtT = ms => { const s=Math.max(0,Math.ceil(ms/1000)), h=Math.floor(s/3600), m=Math.floor(s%3600/60); return h? h+'j '+m+'m' : m? m+'m '+(s%60)+'d' : s+'d'; };
+const fmtG = n => Math.round(n).toLocaleString('id-ID') + ' G';
+
+// ====== 4. PETA DAN KENDARAAN ======
+const map = L.map('map',{zoomControl:false}).setView([-3,106],6);
+L.control.zoom({position:'bottomright'}).addTo(map);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; OpenStreetMap'}).addTo(map);
+map.attributionControl.addAttribution('Rute &copy; OSRM');
+const icon = L.divIcon({ className:'', iconSize:[28,56], iconAnchor:[14,28],
+  html:'<div class="veh" style="width:28px;height:56px"><svg viewBox="0 0 28 56" width="28" height="56"><rect x="4" y="30" width="20" height="24" rx="2" fill="#7a7f86" stroke="#444"/><rect x="4" y="4" width="20" height="24" rx="4" fill="#c0392b" stroke="#6e1f17"/><rect x="7" y="8" width="14" height="6" fill="#9bd1f0"/></svg></div>' });
+const marker = L.marker([-3,106],{icon,interactive:false}).addTo(map);
+const vehEl = () => marker.getElement().querySelector('.veh');
+let rot = 0, idx = 0, layers = [], busy = false, M = null;
+
+// ====== 5. DATA JALAN: matriks jarak antar semua kota dalam SATU permintaan ke OSRM ======
+async function loadMatrix(){
+  try { const c = JSON.parse(localStorage.getItem('gv_matrix_v1')||'null'); if (c && c.n === CITIES.length){ M = c.d; return; } } catch(e){}
+  const co = CITIES.map(c => c.p[1]+','+c.p[0]).join(';');
+  const j = await (await fetch('https://router.project-osrm.org/table/v1/driving/'+co+'?annotations=distance')).json();
+  if (j.code !== 'Ok') throw new Error(j.code);
+  M = j.distances;
+  try { localStorage.setItem('gv_matrix_v1', JSON.stringify({n:CITIES.length, d:M})); } catch(e){}
+}
+async function roadRoute(a,b){
+  const j = await (await fetch('https://router.project-osrm.org/route/v1/driving/'+a[1]+','+a[0]+';'+b[1]+','+b[0]+'?overview=full&geometries=geojson')).json();
+  if (j.code !== 'Ok') throw new Error(j.code);
+  return j.routes[0].geometry.coordinates.map(c => [c[1],c[0]]);
+}
+
+// ====== 6. KECEPATAN (Jawa 60, luar Jawa 50) ======
+const inJawa = p => p[1]>=105.0 && p[1]<=114.7 && p[0]<=-5.7 && p[0]>=-8.9;   // kotak perkiraan pulau Jawa
+const kmh = p => inJawa(p) ? CFG.KMH_JAWA : CFG.KMH_LUAR;
+
+// ====== 7. PAPAN ORDER: dibuat dari kota dan jarak jalan nyata, sama untuk semua pemain dalam 10 menit yang sama ======
+const CARGO = ['Sembako','Material bangunan','Hasil pertanian','Paket ekspedisi','Suku cadang','Hasil laut'];
+const slotNow = () => Math.floor(Date.now()/600000);
+function rng(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const cpk = () => CFG.FUEL_G/CFG.KMPL + CFG.MAINT_G;
+
+function board(){
+  const slot = slotNow(), r = rng(slot*131 + ST.here*7 + 1), here = ST.here, out = [], seen = {};
+  const ok = (a,b) => a!==b && M[a] && M[a][b] > 0;
+  for (let t=0; t<300 && out.length<5; t++){
+    const P = out.length===0 ? here : Math.floor(r()*CITIES.length);   // order pertama selalu dari kota pemain (ramah pemula)
+    const D = Math.floor(r()*CITIES.length);
+    if (!ok(P,D) || seen[P+'-'+D]) continue;
+    const kmL = M[P][D]/1000; if (kmL<60 || kmL>800) continue;
+    let kmE = 0; if (P!==here){ if (!ok(here,P)) continue; kmE = M[here][P]/1000; if (kmE>600) continue; }
+    const margin = CFG.MARGIN[0] + r()*(CFG.MARGIN[1]-CFG.MARGIN[0]);
+    const cargo = CARGO[Math.floor(r()*CARGO.length)];
+    seen[P+'-'+D] = 1;
+    const pay = Math.round(kmL*cpk()*margin);
+    const spd = (kmh(CITIES[here].p)+kmh(CITIES[D].p))/2, hrs = (kmE+kmL)/spd;
+    const cost = Math.round((kmE+kmL)*cpk() + Math.floor(hrs/CFG.MEAL_H)*CFG.MEAL_G);
+    out.push({ id:slot+'-'+out.length, P, D, kmE, kmL, cargo, pay, cost, hrs });
+  }
+  return out;
+}
+
+function renderOrders(){
+  $('sTitle').textContent = 'Papan order (' + Math.ceil((600000 - Date.now()%600000)/60000) + ' menit lagi diperbarui)';
+  const taken = ST.taken.slot===slotNow() ? ST.taken.ids : [];
+  const list = board().filter(o => !taken.includes(o.id));
+  $('sBody').innerHTML = list.length ? list.map(o => {
+    const net = o.pay - o.cost;
+    return '<div class="card"><b>'+o.cargo+'</b><br>Jemput: '+CITIES[o.P].n+(o.kmE? ' ('+o.kmE.toFixed(0)+' km jalan kosong)':' (di kotamu)')+
+      '<br>Antar: '+CITIES[o.D].n+' ('+o.kmL.toFixed(0)+' km)<br>Perkiraan '+fmtT(o.hrs*3600000)+'. Bayaran <b>'+fmtG(o.pay)+'</b>, biaya '+fmtG(o.cost)+
+      '<br>Untung bersih <span class="'+(net>=0?'pos':'neg')+'">'+fmtG(net)+'</span> <button class="go" data-id="'+o.id+'" style="float:right">Ambil</button></div>';
+  }).join('') : '<div class="card">Semua order sudah diambil. Tunggu pembaruan berikutnya.</div>';
+  $('sBody').querySelectorAll('button[data-id]').forEach(b => b.onclick = () => accept(b.dataset.id));
+}
+
+function renderCities(){
+  $('sTitle').textContent = 'Pilih kota awal garasimu';
+  $('sBody').innerHTML = CITIES.map((c,i) => '<button data-i="'+i+'" style="margin:4px">'+c.n+'</button>').join('');
+  $('sBody').querySelectorAll('button').forEach(b => b.onclick = () => { ST.here = +b.dataset.i; save(); closeSheet(); refresh(); map.setView(CITIES[ST.here].p, 8); });
+}
+
+function renderResi(){
+  $('sTitle').textContent = 'Resi pemasukan dan pengeluaran';
+  $('sBody').innerHTML = ST.ledger.length ? ST.ledger.map(l =>
+    '<div class="card"><b>'+l.route+'</b> ('+l.cargo+', '+l.km+' km)<br>Bayaran '+fmtG(l.pay)+'<br>BBM -'+fmtG(l.fuel)+', perawatan -'+fmtG(l.maint)+', makan -'+fmtG(l.meals)+
+    '<br>Bersih <span class="'+(l.net>=0?'pos':'neg')+'">'+fmtG(l.net)+'</span></div>').join('') : '<div class="card">Belum ada resi. Selesaikan satu order dulu.</div>';
+}
+
+// ====== 8. AMBIL ORDER: rute jalan kosong ke titik jemput, lalu rute bermuatan ke tujuan ======
+async function accept(id){
+  if (ST.job || busy) { $('status').textContent = 'Kendaraan masih dalam perjalanan.'; return; }
+  const o = board().find(x => x.id===id); if (!o) return;
+  busy = true; $('status').textContent = 'Menghitung rute jalan...';
+  try {
+    const leg1 = o.kmE>0 ? await roadRoute(CITIES[ST.here].p, CITIES[o.P].p) : [];
+    const leg2 = await roadRoute(CITIES[o.P].p, CITIES[o.D].p);
+    ST.job = makeJob(o, leg1, leg2);
+    ST.taken = { slot:slotNow(), ids:(ST.taken.slot===slotNow()? ST.taken.ids : []).concat(id) };
+    idx = 0; save(); drawRoute(); closeSheet();
+  } catch(e){ $('status').textContent = 'Rute gagal dimuat. Coba lagi sebentar lagi.'; }
+  busy = false;
+}
+
+// Waktu tempuh dihitung dari panjang tiap ruas dan kecepatan wilayahnya (real-time, skala 1)
+function makeJob(o, leg1, leg2){
+  const pts = leg1.concat(leg2), cumD=[0], cumT=[0];
+  for (let i=1;i<pts.length;i++){
+    const d = L.latLng(pts[i-1]).distanceTo(pts[i]);
+    cumD.push(cumD[i-1]+d);
+    cumT.push(cumT[i-1] + d/(kmh(pts[i])*1000/3600)*1000);
+  }
+  const realMs = cumT[cumT.length-1], gameMs = Math.max(1000, realMs/($('fast').checked ? CFG.FAST : 1));
+  return { o, pts, cumD, cumT, pickupIdx:leg1.length, realMs, start:Date.now(), end:Date.now()+gameMs };
+}
+
+function clearRoute(){ layers.forEach(l => map.removeLayer(l)); layers = []; }
+function drawRoute(){
+  clearRoute(); const j = ST.job; if (!j) return;
+  const a = j.pts.slice(0, j.pickupIdx), b = j.pts.slice(j.pickupIdx);
+  if (a.length>1) layers.push(L.polyline(a,{color:'#9aa3ad',weight:4,dashArray:'8 8'}).addTo(map));
+  layers.push(L.polyline(b,{color:'#f2a516',weight:4}).addTo(map));
+  layers.push(L.circleMarker(CITIES[j.o.P].p,{radius:7,color:'#4fc3f7',fillColor:'#4fc3f7',fillOpacity:1}).addTo(map));
+  layers.push(L.circleMarker(CITIES[j.o.D].p,{radius:7,color:'#f2a516',fillColor:'#c0392b',fillOpacity:1}).addTo(map));
+  map.fitBounds(L.polyline(j.pts).getBounds(), {padding:[40,40]});
+}
+
+// ====== 9. SELESAI: hitung resi dari jarak dan waktu NYATA perjalanan ======
+function finish(){
+  const j = ST.job, o = j.o, km = j.cumD[j.cumD.length-1]/1000, h = j.realMs/3600000;
+  const fuel = Math.round(km/CFG.KMPL*CFG.FUEL_G), maint = Math.round(km*CFG.MAINT_G), meals = Math.floor(h/CFG.MEAL_H)*CFG.MEAL_G;
+  const net = o.pay - fuel - maint - meals;
+  ST.gc += net;
+  ST.ledger.unshift({ t:Date.now(), route:CITIES[o.P].n+' ke '+CITIES[o.D].n, cargo:o.cargo, km:Math.round(km), pay:o.pay, fuel, maint, meals, net });
+  ST.ledger = ST.ledger.slice(0,30);
+  ST.here = o.D; ST.job = null; save(); clearRoute(); refresh();
+  $('status').innerHTML = 'Order selesai di '+CITIES[o.D].n+'. Bersih <b>'+fmtG(net)+'</b>. Buka Resi untuk rinciannya.';
+}
+
+// ====== 10. LOOP: posisi dihitung dari JAM, jadi aman walau halaman ditutup ======
+function tick(){
+  const j = ST.job, e = marker.getElement() && vehEl();
+  if (j && e){
+    const fr = (Date.now()-j.start)/(j.end-j.start);
+    if (fr >= 1){ finish(); }
+    else {
+      const T = j.cumT[j.cumT.length-1]*Math.max(0,fr), cum = j.cumT;
+      if (idx>=cum.length-1 || cum[idx]>T) idx = 0;
+      while (idx<cum.length-2 && cum[idx+1]<T) idx++;
+      const a = j.pts[idx], b = j.pts[idx+1], seg = cum[idx+1]-cum[idx], f = seg ? Math.min(1,(T-cum[idx])/seg) : 0;
+      marker.setLatLng([a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f]);
+      const pa = L.CRS.EPSG3857.project(L.latLng(a)), pb = L.CRS.EPSG3857.project(L.latLng(b));
+      if (seg>0){ const d = ((Math.atan2(pb.x-pa.x,pb.y-pa.y)*180/Math.PI - rot + 540)%360)-180; rot += d; }
+      e.style.transform = 'rotate('+rot+'deg)';
+      const toPick = idx < j.pickupIdx;
+      const eta = toPick ? (j.end-j.start)*(j.cumT[j.pickupIdx]/cum[cum.length-1]) - (Date.now()-j.start) : j.end-Date.now();
+      $('status').innerHTML = (toPick ? 'Jalan kosong ke titik jemput <b>'+CITIES[j.o.P].n+'</b>' : 'Mengantar <b>'+j.o.cargo+'</b> ke <b>'+CITIES[j.o.D].n+'</b>') +
+        ', tiba dalam <b>'+fmtT(eta)+'</b>. Waktu asli total '+fmtT(j.realMs)+'.';
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+// ====== 11. UI ======
+function openSheet(fn){ $('sheet').hidden = false; fn(); }
+function closeSheet(){ $('sheet').hidden = true; }
+function refresh(){
+  $('gc').textContent = fmtG(ST.gc);
+  $('here').textContent = ST.here!==null ? 'Garasi: '+CITIES[ST.here].n : '';
+  if (!ST.job && ST.here!==null) marker.setLatLng(CITIES[ST.here].p);
+}
+$('sClose').onclick = closeSheet;
+$('bOrder').onclick = () => {
+  if (ST.here===null) return openSheet(renderCities);
+  if (!M) { $('status').textContent = 'Data jalan belum siap.'; return; }
+  openSheet(renderOrders);
+};
+$('bResi').onclick = () => openSheet(renderResi);
+
+(async function init(){
+  refresh();
+  if (ST.job){ drawRoute(); }
+  else if (ST.here!==null) map.setView(CITIES[ST.here].p, 8);
+  $('status').textContent = 'Memuat data jalan nyata...';
+  try { await loadMatrix(); $('status').textContent = ST.job ? '' : 'Siap. Tekan Order.'; if (ST.here===null) openSheet(renderCities); }
+  catch(e){ $('status').innerHTML = 'Server rute tidak bisa dihubungi. Muat ulang halaman nanti.'; }
+  requestAnimationFrame(tick);
+})();
+</script>
+    <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+</body>
+</html>
