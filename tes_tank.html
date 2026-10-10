@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse - Tes Tank</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<style>
+  html,body{ height:100%; margin:0; background:#0b1630; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  #map{ height:100%; }
+  #hud{
+    position:fixed; z-index:1000; left:10px; right:10px; top:10px;
+    background:rgba(11,22,48,.88); color:#f3efe3; border:1px solid #f2a516;
+    border-radius:10px; padding:8px 12px; font-size:14px;
+    display:flex; justify-content:space-between; align-items:center; gap:8px;
+  }
+  #hud b{ color:#f2a516; }
+  #hud button{ background:#f2a516; color:#0b1630; border:0; border-radius:8px; padding:6px 10px; font-weight:700; }
+
+  /* ===== Tank ===== */
+  .tank{ width:40px; height:56px; transition:transform .25s linear; filter:drop-shadow(0 3px 3px rgba(0,0,0,.5)); }
+  .tank .track{ stroke:#2a2f22; stroke-width:9; stroke-dasharray:5 3; }
+  .tank.moving .track{ animation:roda .35s linear infinite; }   /* roda berputar hanya saat jalan */
+  @keyframes roda{ to{ stroke-dashoffset:-8; } }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="hud"><span id="status"><b>Tank</b> siaga. Ketuk peta untuk memberi tujuan.</span><button id="reset">Reset</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script>
+// ====== 1. PENGATURAN ======
+const START   = [-6.2, 106.8];   // posisi awal tank (Jakarta)
+const SPEED   = 150;             // meter per milidetik (angka besar = cepat, hanya untuk demo)
+const MIN_MS  = 1500;            // durasi minimal perjalanan
+const KEY     = 'gv_tank';       // nama simpanan di browser
+
+// ====== 2. PETA ======
+const map = L.map('map').setView([-6.9, 108.5], 7);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18, attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+// ====== 3. IKON TANK (SVG menghadap ke atas) ======
+const tankSVG = `
+<div class="tank" id="tank">
+  <svg viewBox="0 0 40 56" width="40" height="56">
+    <line class="track" x1="7"  y1="6" x2="7"  y2="50"/>
+    <line class="track" x1="33" y1="6" x2="33" y2="50"/>
+    <rect x="10" y="8" width="20" height="40" rx="4" fill="#6b7a3a" stroke="#3b4420" stroke-width="1.5"/>
+    <rect x="18" y="0" width="4" height="26" rx="1.5" fill="#3b4420"/>
+    <circle cx="20" cy="30" r="9" fill="#7d8e45" stroke="#3b4420" stroke-width="1.5"/>
+    <circle cx="20" cy="30" r="3" fill="#f2a516"/>
+  </svg>
+</div>`;
+const icon = L.divIcon({ html: tankSVG, className: '', iconSize: [40, 56], iconAnchor: [20, 28] });
+
+let pos = START.slice();   // posisi tank sekarang
+let job = null;            // perjalanan aktif: {from, to, start, end, heading}
+const marker = L.marker(pos, { icon, interactive: false }).addTo(map);
+const tankEl = () => marker.getElement().querySelector('.tank');
+let routeLine = null, destDot = null;
+
+// ====== 4. MEMUTAR TANK KE ARAH TUJUAN ======
+function heading(a, b){          // sudut derajat: 0 = utara, 90 = timur
+  const p = L.CRS.EPSG3857.project(L.latLng(a)), q = L.CRS.EPSG3857.project(L.latLng(b));
+  return Math.atan2(q.x - p.x, q.y - p.y) * 180 / Math.PI;
+}
+
+// ====== 5. MEMULAI PERJALANAN ======
+// Yang disimpan: asal, tujuan, waktu mulai, waktu tiba. Posisi dihitung dari JAM, bukan disimpan terus.
+// Nanti di game asli: Date.now() diganti jam server (London) dan data ini disimpan di Supabase.
+function startTrip(to){
+  const dist = map.distance(pos, to);
+  const ms = Math.max(MIN_MS, dist / SPEED);
+  job = { from: pos.slice(), to, start: Date.now(), end: Date.now() + ms, heading: heading(pos, to) };
+  save(); drawRoute();
+}
+
+function drawRoute(){
+  clearRoute();
+  if (!job) return;
+  routeLine = L.polyline([job.from, job.to], { color: '#f2a516', weight: 3, dashArray: '8 8' }).addTo(map);
+  destDot = L.circleMarker(job.to, { radius: 7, color: '#f2a516', fillColor: '#c0392b', fillOpacity: 1 }).addTo(map);
+}
+function clearRoute(){
+  if (routeLine) map.removeLayer(routeLine);
+  if (destDot) map.removeLayer(destDot);
+  routeLine = destDot = null;
+}
+
+// ====== 6. LOOP ANIMASI ======
+const statusEl = document.getElementById('status');
+function tick(){
+  const el = tankEl();
+  if (job && el){
+    const k = (Date.now() - job.start) / (job.end - job.start);
+    if (k >= 1){
+      pos = job.to.slice(); job = null; save(); clearRoute();
+      el.classList.remove('moving');
+      statusEl.innerHTML = '<b>Tank</b> sudah tiba. Ketuk peta untuk tujuan baru.';
+    } else {
+      pos = [job.from[0] + (job.to[0] - job.from[0]) * k, job.from[1] + (job.to[1] - job.from[1]) * k];
+      el.style.transform = 'rotate(' + job.heading + 'deg)';
+      el.classList.add('moving');
+      statusEl.innerHTML = '<b>Tank</b> bergerak, tiba ' + Math.ceil((job.end - Date.now()) / 1000) + ' dtk lagi';
+    }
+    marker.setLatLng(pos);
+  }
+  requestAnimationFrame(tick);
+}
+
+// ====== 7. SIMPAN, BUKA, RESET ======
+function save(){ try { localStorage.setItem(KEY, JSON.stringify({ pos, job })); } catch (e) {} }
+function load(){
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (s){ pos = s.pos; job = s.job; }
+  } catch (e) {}
+}
+load();
+marker.setLatLng(pos);
+if (job){ drawRoute(); }
+map.on('click', e => startTrip([e.latlng.lat, e.latlng.lng]));
+document.getElementById('reset').onclick = () => {
+  job = null; pos = START.slice(); marker.setLatLng(pos); clearRoute(); save();
+  const el = tankEl(); if (el){ el.classList.remove('moving'); el.style.transform = 'rotate(0deg)'; }
+  statusEl.innerHTML = '<b>Tank</b> siaga. Ketuk peta untuk memberi tujuan.';
+};
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
