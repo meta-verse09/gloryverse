@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashboard - GloryVerse</title>
-    
+
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+   
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -117,6 +120,9 @@
                 </div>
             </div>
 
+              <div id="map" style="width:100%; height:100vh;"></div>
+<script type="module" src="/map.js"></script>
+           
             <!-- ADSTERRA NATIVE BANNER -->
             <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-4 backdrop-blur-sm mb-8">
                 <p class="text-slate-400 text-xs text-center mb-2">Advertisement</p>
