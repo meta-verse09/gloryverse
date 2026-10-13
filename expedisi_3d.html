@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Expedisi Basung 3D</title>
+<script src="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.js"></script>
+<link href="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.css" rel="stylesheet">
+<style>body{margin:0} #map{width:100%; height:100vh}</style>
+</head>
+<body>
+<div id="map"></div>
+<script>
+// GANTI INI PAKAI ARRAY RUTE LU DARI CLAUDE
+const ruteAsli = [
+  [100.027, -0.060], // Pasar Lubuk Basung
+  [100.029, -0.062],
+  [100.032, -0.065],
+  [100.035, -0.068],
+  [100.038, -0.071] // lanjutkan...
+];
+
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_Demo_key',
+  // kalau key error, ganti style jadi: 'https://demotiles.maplibre.org/style.json'
+  center: ruteAsli[0],
+  zoom: 17.5,
+  pitch: 65,
+  bearing: 25
+});
+
+map.on('load', () => {
+  // Bikin gedung jadi 3D biar hidup
+  const layers = map.getStyle().layers;
+  for (let layer of layers) {
+    if (layer.type === 'fill' && layer.source === 'openmaptiles' && layer['source-layer'] === 'building') {
+      map.setPaintProperty(layer.id, 'fill-extrusion-height', ['get', 'render_height']);
+      map.setPaintProperty(layer.id, 'fill-extrusion-base', ['get', 'render_min_height']);
+    }
+  }
+  // Fallback kalau style beda, add manual
+  if(!map.getLayer('3d-buildings')){
+    map.addLayer({
+      id: '3d-buildings', source: 'openmaptiles', 'source-layer': 'building',
+      type: 'fill-extrusion', minzoom: 14,
+      paint: {
+        'fill-extrusion-color': '#c8c8c8',
+        'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14, 0, 16, ['get', 'height']],
+        'fill-extrusion-opacity': 0.8
+      }
+    });
+  }
+});
+
+// Bikin icon mobil ekspedisi
+const el = document.createElement('div');
+el.innerHTML = '🚚';
+el.style.fontSize = '32px';
+el.style.filter = 'drop-shadow(0 4px 4px black)';
+
+const mobil = new maplibregl.Marker({element: el})
+ .setLngLat(ruteAsli[0])
+ .addTo(map);
+
+let i = 0;
+function jalan() {
+  if(i < ruteAsli.length -1){
+    i++;
+    const pos = ruteAsli[i];
+    mobil.setLngLat(pos);
+
+    // Kamera ngikut mobil biar kayak game
+    map.easeTo({center: pos, duration: 500, bearing: map.getBearing()+0.3});
+
+    // Ganti arah mobil sesuai belokan (opsional)
+    if(i > 0){
+      const dx = ruteAsli[i][0] - ruteAsli[i-1][0];
+      const dy = ruteAsli[i][1] - ruteAsli[i-1][1];
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      el.style.transform = `rotate(${angle}deg)`;
+    }
+  } else { i=0 } // ulang lagi
+}
+setInterval(jalan, 400); // 400ms = kecepatan mobil
+</script>
+</body>
+</html>
