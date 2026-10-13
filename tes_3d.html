@@ -1,88 +1,379 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="utf-8">
-<title>Expedisi Basung 3D</title>
-<script src="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.js"></script>
-<link href="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.css" rel="stylesheet">
-<style>body{margin:0} #map{width:100%; height:100vh}</style>
+<meta charset="UTF-8">
+<title>OSM Truck Simulator - Browser Edition</title>
+<style>
+  body { margin: 0; overflow: hidden; font-family: sans-serif; background: #87CEEB; }
+  canvas { display: block; }
+  #hud {
+    position: absolute; top: 10px; left: 10px; color: white;
+    background: rgba(0,0,0,0.6); padding: 12px 16px; border-radius: 8px;
+    font-size: 14px; line-height: 1.6;
+  }
+  #loading {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    color: white; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 10px;
+    font-size: 18px;
+  }
+</style>
+<!-- Import map biar bisa pakai ES modules dari CDN -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "cannon-es": "https://unpkg.com/cannon-es@0.20.0/dist/cannon-es.js"
+  }
+}
+</script>
 </head>
 <body>
-<div id="map"></div>
-<script>
-// GANTI INI PAKAI ARRAY RUTE LU DARI CLAUDE
-const ruteAsli = [
-  [100.027, -0.060], // Pasar Lubuk Basung
-  [100.029, -0.062],
-  [100.032, -0.065],
-  [100.035, -0.068],
-  [100.038, -0.071] // lanjutkan...
-];
+<div id="hud">
+  <b>🚛 OSM Truck Simulator</b><br>
+  WASD / Arrow = Nyetir<br>
+  SPACE = Rem<br>
+  Speed: <span id="speed">0</span> km/h
+</div>
+<div id="loading">⏳ Loading peta OSM...</div>
 
-const map = new maplibregl.Map({
-  container: 'map',
-  style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_Demo_key',
-  // kalau key error, ganti style jadi: 'https://demotiles.maplibre.org/style.json'
-  center: ruteAsli[0],
-  zoom: 17.5,
-  pitch: 65,
-  bearing: 25
-});
+<script type="module">
+import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 
-map.on('load', () => {
-  // Bikin gedung jadi 3D biar hidup
-  const layers = map.getStyle().layers;
-  for (let layer of layers) {
-    if (layer.type === 'fill' && layer.source === 'openmaptiles' && layer['source-layer'] === 'building') {
-      map.setPaintProperty(layer.id, 'fill-extrusion-height', ['get', 'render_height']);
-      map.setPaintProperty(layer.id, 'fill-extrusion-base', ['get', 'render_min_height']);
-    }
-  }
-  // Fallback kalau style beda, add manual
-  if(!map.getLayer('3d-buildings')){
-    map.addLayer({
-      id: '3d-buildings', source: 'openmaptiles', 'source-layer': 'building',
-      type: 'fill-extrusion', minzoom: 14,
-      paint: {
-        'fill-extrusion-color': '#c8c8c8',
-        'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14, 0, 16, ['get', 'height']],
-        'fill-extrusion-opacity': 0.8
-      }
-    });
-  }
-});
+// ============================================================
+// 1. SETUP DASAR: Scene, Camera, Renderer, Light
+// ============================================================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87CEEB);
+scene.fog = new THREE.Fog(0x87CEEB, 150, 500);
 
-// Bikin icon mobil ekspedisi
-const el = document.createElement('div');
-el.innerHTML = '🚚';
-el.style.fontSize = '32px';
-el.style.filter = 'drop-shadow(0 4px 4px black)';
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
 
-const mobil = new maplibregl.Marker({element: el})
- .setLngLat(ruteAsli[0])
- .addTo(map);
+// Cahaya matahari + bayangan
+const sun = new THREE.DirectionalLight(0xffffff, 1.2);
+sun.position.set(100, 150, 80);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left = -150;
+sun.shadow.camera.right = 150;
+sun.shadow.camera.top = 150;
+sun.shadow.camera.bottom = -150;
+scene.add(sun);
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-let i = 0;
-function jalan() {
-  if(i < ruteAsli.length -1){
-    i++;
-    const pos = ruteAsli[i];
-    mobil.setLngLat(pos);
+// ============================================================
+// 2. FISIKA WORLD (Cannon-es)
+// ============================================================
+const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) });
+world.broadphase = new CANNON.SAPBroadphase(world);
 
-    // Kamera ngikut mobil biar kayak game
-    map.easeTo({center: pos, duration: 500, bearing: map.getBearing()+0.3});
+// Tanah (biar truck gak jatuh)
+const groundBody = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
+groundBody.quaternion.setFromEuler(-Math.PI/2, 0, 0);
+world.addBody(groundBody);
 
-    // Ganti arah mobil sesuai belokan (opsional)
-    if(i > 0){
-      const dx = ruteAsli[i][0] - ruteAsli[i-1][0];
-      const dy = ruteAsli[i][1] - ruteAsli[i-1][1];
-      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-      el.style.transform = `rotate(${angle}deg)`;
-    }
-  } else { i=0 } // ulang lagi
+// ============================================================
+// 3. KONVERSI KOORDINAT: Lat/Lon <-> Meter (lokal)
+// ============================================================
+// Pusat peta (default: sekitar Monas, Jakarta)
+const CENTER_LAT = -6.1754;
+const CENTER_LON = 106.8272;
+
+function latLonToXY(lat, lon) {
+  const x = (lon - CENTER_LON) * Math.cos(CENTER_LAT * Math.PI/180) * 111320;
+  const z = -(lat - CENTER_LAT) * 110540; // minus karena sumbu Z three.js terbalik
+  return { x, z };
 }
-setInterval(jalan, 400); // 400ms = kecepatan mobil
+
+// ============================================================
+// 4. AMBIL DATA OSM LEWAT OVERPASS API
+// ============================================================
+async function loadOSM() {
+  // Bounding box kecil (radius ~400m dari Monas) biar ringan
+  const delta = 0.004;
+  const bbox = [
+    CENTER_LAT - delta, CENTER_LON - delta,
+    CENTER_LAT + delta, CENTER_LON + delta
+  ].join(',');
+
+  const query = `
+    [out:json][timeout:25];
+    (
+      way["building"](${bbox});
+      way["highway"~"motorway|trunk|primary|secondary|tertiary|residential|service"](${bbox});
+    );
+    out geom;
+  `;
+
+  try {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
+      method: 'POST',
+      body: 'data=' + encodeURIComponent(query)
+    });
+    const data = await res.json();
+    buildMap(data.elements);
+  } catch (e) {
+    console.error('Gagal load OSM, pakai peta cadangan', e);
+    buildFallbackMap();
+  }
+  document.getElementById('loading').style.display = 'none';
+}
+
+// ============================================================
+// 5. BANGUN PETA 3D DARI DATA OSM
+// ============================================================
+function buildMap(elements) {
+  const buildings = elements.filter(e => e.tags && e.tags.building);
+  const roads = elements.filter(e => e.tags && e.tags.highway);
+
+  // --- BANGUNAN ---
+  const buildingMat = new THREE.MeshLambertMaterial({ color: 0xb0b0b0 });
+  const industrialMat = new THREE.MeshLambertMaterial({ color: 0xd4a017 }); // gudang kuning
+  const commercialMat = new THREE.MeshLambertMaterial({ color: 0x6fa8dc }); // perkantoran biru
+
+  buildings.forEach(b => {
+    if (!b.geometry || b.geometry.length < 3) return;
+    const points = b.geometry.map(n => latLonToXY(n.lat, n.lon));
+    const shape = new THREE.Shape();
+    shape.moveTo(points[0].x, points[0].z);
+    for (let i = 1; i < points.length; i++) shape.lineTo(points[i].x, points[i].z);
+    shape.closePath();
+
+    // Tinggi: pakai tag height/levels, atau random 5-20m
+    let height = parseFloat(b.tags.height) || (parseInt(b.tags['building:levels']) || 1) * 3.5;
+    height = Math.min(Math.max(height, 4), 40);
+
+    const geom = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false });
+    geom.rotateX(-Math.PI/2); // Extrude ke atas (sumbu Y)
+
+    let mat = buildingMat;
+    if (b.tags.building === 'industrial' || b.tags.building === 'warehouse') mat = industrialMat;
+    else if (b.tags.building === 'commercial' || b.tags.building === 'office') mat = commercialMat;
+
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    scene.add(mesh);
+  });
+
+  // --- JALAN ---
+  const roadMat = new THREE.MeshLambertMaterial({ color: 0x3a3a3a });
+  roads.forEach(r => {
+    if (!r.geometry || r.geometry.length < 2) return;
+    const points = r.geometry.map(n => latLonToXY(n.lat, n.lon));
+
+    // Bikin jalan jadi plane tipis mengikuti polyline
+    for (let i = 0; i < points.length - 1; i++) {
+      const a = points[i], b = points[i+1];
+      const dx = b.x - a.x, dz = b.z - a.z;
+      const len = Math.sqrt(dx*dx + dz*dz);
+      if (len < 0.1) continue;
+      const angle = Math.atan2(dx, dz);
+
+      const width = r.tags.highway === 'motorway' ? 12 : r.tags.highway === 'primary' ? 8 : 5;
+      const geom = new THREE.PlaneGeometry(width, len);
+      geom.rotateX(-Math.PI/2);
+      const mesh = new THREE.Mesh(geom, roadMat);
+      mesh.position.set((a.x+b.x)/2, 0.02, (a.z+b.z)/2);
+      mesh.rotation.y = angle;
+      mesh.receiveShadow = true;
+      scene.add(mesh);
+    }
+  });
+
+  // Tanah besar
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(2000, 2000),
+    new THREE.MeshLambertMaterial({ color: 0x6b8e23 })
+  );
+  ground.rotation.x = -Math.PI/2;
+  ground.position.y = -0.01;
+  ground.receiveShadow = true;
+  scene.add(ground);
+}
+
+// Peta cadangan kalau Overpass gagal (grid bangunan sederhana)
+function buildFallbackMap() {
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(500, 500),
+    new THREE.MeshLambertMaterial({ color: 0x6b8e23 })
+  );
+  ground.rotation.x = -Math.PI/2;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  const mat = new THREE.MeshLambertMaterial({ color: 0xb0b0b0 });
+  for (let x = -100; x <= 100; x += 25) {
+    for (let z = -100; z <= 100; z += 25) {
+      if (Math.abs(x) < 8 || Math.abs(z) < 8) continue; // sisakan jalan
+      const h = 5 + Math.random() * 15;
+      const m = new THREE.Mesh(new THREE.BoxGeometry(15, h, 15), mat);
+      m.position.set(x, h/2, z);
+      m.castShadow = m.receiveShadow = true;
+      scene.add(m);
+    }
+  }
+  // Jalan
+  const road = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 500),
+    new THREE.MeshLambertMaterial({ color: 0x3a3a3a })
+  );
+  road.rotation.x = -Math.PI/2;
+  road.position.y = 0.02;
+  scene.add(road);
+  const road2 = road.clone();
+  road2.rotation.z = Math.PI/2;
+  scene.add(road2);
+}
+
+// ============================================================
+// 6. TRUCK KONTAINER (Visual + Fisika)
+// ============================================================
+const truck = new THREE.Group();
+
+// Kepala truck (truknya)
+const cab = new THREE.Mesh(
+  new THREE.BoxGeometry(2.2, 2, 2.5),
+  new THREE.MeshLambertMaterial({ color: 0xffffff })
+);
+cab.position.set(0, 1.5, -2);
+cab.castShadow = true;
+truck.add(cab);
+
+// Kontainer (kotak besar di belakang)
+const container = new THREE.Mesh(
+  new THREE.BoxGeometry(2.4, 2.6, 12),
+  new THREE.MeshLambertMaterial({ color: 0xc0392b }) // merah kontainer
+);
+container.position.set(0, 1.8, 4);
+container.castShadow = true;
+truck.add(container);
+
+// Roda (6 buah: 2 depan, 4 belakang)
+const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.4, 16);
+wheelGeo.rotateZ(Math.PI/2);
+const wheelMat = new THREE.MeshLambertMaterial({ color: 0x111111 });
+const wheelPositions = [
+  [-1.2, 0.5, -2], [1.2, 0.5, -2],
+  [-1.2, 0.5, 2],  [1.2, 0.5, 2],
+  [-1.2, 0.5, 6],  [1.2, 0.5, 6],
+];
+wheelPositions.forEach(p => {
+  const w = new THREE.Mesh(wheelGeo, wheelMat);
+  w.position.set(...p);
+  w.castShadow = true;
+  truck.add(w);
+});
+
+truck.position.set(0, 0, 0);
+scene.add(truck);
+
+// Physics body truck (kotak sederhana, arcade-style)
+const truckBody = new CANNON.Body({
+  mass: 8000, // 8 ton (truck + kontainer)
+  shape: new CANNON.Box(new CANNON.Vec3(1.3, 1.5, 7)),
+  position: new CANNON.Vec3(0, 2, 0),
+  linearDamping: 0.3,
+  angularDamping: 0.99
+});
+world.addBody(truckBody);
+
+// ============================================================
+// 7. KONTROL & STATE
+// ============================================================
+const keys = {};
+addEventListener('keydown', e => keys[e.code] = true);
+addEventListener('keyup', e => keys[e.code] = false);
+
+let speed = 0;
+let steering = 0;
+const MAX_SPEED = 25;    // m/s (~90 km/h)
+const ACCEL = 12;
+const BRAKE = 25;
+const FRICTION = 4;
+const MAX_STEER = 0.6;
+
+// ============================================================
+// 8. KAMERA FOLLOW
+// ============================================================
+const camOffset = new THREE.Vector3(0, 8, -18);
+
+// ============================================================
+// 9. GAME LOOP
+// ============================================================
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.1);
+
+  // --- Input ---
+  const forward = (keys['KeyW'] || keys['ArrowUp']) ? 1 : 0;
+  const back = (keys['KeyS'] || keys['ArrowDown']) ? 1 : 0;
+  const left = (keys['KeyA'] || keys['ArrowLeft']) ? 1 : 0;
+  const right = (keys['KeyD'] || keys['ArrowRight']) ? 1 : 0;
+  const brake = keys['Space'] ? 1 : 0;
+
+  // --- Fisika Arcade ---
+  if (forward) speed += ACCEL * dt;
+  else if (back) speed -= ACCEL * 0.7 * dt;
+  else {
+    // friction
+    if (Math.abs(speed) < 0.5) speed = 0;
+    else speed -= Math.sign(speed) * FRICTION * dt;
+  }
+  if (brake) speed *= 0.9;
+  speed = Math.max(-MAX_SPEED*0.4, Math.min(MAX_SPEED, speed));
+
+  // Steering hanya efektif kalau truck gerak
+  const steerInput = left - right;
+  const speedFactor = Math.min(Math.abs(speed) / 5, 1);
+  steering = steerInput * MAX_STEER * speedFactor;
+
+  // Update heading
+  truck.rotation.y += steering * dt * Math.sign(speed) * 2;
+
+  // Gerakin truck sesuai heading
+  const dir = new THREE.Vector3(0, 0, 1).applyAxisAngle(new THREE.Vector3(0,1,0), truck.rotation.y);
+  truck.position.addScaledVector(dir, speed * dt);
+  truck.position.y = 0; // biar gak terbang
+
+  // Sync ke physics body (buat collision)
+  truckBody.position.set(truck.position.x, 2, truck.position.z);
+  truckBody.quaternion.setFromEuler(0, truck.rotation.y, 0);
+  truckBody.velocity.set(0,0,0);
+
+  // --- Kamera follow ---
+  const desiredCam = camOffset.clone().applyAxisAngle(new THREE.Vector3(0,1,0), truck.rotation.y).add(truck.position);
+  camera.position.lerp(desiredCam, 0.1);
+  camera.lookAt(truck.position.x, 2, truck.position.z + 5);
+
+  // --- Step fisika ---
+  world.step(1/60, dt, 3);
+
+  // HUD
+  document.getElementById('speed').textContent = Math.abs(Math.round(speed * 3.6));
+
+  renderer.render(scene, camera);
+}
+
+// Resize handler
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ============================================================
+// 10. START!
+// ============================================================
+loadOSM().then(() => animate());
 </script>
 </body>
 </html>
