@@ -1,119 +1,88 @@
+
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Expedisi Basung 3D</title>
 <script src="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.js"></script>
 <link href="https://unpkg.com/maplibre-gl@3.6/dist/maplibre-gl.css" rel="stylesheet">
-<style>
-  body{margin:0; overflow:hidden; font-family: sans-serif}
-  #map{width:100%; height:100vh}
-  #info{
-    position:absolute; top:10px; left:10px;
-    background:rgba(0,0,0,0.8); color:white;
-    padding:12px 16px; border-radius:12px; font-size:14px;
-    z-index:10;
-  }
-</style>
+<style>body{margin:0} #map{width:100%; height:100vh}</style>
 </head>
 <body>
-<div id="info">🚚 Expedisi Basung 3D<br><small>Ngikutin jalan OSM asli + Gedung 3D</small></div>
 <div id="map"></div>
 <script>
-async function startExpedisi(){
-  const map = new maplibregl.Map({
-    container: 'map',
-    style: 'https://demotiles.maplibre.org/style.json',
-    center: [100.0285, -0.0645],
-    zoom: 16.5,
-    pitch: 68,
-    bearing: -15,
-    antialias: true
-  });
+// GANTI INI PAKAI ARRAY RUTE LU DARI CLAUDE
+const ruteAsli = [
+  [100.027, -0.060], // Pasar Lubuk Basung
+  [100.029, -0.062],
+  [100.032, -0.065],
+  [100.035, -0.068],
+  [100.038, -0.071] // lanjutkan...
+];
 
-  map.on('load', async () => {
-    // 1. BIKIN GEDUNG JADI 3D BIAR HIDUP
-    map.addLayer({
-      id: '3d-buildings',
-      source: 'openmaptiles',
-      'source-layer': 'building',
-      type: 'fill-extrusion',
-      minzoom: 14,
-      paint: {
-        'fill-extrusion-color': '#d0d0d0',
-        'fill-extrusion-height': ['case', ['has','height'], ['get','height'], 15],
-        'fill-extrusion-base': ['case', ['has','min_height'], ['get','min_height'], 0],
-        'fill-extrusion-opacity': 0.85
-      }
-    });
+const map = new maplibregl.Map({
+  container: 'map',
+  style: 'https://api.maptiler.com/maps/streets/style.json?key=get_your_own_Demo_key',
+  // kalau key error, ganti style jadi: 'https://demotiles.maplibre.org/style.json'
+  center: ruteAsli[0],
+  zoom: 17.5,
+  pitch: 65,
+  bearing: 25
+});
 
-    // 2. RUTE EKSPEDISI ASLI LUBUK BASUNG (pakai jalan OSM beneran)
-    // Gue bikin 3 titik: Pasar - Manggopoh - Kelok 44
-    const checkpoints = [
-      [100.0278, -0.0628], // Start: Pasar Lubuk Basung
-      [100.0335, -0.0735], // Manggopoh
-      [100.0412, -0.0820] // Menuju Maninjau
-    ];
-
-    let fullRoute = [];
-    // Gabungin rute antar checkpoint biar ngikutin jalan aspal
-    for(let k=0;k<checkpoints.length-1;k++){
-      const url = `https://router.project-osrm.org/route/v1/driving/${checkpoints[k].join(',')};${checkpoints[k+1].join(',')}?overview=full&geometries=geojson`;
-      const res = await fetch(url);
-      const json = await res.json();
-      fullRoute = fullRoute.concat(json.routes[0].geometry.coordinates);
+map.on('load', () => {
+  // Bikin gedung jadi 3D biar hidup
+  const layers = map.getStyle().layers;
+  for (let layer of layers) {
+    if (layer.type === 'fill' && layer.source === 'openmaptiles' && layer['source-layer'] === 'building') {
+      map.setPaintProperty(layer.id, 'fill-extrusion-height', ['get', 'render_height']);
+      map.setPaintProperty(layer.id, 'fill-extrusion-base', ['get', 'render_min_height']);
     }
-
-    // Gambar jejak jalan nya
-    map.addSource('route', {
-      type: 'geojson',
-      data: {type:'Feature', geometry:{type:'LineString', coordinates: fullRoute}}
-    });
+  }
+  // Fallback kalau style beda, add manual
+  if(!map.getLayer('3d-buildings')){
     map.addLayer({
-      id:'route-line', type:'line', source:'route',
-      paint:{'line-color':'#ff6a00','line-width':6,'line-opacity':0.8}
-    });
-
-    // 3. MOBIL EKSPEDISI NYA
-    const el = document.createElement('div');
-    el.innerHTML = '🚚';
-    el.style.fontSize = '38px';
-    el.style.textShadow = '0 4px 8px black';
-    el.style.transition = 'transform 0.2s';
-    const mobil = new maplibregl.Marker({element: el, rotationAlignment:'map'})
-     .setLngLat(fullRoute[0]).addTo(map);
-
-    // 4. JALAN OTOMATIS NGIKUTIN JALAN OSM
-    let i = 0;
-    const speed = 3; // makin gede makin ngebut
-    setInterval(()=>{
-      if(i < fullRoute.length - speed){
-        const curr = fullRoute[i];
-        const next = fullRoute[i+speed];
-        mobil.setLngLat(curr);
-
-        // Kamera ngikut kayak GTA
-        map.easeTo({
-          center: curr,
-          bearing: Math.atan2(next[0]-curr[0], next[1]-curr[1]) * 180 / Math.PI * -1 + 90,
-          duration: 400,
-          easing: t=>t
-        });
-
-        // Putar mobil sesuai belokan
-        const angle = Math.atan2(next[1]-curr[1], next[0]-curr[0]) * 180 / Math.PI;
-        el.style.transform = `rotate(${angle-90}deg)`;
-
-        i += speed;
-        document.getElementById('info').innerHTML = `🚚 Expedisi Basung 3D<br><small>📍 ${i}/${fullRoute.length} | Kecepatan ${speed*10} km/h</small>`;
-      } else {
-        i = 0; // ulang lagi dari awal
+      id: '3d-buildings', source: 'openmaptiles', 'source-layer': 'building',
+      type: 'fill-extrusion', minzoom: 14,
+      paint: {
+        'fill-extrusion-color': '#c8c8c8',
+        'fill-extrusion-height': ['interpolate', ['linear'], ['zoom'], 14, 0, 16, ['get', 'height']],
+        'fill-extrusion-opacity': 0.8
       }
-    }, 120);
-  });
+    });
+  }
+});
+
+// Bikin icon mobil ekspedisi
+const el = document.createElement('div');
+el.innerHTML = '🚚';
+el.style.fontSize = '32px';
+el.style.filter = 'drop-shadow(0 4px 4px black)';
+
+const mobil = new maplibregl.Marker({element: el})
+ .setLngLat(ruteAsli[0])
+ .addTo(map);
+
+let i = 0;
+function jalan() {
+  if(i < ruteAsli.length -1){
+    i++;
+    const pos = ruteAsli[i];
+    mobil.setLngLat(pos);
+
+    // Kamera ngikut mobil biar kayak game
+    map.easeTo({center: pos, duration: 500, bearing: map.getBearing()+0.3});
+
+    // Ganti arah mobil sesuai belokan (opsional)
+    if(i > 0){
+      const dx = ruteAsli[i][0] - ruteAsli[i-1][0];
+      const dy = ruteAsli[i][1] - ruteAsli[i-1][1];
+      const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+      el.style.transform = `rotate(${angle}deg)`;
+    }
+  } else { i=0 } // ulang lagi
 }
-startExpedisi();
+setInterval(jalan, 400); // 400ms = kecepatan mobil
 </script>
 </body>
 </html>
