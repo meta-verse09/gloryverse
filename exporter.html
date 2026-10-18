@@ -1,0 +1,436 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>OSM 3D Exporter - Free Version</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', sans-serif; background: #1a1a1a; color: white; }
+  
+  #header {
+    background: #2a2a2a;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #444;
+  }
+  
+  #header h1 { font-size: 24px; color: #4CAF50; }
+  #header h1 span { color: white; }
+  
+  #map-container {
+    position: relative;
+    height: calc(100vh - 70px);
+  }
+  
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+  
+  #controls {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(42, 42, 42, 0.95);
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 300px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  
+  #controls h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #4CAF50;
+  }
+  
+  .control-group {
+    margin-bottom: 15px;
+  }
+  
+  .control-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .control-group input, .control-group select {
+    width: 100%;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+  }
+  
+  .btn:hover { background: #45a049; }
+  .btn:disabled { background: #555; cursor: not-allowed; }
+  
+  #status {
+    margin-top: 15px;
+    padding: 10px;
+    background: #1a1a1a;
+    border-radius: 5px;
+    font-size: 13px;
+    min-height: 40px;
+  }
+  
+  .area-info {
+    background: #1a1a1a;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 13px;
+  }
+  
+  .area-info div { margin: 5px 0; }
+  .area-info span { color: #4CAF50; font-weight: bold; }
+  
+  /* Leaflet custom */
+  .leaflet-container { background: #2a2a2a; }
+</style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div id="header">
+  <h1>urban<span>EXPORT</span> <small style="font-size:12px;color:#888;">Free Version</small></h1>
+  <div style="color:#888;font-size:14px;">🆓 Unlimited Free Exports</div>
+</div>
+
+<div id="map-container">
+  <div id="map"></div>
+  
+  <div id="controls">
+    <h2>📦 Export Settings</h2>
+    
+    <div class="area-info">
+      <div>Area: <span id="area-size">1.0 × 1.0 km</span></div>
+      <div>Center: <span id="center-coord">-6.1754, 106.8272</span></div>
+      <div>Buildings: <span id="building-count">-</span></div>
+    </div>
+    
+    <div class="control-group">
+      <label>Export Format</label>
+      <select id="format">
+        <option value="obj">OBJ (3D Model)</option>
+        <option value="json">JSON (Three.js)</option>
+        <option value="geojson">GeoJSON</option>
+      </select>
+    </div>
+    
+    <div class="control-group">
+      <label>Include</label>
+      <label style="display:flex;align-items:center;gap:8px;margin:5px 0;">
+        <input type="checkbox" id="include-buildings" checked style="width:auto;"> Buildings
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;margin:5px 0;">
+        <input type="checkbox" id="include-roads" checked style="width:auto;"> Roads
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;margin:5px 0;">
+        <input type="checkbox" id="include-water" style="width:auto;"> Water bodies
+      </label>
+    </div>
+    
+    <div class="control-group">
+      <label>Building Height</label>
+      <select id="height-mode">
+        <option value="real">Real (from OSM tags)</option>
+        <option value="random">Random (5-30m)</option>
+        <option value="uniform">Uniform (15m)</option>
+      </select>
+    </div>
+    
+    <button class="btn" id="export-btn" onclick="exportArea()">
+      🚀 Export Area
+    </button>
+    
+    <div id="status">Klik "Export Area" untuk mulai...</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 1. SETUP MAP (Leaflet)
+// ============================================================
+const map = L.map('map').setView([-6.1754, 106.8272], 14); // Jakarta
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 19
+}).addTo(map);
+
+// Area selection box (default 1km x 1km)
+let areaBounds = null;
+const defaultSize = 0.009; // ~1km in degrees
+
+function updateAreaBox() {
+  if (areaBounds) map.removeLayer(areaBounds);
+  
+  const center = map.getCenter();
+  const bounds = [
+    [center.lat - defaultSize, center.lng - defaultSize],
+    [center.lat + defaultSize, center.lng + defaultSize]
+  ];
+  
+  areaBounds = L.rectangle(bounds, {
+    color: '#4CAF50',
+    weight: 3,
+    fillOpacity: 0.1
+  }).addTo(map);
+  
+  document.getElementById('center-coord').textContent = 
+    `${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`;
+}
+
+updateAreaBox();
+map.on('moveend', updateAreaBox);
+
+// ============================================================
+// 2. FETCH OSM DATA
+// ============================================================
+async function fetchOSMData(bounds) {
+  const bbox = [
+    bounds[0][0], bounds[0][1],
+    bounds[1][0], bounds[1][1]
+  ].join(',');
+  
+  const includeBuildings = document.getElementById('include-buildings').checked;
+  const includeRoads = document.getElementById('include-roads').checked;
+  const includeWater = document.getElementById('include-water').checked;
+  
+  let query = `[out:json][timeout:30];(\n`;
+  if (includeBuildings) query += `way["building"](${bbox});\n`;
+  if (includeRoads) query += `way["highway"~"motorway|trunk|primary|secondary|tertiary|residential"](${bbox});\n`;
+  if (includeWater) query += `way["natural"="water"](${bbox});\n`;
+  query += `);out geom;`;
+  
+  const res = await fetch('https://overpass-api.de/api/interpreter', {
+    method: 'POST',
+    body: 'data=' + encodeURIComponent(query)
+  });
+  
+  return await res.json();
+}
+
+// ============================================================
+// 3. CONVERT TO 3D DATA
+// ============================================================
+function processOSMData(data, bounds) {
+  const elements = data.elements;
+  const buildings = [];
+  const roads = [];
+  const waters = [];
+  
+  const centerLat = (bounds[0][0] + bounds[1][0]) / 2;
+  const centerLon = (bounds[0][1] + bounds[1][1]) / 2;
+  
+  function latLonToXY(lat, lon) {
+    const x = (lon - centerLon) * Math.cos(centerLat * Math.PI/180) * 111320;
+    const y = -(lat - centerLat) * 110540;
+    return { x, y };
+  }
+  
+  elements.forEach(el => {
+    if (!el.geometry || el.geometry.length < 2) return;
+    
+    const points = el.geometry.map(n => latLonToXY(n.lat, n.lon));
+    
+    if (el.tags && el.tags.building) {
+      let height = 15;
+      const heightMode = document.getElementById('height-mode').value;
+      
+      if (heightMode === 'real') {
+        height = parseFloat(el.tags.height) || (parseInt(el.tags['building:levels']) || 1) * 3.5;
+      } else if (heightMode === 'random') {
+        height = 5 + Math.random() * 25;
+      }
+      
+      buildings.push({
+        type: 'building',
+        points: points,
+        height: Math.min(Math.max(height, 4), 50),
+        tags: el.tags
+      });
+    }
+    
+    if (el.tags && el.tags.highway) {
+      roads.push({
+        type: 'road',
+        points: points,
+        width: el.tags.highway === 'motorway' ? 12 : 
+               el.tags.highway === 'primary' ? 8 : 5,
+        tags: el.tags
+      });
+    }
+    
+    if (el.tags && el.tags.natural === 'water') {
+      waters.push({
+        type: 'water',
+        points: points,
+        tags: el.tags
+      });
+    }
+  });
+  
+  return { buildings, roads, waters, center: { lat: centerLat, lon: centerLon } };
+}
+
+// ============================================================
+// 4. EXPORT FUNCTIONS
+// ============================================================
+function exportToOBJ(data) {
+  let obj = '# OSM 3D Export\n# Generated by urbanEXPORT Free\n\n';
+  
+  let vertexOffset = 1;
+  
+  // Buildings
+  data.buildings.forEach((b, idx) => {
+    obj += `o building_${idx}\n`;
+    
+    // Create vertices for top and bottom
+    b.points.forEach(p => {
+      obj += `v ${p.x.toFixed(2)} 0 ${p.y.toFixed(2)}\n`;
+    });
+    b.points.forEach(p => {
+      obj += `v ${p.x.toFixed(2)} ${b.height.toFixed(2)} ${p.y.toFixed(2)}\n`;
+    });
+    
+    // Bottom face
+    obj += `f`;
+    for (let i = 0; i < b.points.length; i++) {
+      obj += ` ${vertexOffset + i}`;
+    }
+    obj += '\n';
+    
+    // Top face
+    obj += `f`;
+    for (let i = b.points.length - 1; i >= 0; i--) {
+      obj += ` ${vertexOffset + b.points.length + i}`;
+    }
+    obj += '\n';
+    
+    // Side faces
+    for (let i = 0; i < b.points.length; i++) {
+      const next = (i + 1) % b.points.length;
+      obj += `f ${vertexOffset + i} ${vertexOffset + next} ` +
+             `${vertexOffset + b.points.length + next} ${vertexOffset + b.points.length + i}\n`;
+    }
+    
+    vertexOffset += b.points.length * 2;
+  });
+  
+  return obj;
+}
+
+function exportToJSON(data) {
+  return JSON.stringify(data, null, 2);
+}
+
+function exportToGeoJSON(data) {
+  const features = [];
+  
+  data.buildings.forEach(b => {
+    features.push({
+      type: 'Feature',
+      geometry: {
+        type: 'Polygon',
+        coordinates: [b.points.map(p => [p.x, p.y])]
+      },
+      properties: {
+        type: 'building',
+        height: b.height,
+        tags: b.tags
+      }
+    });
+  });
+  
+  return {
+    type: 'FeatureCollection',
+    features: features
+  };
+}
+
+// ============================================================
+// 5. MAIN EXPORT FUNCTION
+// ============================================================
+async function exportArea() {
+  const btn = document.getElementById('export-btn');
+  const status = document.getElementById('status');
+  
+  btn.disabled = true;
+  status.textContent = '⏳ Fetching data from OSM...';
+  
+  try {
+    const center = map.getCenter();
+    const bounds = [
+      [center.lat - defaultSize, center.lng - defaultSize],
+      [center.lat + defaultSize, center.lng + defaultSize]
+    ];
+    
+    const osmData = await fetchOSMData(bounds);
+    const processed = processOSMData(osmData, bounds);
+    
+    document.getElementById('building-count').textContent = processed.buildings.length;
+    status.textContent = `✅ Found ${processed.buildings.length} buildings, ${processed.roads.length} roads`;
+    
+    const format = document.getElementById('format').value;
+    let output, filename, mime;
+    
+    if (format === 'obj') {
+      output = exportToOBJ(processed);
+      filename = 'osm_export.obj';
+      mime = 'text/plain';
+    } else if (format === 'json') {
+      output = exportToJSON(processed);
+      filename = 'osm_export.json';
+      mime = 'application/json';
+    } else {
+      output = exportToGeoJSON(processed);
+      filename = 'osm_export.geojson';
+      mime = 'application/json';
+    }
+    
+    // Download
+    const blob = new Blob([output], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    status.textContent = `🎉 Exported ${filename} successfully!`;
+    
+  } catch (e) {
+    status.textContent = `❌ Error: ${e.message}`;
+    console.error(e);
+  }
+  
+  btn.disabled = false;
+}
+</script>
+
+</body>
+  </html>
