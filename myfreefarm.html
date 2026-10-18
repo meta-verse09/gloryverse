@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🌈 Kebun Pelangi</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: linear-gradient(180deg, #5fc4f7 0%, #a8e6ff 28%, #d7f7c4 52%, #8fd97a 78%, #6cc25a 100%);
+    background-attachment: fixed;
+    color: #22301c;
+    padding: 14px;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* ---------- dekorasi langit ---------- */
+  .sun {
+    position: fixed; top: -60px; right: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, #fff7a8 0%, #ffd93d 45%, rgba(255,217,61,0) 70%);
+    pointer-events: none; z-index: 0;
+    animation: pulse 6s ease-in-out infinite;
+  }
+  @keyframes pulse { 50% { transform: scale(1.12); } }
+
+  .cloud {
+    position: fixed; top: 40px; left: -220px;
+    width: 160px; height: 55px; border-radius: 40px;
+    background: rgba(255,255,255,.85);
+    box-shadow: 40px 12px 0 -6px rgba(255,255,255,.85), 80px -4px 0 -12px rgba(255,255,255,.85);
+    pointer-events: none; z-index: 0;
+    animation: drift 38s linear infinite;
+  }
+  .cloud.c2 { top: 130px; transform: scale(.7); animation-duration: 55s; animation-delay: -18s; opacity: .75; }
+  .cloud.c3 { top: 12px; transform: scale(.5); animation-duration: 70s; animation-delay: -40s; opacity: .6; }
+  @keyframes drift { to { left: 110vw; } }
+
+  /* ---------- layout ---------- */
+  .wrap { max-width: 1040px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .topbar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    background: rgba(255,255,255,.72);
+    backdrop-filter: blur(8px);
+    border: 3px solid #fff;
+    border-radius: 20px;
+    padding: 10px 16px;
+    box-shadow: 0 8px 22px rgba(40,90,30,.22);
+    margin-bottom: 14px;
+  }
+  .title { font-size: 20px; font-weight: 900; letter-spacing: .5px; margin-right: auto;
+           background: linear-gradient(90deg,#ff5f6d,#ffb347,#47c95e,#3ba7ff,#a56bff);
+           -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 15px;
+          background: #fff; border-radius: 12px; padding: 6px 12px; box-shadow: 0 3px 0 #d8e6cf; }
+  .stat.money { color: #b8860b; }
+  .stat.lvl { color: #7a4fbf; }
+  .xpbar { width: 90px; height: 10px; background: #e6e9f5; border-radius: 8px; overflow: hidden; }
+  .xpbar > div { height: 100%; width: 0%; border-radius: 8px;
+                 background: linear-gradient(90deg,#a56bff,#5b8dff);
+                 transition: width .35s ease; }
+
+  .main { display: grid; grid-template-columns: 1fr 296px; gap: 14px; align-items: start; }
+  @media (max-width: 780px) { .main { grid-template-columns: 1fr; } }
+
+  /* ---------- area kebun ---------- */
+  .farmbox {
+    background: linear-gradient(180deg, #bdf0a4, #8edc78);
+    border: 4px solid #ffffff9c;
+    border-radius: 22px;
+    padding: 14px;
+    box-shadow: 0 10px 24px rgba(40,90,30,.25), inset 0 -8px 0 rgba(0,0,0,.06);
+  }
+  .farm {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+    gap: 10px;
+  }
+
+  .plot {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    background:
+      radial-gradient(circle at 28% 18%, #b57c47 0%, transparent 55%),
+      repeating-linear-gradient(45deg, #8b5a2b 0 9px, #7a4a22 9px 18px);
+    box-shadow: inset 0 -7px 0 rgba(0,0,0,.22), inset 0 3px 0 rgba(255,255,255,.16), 0 5px 10px rgba(0,0,0,.18);
+    transition: transform .14s ease, box-shadow .14s ease, filter .2s;
+    overflow: hidden;
+  }
+  .plot:hover { transform: translateY(-4px) scale(1.03); box-shadow: inset 0 -7px 0 rgba(0,0,0,.22), 0 10px 16px rgba(0,0,0,.24); }
+  .plot:active { transform: translateY(-1px) scale(.99); }
+
+  .plot.watered { filter: brightness(1.06) saturate(1.15); }
+  .plot.watered::before {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(80,180,255,.30), rgba(80,180,255,0));
+    pointer-events: none;
+  }
+
+  .plot.ready {
+    animation: readyBounce 1.1s ease-in-out infinite;
+    box-shadow: inset 0 -7px 0 rgba(0,0,0,.22), 0 0 0 4px #ffe066, 0 0 22px 4px #ffd93d99;
+  }
+  @keyframes readyBounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+  .crop-emoji {
+    font-size: clamp(26px, 6vw, 42px);
+    line-height: 1;
+    filter: drop-shadow(0 3px 2px rgba(0,0,0,.35));
+    transition: font-size .2s;
+    pointer-events: none;
+  }
+  .plot:not(.locked):not(.has-crop) .crop-emoji { opacity: .5; font-size: 26px; }
+
+  .progress {
+    position: absolute; left: 8px; right: 8px; bottom: 7px;
+    height: 8px; border-radius: 6px;
+    background: rgba(0,0,0,.42);
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .progress .fill {
+    height: 100%; width: 0%; border-radius: 6px;
+    background: linear-gradient(90deg, #7ee787, #38d25c);
+    transition: width .1s linear;
+  }
+
+  .water-btn {
+    position: absolute; top: 5px; right: 5px;
+    width: 26px; height: 26px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: #ffffffdd; font-size: 14px; border: 2px solid #7ec8ff;
+    box-shadow: 0 2px 5px rgba(0,0,0,.25);
+    cursor: pointer;
+    transition: transform .12s, opacity .2s;
+  }
+  .water-btn:hover { transform: scale(1.18); }
+  .water-btn.wet { background: #b8e6ff; border-color: #3ba7ff; opacity: .85; }
+
+  .lock {
+    position: absolute; inset: 0;
+    display: none; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    background: repeating-linear-gradient(45deg, #6d6d6d 0 8px, #5e5e5e 8px 16px);
+    color: #fff; font-weight: 800; font-size: 12px;
+    text-shadow: 0 1px 2px #000;
+  }
+  .lock span { font-size: 24px; filter: grayscale(0); }
+  .plot.locked { cursor: pointer; }
+  .plot.locked:hover .lock { filter: brightness(1.18); }
+
+  /* ---------- panel kanan ---------- */
+  .panel { display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(8px);
+    border: 3px solid #fff;
+    border-radius: 18px;
+    padding: 12px;
+    box-shadow: 0 8px 20px rgba(40,90,30,.2);
+  }
+  .card h3 {
+    margin: 0 0 10px; font-size: 13px; letter-spacing: 1.4px;
+    text-transform: uppercase; color: #4b6b3c;
+  }
+
+  .seeds { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  .seed {
+    position: relative;
+    background: #fff; border-radius: 13px; padding: 8px 6px;
+    text-align: center; cursor: pointer;
+    border: 3px solid transparent;
+    box-shadow: 0 3px 0 #dfe9d8;
+    transition: transform .12s, border-color .15s, box-shadow .15s;
+  }
+  .seed:hover { transform: translateY(-2px); box-shadow: 0 5px 0 #dfe9d8; }
+  .seed.selected { border-color: #38d25c; box-shadow: 0 0 0 3px #38d25c33, 0 3px 0 #dfe9d8; }
+  .seed.cant { opacity: .45; filter: grayscale(.7); }
+  .seed .e { font-size: 24px; line-height: 1.1; display: block; }
+  .seed .n { font-size: 11px; font-weight: 800; color: #3c4a33; }
+  .seed .c { font-size: 11px; font-weight: 700; color: #c08b12; }
+  .seed .lvlreq {
+    position: absolute; inset: 0; border-radius: 11px;
+    background: rgba(30,30,30,.72); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; gap: 2px;
+  }
+
+  .inv-empty { font-size: 12px; color: #7b8a72; font-style: italic; text-align: center; padding: 6px 0; }
+
+  .inv-item {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff; border-radius: 11px; padding: 6px 8px; margin-bottom: 6px;
+    box-shadow: 0 2px 0 #e2ecdb;
+  }
+  .inv-item .e { font-size: 20px; }
+  .inv-item .n { font-size: 12px; font-weight: 800; flex: 1; }
+  .inv-item .q { font-size: 12px; font-weight: 700; color: #6b7a62; }
+  .inv-item button {
+    border: none; border-radius: 9px; padding: 5px 9px;
+    background: linear-gradient(180deg,#4ade6a,#2eb84c);
+    color: #fff; font-weight: 800; font-size: 11px; cursor: pointer;
+    box-shadow: 0 3px 0 #1f8b37;
+    transition: transform .1s;
+  }
+  .inv-item button:active { transform: translateY(2px); box-shadow: 0 1px 0 #1f8b37; }
+
+  .sellall {
+    width: 100%; margin-top: 4px; border: none; border-radius: 12px;
+    padding: 10px; font-weight: 900; font-size: 13px; cursor: pointer; color: #fff;
+    background: linear-gradient(180deg,#ffb347,#f59300);
+    box-shadow: 0 4px 0 #c47400;
+    transition: transform .1s;
+  }
+  .sellall:active { transform: translateY(3px); box-shadow: 0 1px 0 #c47400; }
+  .sellall:disabled { opacity: .4; cursor: not-allowed; box-shadow: 0 4px 0 #aaa; background: #bbb; }
+
+  .hint {
+    font-size: 11.5px; color: #40603a; line-height: 1.5;
+    background: #ffffffb8; border-radius: 14px; padding: 10px 12px;
+    border: 2px dashed #9ed48a;
+  }
+
+  /* ---------- toast & floating text ---------- */
+  #toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: #22301ce8; color: #fff; font-weight: 800; font-size: 13px;
+    padding: 10px 20px; border-radius: 30px; opacity: 0; pointer-events: none;
+    transition: opacity .25s, transform .25s; z-index: 1000;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .floater {
+    position: fixed; transform: translate(-50%, 0);
+    font-weight: 900; font-size: 17px; pointer-events: none; z-index: 999;
+    text-shadow: 0 2px 0 #fff, 0 0 10px rgba(0,0,0,.25);
+    animation: floatUp 1s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translate(-50%, 0) scale(.7); }
+    22%  { opacity: 1; transform: translate(-50%, -14px) scale(1.15); }
+    100% { opacity: 0; transform: translate(-50%, -62px) scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<div class="sun"></div>
+<div class="cloud"></div>
+<div class="cloud c2"></div>
+<div class="cloud c3"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="title">🌈 Kebun Pelangi</div>
+    <div class="stat money">💰 <span id="money">0</span></div>
+    <div class="stat lvl">⭐ Lv <span id="level">1</span></div>
+    <div class="stat"><div class="xpbar"><div id="xpfill"></div></div><span id="xptext" style="font-size:11px;color:#7a8b70"></span></div>
+  </div>
+
+  <div class="main">
+    <div class="farmbox">
+      <div class="farm" id="farm"></div>
+    </div>
+
+    <div class="panel">
+      <div class="card">
+        <h3>🌱 Bibit</h3>
+        <div class="seeds" id="shop"></div>
+      </div>
+
+      <div class="card">
+        <h3>🧺 Keranjang</h3>
+        <div id="inventory"></div>
+      </div>
+
+      <div class="hint">
+        Pilih bibit → klik lahan kosong untuk menanam.<br>
+        Klik 💧 untuk menyiram (tumbuh 1.7× lebih cepat).<br>
+        Klik tanaman siap panen untuk memetiknya! 🌟
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   DATA TANAMAN
+   ========================================================= */
+const CROPS = {
+  gandum:   { name:'Gandum',   emoji:'🌾', cost:10,  time:10,  sell:25,   xp:6,   lvl:1 },
+  wortel:   { name:'Wortel',   emoji:'🥕', cost:25,  time:20,  sell:65,   xp:12,  lvl:1 },
+  tomat:    { name:'Tomat',    emoji:'🍅', cost:55,  time:35,  sell:150,  xp:22,  lvl:2 },
+  jagung:   { name:'Jagung',   emoji:'🌽', cost:110, time:60,  sell:310,  xp:40,  lvl:3 },
+  stroberi: { name:'Stroberi', emoji:'🍓', cost:240, time:90,  sell:700,  xp:70,  lvl:4 },
+  labu:     { name:'Labu',     emoji:'🎃', cost:500, time:150, sell:1500, xp:120, lvl:5 },
+};
+const CROP_KEYS = Object.keys(CROPS);
+const UNLOCK_COSTS = [300, 550, 900, 1400, 2000, 2800];
+const PLOT_COUNT = 12;
+const SAVE_KEY = 'kebun-pelangi-v1';
+
+/* =========================================================
+   STATE
+   ========================================================= */
+let state = {
+  money: 120,
+  xp: 0,
+  level: 1,
+  selected: 'gandum',
+  inv: {},
+  plots: []
+};
+
+function makePlots() {
+  const arr = [];
+  for (let i = 0; i < PLOT_COUNT; i++) {
+    arr.push({
+      unlocked: i < 6,
+      unlockCost: i < 6 ? 0 : UNLOCK_COSTS[i - 6],
+      crop: null,
+      progress: 0,
+      watered: false,
+      waterLeft: 0
+    });
+  }
+  return arr;
+}
+state.plots = makePlots();
+
+/* =========================================================
+   ELEMEN
+   ========================================================= */
+const farmEl  = document.getElementById('farm');
+const shopEl  = document.getElementById('shop');
+const invEl   = document.getElementById('inventory');
+const moneyEl = document.getElementById('money');
+const levelEl = document.getElementById('level');
+const xpFill  = document.getElementById('xpfill');
+const xpText  = document.getElementById('xptext');
+const toastEl = document.getElementById('toast');
+
+const plotEls = [];
+
+/* =========================================================
+   UTIL
+   ========================================================= */
+const fmt = n => n.toLocaleString('id-ID');
+const xpNeeded = lvl => 100 + (lvl - 1) * 80;
+
+let toastTimer;
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1700);
+}
+
+function floatText(el, text, color) {
+  const r = el.getBoundingClientRect();
+  const d = document.createElement('div');
+  d.className = 'floater';
+  d.textContent = text;
+  d.style.color = color;
+  d.style.left = (r.left + r.width / 2) + 'px';
+  d.style.top  = (r.top + r.height / 2 - 10) + 'px';
+  document.body.appendChild(d);
+  setTimeout(() => d.remove(), 1000);
+}
+
+/* =========================================================
+   BANGUN LAHAN
+   ========================================================= */
+function buildFarm() {
+  farmEl.innerHTML = '';
+  plotEls.length = 0;
+
+  state.plots.forEach((p, i) => {
+    const el = document.createElement('div');
+    el.className = 'plot';
+    el.innerHTML = `
+      <div class="crop-emoji"></div>
+      <div class="progress"><div class="fill"></div></div>
+      <div class="water-btn" title="Siram">💧</div>
+      <div class="lock"><span>🔒</span><b></b></div>
+    `;
+
+    el.addEventListener('click', () => onPlotClick(i));
+
+    const waterBtn = el.querySelector('.water-btn');
+    waterBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      onWater(i);
+    });
+
+    farmEl.appendChild(el);
+    plotEls.push(el);
+  });
+}
+
+/* =========================================================
+   AKSI PEMAIN
+   ========================================================= */
+function onPlotClick(i) {
+  const p = state.plots[i];
+  const el = plotEls[i];
+
+  // ---- lahan terkunci ----
+  if (!p.unlocked) {
+    if (state.money >= p.unlockCost) {
+      state.money -= p.unlockCost;
+      p.unlocked = true;
+      floatText(el, '-' + fmt(p.unlockCost), '#e03131');
+      toast('🔓 Lahan baru terbuka!');
+      refreshUI();
+      save();
+    } else {
+      toast('💸 Koin kurang untuk membuka lahan ini');
+    }
+    return;
+  }
+
+  // ---- lahan kosong → tanam ----
+  if (!p.crop) {
+    const c = CROPS[state.selected];
+    if (state.level < c.lvl) { toast('🔒 Bibit ini butuh Level ' + c.lvl); return; }
+    if (state.money < c.cost) { toast('💸 Koin tidak cukup untuk bibit ' + c.name); return; }
+
+    state.money -= c.cost;
+    p.crop = state.selected;
+    p.progress = 0;
+    p.watered = false;
+    p.waterLeft = 0;
+
+    floatText(el, '-' + fmt(c.cost), '#e03131');
+    refreshUI();
+    save();
+    return;
+  }
+
+  // ---- siap panen ----
+  if (p.progress >= 1) {
+    const c = CROPS[p.crop];
+    state.inv[p.crop] = (state.inv[p.crop] || 0) + 1;
+
+    p.crop = null;
+    p.progress = 0;
+    p.watered = false;
+    p.waterLeft = 0;
+
+    floatText(el, '+1 ' + c.emoji, '#2eb84c');
+    addXP(c.xp);
+    refreshUI();
+    save();
+    return;
+  }
+
+  // ---- masih tumbuh ----
+  toast('🌿 Masih tumbuh... sabar ya!');
+}
+
+function onWater(i) {
+  const p = state.plots[i];
+  if (!p.crop || p.progress >= 1 || p.watered) return;
+  const c = CROPS[p.crop];
+  p.watered = true;
+  p.waterLeft = Math.max(3, c.time * 0.6);
+  floatText(plotEls[i], '💧', '#3ba7ff');
+}
+
+function addXP(n) {
+  state.xp += n;
+  let need = xpNeeded(state.level);
+  while (state.xp >= need) {
+    state.xp -= need;
+    state.level++;
+    toast('🎉 Naik ke Level ' + state.level + '!');
+    need = xpNeeded(state.level);
+  }
+}
+
+/* =========================================================
+   JUAL
+   ========================================================= */
+function sellOne(key) {
+  const count = state.inv[key] || 0;
+  if (count <= 0) return;
+  const price = CROPS[key].sell;
+  state.inv[key] = count - 1;
+  if (state.inv[key] === 0) delete state.inv[key];
+  state.money += price;
+  toast('💰 +' + fmt(price) + ' koin');
+  refreshUI();
+  save();
+}
+
+function sellAll() {
+  let total = 0, items = 0;
+  for (const key in state.inv) {
+    const n = state.inv[key];
+    total += n * CROPS[key].sell;
+    items += n;
+  }
+  if (total === 0) return;
+  state.inv = {};
+  state.money += total;
+  toast('💰 Terjual ' + items + ' item → +' + fmt(total) + ' koin!');
+  refreshUI();
+  save();
+}
+
+/* =========================================================
+   RENDER PANEL
+   ========================================================= */
+function renderShop() {
+  shopEl.innerHTML = '';
+  CROP_KEYS.forEach(key => {
+    const c = CROPS[key];
+    const locked = state.level < c.lvl;
+    const broke  = state.money < c.cost;
+
+    const d = document.createElement('div');
+    d.className = 'seed'
+      + (state.selected === key ? ' selected' : '')
+      + (!locked && broke ? ' cant' : '');
+    d.innerHTML = `
+      <span class="e">${c.emoji}</span>
+      <span class="n">${c.name}</span>
+      <span class="c">💰 ${fmt(c.cost)}</span>
+      ${locked ? `<div class="lvlreq">🔒 Lv.${c.lvl}</div>` : ''}
+    `;
+    d.addEventListener('click', () => {
+      if (locked) { toast('🔒 Butuh Level ' + c.lvl + ' untuk bibit ini'); return; }
+      state.selected = key;
+      renderShop();
+    });
+    shopEl.appendChild(d);
+  });
+}
+
+function renderInventory() {
+  invEl.innerHTML = '';
+  const keys = Object.keys(state.inv).filter(k => state.inv[k] > 0);
+
+  if (keys.length === 0) {
+    invEl.innerHTML = '<div class="inv-empty">Keranjang masih kosong… panen dulu! 🌾</div>';
+    return;
+  }
+
+  let total = 0;
+  keys.forEach(key => {
+    const c = CROPS[key];
+    const n = state.inv[key];
+    total += n * c.sell;
+
+    const row = document.createElement('div');
+    row.className = 'inv-item';
+    row.innerHTML = `
+      <span class="e">${c.emoji}</span>
+      <span class="n">${c.name}</span>
+      <span class="q">×${n}</span>
+    `;
+    const btn = document.createElement('button');
+    btn.textContent = 'Jual ' + fmt(c.sell);
+    btn.addEventListener('click', () => sellOne(key));
+    row.appendChild(btn);
+    invEl.appendChild(row);
+  });
+
+  const all = document.createElement('button');
+  all.className = 'sellall';
+  all.textContent = '💰 Jual Semua (' + fmt(total) + ')';
+  all.addEventListener('click', sellAll);
+  invEl.appendChild(all);
+}
+
+function refreshUI() {
+  moneyEl.textContent = fmt(state.money);
+  levelEl.textContent = state.level;
+  const need = xpNeeded(state.level);
+  xpFill.style.width = Math.min(100, (state.xp / need) * 100) + '%';
+  xpText.textContent = state.xp + '/' + need;
+  renderShop();
+  renderInventory();
+}
+
+/* =========================================================
+   RENDER LAHAN (tiap frame)
+   ========================================================= */
+function renderPlots() {
+  state.plots.forEach((p, i) => {
+    const el = plotEls[i];
+    const cropEl  = el.querySelector('.crop-emoji');
+    const fillEl  = el.querySelector('.fill');
+    const progEl  = el.querySelector('.progress');
+    const waterEl = el.querySelector('.water-btn');
+    const lockEl  = el.querySelector('.lock');
+
+    // terkunci
+    if (!p.unlocked) {
+      el.classList.add('locked');
+      el.classList.remove('ready', 'watered', 'has-crop');
+      lockEl.style.display = 'flex';
+      lockEl.querySelector('b').textContent = '💰 ' + fmt(p.unlockCost);
+      cropEl.textContent = '';
+      progEl.style.display = 'none';
+      waterEl.style.display = 'none';
+      return;
+    }
+    el.classList.remove('locked');
+    lockEl.style.display = 'none';
+
+    // kosong
+    if (!p.crop) {
+      el.classList.remove('ready', 'watered', 'has-crop');
+      cropEl.textContent = '＋';
+      progEl.style.display = 'none';
+      waterEl.style.display = 'none';
+      return;
+    }
+
+    const c = CROPS[p.crop];
+    el.classList.add('has-crop');
+    progEl.style.display = 'block';
+    fillEl.style.width = (p.progress * 100).toFixed(1) + '%';
+    el.classList.toggle('watered', p.watered);
+
+    if (p.progress >= 1) {
+      el.classList.add('ready');
+      cropEl.textContent = c.emoji;
+      waterEl.style.display = 'none';
+    } else {
+      el.classList.remove('ready');
+      cropEl.textContent = p.progress < 0.35 ? '🌱' : '🌿';
+      waterEl.style.display = 'flex';
+      waterEl.classList.toggle('wet', p.watered);
+    }
+  });
+}
+
+/* =========================================================
+   GAME LOOP
+   ========================================================= */
+function update(dt) {
+  for (const p of state.plots) {
+    if (!p.unlocked || !p.crop || p.progress >= 1) continue;
+
+    let speed = 1;
+    if (p.watered) {
+      speed = 1.7;
+      p.waterLeft -= dt;
+      if (p.waterLeft <= 0) {
+        p.watered = false;
+        p.waterLeft = 0;
+      }
+    }
+    p.progress = Math.min(1, p.progress + (dt / CROPS[p.crop].time) * speed);
+  }
+}
+
+let lastT = performance.now();
+function loop(t) {
+  const dt = Math.min((t - lastT) / 1000, 0.4);
+  lastT = t;
+  update(dt);
+  renderPlots();
+  requestAnimationFrame(loop);
+}
+
+/* =========================================================
+   SIMPAN / MUAT
+   ========================================================= */
+function save() {
+  try {
+    localStorage.setItem(SAVE_KEY, JSON.stringify({
+      money: state.money,
+      xp: state.xp,
+      level: state.level,
+      selected: state.selected,
+      inv: state.inv,
+      plots: state.plots.map(p => ({
+        unlocked: p.unlocked,
+        crop: p.crop,
+        progress: p.progress,
+        watered: p.watered,
+        waterLeft: p.waterLeft
+      }))
+    }));
+  } catch (e) { /* abaikan */ }
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    state.money = s.money ?? 120;
+    state.xp = s.xp ?? 0;
+    state.level = s.level ?? 1;
+    state.selected = CROPS[s.selected] ? s.selected : 'gandum';
+    state.inv = s.inv || {};
+    state.plots = makePlots();
+    (s.plots || []).forEach((sp, i) => {
+      if (!state.plots[i]) return;
+      state.plots[i].unlocked = !!sp.unlocked;
+      state.plots[i].crop = CROPS[sp.crop] ? sp.crop : null;
+      state.plots[i].progress = sp.progress || 0;
+      state.plots[i].watered = !!sp.watered;
+      state.plots[i].waterLeft = sp.waterLeft || 0;
+    });
+    return true;
+  } catch (e) { return false; }
+}
+
+/* =========================================================
+   START
+   ========================================================= */
+load();
+buildFarm();
+refreshUI();
+requestAnimationFrame(loop);
+setInterval(save, 5000);
+
+// sapaan
+setTimeout(() => {
+  if (state.money === 120 && state.level === 1) {
+    toast('🌱 Selamat datang di Kebun Pelangi!');
+  }
+}, 400);
+</script>
+</body>
+</html>
