@@ -62,3 +62,41 @@ export const mockWars = [
   { id: 98189, attacker: 'Maldives', defender: 'Krsko', damage: '12.4M', status: 'active' },
   { id: 98180, attacker: 'Monaco',   defender: 'Corsica', damage: '8.1M',  status: 'active' },
 ];
+
+// ===== Tambahkan ke mockPlayer =====
+// (ganti objek mockPlayer dengan ini)
+export const mockPlayer = {
+  id: 'ADVAN',
+  name: 'ADVAN',
+  avatar: 'https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460',
+  country: 'Maldives',
+  countryCode: 'MV',
+  region: 'Krsko',
+  level: 29,
+  xp: 11810,
+  xpMax: 16091,
+  energy: 62.41,
+  health: 95.0,
+  gold: 360.72,
+  diamond: 12,          // ← BARU
+  usdt: 0,              // ← BARU (saldo USDT on-chain / off-chain)
+  euro: 0.03,
+  svct: 106.95,
+  ruf: 0.00,
+  activeWar: true,
+  medalsProgress: 63.4,
+};
+
+// ===== BARU: mock wallet history =====
+export const mockWalletHistory = [
+  { id: 'TX-88171', type: 'topup',    method: 'USDT_SOLANA', amountUSD: 50, diamonds: 50,  status: 'success', date: '2026-09-10 14:22' },
+  { id: 'TX-88170', type: 'topup',    method: 'QRIS_DANA',   amountUSD: 20, diamonds: 20,  status: 'success', date: '2026-09-08 09:15' },
+  { id: 'TX-88169', type: 'withdraw', method: 'USDT_SOLANA', amountUSD: 30, diamonds: 30,  status: 'success', date: '2026-09-05 18:40' },
+  { id: 'TX-88168', type: 'topup',    method: 'QRIS_DANA',   amountUSD: 10, diamonds: 10,  status: 'pending', date: '2026-09-05 11:02' },
+];
+
+// ===== BARU: mock company purchase info =====
+export const mockCompanyPrice = {
+  diamonds: 30,   // default; bisa berubah dari admin
+  gold: 0,
+};
