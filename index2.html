@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GloryVerse — One World, One Game</title>
+  <meta name="description" content="GloryVerse — resource, production, war and government strategy game.">
+  <link rel="icon" type="image/png" href="https://gloryverse.id/img/logo-site.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+
+  <div class="gv-app">
+    <header id="gv-header" class="gv-header"></header>
+    <nav id="gv-topbar" class="gv-topbar"></nav>
+    <div class="gv-body">
+      <aside id="gv-sidebar" class="gv-sidebar"></aside>
+      <main id="gv-main" class="gv-main"></main>
+    </div>
+    <div class="gv-ad-slot">
+      <div id="container-155237578e6f84c2a6d93ea22b88ea6d" class="gv-ad-container"></div>
+    </div>
+  </div>
+
+  <div class="gv-footer">
+    <div class="gv-footer-inner">
+      <div>Copyright 2026 &copy; gloryverse.id — All rights reserved.</div>
+      <div>
+        <a href="#/terms">Terms</a> ·
+        <a href="#/privacy">Privacy</a> ·
+        <a href="#/docs">Docs</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="gv-modal-root" class="gv-modal-root"></div>
+  <div id="gv-toast-root" class="gv-toast-root"></div>
+
+  <!-- Native Ad Network -->
+  <script async="async" data-cfasync="false"
+    src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+
+  <!-- Supabase JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <script>
+    window.GV_CONFIG = {
+      supabaseUrl: 'https://gfhcqbosxtcuvxttmzsm.supabase.co',
+      supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY',   // ← isi nanti
+      mockMode: true,
+      // Wallet defaults (bisa diubah dari Admin panel)
+      diamondPriceUSD: 1,          // 1 Diamond = 1 USDT
+      companyPriceDiamonds: 30,    // harga dasar company
+      withdrawMinUSD: 10,          // minimum withdraw
+      usdtNetwork: 'SOL',
+      depositMethods: ['USDT_SOLANA', 'QRIS_DANA']
+    };
+  </script>
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
