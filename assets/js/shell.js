@@ -276,3 +276,152 @@ export function renderSidebar() {
     </div>
   `;
 }
+
+import { mockPlayer } from './data.js';
+
+/* ============ HEADER ============ */
+export function renderHeader() {
+  const el = document.getElementById('gv-header');
+  const p = mockPlayer;
+  el.innerHTML = `
+    <a href="#/dashboard" class="gv-brand">
+      <img src="https://gloryverse.id/img/logo-site.png" alt="GloryVerse">
+    </a>
+
+    <div class="gv-header-search">
+      <input type="text" placeholder="Search players, companies, countries…">
+    </div>
+
+    <div class="gv-header-right">
+      <div class="gv-clock" title="Server time (London)">
+        <span class="gv-clock-time" id="gv-clock-time">--:--:--</span>
+        <div class="gv-clock-bar" title="Next medal session: ${p.medalsProgress}%">
+          <div style="width:${p.medalsProgress}%"></div>
+        </div>
+      </div>
+
+      <a class="gv-label gv-label--success" href="#/activity/offers">
+        <i class="fa-solid fa-arrow-trend-up"></i> Income (20232)
+      </a>
+      <a class="gv-label gv-label--warning" href="#/dashboard">
+        <i class="fa-solid fa-bell"></i> Alerts (9569)
+      </a>
+      <a class="gv-label gv-label--light" href="#/messages">
+        <i class="fa-solid fa-envelope"></i> Messages (0)
+      </a>
+      <a class="gv-label gv-label--icon gv-label--light" href="#/notepad" title="Notepad">
+        <i class="fa-solid fa-file-lines"></i>
+      </a>
+      <a class="gv-label gv-label--icon gv-label--light" href="#/settings" title="Settings">
+        <i class="fa-solid fa-gear"></i>
+      </a>
+      <a class="gv-label gv-label--icon gv-label--light" href="#/logout" title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </a>
+    </div>
+  `;
+  startClock();
+}
+
+function startClock() {
+  const node = document.getElementById('gv-clock-time');
+  if (!node) return;
+  const tick = () => {
+    node.textContent = new Date().toLocaleTimeString('en-GB', {
+      timeZone: 'Europe/London',
+      hour12: false,
+    });
+  };
+  tick();
+  setInterval(tick, 1000);
+}
+
+/* ============ TOPBAR ============ */
+/* (TIDAK BERUBAH — pakai NAV dari kode sebelumnya) */
+
+/* ============ SIDEBAR ============ */
+export function renderSidebar() {
+  const el = document.getElementById('gv-sidebar');
+  const p = mockPlayer;
+
+  el.innerHTML = `
+    <div class="gv-player-card">
+      <img class="gv-player-avatar" src="${p.avatar}" alt="${p.name}">
+      <div class="gv-player-name">${p.name}</div>
+      <div class="gv-player-loc">
+        <img src="https://myprofitland.com/img/country_flags/16/${p.countryCode.toLowerCase()}.png">
+        ${p.country} · ${p.region}
+      </div>
+      ${p.activeWar ? `<span class="gv-war-flag"><i class="fa-solid fa-crosshairs"></i> Active War</span>` : ''}
+    </div>
+
+    <div class="gv-stat">
+      <div class="gv-stat-head"><span>Energy</span><b>${p.energy.toFixed(2)}%</b></div>
+      <div class="gv-bar gv-bar--energy"><div style="width:${p.energy}%"></div></div>
+    </div>
+    <div class="gv-stat">
+      <div class="gv-stat-head"><span>Health</span><b>${p.health.toFixed(1)}%</b></div>
+      <div class="gv-bar gv-bar--health"><div style="width:${p.health}%"></div></div>
+    </div>
+    <div class="gv-stat">
+      <div class="gv-stat-head"><span>Level ${p.level}</span><b>${p.xp}/${p.xpMax}</b></div>
+      <div class="gv-bar gv-bar--xp"><div style="width:${((p.xp/p.xpMax)*100).toFixed(0)}%"></div></div>
+    </div>
+
+    <div class="gv-resources">
+      <div class="gv-res-row">
+        <i class="fa-solid fa-v" style="color:var(--gold)"></i>
+        <span>sVCT</span><b>${p.svct.toFixed(3)}</b>
+      </div>
+      <div class="gv-res-row">
+        <i class="fa-solid fa-coins" style="color:var(--gold-bright)"></i>
+        <span>Gold</span><b>${p.gold.toFixed(2)}</b>
+      </div>
+      <div class="gv-res-row">
+        <i class="fa-solid fa-gem"></i>
+        <span>Diamond</span><b>${p.diamond.toFixed(2)}</b>
+      </div>
+      <div class="gv-res-row">
+        <i class="fa-brands fa-bitcoin" style="color:#26a17b"></i>
+        <span>USDT</span><b>${p.usdt.toFixed(2)}</b>
+      </div>
+      <div class="gv-res-row">
+        <i class="fa-solid fa-euro-sign" style="color:#60a5fa"></i>
+        <span>Euro</span><b>${p.euro.toFixed(2)}</b>
+      </div>
+      <div class="gv-res-row">
+        <i class="fa-solid fa-money-bill" style="color:var(--cyan)"></i>
+        <span>RUF</span><b>${p.ruf.toFixed(2)}</b>
+      </div>
+    </div>
+
+    <div class="gv-alert gv-alert--info">
+      <b>Breakfast</b> with 20% energy, served at 06:00 — you have <b>7 units</b>.
+      <a href="#/activity/bar">Buy more</a>
+    </div>
+
+    <ul class="gv-sidebar-links">
+      <li><a href="#/companies">My Companies</a></li>
+      <li><a href="#/inventory">My Inventory</a></li>
+      <li><a href="#/companion">My Companion</a></li>
+      <li><a href="#/vehicles">My Vehicles</a></li>
+      <li><a href="#/financials">My Finances</a></li>
+      <li><a href="#/weapons">My Weapons &amp; Info</a></li>
+      <li><a href="#/clothing">My Clothing</a></li>
+      <li><a href="#/realestate">My Real Estate</a></li>
+      <li><a href="#/recruits">My Recruits</a></li>
+      <li><a href="#/medals">My Medals</a></li>
+      <li><a href="#/newspapers">My Newspapers</a></li>
+      <li><a href="#/regions">My Regions</a></li>
+    </ul>
+
+    <div class="gv-sidebar-actions">
+      <a href="#/wallet/topup" class="gv-btn gv-btn--gold gv-btn--sm" style="flex:1">
+        <i class="fa-solid fa-plus"></i> Top Up
+      </a>
+      <a href="#/wallet/withdraw" class="gv-btn gv-btn--red gv-btn--sm" style="flex:1">
+        <i class="fa-solid fa-arrow-up-from-bracket"></i> Withdraw
+      </a>
+    </div>
+  `;
+}
