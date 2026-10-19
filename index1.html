@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GloryVerse - One World, One Game</title>
+  <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <div class="gv-app">
+    <header id="gv-header" class="gv-header"></header>
+    <nav id="gv-topbar" class="gv-topbar"></nav>
+    <div class="gv-body">
+      <aside id="gv-sidebar" class="gv-sidebar"></aside>
+      <main id="gv-main" class="gv-main"></main>
+    </div>
+  </div>
+
+  <div id="gv-modal-root" class="gv-modal-root"></div>
+  <div id="gv-toast-root" class="gv-toast-root"></div>
+
+  <script>
+    // Isi nanti setelah lo bikin project di Supabase
+    window.GV_CONFIG = {
+      supabaseUrl: 'YOUR_SUPABASE_URL',
+      supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY',
+      mockMode: true // set false setelah Supabase siap
+    };
+  </script>
+  <script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
