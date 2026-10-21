@@ -1,0 +1,515 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>My Profit Land - Online Strategy Browser Game Account Verification</title>
+
+	<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+	<meta name="description" content="" />
+	<meta name="copyright" content="My Profit Land" />
+	<meta property="og:title" content="My Profit Land - Online Strategy Browser Game Account Verification" />
+	<meta property="og:description" content="" />
+	<meta property="og:type" content="website" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
+	<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+
+	<!-- Core CSS -->
+	<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
+	<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+
+	<!-- Core JS -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://gloryverse.id/js/base.js"></script>
+	<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+	<script>
+		function ajaxcall(my_url, my_div, my_data){
+			$.ajax({
+				url: my_url,
+				data: my_data,
+				type: 'get',
+				crossDomain: true,
+				headers: {'X-Requested-With': 'XMLHttpRequest'},
+				beforeSend: function() {
+					$('*').css('cursor', 'progress');
+				},
+				error: function (request, error) {
+					console.log(arguments);
+					$('*').css('cursor', '');
+				},
+				success: function(output){
+					$(my_div).html(output);
+					$('*').css('cursor', '');
+				}
+			});
+		};
+	</script>
+
+	<meta name="robots" content="noindex, nofollow">
+</head>
+
+<body>
+	<div class="viewport">
+		<div class="page">
+			<div class="contents">
+				<!-- HEADER -->
+				<div class="game-head" style="background-image: url(https://mplstatic.com/img/game-head.jpg)">
+					<div class="container">
+						<a class="brand" href="https://gloryverse.id/dashboard.php">
+							<img alt="gloryverse.id" src="https://mplstatic.com/img/logo-site.png">
+						</a>
+					
+						<div class="pull-right">
+							<div class="pull-left" style="margin-right: 16px">
+								<script type="text/javascript">
+									var currenttime = 'September 16, 2026 01:21:00';
+									var serverdate = new Date(currenttime);
+
+									function padlength(what){
+										return (what.toString().length == 1) ? "0" + what : what;
+									}
+
+									function displaytime(){
+										serverdate.setSeconds(serverdate.getSeconds() + 1);
+										var timestring = padlength(serverdate.getHours()) + ":" + padlength(serverdate.getMinutes()) + ":" + padlength(serverdate.getSeconds());
+										var el = document.getElementById("server_time");
+										if(el) el.innerHTML = timestring;
+									}
+									setInterval(displaytime, 1000);
+								</script>
+
+								<a href="https://gloryverse.id/my_medals.php" data-toggle="tooltip" title="Next Medal Session: 30.7% (613 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
+									<span class="label label-light"><span class="icon-clock"></span><b id="server_time">01:21:00</b></span>
+									<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+										<div style="height: 100%; width: 30.7%; border-radius: 1px; background: #f0ad4e;"></div>
+									</div>
+								</a>
+							</div>
+							
+							<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
+								<form method="post" action="https://gloryverse.id/search.php">
+									<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px">
+								</form>
+							</div>
+
+							<div class="pull-left">
+								<div class="text-right">
+									<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax">Income (20264)</a>
+									<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax">Alerts (9572)</a>
+									<a class="label label-light" href="https://gloryverse.id/my_pms.php">Messages (0)</a>
+									<a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.php"><i class="icon icon-cog"></i></a>
+									<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.php"><i class="icon icon-logout"></i></a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- TOPNAV -->
+				<nav class="topnav">
+					<div class="topnav-inner">
+						<div class="container">
+							<div class="topnav-collapse" id="topnav-collapse">
+								<ul class="nav topnav-nav">
+									<li class="active"><a href="https://gloryverse.id/dashboard.php">Home</a></li>
+									<li><a href="https://gloryverse.id/workplaces.php">Work</a></li>
+									<li><a href="https://gloryverse.id/market_local.php">Markets</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</nav>
+
+				<!-- CONTENT AREA -->
+				<div class="container">
+					<div class="clearfix">
+						<!-- LEFTBAR -->
+						<div class="leftbar">
+							<div style="position:relative; padding-left:85px; height:78px">
+								<div style="position:absolute; left:0; top:0;">
+									<a href="https://gloryverse.id/profile.php&id=ADVAN">
+										<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
+									</a>
+								</div>
+								<p class="nw">
+									<b><a href="https://gloryverse.id/profile.php&id=ADVAN">ADVAN</a></b><br>
+									<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/mc.png"> <span class="small"><a href="https://gloryverse.id/country.php&id=MC">Monaco</a></span>
+								</p>
+							</div>
+
+							<div class="text-center small"><b>Energy:</b> 59.36%</div>
+							<div class="progress progress-xs mb-sm-10">
+								<div class="progress-bar progress-bar-success" role="progressbar" style="width: 59.36%;"></div>
+							</div>
+							
+							<div class="text-center small"><b>Health:</b> 100.0%</div>
+							<div class="progress progress-xs mb-sm-10">
+								<div class="progress-bar progress-bar-danger" role="progressbar" style="width: 100.0%;"></div>
+							</div>
+
+							<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 0.03</p>
+							<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 40.49</p>
+						</div>
+
+						<!-- MAIN CONTENT AREA -->
+						<div class="main">
+							<h4>Phone Verification (SMS)</h4>
+							<p>Making sure the game is fair for everyone is very important for us. For this reason we ask players to verify their accounts using their phone. This way we limit the amount of active duplicate accounts within the game. Phone validation is <b>free</b> for everyone and the process is fairly simple.</p>
+
+							<!-- Status Box untuk notifikasi Firebase / AJAX -->
+							<div id="firebaseStatus"></div>
+
+							<!-- FORM VERIFIKASI SMS -->
+							<div class="panel panel-default" style="margin-top: 15px;">
+								<div class="panel-body">
+									<!-- Input Nomor HP -->
+									<div class="form-group">
+										<label for="user_phone">Phone Number:</label>
+										<div class="input-group" style="max-width: 320px;">
+											<span class="input-group-addon" id="phone_ext_display">+62</span>
+											<input type="text" id="user_phone" class="form-control" value="85263477631" placeholder="8123456789">
+										</div>
+										<span class="help-block small">Nomor diambil dari profil database akun Anda.</span>
+									</div>
+
+									<!-- Wadah Invisible reCAPTCHA -->
+									<div id="recaptcha-container" style="margin-bottom: 10px;"></div>
+
+									<!-- Tombol Kirim SMS -->
+									<div class="form-group">
+										<button id="sendCodeBtn" type="button" class="btn btn-primary">
+											<i class="icon-envelope"></i> Send SMS Verification Code
+										</button>
+									</div>
+
+									<!-- Bagian Input Kode OTP (Muncul setelah SMS terkirim) -->
+									<div id="codeVerificationSection" style="display: none; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
+										<div class="form-group">
+											<label for="verification_code">Enter 6-Digit Code:</label>
+											<input type="text" id="verification_code" class="form-control" maxlength="6" placeholder="123456" style="max-width: 200px; font-size: 18px; letter-spacing: 4px; text-align: center;">
+										</div>
+
+										<div class="form-group">
+											<button id="verifyCodeBtn" type="button" class="btn btn-success">
+												<i class="icon-check"></i> Verify Code
+											</button>
+											<button id="resendCodeBtn" type="button" class="btn btn-default" style="display: none; margin-left: 8px;">
+												<i class="icon-refresh"></i> Resend Code
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div><!-- end .main -->
+
+						<!-- RIGHTBAR -->
+						<div class="rightbar">
+							<h6>My Friends</h6>
+							<div class="nw">
+								<a href="https://gloryverse.id/profile.php&id=julienoor">julienoor</a>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div><!-- end .contents -->
+
+			<div class="footer">
+				<div class="container text-center">
+					<div class="copyright">Copyright 2026 &copy; gloryverse.id. All rights reserved.</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+	<!-- FIREBASE MODULE SDK -->
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+		import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyB2wOi2wigCgR6kwNYBPGh5KYRNPWoSkDg",
+			authDomain: "my-profit-land-1528747259776.firebaseapp.com",
+			projectId: "my-profit-land-1528747259776",
+			storageBucket: "my-profit-land-1528747259776.firebasestorage.app",
+			messagingSenderId: "900742102216",
+			appId: "1:900742102216:web:6b5d793444a200f7d0b9fd",
+			measurementId: "G-NZR9DSHLL5"
+		};
+
+		// Initialize Firebase
+		const app = initializeApp(firebaseConfig);
+		const auth = getAuth(app);
+
+		if (!auth.settings) auth.settings = {};
+		auth.settings.appVerificationDisabledForTesting = false;
+
+		// Ekspor ke global window
+		window.firebaseAuth = auth;
+		window.RecaptchaVerifier = RecaptchaVerifier;
+		window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+		// Trigger init setelah SDK Firebase ter-load
+		$(document).ready(function() {
+			if (typeof window.initializeRecaptcha === 'function') {
+				window.initializeRecaptcha();
+			}
+		});
+	</script>
+
+	<!-- JAVASCRIPT LOGIKA VERIFIKASI SMS -->
+	<script>
+		let confirmationResult = null;
+		let recaptchaVerifier = null;
+		let isRecaptchaReady = false;
+		let recaptchaInitInProgress = false;
+
+		const dbPhone = '85263477631';
+		const dbPhoneExt = '62';
+
+		// Validasi hanya angka pada input nomor
+		$(function() {
+			const $phone = $('#user_phone');
+			if ($phone.length) {
+				$phone.on('input', function() {
+					const start = this.selectionStart;
+					const end = this.selectionEnd;
+					const cleaned = this.value.replace(/[^0-9]/g, '');
+					if (this.value !== cleaned) {
+						this.value = cleaned;
+						try { this.setSelectionRange(start, end); } catch(e) {}
+					}
+				});
+			}
+
+			// Event Handler tombol
+			$('#sendCodeBtn').off('click.sms').on('click.sms', function() {
+				sendVerificationCode();
+			});
+
+			$('#verifyCodeBtn').off('click.sms').on('click.sms', function() {
+				verifyCode();
+			});
+
+			$('#resendCodeBtn').off('click.sms').on('click.sms', function() {
+				sendVerificationCode();
+			});
+		});
+
+		function resetRecaptchaContainer() {
+			var old = document.getElementById('recaptcha-container');
+			if (!old || !old.parentNode) return;
+			var fresh = document.createElement('div');
+			fresh.id = 'recaptcha-container';
+			fresh.style.marginBottom = '10px';
+			old.parentNode.replaceChild(fresh, old);
+		}
+
+		window.initializeRecaptcha = function() {
+			if (!window.RecaptchaVerifier || !window.firebaseAuth) return;
+			if (recaptchaInitInProgress) return;
+			recaptchaInitInProgress = true;
+			isRecaptchaReady = false;
+
+			try {
+				if (recaptchaVerifier) {
+					try { recaptchaVerifier.clear(); } catch (e) {}
+					recaptchaVerifier = null;
+				}
+				resetRecaptchaContainer();
+
+				recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+					'size': 'invisible',
+					'callback': function(response) {
+						isRecaptchaReady = true;
+					},
+					'expired-callback': function() {
+						isRecaptchaReady = false;
+						$('#firebaseStatus').html('<div class="alert alert-warning">reCAPTCHA expired. Please try again.</div>');
+					}
+				});
+
+				recaptchaVerifier.render().then(function() {
+					isRecaptchaReady = true;
+					recaptchaInitInProgress = false;
+				}).catch(function(renderError) {
+					recaptchaInitInProgress = false;
+					console.error('reCAPTCHA render error:', renderError);
+					$('#firebaseStatus').html('<div class="alert alert-danger">Gagal memuat reCAPTCHA. (' + renderError.message + ')</div>');
+				});
+			} catch (error) {
+				recaptchaInitInProgress = false;
+				console.error('reCAPTCHA initialization error:', error);
+				$('#firebaseStatus').html('<div class="alert alert-danger">Gagal inisialisasi reCAPTCHA: ' + error.message + '</div>');
+			}
+		};
+
+		function formatPhoneNumber() {
+			const phoneVal = $('#user_phone').val().trim() || dbPhone;
+			if (!dbPhoneExt || !phoneVal) return null;
+			return '+' + dbPhoneExt + phoneVal;
+		}
+
+		function maskPhone(e164) {
+			if (!e164) return '';
+			const prefix = e164.slice(0, 4);
+			const suffix = e164.slice(-2);
+			const middleLen = Math.max(3, e164.length - prefix.length - suffix.length);
+			return prefix + '*'.repeat(middleLen) + suffix;
+		}
+
+		let resendTimer = null;
+		function startResendCountdown(seconds) {
+			clearInterval(resendTimer);
+			let remaining = seconds;
+			const $resend = $('#resendCodeBtn');
+			if ($resend.length === 0) return;
+
+			$resend.prop('disabled', true).show();
+			resendTimer = setInterval(function() {
+				if (remaining <= 0) {
+					clearInterval(resendTimer);
+					$resend.prop('disabled', false).html('<i class="icon-refresh"></i> Resend Code');
+					return;
+				}
+				const m = Math.floor(remaining / 60).toString().padStart(2, '0');
+				const s = (remaining % 60).toString().padStart(2, '0');
+				$resend.html('<i class="icon-refresh"></i> Resend in ' + m + ':' + s);
+				remaining--;
+			}, 1000);
+		}
+
+		function sendVerificationCode() {
+			const phoneNumber = formatPhoneNumber();
+			if (!phoneNumber) {
+				$('#firebaseStatus').html('<div class="alert alert-danger">Masukkan nomor telepon yang valid.</div>');
+				return;
+			}
+
+			if (!isRecaptchaReady) {
+				$('#firebaseStatus').html('<div class="alert alert-warning">Verifikasi keamanan sedang dimuat. Mohon tunggu sebentar...</div>');
+				return;
+			}
+
+			$('#sendCodeBtn').prop('disabled', true).html('<i class="icon-spinner icon-spin"></i> Checking limits...');
+			$('#firebaseStatus').html('<div class="alert alert-info">Checking rate limits...</div>');
+
+			$.ajax({
+				url: 'https://gloryverse.id/ajax/sms/check_sms_rate_limit.php',
+				type: 'POST',
+				data: {
+					key: '50589388c8ffd9280bc92f1f8c69834c122665',
+					phone_number: phoneNumber,
+					csrf_token: '819747241a23b03fe95f82bdc27b8b59dc93987ee2926948f9807d84071ea069'
+				},
+				dataType: 'json',
+				success: function(response) {
+					if (response.success) {
+						$('#firebaseStatus').html('<div class="alert alert-info">Mengirim kode OTP ke ' + maskPhone(phoneNumber) + '...</div>');
+						$('#sendCodeBtn').html('<i class="icon-spinner icon-spin"></i> Sending...');
+						
+						window.signInWithPhoneNumber(window.firebaseAuth, phoneNumber, recaptchaVerifier)
+							.then(function(confirmation) {
+								confirmationResult = confirmation;
+								$('#sendCodeBtn').prop('disabled', true).html('<i class="icon-check"></i> Code Sent');
+								$('#codeVerificationSection').slideDown();
+								$('#firebaseStatus').html('<div class="alert alert-success">Kode verifikasi telah dikirim ke ' + maskPhone(phoneNumber) + '. Masukkan 6 digit kode.</div>');
+								$('#verification_code').focus();
+
+								const cooldown = parseInt(response.retry_after) || 600;
+								startResendCountdown(cooldown);
+								window.initializeRecaptcha();
+							})
+							.catch(function(error) {
+								console.error('Error sending code:', error);
+								let errMsg = error.message;
+								if (error.code === 'auth/invalid-phone-number') errMsg = 'Format nomor HP tidak valid.';
+								else if (error.code === 'auth/too-many-requests') errMsg = 'Terlalu banyak permintaan. Silakan coba lagi nanti.';
+								
+								$('#firebaseStatus').html('<div class="alert alert-danger">' + errMsg + '</div>');
+								$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+								window.initializeRecaptcha();
+							});
+					} else {
+						const retryAfter = parseInt(response.retry_after) || 0;
+						if (retryAfter > 0) startResendCountdown(retryAfter);
+						$('#firebaseStatus').html('<div class="alert alert-danger">' + (response.message || response.error || 'Rate limit terlampaui.') + '</div>');
+						$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+					}
+				},
+				error: function(xhr, status, error) {
+					$('#firebaseStatus').html('<div class="alert alert-danger">Gagal memeriksa batasan SMS ke server.</div>');
+					$('#sendCodeBtn').prop('disabled', false).html('<i class="icon-envelope"></i> Send SMS Verification Code');
+				}
+			});
+		}
+
+		function verifyCode() {
+			const code = $('#verification_code').val().trim();
+			if (!code || code.length !== 6) {
+				$('#firebaseStatus').html('<div class="alert alert-danger">Masukkan 6 digit kode verifikasi yang benar.</div>');
+				return;
+			}
+
+			if (!confirmationResult) {
+				$('#firebaseStatus').html('<div class="alert alert-danger">Sesi tidak ditemukan. Silakan kirim ulang kode.</div>');
+				return;
+			}
+
+			$('#verifyCodeBtn').prop('disabled', true).html('<i class="icon-spinner icon-spin"></i> Verifying...');
+			$('#firebaseStatus').html('<div class="alert alert-info">Memverifikasi kode...</div>');
+
+			confirmationResult.confirm(code)
+				.then(function(result) {
+					return result.user.getIdToken();
+				})
+				.then(function(idToken) {
+					$.ajax({
+						url: 'https://gloryverse.id/ajax/sms/firebase_verify_token.php',
+						type: 'POST',
+						data: {
+							key: '50589388c8ffd9280bc92f1f8c69834c122665',
+							id_token: idToken,
+							csrf_token: '819747241a23b03fe95f82bdc27b8b59dc93987ee2926948f9807d84071ea069'
+						},
+						dataType: 'json',
+						success: function(response) {
+							if (response.success) {
+								$('#firebaseStatus').html('<div class="alert alert-success">' + (response.message || 'Verifikasi Berhasil!') + '</div>');
+								if (window.firebaseAuth && window.firebaseAuth.signOut) {
+									window.firebaseAuth.signOut().catch(function(){});
+								}
+								setTimeout(function() {
+									window.location.reload();
+								}, 2000);
+							} else {
+								$('#firebaseStatus').html('<div class="alert alert-danger">' + (response.error || 'Verifikasi gagal.') + '</div>');
+								$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+							}
+						},
+						error: function() {
+							$('#firebaseStatus').html('<div class="alert alert-danger">Kesalahan pada server saat verifikasi token.</div>');
+							$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+						}
+					});
+				})
+				.catch(function(error) {
+					let errMsg = 'Kode salah atau sudah kadaluarsa.';
+					if (error.code === 'auth/invalid-verification-code') errMsg = 'Kode verifikasi tidak sesuai.';
+					else if (error.code === 'auth/code-expired') errMsg = 'Kode sudah kadaluarsa. Minta kode baru.';
+					$('#firebaseStatus').html('<div class="alert alert-danger">' + errMsg + '</div>');
+					$('#verifyCodeBtn').prop('disabled', false).html('<i class="icon-check"></i> Verify Code');
+				});
+		}
+	</script>
+</body>
+</html>
