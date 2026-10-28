@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Awal · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="../../css/gloryverse.css">
+<script src="../../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="../../skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="../../skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="../../skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="../../skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Dashboard Awal</h1>
+      <div class="legacy-content">
+
+							
+
+									<div class="alert alert-success">
+							<p>You started traveling successfully</p>
+						</div>
+		
+							
+							
+
+																<div class="alert alert-info alert-sm">
+										1. Usahakan organ tetep kosong 1 slot, filter dari yang sedang work, last online lebih dari 1 jam, energy rendah.
+
+2. Gold organ (GO) yang didapatkan warrior akan dibagikan langsung ke masing-masing secara berkala melalui WD. WD akan dilakukan oleh para leader yang ditunjuk. Apabila ada yang akan keluar organ dan GO belum dibagi harap memberitahukan kepada leader yang ditunjuk sebelum meninggalkan organ.
+__________________________________________________________________________________
+
+PERINGATAN KERAS UNTUK SEMUA WARIOR MONACO, mulai hari ini siapapun yang jual region monaco untuk kepentingan pribadi, harus bertanggung jawab mengembalikan region ke monaco kembali dalam kurun waktu maksimal 48 jam dalam kondisi normal, dan kurun waktu tentatif untuk kondisi tertentu.
+
+Apabila tidak bisa mengembalikan dan atau bertanggung jawab atas segala kerugian dalam waktu yg ditentukan, akan masuk ke daftar hitam di semua organisasi war monaco dan atau sangsi dikeluarkan dari negara monaco serta diterbitkan rekomendasi daftar hitam dalam jaringan aliansi, juga seluruh komunitas MPL.
+
+Terima kasih.
+										<br><br>
+										<div class="row">
+											<div class="col-sm-8">
+												<small>Organization Message last updated <b>4 years ago</b></small>
+											</div>
+											
+											<div class="col-sm-4 text-right">
+												<b><a href="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&acn=dismissorgmsg">Dismiss</a></b>
+											</div>
+										</div>
+									</div>
+																
+							<div class="row">
+								<div class="col-sm-6">
+									<img width="48" height="48" src="https://myprofitland.com/img/country_flags/48/mc.png">
+
+									Your Nationality is from: <a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a><br>
+									You are in Maldives (<a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a>)<br>
+									Available jobs in <a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a>: 2 of 2<br><br>
+
+									<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/user_travel.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665", "#modal_ajax")' class="btn btn-default">Change Region <i class="icon icon-location-pin"></i></a>
+
+																		
+																			<br><br>
+										<div class="alert alert-danger">Today is the last day of this month to bid on the <b><a href="https://myprofitland.com/private_countries.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">Private Country Auction</a></b>.</div>
+																			
+									
+																		
+								</div>
+
+
+
+								<div class="col-sm-6 text-center">
+									
+
+																			<img width="150" height="150" src="https://myprofitland.com/img/assets/homeless2.png">
+										<br>
+										<span class="label label-warning">You are pretty much homeless</span><br><br>
+										<a href="https://myprofitland.com/market_real_estate.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="btn btn-default">Rent</a> or <a href="https://myprofitland.com/market_real_estate.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="btn btn-default">Buy</a>
+																		</div>
+							</div>
+							
+							
+
+							
+
+
+
+							
+							<div style="margin-top: 20px;" class="row">
+
+								<div class="col-sm-7">
+									<h5>Wars with Maldives (9)</h5>
+								</div>
+
+								<div class="col-sm-5">
+                                    <form action="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="form-horizontal" method="post">
+                                        <!-- SELECTIZE -->
+                                        <div class="form-cols-row">				
+                                            <label class="control-label form-col-sm-4" for="check_country_id">Country</label>
+
+                                            <div class="form-col-sm-8">
+                                            
+                                                <select name="check_country_id" id="check_country_id" class="demo-default" placeholder="Select country...">
+                                                    <option value="">Select country...</option>
+                                                                                                            <option  value="2" data-data='{"iso2": "ax"}'>Aland Islands</option>
+                                                                                                                <option  value="3" data-data='{"iso2": "al"}'>Albania</option>
+                                                                                                                <option  value="4" data-data='{"iso2": "dz"}'>Algeria</option>
+                                                                                                                <option  value="6" data-data='{"iso2": "ad"}'>Andorra</option>
+                                                                                                                <option  value="10" data-data='{"iso2": "ag"}'>Antigua and Barbuda</option>
+                                                                                                                <option  value="11" data-data='{"iso2": "ar"}'>Argentina</option>
+                                                                                                                <option  value="12" data-data='{"iso2": "am"}'>Armenia</option>
+                                                                                                                <option  value="14" data-data='{"iso2": "au"}'>Australia</option>
+                                                                                                                <option  value="15" data-data='{"iso2": "at"}'>Austria</option>
+                                                                                                                <option  value="17" data-data='{"iso2": "bs"}'>Bahamas</option>
+                                                                                                                <option  value="20" data-data='{"iso2": "bb"}'>Barbados</option>
+                                                                                                                <option  value="21" data-data='{"iso2": "by"}'>Belarus</option>
+                                                                                                                <option  value="22" data-data='{"iso2": "be"}'>Belgium</option>
+                                                                                                                <option  value="23" data-data='{"iso2": "bz"}'>Belize</option>
+                                                                                                                <option  value="27" data-data='{"iso2": "bo"}'>Bolivia</option>
+                                                                                                                <option  value="29" data-data='{"iso2": "ba"}'>Bosnia and Herzegovina</option>
+                                                                                                                <option  value="32" data-data='{"iso2": "br"}'>Brazil</option>
+                                                                                                                <option  value="34" data-data='{"iso2": "bn"}'>Brunei</option>
+                                                                                                                <option  value="35" data-data='{"iso2": "bg"}'>Bulgaria</option>
+                                                                                                                <option  value="40" data-data='{"iso2": "ca"}'>Canada</option>
+                                                                                                                <option  value="41" data-data='{"iso2": "cv"}'>Cape Verde</option>
+                                                                                                                <option  value="42" data-data='{"iso2": "ky"}'>Cayman Islands</option>
+                                                                                                                <option  value="45" data-data='{"iso2": "cl"}'>Chile</option>
+                                                                                                                <option  value="46" data-data='{"iso2": "cn"}'>China</option>
+                                                                                                                <option  value="49" data-data='{"iso2": "co"}'>Colombia</option>
+                                                                                                                <option  value="53" data-data='{"iso2": "cr"}'>Costa Rica</option>
+                                                                                                                <option  value="55" data-data='{"iso2": "hr"}'>Croatia</option>
+                                                                                                                <option  value="56" data-data='{"iso2": "cu"}'>Cuba</option>
+                                                                                                                <option  value="58" data-data='{"iso2": "cy"}'>Cyprus</option>
+                                                                                                                <option  value="59" data-data='{"iso2": "cz"}'>Czech Republic</option>
+                                                                                                                <option  value="61" data-data='{"iso2": "dk"}'>Denmark</option>
+                                                                                                                <option  value="64" data-data='{"iso2": "do"}'>Dominican Republic</option>
+                                                                                                                <option  value="65" data-data='{"iso2": "ec"}'>Ecuador</option>
+                                                                                                                <option  value="66" data-data='{"iso2": "eg"}'>Egypt</option>
+                                                                                                                <option  value="67" data-data='{"iso2": "sv"}'>El Salvador</option>
+                                                                                                                <option  value="70" data-data='{"iso2": "ee"}'>Estonia</option>
+                                                                                                                <option  value="73" data-data='{"iso2": "fo"}'>Faroe Islands</option>
+                                                                                                                <option  value="76" data-data='{"iso2": "fr"}'>France</option>
+                                                                                                                <option  value="82" data-data='{"iso2": "ge"}'>Georgia</option>
+                                                                                                                <option  value="83" data-data='{"iso2": "de"}'>Germany</option>
+                                                                                                                <option  value="85" data-data='{"iso2": "gi"}'>Gibraltar</option>
+                                                                                                                <option  value="86" data-data='{"iso2": "gr"}'>Greece</option>
+                                                                                                                <option  value="87" data-data='{"iso2": "gl"}'>Greenland</option>
+                                                                                                                <option  value="88" data-data='{"iso2": "gd"}'>Grenada</option>
+                                                                                                                <option  value="92" data-data='{"iso2": "gg"}'>Guernsey</option>
+                                                                                                                <option  value="95" data-data='{"iso2": "gy"}'>Guyana</option>
+                                                                                                                <option  value="100" data-data='{"iso2": "hu"}'>Hungary</option>
+                                                                                                                <option  value="101" data-data='{"iso2": "is"}'>Iceland</option>
+                                                                                                                <option  value="102" data-data='{"iso2": "in"}'>India</option>
+                                                                                                                <option  value="103" data-data='{"iso2": "id"}'>Indonesia</option>
+                                                                                                                <option  value="106" data-data='{"iso2": "ie"}'>Ireland</option>
+                                                                                                                <option  value="107" data-data='{"iso2": "im"}'>Isle of Man</option>
+                                                                                                                <option  value="108" data-data='{"iso2": "il"}'>Israel</option>
+                                                                                                                <option  value="109" data-data='{"iso2": "it"}'>Italy</option>
+                                                                                                                <option  value="111" data-data='{"iso2": "jp"}'>Japan</option>
+                                                                                                                <option  value="112" data-data='{"iso2": "je"}'>Jersey</option>
+                                                                                                                <option  value="117" data-data='{"iso2": "xk"}'>Kosovo</option>
+                                                                                                                <option  value="122" data-data='{"iso2": "lb"}'>Lebanon</option>
+                                                                                                                <option  value="125" data-data='{"iso2": "ly"}'>Libya</option>
+                                                                                                                <option  value="126" data-data='{"iso2": "li"}'>Liechtenstein</option>
+                                                                                                                <option  value="128" data-data='{"iso2": "lu"}'>Luxembourg</option>
+                                                                                                                <option  value="130" data-data='{"iso2": "mk"}'>Macedonia</option>
+                                                                                                                <option  value="131" data-data='{"iso2": "mg"}'>Madagascar</option>
+                                                                                                                <option  value="251" data-data='{"iso2": "rm"}'>Madeira</option>
+                                                                                                                <option  value="133" data-data='{"iso2": "my"}'>Malaysia</option>
+                                                                                                                <option selected value="134" data-data='{"iso2": "mv"}'>Maldives</option>
+                                                                                                                <option  value="136" data-data='{"iso2": "mt"}'>Malta</option>
+                                                                                                                <option  value="142" data-data='{"iso2": "mx"}'>Mexico</option>
+                                                                                                                <option  value="144" data-data='{"iso2": "md"}'>Moldova</option>
+                                                                                                                <option  value="145" data-data='{"iso2": "mc"}'>Monaco</option>
+                                                                                                                <option  value="147" data-data='{"iso2": "me"}'>Montenegro</option>
+                                                                                                                <option  value="149" data-data='{"iso2": "ma"}'>Morocco</option>
+                                                                                                                <option  value="155" data-data='{"iso2": "nl"}'>Netherlands</option>
+                                                                                                                <option  value="157" data-data='{"iso2": "nz"}'>New Zealand</option>
+                                                                                                                <option  value="160" data-data='{"iso2": "ng"}'>Nigeria</option>
+                                                                                                                <option  value="163" data-data='{"iso2": "kp"}'>North Korea</option>
+                                                                                                                <option  value="165" data-data='{"iso2": "no"}'>Norway</option>
+                                                                                                                <option  value="169" data-data='{"iso2": "ps"}'>Palestine</option>
+                                                                                                                <option  value="170" data-data='{"iso2": "pa"}'>Panama</option>
+                                                                                                                <option  value="174" data-data='{"iso2": "ph"}'>Philippines</option>
+                                                                                                                <option  value="176" data-data='{"iso2": "pl"}'>Poland</option>
+                                                                                                                <option  value="177" data-data='{"iso2": "pt"}'>Portugal</option>
+                                                                                                                <option  value="178" data-data='{"iso2": "pr"}'>Puerto Rico</option>
+                                                                                                                <option  value="179" data-data='{"iso2": "qa"}'>Qatar</option>
+                                                                                                                <option  value="181" data-data='{"iso2": "ro"}'>Romania</option>
+                                                                                                                <option  value="182" data-data='{"iso2": "ru"}'>Russia</option>
+                                                                                                                <option  value="192" data-data='{"iso2": "sm"}'>San Marino</option>
+                                                                                                                <option  value="194" data-data='{"iso2": "sa"}'>Saudi Arabia</option>
+                                                                                                                <option  value="196" data-data='{"iso2": "rs"}'>Serbia</option>
+                                                                                                                <option  value="199" data-data='{"iso2": "sg"}'>Singapore</option>
+                                                                                                                <option  value="201" data-data='{"iso2": "sk"}'>Slovakia</option>
+                                                                                                                <option  value="202" data-data='{"iso2": "si"}'>Slovenia</option>
+                                                                                                                <option  value="205" data-data='{"iso2": "za"}'>South Africa</option>
+                                                                                                                <option  value="207" data-data='{"iso2": "kr"}'>South Korea</option>
+                                                                                                                <option  value="209" data-data='{"iso2": "es"}'>Spain</option>
+                                                                                                                <option  value="215" data-data='{"iso2": "se"}'>Sweden</option>
+                                                                                                                <option  value="216" data-data='{"iso2": "ch"}'>Switzerland</option>
+                                                                                                                <option  value="217" data-data='{"iso2": "sy"}'>Syria</option>
+                                                                                                                <option  value="218" data-data='{"iso2": "tw"}'>Taiwan</option>
+                                                                                                                <option  value="221" data-data='{"iso2": "th"}'>Thailand</option>
+                                                                                                                <option  value="222" data-data='{"iso2": "tl"}'>Timor-Leste</option>
+                                                                                                                <option  value="227" data-data='{"iso2": "tn"}'>Tunisia</option>
+                                                                                                                <option  value="228" data-data='{"iso2": "tr"}'>Turkey</option>
+                                                                                                                <option  value="234" data-data='{"iso2": "ae"}'>United Arab Emirates</option>
+                                                                                                                <option  value="235" data-data='{"iso2": "gb"}'>United Kingdom</option>
+                                                                                                                <option  value="236" data-data='{"iso2": "us"}'>United States</option>
+                                                                                                                <option  value="238" data-data='{"iso2": "uy"}'>Uruguay</option>
+                                                                                                                <option  value="241" data-data='{"iso2": "va"}'>Vatican City</option>
+                                                                                                                <option  value="242" data-data='{"iso2": "ve"}'>Venezuela</option>
+                                                                                                                <option  value="243" data-data='{"iso2": "vn"}'>Vietnam</option>
+                                                                                                                <option  value="245" data-data='{"iso2": "vi"}'>Virgin Islands, US</option>
+                                                                                                                <option  value="247" data-data='{"iso2": "eh"}'>Western Sahara</option>
+                                                                                                        </select>
+
+                                            </div><!-- end .form-col-* -->
+                                        </div><!-- end .form-row -->
+                                        <!-- end SELECTIZE -->
+                                    </form>
+								</div>
+
+
+
+							</div>
+
+
+															<table class="table table-condensed table-hover">
+									<thead>
+										<th width="210">Region</th>
+										<th>Attackers</th>
+										<th>Defenders</th>
+										<th width="110">Started</th>
+										<th width="40"></th>
+									</thead>
+									
+																			<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=66">Edinburgh</a></b>
+																									<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i>
+													<i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MK">Macedonia</a> 21%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 79%</td>
+											<td class="small">1 hour ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98196" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr class="active">
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=295">Krsko</a></b>
+																							</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MC">Monaco</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">10 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98189" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=25">Bilbao</a></b>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=NG">Nigeria</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">11 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98188" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=346">Puerto Montt</a></b>
+																									<i class="icon icon-location red icon-big" data-toggle="tooltip" title="This region has a POI"></i>
+													<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="2 Missiles Launched"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=FO">Faroe Islands</a> 47%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MK">Macedonia</a> 53%</td>
+											<td class="small">13 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98187" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=3">Faro</a></b>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=AL">Albania</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">14 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98186" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=211">Brno</a></b>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=SM">San Marino</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">16 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98182" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=522">Aswan</a></b>
+												<i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="3 Missiles Launched"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=NL">Netherlands</a> 15%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 85%</td>
+											<td class="small">17 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98180" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=331">Artigas</a></b>
+												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i><i class="icon icon-rocket red icon-big" data-toggle="tooltip" title="1 Missiles Launched"></i>											</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=NL">Netherlands</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">17 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98179" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+																				<tr >
+											<td>
+												
+												<b><a href="https://myprofitland.com/region.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=297">Maribor</a></b>
+																							</td>
+											<td class="small bold"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=TW">Taiwan</a> 100%</td>
+											<td class="small"><a href="https://myprofitland.com/country.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=MV">Maldives</a> 0%</td>
+											<td class="small">20 hours ago</td>
+											<td class="small">
+												<a href="https://myprofitland.com/war.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=98176" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
+											</td>
+										</tr>
+										
+								</table>
+								
+
+							<div class="row">
+								
+								<div class="col-sm-6">
+									<h5>Latest local shouts <a id="toggleNewShout" class="icon icon-circle-plus "></a></h5>
+									
+									<script>
+
+										function ToggleHide(){
+											$('#new_shout').hide();
+											$('#toggleNewShout').removeClass('active');
+										};
+											
+										$(document).ready(function() {
+											$("#toggleNewShout").click(function(e){
+												if($('#toggleNewShout').hasClass('active')){
+													ToggleHide();
+												}
+												else{
+													$('#toggleNewShout').addClass('active');
+													$('#new_shout').show();
+													
+												}//end else
+												e.preventDefault();
+											});
+										
+										});
+									</script>
+									
+									<div id="new_shout" class="hide">
+										<form action="https://myprofitland.com/dashboard.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" method="post" class="form-horizontal form-horizontal-bordered">
+											<input name="acn" type="hidden" value="newshout" />
+
+											<div class="form-cols-row">
+												<div class="form-col-sm-12">
+													<label for="user_shout_text">Message</label>
+													<textarea maxlength="255" name="user_shout_text" class="form-control" rows="5"></textarea>
+
+													<label class="checkbox">
+														<input type="checkbox" name="votingshout" value="1"> Yes/No voting enabled
+													</label>
+
+												</div>
+											</div>
+											
+											
+
+											<button type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout</button>
+
+										</form>
+
+										<small>By writing in this section you agree with our <a href="https://myprofitland.com/code_of_conduct.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">code of conduct</a></small>
+										<br><br><br>
+									</div>
+									
+
+
+									
+																					<div class="row">
+												<div class="col-sm-2">
+													<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=El.Profesor">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/5297625a46e5fca99ea1e18b08b44670.jpg?1730722853">
+														</a>
+												</div>
+
+												<div class="col-sm-10">
+													Good day, everyone. El.Profesor’s Maldivians organization, with all facilities, is for hard workers willing to work both shifts and overtime. If you’re not willing to work hard, this organization isn’t for you. Hard workers are always welcome!													
+													<div class="text-center small">
+														<br>
+														<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=El.Profesor">El.Profesor</a> posted 4 weeks ago <br>
+
+															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/shout_comments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=53267", "#modal_ajax")'>1 comments</a> 														<br><br>
+													</div>
+												</div>
+
+											</div>
+																						<div class="row">
+												<div class="col-sm-2">
+													<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/29943b7f7fb675554308da1793f9eef4.jpg?1709083158">
+														</a>
+												</div>
+
+												<div class="col-sm-10">
+													Payment method changing due to time needed to process stats and payouts. Overtime work shifts from 7th you will have to note and report the number you have done at the end/start of a month, you will be paid by bank 1 gold per over time shift.													
+													<div class="text-center small">
+														<br>
+														<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">mmggzz</a> posted 1 month ago <br>
+
+															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/shout_comments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=53226", "#modal_ajax")'>2 comments</a> 														<br><br>
+													</div>
+												</div>
+
+											</div>
+																						<div class="row">
+												<div class="col-sm-2">
+													<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/29943b7f7fb675554308da1793f9eef4.jpg?1709083158">
+														</a>
+												</div>
+
+												<div class="col-sm-10">
+													REMEMBER only work for my companies unless you came to this country in a deal to work as a manager for a other owner.  I pay for booster I pay for housing I pay for all your discounts respect this, you will NOT be paid by me for ALL work you do for others													
+													<div class="text-center small">
+														<br>
+														<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">mmggzz</a> posted 3 months ago <br>
+
+															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/shout_comments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=52947", "#modal_ajax")'>4 comments</a> 														<br><br>
+													</div>
+												</div>
+
+											</div>
+																						<div class="row">
+												<div class="col-sm-2">
+													<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/29943b7f7fb675554308da1793f9eef4.jpg?1709083158">
+														</a>
+												</div>
+
+												<div class="col-sm-10">
+													Hi all some are NOT taking 2 food as is NOW the rule here I do not have time to waste writing them and org leaders to suspend from org for x time so next time a player does this they will be removed from the country, real updates HERE													
+													<div class="text-center small">
+														<br>
+														<a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=mmggzz">mmggzz</a> posted 1 year ago <br>
+
+															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://myprofitland.com/ajax/shout_comments.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=50705", "#modal_ajax")'>0 comments</a> 														<br><br>
+													</div>
+												</div>
+
+											</div>
+																				
+									<a class="small" href="https://myprofitland.com/local_shouts.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">View all</a>
+
+
+									<br><br>
+
+									<h5>Latest Forum Posts</h5>
+
+									
+																			<table style="margin-bottom: 5px" class="table table-condensed table-hover">
+											<thead>
+												<tr>
+													<th>Topic</th>
+													<th width="90"></th>
+												</tr>
+											</thead>
+																							<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4643&topic=singapore-share-offering">Singapore Share Offering</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														3 hours ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4713&topic=rent-coffee-shop">Rent coffee shop</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														13 hours ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4712&topic=company-bugging-workplace-doesnt-appear">Company Bugging? , workplace doesnt appear</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														14 hours ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4701&topic=north-korea-wars">North Korea wars</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														2 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4711&topic=ranking-update">ranking update</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														2 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4710&topic=wtb-corn-coal-choco">WTB corn . coal . choco</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														2 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4709&topic=local-currency">Local currency</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														3 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4708&topic=workers">WORKERS</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														4 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4707&topic=chocolate">Chocolate</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														4 days ago
+													</td>
+												</tr>
+																								<tr>
+													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+														<a href="https://myprofitland.com/forum_topic.php?tid=4706&topic=buying-coffee-by-bank">Buying coffee by bank</a>
+													</td>
+													<td class="small" style="padding-right: 1px">
+														1 week ago
+													</td>
+												</tr>
+																						</table>
+										
+									<a class="small" href="https://myprofitland.com/forum.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">View all</a>
+
+								</div>
+
+								<div class="col-sm-6">
+									
+									<h5>Offers Statistics</h5>
+	
+									<div class="row">
+										<div class="col-sm-8">
+											<b>Completed:</b> 2,457,334 Offers<br>
+											<b>Total Paid:</b> 72,782.02 Euro
+										</div>
+
+										<div class="col-sm-4">
+											<a href="https://myprofitland.com/fund_offers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665" class="btn btn-danger btn-lg">GO</a>
+										</div>
+									</div>
+
+									<br>
+
+
+									<h5>Latest Newspapers in Maldives</h5>
+									
+																		
+																			
+																					<div class="well well-sm well-shadow">
+												<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td class="text-center" width="100">
+
+															<a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e79ce91c3"><img title="Calm Life 386" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1506266aa6e79ce91c3/1506266aa6e79ce91c3.jpg?1789323193">
+																<div class="np-thumbs-vote" id="np-thumbs-vote-1506266aa6e79ce91c3">
+		<a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e79ce91c3&vote=up", "#np-thumbs-vote-1506266aa6e79ce91c3")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">0</span> 
+        <a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e79ce91c3&vote=down", "#np-thumbs-vote-1506266aa6e79ce91c3")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
+	</div>
+	 
+																
+														</td>
+														<td valign="top">
+															<b><a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e79ce91c3">Calm Life 386</a></b> <br>
+															<small>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=El.Profesor">El.Profesor</a> on <a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=41698">El.Profesor - Newspaper ࿐</a></small> <img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mv.png"><br><br>
+															<div class="small text-center">22 views | 22 sales | 0 comments | 9 hours ago | <b><a href="https://myprofitland.com/newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
+														</td>
+													</tr>
+												</table>
+											</div>
+																						<div class="well well-sm well-shadow">
+												<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td class="text-center" width="100">
+
+															<a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e73f3d14a"><img title="Happy Life 148" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1506266aa6e73f3d14a/1506266aa6e73f3d14a.jpg?1789323140">
+																<div class="np-thumbs-vote" id="np-thumbs-vote-1506266aa6e73f3d14a">
+		<a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e73f3d14a&vote=up", "#np-thumbs-vote-1506266aa6e73f3d14a")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">0</span> 
+        <a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e73f3d14a&vote=down", "#np-thumbs-vote-1506266aa6e73f3d14a")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
+	</div>
+	 
+																
+														</td>
+														<td valign="top">
+															<b><a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e73f3d14a">Happy Life 148</a></b> <br>
+															<small>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=El.Profesor">El.Profesor</a> on <a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=55353">El.Profesor - Newspaper ⚓</a></small> <img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mv.png"><br><br>
+															<div class="small text-center">13 views | 13 sales | 0 comments | 9 hours ago | <b><a href="https://myprofitland.com/newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
+														</td>
+													</tr>
+												</table>
+											</div>
+																						<div class="well well-sm well-shadow">
+												<table width="100%" border="0" cellspacing="0" cellpadding="0">
+													<tr>
+														<td class="text-center" width="100">
+
+															<a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e6f99f12b"><img title="Calm Life 398" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1506266aa6e6f99f12b/1506266aa6e6f99f12b.jpg?1789323045">
+																<div class="np-thumbs-vote" id="np-thumbs-vote-1506266aa6e6f99f12b">
+		<a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e6f99f12b&vote=up", "#np-thumbs-vote-1506266aa6e6f99f12b")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">0</span> 
+        <a onclick='ajaxcall("https://myprofitland.com/ajax/newspaper_article_votes.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e6f99f12b&vote=down", "#np-thumbs-vote-1506266aa6e6f99f12b")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
+	</div>
+	 
+																
+														</td>
+														<td valign="top">
+															<b><a href="https://myprofitland.com/newspaper_article.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=1506266aa6e6f99f12b">Calm Life 398</a></b> <br>
+															<small>by <a href="https://myprofitland.com/profile.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=El.Profesor">El.Profesor</a> on <a href="https://myprofitland.com/company.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&id=51550">El.Profesor - Newspaper ᯓ</a></small> <img width="15" height="15" src="https://myprofitland.com/img/country_flags/16/mv.png"><br><br>
+															<div class="small text-center">12 views | 11 sales | 0 comments | 9 hours ago | <b><a href="https://myprofitland.com/newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
+														</td>
+													</tr>
+												</table>
+											</div>
+											
+										
+									<a class="small" href="https://myprofitland.com/newspapers.php?key=53d1c6c374b2ff3e659f1e883df6e5e0122665">View all</a>
+
+									<h5>Regions Bonuses in Maldives</h5>
+
+									<div class="alert alert-success alert-sm mb-sm-5">Productivity Bonus: <b>+15.00%</b></div>
+									<div class="alert alert-success alert-sm mb-sm-5">War Damage Bonus: <b>+12.00%</b></div>									
+									<div class="alert alert-danger alert-sm mb-sm-5">Offers Payout Bonus: <b>0%</b></div>
+									<br>
+									
+									<h5>Infrastructure in Maldives</h5>
+
+									<div class="alert alert-danger alert-sm mb-sm-5">Homeless Shelter: <b>No</b></div>									
+
+									<div class="alert alert-success alert-sm mb-sm-5">Public Transport: <b>Level 3</b></div>									
+
+									<div class="alert alert-success alert-sm mb-sm-5">Central Intelligence Agency: <b>Level 3</b></div>
+									<br>
+
+									<h5>Bonuses in Maldives</h5>
+
+									<div class="row">
+										<div class="col-sm-12">
+											<div class="well text-center">
+												<b>Work Bonus</b><br>
+												<small>After 3 full worked days in a row you get a bonus.</small><br>
+												<b>385.00 RUF</b>
+											</div>
+										</div>
+										<div class="col-sm-12">
+											<div class="well text-center">
+												<b>Army Wage</b><br>
+												<small>Paid daily, if your organization is part of the army.</small><br>
+												<b>0.00 RUF</b>
+											</div>
+										</div>
+										<div class="col-sm-12">
+											<div class="well text-center">
+												<b>Minimum Wage</b><br>
+												<small>Companies must pay atleast this much wage per hour.</small><br>
+												<b>1.00 RUF</b>
+											</div>
+										</div>
+									</div>
+
+
+								</div>
+
+							</div>
+
+							
+
+						
+      </div>
+    </div>
+  </main>
+</div>
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
+</body>
+</html>

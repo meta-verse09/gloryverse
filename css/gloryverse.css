@@ -1,0 +1,64 @@
+/* Glory Verse - Colorful UI */
+:root {
+  --gv-blue: #60a5fa;
+  --gv-violet: #a78bfa;
+  --gv-pink: #f472b6;
+  --gv-yellow: #fbbf24;
+  --gv-green: #34d399;
+  --gv-red: #f87171;
+}
+
+body {
+  background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 40%, #fce7f3 70%, #fef9c3 100%);
+  color: #1e293b;
+  font-family: 'Inter', sans-serif;
+}
+
+.gv-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.gv-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+}
+
+.legacy-content table { width: 100%; border-collapse: collapse; }
+.legacy-content th, .legacy-content td { padding: 8px 10px; border-bottom: 1px solid #e2e8f0; color: #1e293b; font-size: 13px; }
+.legacy-content th { background: linear-gradient(90deg, #60a5fa, #a78bfa); color: #fff; }
+.legacy-content tr:hover td { background: #f1f5f9; }
+.legacy-content a { color: #7c3aed; font-weight: 600; }
+.legacy-content img { max-width: 100%; height: auto; border-radius: 8px; }
+
+.gv-gradient-bar { background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6, #fbbf24); }
+
+.gv-btn-primary {
+  background: linear-gradient(90deg, #60a5fa, #a78bfa);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.gv-btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.gv-btn-gold {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  color: #1e293b;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+}
+
+.gv-topbar {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+  color: #fff;
+}
+
+.gv-sidebar {
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}

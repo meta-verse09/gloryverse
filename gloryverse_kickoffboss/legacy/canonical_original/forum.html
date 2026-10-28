@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forum · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="../../../css/gloryverse.css">
+<script src="../../../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../../../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../../../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="../../../skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="../../../skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="../../../skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="../../../skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Forum</h1>
+      <div class="legacy-content">
+
+							
+
+														
+							<h4>Forum</h4>
+
+							<p>Use the forums to engage with other citizens publicly, each country has its own forum where everyone can use their own language.</p>
+
+							<form method="get" action="https://myprofitland.com/forum_search.php" class="form-default">
+								<div class="form-cols-row">
+									<div class="form-col-sm-6">
+										<input type="text" name="q" class="form-control" placeholder="Search topics, posts or usernames..." required>
+										<input type="hidden" name="key" value="2e5c93c862a524e8f5364139ac168b71122665">
+									</div>
+									<div class="form-col-sm-2">
+										<button type="submit" class="btn btn-info">Search</button>
+									</div>
+								</div>
+							</form>
+
+							<hr>
+
+							<table class="table">
+								<thead>
+									<tr>
+										<th></th>
+										<th class="text-center" width="100">Topics</th>
+										<th width="150">Latest Post</th>
+									</tr>
+								</thead>
+
+																		<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=19">Announcements</a></b>
+											</td>
+											<td class="text-center">213</td>
+											<td>4 weeks ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=1">General (International)</a></b>
+											</td>
+											<td class="text-center">500</td>
+											<td>23 hours ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=2">Trade (International)</a></b>
+											</td>
+											<td class="text-center">460</td>
+											<td>1 day ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=9">Guides and Tips (International)</a></b>
+											</td>
+											<td class="text-center">45</td>
+											<td>4 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=10">Help and Questions (International)</a></b>
+											</td>
+											<td class="text-center">651</td>
+											<td>4 hours ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=11">Suggestions (International)</a></b>
+											</td>
+											<td class="text-center">1551</td>
+											<td>3 days ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=12"></a></b>
+											</td>
+											<td class="text-center"></td>
+											<td></td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/au.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=27">Australia</a></b>
+											</td>
+											<td class="text-center">4</td>
+											<td>5 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/dk.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=28">Denmark</a></b>
+											</td>
+											<td class="text-center">1</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/fr.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=31">France</a></b>
+											</td>
+											<td class="text-center">8</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/nl.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=30">Netherlands</a></b>
+											</td>
+											<td class="text-center">5</td>
+											<td>3 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ru.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=26">Russia</a></b>
+											</td>
+											<td class="text-center">12</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ch.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=29">Switzerland</a></b>
+											</td>
+											<td class="text-center">2</td>
+											<td>6 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/al.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=33">Albania</a></b>
+											</td>
+											<td class="text-center">16</td>
+											<td>8 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/bg.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=15">Bulgaria</a></b>
+											</td>
+											<td class="text-center">5</td>
+											<td>5 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ca.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=25">Canada</a></b>
+											</td>
+											<td class="text-center">7</td>
+											<td>8 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/de.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=7">Germany</a></b>
+											</td>
+											<td class="text-center">7</td>
+											<td>8 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/in.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=16">India</a></b>
+											</td>
+											<td class="text-center">6</td>
+											<td>1 year ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/id.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=13">Indonesia</a></b>
+											</td>
+											<td class="text-center">97</td>
+											<td>2 weeks ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/it.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=14">Italy</a></b>
+											</td>
+											<td class="text-center">26</td>
+											<td>6 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/my.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=20">Malaysia</a></b>
+											</td>
+											<td class="text-center">12</td>
+											<td>4 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/nz.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=24">New Zealand</a></b>
+											</td>
+											<td class="text-center">7</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/no.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=23">Norway</a></b>
+											</td>
+											<td class="text-center">5</td>
+											<td>8 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/pl.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=21">Poland</a></b>
+											</td>
+											<td class="text-center">10</td>
+											<td>3 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/pt.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=3">Portugal</a></b>
+											</td>
+											<td class="text-center">15</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ro.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=4">Romania</a></b>
+											</td>
+											<td class="text-center">78</td>
+											<td>5 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/es.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=5">Spain</a></b>
+											</td>
+											<td class="text-center">34</td>
+											<td>3 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/th.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=18">Thailand</a></b>
+											</td>
+											<td class="text-center">7</td>
+											<td>5 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/tr.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=17">Turkey</a></b>
+											</td>
+											<td class="text-center">6</td>
+											<td>4 months ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/gb.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=8">United Kingdom</a></b>
+											</td>
+											<td class="text-center">25</td>
+											<td>4 years ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/us.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=6">United States</a></b>
+											</td>
+											<td class="text-center">32</td>
+											<td>1 year ago</td>
+										</tr>
+		                                										<tr>
+											<td>
+												<img width="16" height="16" src="https://myprofitland.com/img/country_flags/16/ve.png"> 
+												<b><a href="https://myprofitland.com/forum_display.php?key=2e5c93c862a524e8f5364139ac168b71122665&fid=22">Venezuela</a></b>
+											</td>
+											<td class="text-center">31</td>
+											<td>2 months ago</td>
+										</tr>
+		                                								
+							</table>
+							
+							
+						
+      </div>
+    </div>
+  </main>
+</div>
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
+</body>
+</html>

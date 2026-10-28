@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Demo · GloryVerse</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter','sans-serif'] },
+        colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } }
+      }
+    }
+  };
+  window.GV_CONFIG = { supabaseUrl: 'YOUR_SUPABASE_URL', supabaseAnonKey: 'YOUR_SUPABASE_ANON_KEY', mockMode: true };
+</script>
+<style>
+  .hero-grad { background: linear-gradient(135deg,#60a5fa 0%,#a78bfa 40%,#f472b6 70%,#fbbf24 100%); }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 40px rgba(0,0,0,.15); }
+  .pulse-ring { animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); opacity:1; } 50% { transform: scale(1.08); opacity:.85; } }
+</style>
+<link rel="stylesheet" href="../css/gloryverse.css">
+<script src="../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans bg-gradient-to-br from-sky-100 via-violet-100 to-pink-100 text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b id="nav-gold">0</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="max-w-6xl mx-auto px-4 pt-8 pb-4">
+  <div class="hero-grad rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden">
+    <div class="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-2xl"></div>
+    <div class="absolute bottom-0 left-1/3 w-32 h-32 bg-yellow-300/30 rounded-full blur-2xl"></div>
+    <div class="relative z-10 flex flex-col md:flex-row items-center gap-6">
+      <img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400&h=260&fit=crop" alt="Business" class="w-full md:w-64 h-40 object-cover rounded-2xl shadow-xl border-4 border-white/40">
+      <div>
+        <h1 class="text-4xl md:text-5xl font-black mb-2">Bisnis Empire 💼</h1>
+        <p class="text-white/90 text-lg max-w-xl">Beli bisnis, kumpulkan profit per detik, dan jadikan kerajaan ekonomimu makin gemerlap!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="max-w-6xl mx-auto px-4 py-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white rounded-2xl p-5 shadow-lg border-t-4 border-yellow-400 card-hover">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-2xl">🪙</div>
+        <div>
+          <p class="text-xs text-slate-500 font-semibold">Saldo Gold</p>
+          <p id="gold" class="text-2xl font-black text-yellow-600">0.00</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-lg border-t-4 border-emerald-400 card-hover">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-2xl pulse-ring">📈</div>
+        <div>
+          <p class="text-xs text-slate-500 font-semibold">Profit / detik</p>
+          <p id="pps" class="text-2xl font-black text-emerald-600">0.00</p>
+        </div>
+      </div>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-lg border-t-4 border-violet-400 card-hover">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-violet-100 flex items-center justify-center text-2xl">🏪</div>
+        <div>
+          <p class="text-xs text-slate-500 font-semibold">Bisnis Dimiliki</p>
+          <p id="owned-count" class="text-2xl font-black text-violet-600">0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESSES -->
+<section class="max-w-6xl mx-auto px-4 py-6">
+  <h2 class="text-2xl font-black mb-4 text-slate-800">Pilih Bisnis 🛒</h2>
+  <div id="businesses" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+</section>
+
+<!-- OWNED -->
+<section class="max-w-6xl mx-auto px-4 py-6 pb-12">
+  <h2 class="text-2xl font-black mb-4 text-slate-800">Bisnis Kamu 🏆</h2>
+  <div id="owned" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+</section>
+
+<script>
+  const MOCK_BUSINESSES = [
+    { id: 'b1', name: 'Solar Panel Farm', type: 'Energy', profit_per_second: 0.5, base_price_gold: 100, img: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=240&fit=crop', grad: 'from-yellow-400 to-orange-500', emoji: '☀️' },
+    { id: 'b2', name: 'Clothes Factory', type: 'Manufacturing', profit_per_second: 1.2, base_price_gold: 250, img: 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=400&h=240&fit=crop', grad: 'from-pink-400 to-rose-500', emoji: '👗' },
+    { id: 'b3', name: 'Newspaper', type: 'Media', profit_per_second: 0.8, base_price_gold: 150, img: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=240&fit=crop', grad: 'from-blue-400 to-cyan-500', emoji: '📰' },
+    { id: 'b4', name: 'Coffee Shop', type: 'Food & Beverage', profit_per_second: 1.5, base_price_gold: 300, img: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7c46?w=400&h=240&fit=crop', grad: 'from-amber-700 to-yellow-600', emoji: '☕' },
+    { id: 'b5', name: 'Tech Startup', type: 'Technology', profit_per_second: 2.5, base_price_gold: 600, img: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=240&fit=crop', grad: 'from-violet-500 to-indigo-600', emoji: '💻' },
+  ];
+  let owned = [];
+  let gold = 500;
+
+  function totalPps() {
+    return owned.reduce((a, o) => {
+      const b = MOCK_BUSINESSES.find(x => x.id === o.business_id);
+      return a + (b ? b.profit_per_second * o.quantity : 0);
+    }, 0);
+  }
+
+  function render() {
+    document.getElementById('gold').textContent = gold.toFixed(2);
+    document.getElementById('nav-gold').textContent = gold.toFixed(2);
+    const pps = totalPps();
+    document.getElementById('pps').textContent = pps.toFixed(2);
+    document.getElementById('owned-count').textContent = owned.reduce((a,o)=>a+o.quantity,0);
+
+    const el = document.getElementById('businesses');
+    el.innerHTML = MOCK_BUSINESSES.map(b => `
+      <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover border border-slate-100">
+        <div class="relative h-36">
+          <img src="${b.img}" alt="${b.name}" class="w-full h-full object-cover">
+          <span class="absolute top-3 left-3 bg-white/90 backdrop-blur text-slate-800 text-xs font-bold px-2 py-1 rounded-lg">${b.emoji} ${b.type}</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-black text-lg text-slate-800">${b.name}</h3>
+          <div class="flex items-center justify-between mt-2 text-sm">
+            <span class="text-slate-500">Profit</span>
+            <span class="font-bold text-emerald-600">+${b.profit_per_second}/s</span>
+          </div>
+          <div class="flex items-center justify-between mt-1 text-sm">
+            <span class="text-slate-500">Harga</span>
+            <span class="font-bold text-amber-600">${b.base_price_gold} Gold</span>
+          </div>
+          <button onclick="buy('${b.id}')" class="mt-4 w-full bg-gradient-to-r ${b.grad} text-white font-black py-2.5 rounded-xl hover:opacity-90 active:scale-95 transition shadow-md">
+            Beli Sekarang
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+    const ownedEl = document.getElementById('owned');
+    if (owned.length === 0) {
+      ownedEl.innerHTML = `<div class="col-span-full text-center text-slate-500 bg-white/60 rounded-2xl p-8">Belum ada bisnis. Yuk beli yang pertama! 🚀</div>`;
+      return;
+    }
+    ownedEl.innerHTML = owned.map(o => {
+      const b = MOCK_BUSINESSES.find(x => x.id === o.business_id);
+      return `
+        <div class="bg-white rounded-2xl p-4 shadow-md flex items-center gap-4 border-l-4 border-emerald-400 card-hover">
+          <img src="${b.img}" alt="${b.name}" class="w-16 h-16 rounded-xl object-cover">
+          <div class="flex-1">
+            <h3 class="font-black text-slate-800">${b.name}</h3>
+            <p class="text-xs text-slate-500">${o.quantity} unit · +${(b.profit_per_second * o.quantity).toFixed(2)}/s</p>
+          </div>
+          <button onclick="buy('${b.id}')" class="bg-emerald-100 text-emerald-700 font-bold px-3 py-1.5 rounded-lg hover:bg-emerald-200 transition text-xs">+1</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function buy(id) {
+    const b = MOCK_BUSINESSES.find(x => x.id === id);
+    if (!b) return;
+    if (gold < b.base_price_gold) { alert('Gold tidak cukup! Kumpulkan lebih dulu.'); return; }
+    gold -= b.base_price_gold;
+    const ex = owned.find(o => o.business_id === id);
+    if (ex) ex.quantity += 1; else owned.push({ business_id: id, quantity: 1 });
+    // TODO: supabase.from('user_businesses').insert({ user_id, business_id: id, quantity: 1 })
+    render();
+  }
+
+  render();
+  setInterval(() => {
+    gold += totalPps();
+    render();
+  }, 1000);
+</script>
+</body>
+</html>

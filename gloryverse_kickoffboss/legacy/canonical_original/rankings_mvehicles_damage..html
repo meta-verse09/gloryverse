@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Military Vehicles Damage Ranking · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="../../../css/gloryverse.css">
+<script src="../../../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../../../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../../../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="../../../skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="../../../skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="../../../skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="../../../skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Military Vehicles Damage Ranking</h1>
+      <div class="legacy-content">
+
+							
+
+														
+							<h4>Military Vehicles Damage Ranking</h4>
+								
+
+															<table class="table table-condensed table-hover">
+									<thead>
+										<th>Name</th>
+										<th width="150">Type</th>
+										<th width="120">Damage</th>
+									</thead>
+																			<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=terbaik">
+									<img title="terbaik" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/dbffd55ceaed946f68c65e817e7aab21.jpg?1751237035">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="terbaik" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=terbaik">terbaik</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist" class="icon icon-crosshairs "></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> Maldives					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>7,756,359</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Pegaso">
+									<img title="Pegaso" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/57ea91ed1c011.jpg?1558615146">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Pegaso" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Pegaso">Pegaso</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/rm.png"> Madeira					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>5,669,068</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=martinez">
+									<img title="martinez" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/b7ca22369ec7f588d9432e8c7041bdd1.jpg?1574888588">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="martinez" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=martinez">martinez</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/rm.png"> Madeira					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>4,268,303</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=jasmir7">
+									<img title="jasmir7" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/cc07a9b548a033c90e79044fc63d1ea7.jpg?1573679795">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="jasmir7" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=jasmir7">jasmir7</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/gi.png"> Gibraltar					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>4,201,834</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=speedtuning">
+									<img title="speedtuning" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/f217577d4bca124cf44c31151d295999.jpg?1604524221">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="speedtuning" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=speedtuning">speedtuning</a></b>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/gi.png"> Gibraltar					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>3,990,592</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=DonCareLeone">
+									<img title="DonCareLeone" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/1c5a92764f5de48783610a8a51555acf.jpg?1780880201">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="DonCareLeone" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=DonCareLeone">DonCareLeone</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist+" class="icon icon-crosshairs red"></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/sv.png"> El Salvador					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>3,755,439</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=terbaik">
+									<img title="terbaik" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/dbffd55ceaed946f68c65e817e7aab21.jpg?1751237035">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="terbaik" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=terbaik">terbaik</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist" class="icon icon-crosshairs "></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> Maldives					</p>
+	</div>
+	</td>
+											<td>Heavy Tank</td>
+											<td>3,332,216</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=andryleonhart">
+									<img title="andryleonhart" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/bc3ceef9ebfcdf9cfa58b5b4002452b2.jpg?1">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="andryleonhart" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=andryleonhart">andryleonhart</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mc.png"> Monaco					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>3,313,044</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Pegaso">
+									<img title="Pegaso" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/57ea91ed1c011.jpg?1558615146">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Pegaso" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Pegaso">Pegaso</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/rm.png"> Madeira					</p>
+	</div>
+	</td>
+											<td>Heavy Tank</td>
+											<td>3,256,593</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=halderconstruction">
+									<img title="halderconstruction" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/35e62122180045976c11a04ecbc0d639.jpg?1668271924">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="halderconstruction" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=halderconstruction">halderconstruction</a></b>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/ad.png"> Andorra					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>3,039,191</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Antarctica">
+									<img title="Antarctica" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/ba4bbf5320c3a08fea2710985c8edcdf.jpg?1659751392">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Antarctica" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Antarctica">Antarctica</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist+" class="icon icon-crosshairs red"></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/ae.png"> United Arab Emirates					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>2,915,267</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=BURS">
+									<img title="BURS" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/ae9d09ef3b3b676b2ba2e57706e62963.jpg?1621201782">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="BURS" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=BURS">BURS</a></b>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/gb.png"> United Kingdom					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>2,858,272</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=chandra6682">
+									<img title="chandra6682" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/8a9d235119f9b2a522a1c7cb9a9bbcff.jpg?1746081038">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="chandra6682" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=chandra6682">chandra6682</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist+" class="icon icon-crosshairs red"></i></a> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="Accuracy Enhanced" class="icon icon-bullseye"></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mk.png"> Macedonia					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>2,824,188</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=jasmir7">
+									<img title="jasmir7" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/cc07a9b548a033c90e79044fc63d1ea7.jpg?1573679795">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="jasmir7" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=jasmir7">jasmir7</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/gi.png"> Gibraltar					</p>
+	</div>
+	</td>
+											<td>Heavy Tank</td>
+											<td>2,815,175</td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Melkor">
+									<img title="Melkor" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/ae8fab1dbdd7b50234fe1c3ef5ea2053.jpg?1558201597">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Melkor" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Melkor">Melkor</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/es.png"> Spain					</p>
+	</div>
+	</td>
+											<td>Bomber Jet</td>
+											<td>2,538,215</td>
+										</tr>
+																		</table>
+								
+									<div class="pagination
+		 pagination-sm pagination-right		">
+		
+		<div class="pagination-text"><span><b>1</b>-<b>15</b> of <b>732</b></span></div>		
+		
+		<ul>
+		<li class="active"><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=1">1</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2">2</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=3">3</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=4">4</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=5">5</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=6">6</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=7">7</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=8">8</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=9">9</a></li><li ><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=10">10</a></li><li><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2"><i class="icon-angle-right"></i></a></li><li><a href="https://myprofitland.com/rankings_mvehicles_damage.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=49">Last</a></li>		</ul>
+				</div>
+									
+							
+						
+      </div>
+    </div>
+  </main>
+</div>
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
+</body>
+</html>

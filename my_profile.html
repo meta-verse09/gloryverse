@@ -1,83 +1,82 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Profile - GloryVerse</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- ADSTERRA: SOCIAL BAR -->
-    <script src="https://pl31023491.profitableratecpmnetwork.com/3a/8e/f9/3a8ef9f3a9370bf69cd77a1e4b8c11c9.js"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
-                    colors: { brand: { dark: '#0B0F19', card: '#151B2B', accent: '#F59E0B' } }
-                }
-            }
-        }
-    </script>
-    <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0B0F19; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #F59E0B; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile - GloryVerse · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="css/gloryverse.css">
+<script src="js/gloryverse.js"></script>
 </head>
-<body class="bg-brand-dark text-slate-200 font-sans min-h-screen">
-
-    <!-- ========================================== -->
+<body class="min-h-screen font-sans text-slate-800">
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">My Profile - GloryVerse</h1>
+      <div class="legacy-content">
+<!-- ========================================== -->
     <!-- NAVBAR (TOP BAR)                           -->
     <!-- ========================================== -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 px-6 py-3 flex justify-between items-center shadow-lg">
-        <div class="flex items-center gap-3">
-            <a href="dashboard.html" class="w-8 h-8 bg-amber-500 rounded-lg flex items-center justify-center font-bold text-slate-900 hover:bg-amber-400 transition">G</a>
-            <span class="font-bold text-lg tracking-tight hidden sm:block text-white">GLORY<span class="text-amber-500">VERSE</span></span>
-        </div>
-
-        <div class="flex items-center gap-3 text-sm font-semibold">
-            <div class="hidden md:flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700 text-blue-300">
-                <span>🇬🇧</span> <span id="london-clock">Loading...</span>
-            </div>
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-yellow-400">💰</span> <span id="stat-gold">0</span>
-            </div>
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-blue-400">🪙</span> <span id="stat-currency">0</span>
-            </div>
-            <div class="flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-full border border-slate-700">
-                <span class="text-purple-400">💎</span> <span id="stat-diamond">0</span>
-            </div>
-        </div>
-
-        <div class="flex items-center gap-3">
-            <button id="wallet-btn" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition flex items-center gap-2">
-                👻 Connect Wallet
-            </button>
-            <a href="dashboard.html" class="text-slate-400 hover:text-white text-sm">← Dashboard</a>
-        </div>
-    </nav>
+    
 
     <!-- ========================================== -->
     <!-- MENU BAR (8 TOMBOL)                        -->
     <!-- ========================================== -->
-    <div class="fixed top-[60px] left-0 right-0 z-40 bg-slate-800/90 backdrop-blur-md border-b border-slate-700">
-        <div class="max-w-7xl mx-auto flex items-center justify-center overflow-x-auto py-2 px-4 gap-2">
-            <button onclick="openPanel('dashboard')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">️ Dashboard</button>
-            <button onclick="openPanel('profile')" class="flex-shrink-0 bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">👤 Profile</button>
-            <button onclick="openPanel('activities')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">⚔️ Activities</button>
-            <button onclick="openPanel('business')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏢 Business</button>
-            <button onclick="openPanel('financial')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">📈 Financial</button>
-            <button onclick="openPanel('politics')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🏛️ Politics</button>
-            <button onclick="openPanel('events')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🎉 Events</button>
-            <button onclick="openPanel('community')" class="flex-shrink-0 bg-slate-700 hover:bg-amber-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition whitespace-nowrap">🌐 Community</button>
-        </div>
-    </div>
+    
 
     <!-- ========================================== -->
     <!-- SIDE PANEL                                 -->
@@ -184,7 +183,7 @@
         <div class="bg-slate-800/30 border border-slate-700 rounded-xl p-6 backdrop-blur-sm mb-6">
             <p class="text-slate-400 text-sm text-center mb-4">Advertisement</p>
             <div class="flex justify-center">
-                <script async="async" data-cfasync="false" src="https://pl31341145.profitableratecpmnetwork.com/155237578e6f84c2a6d93ea22b88ea6d/invoke.js"></script>
+                
                 <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
             </div>
         </div>
@@ -197,9 +196,13 @@
     </div>
 	
 	<!-- Library Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
         // 1. SETUP SUPABASE
         const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 

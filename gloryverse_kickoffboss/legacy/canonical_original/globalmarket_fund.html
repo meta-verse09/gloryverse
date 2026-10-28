@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Global Market Fund · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="../../../css/gloryverse.css">
+<script src="../../../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../../../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../../../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="../../../skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="../../../skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="../../../skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="../../../skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">The Global Market Fund</h1>
+      <div class="legacy-content">
+
+							
+							
+														
+							<h4>The Global Market Fund</h4>
+
+							<p>The Global Market Fund is capitalized when companies sell their products on the Global Market. For each product sold in the Global Market, every company will pay a fee, in Gold. This fund rewards <b><a href="https://myprofitland.com/dailyhero.php?key=2e5c93c862a524e8f5364139ac168b71122665">hero</a></b>'s damage done during the current day (0:00 server time). The reward will go down or up by 50 gold, depending if the balance is higher or lower than the day before. The last payment was a total of <b>700.00 Gold</b> 10 hours ago.</p>
+
+							<br>
+							
+							<div class="row">
+								<div class="col-sm-5">
+									<div class="text-center">
+										<h5>Today's Reward</h5>
+										<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> <b>Gold 650.00</b>
+									</div>
+								</div>
+
+								<div class="col-sm-2">
+									<img src="https://myprofitland.com/img/goldchest.jpg">
+								</div>
+
+								<div class="col-sm-5">
+									<div class="text-center">
+										<h5>Fund Balance</h5>
+										<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> <b>Gold 13,204.05</b>
+									</div>
+								</div>
+							</div>
+							
+
+							<h5>Fund Balance History</h5>
+							
+							<canvas id="myChart" width="400" height="100"></canvas>
+							<script>
+								var ctx = document.getElementById('myChart').getContext('2d');
+								var myChart = new Chart(ctx, {
+								  type: 'line',
+								  data: {
+								    labels: ['27', '28', '29', '30', '31', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', ],
+								    datasets: [{
+								      label: 'Gold Balance',
+								      data: [13663.49400000, 13658.97800000, 13580.36350000, 13587.08100000, 13803.93700000, 13986.94800000, 14059.13350000, 14092.77000000, 14251.76250000, 14200.70350000, 13956.25500000, 13794.99700000, 13908.30350000, 13915.20100000, 13792.28000000, 13634.90500000, 13696.35950000, 13567.71750000, 13505.45450000, 13452.49800000, ],
+								      fill: false
+								    }]
+								  },
+								  options: {
+							         legend: {
+							            display: false
+							         }
+							    	}
+								});
+
+
+							</script>
+							<br>
+
+
+							<h5>Latest Transactions</h5>
+							
+							<table class="table table-condensed table-hover">
+								<thead>
+									<tr>
+										<th width="70">Curr.</th>
+										<th></th>
+										<th width="85">Time Ago</th>
+										<th width="80">Value</th>
+									</tr>
+									</thead>
+																	<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Lux - Attack Weapons</b> sold <b>RPG</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">28 seconds</td>
+										<td>
+																							<span class="label label-success">
+													+0.7875												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Lux - Attack Weapons</b> sold <b>Heavy MG</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">58 seconds</td>
+										<td>
+																							<span class="label label-success">
+													+0.7875												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Instalaza</b> sold <b>Laser Sight Rifle</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">1 minute</td>
+										<td>
+																							<span class="label label-success">
+													+0.786												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Instalaza</b> sold <b>Desert Eagle</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">1 minute</td>
+										<td>
+																							<span class="label label-success">
+													+0.783												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Instalaza</b> sold <b>Exploding Grenade</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">1 minute</td>
+										<td>
+																							<span class="label label-success">
+													+0.786												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Instalaza</b> sold <b>Hunting Knife</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">1 minute</td>
+										<td>
+																							<span class="label label-success">
+													+0.786												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Cervecería Polar</b> sold <b>Beer Pint</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">1 minute</td>
+										<td>
+																							<span class="label label-success">
+													+0.0285												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Winery 350</b> sold <b>Great Wine</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">2 minutes</td>
+										<td>
+																							<span class="label label-success">
+													+0.078												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Winery 350</b> sold <b>Great Wine</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">3 minutes</td>
+										<td>
+																							<span class="label label-success">
+													+0.078												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>✨ Notary net</b> sold <b>Governmental Form</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">3 minutes</td>
+										<td>
+																							<span class="label label-success">
+													+0.057												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Cervecería Polar</b> sold <b>Beer Pint</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">9 minutes</td>
+										<td>
+																							<span class="label label-success">
+													+0.0285												</span>
+																						</td>
+									</tr>
+																		<tr>
+										<td class="small">
+											<img width="16" height="16" src="https://myprofitland.com/img/gold_icon.png"> Gold										</td>
+										<td class="small">
+											<b>Hydro Core</b> sold <b>Water</b> in the global market and paid the fee to the Global Fund										</td>
+										<td class="small">9 minutes</td>
+										<td>
+																							<span class="label label-success">
+													+0.3135												</span>
+																						</td>
+									</tr>
+																</table>
+						
+									<div class="pagination
+		 pagination-sm pagination-right		">
+		
+		<div class="pagination-text"><span><b>1</b>-<b>12</b> of <b>33850</b></span></div>		
+		
+		<ul>
+		<li class="active"><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=1">1</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2">2</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=3">3</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=4">4</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=5">5</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=6">6</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=7">7</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=8">8</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=9">9</a></li><li ><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=10">10</a></li><li><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2"><i class="icon-angle-right"></i></a></li><li><a href="https://myprofitland.com/globalmarket_fund.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2821">Last</a></li>		</ul>
+				</div>
+									
+							
+						
+      </div>
+    </div>
+  </main>
+</div>
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
+</body>
+</html>

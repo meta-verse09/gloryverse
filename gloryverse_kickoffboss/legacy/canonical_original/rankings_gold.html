@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Balance Ranking · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
+</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="../../../css/gloryverse.css">
+<script src="../../../js/gloryverse.js"></script>
+</head>
+<body class="min-h-screen font-sans text-slate-800">
+
+<!-- TOPBAR -->
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="../../../index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="../../../index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <!-- SIDEBAR -->
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="../../../skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="../../../skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="../../../skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="../../../skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Gold Balance Ranking</h1>
+      <div class="legacy-content">
+
+							
+
+														
+							<h4>Gold Balance Ranking</h4>
+								
+
+															<table class="table table-condensed table-hover">
+									<thead>
+										<th>Name</th>
+										<th width="150" class="text-center">Activity</th>
+										<th width="140" class="text-center">Gold</th>
+									</thead>
+																			<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=nicmo">
+									<img title="nicmo" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/dgdgg54g56g56gjui.jpg?1531678535">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="nicmo" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=nicmo">nicmo</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist" class="icon icon-crosshairs "></i></a>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/kp.png"> North Korea					</p>
+	</div>
+	</td>
+											<td class="text-center">3 days ago</td>
+											<td class="text-center"><h5>34,839.33</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=TheGuardian">
+									<img title="TheGuardian" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/4c4929aacc9a180cb20b96883a59e8ff.jpg?1">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="TheGuardian" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=TheGuardian">TheGuardian</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/qa.png"> Qatar					</p>
+	</div>
+	</td>
+											<td class="text-center">10 hours ago</td>
+											<td class="text-center"><h5>15,629.98</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Thian010118">
+									<img title="Thian010118" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/f48a636f1404f5685d8e55e7345ad17c.jpg?1">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Thian010118" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Thian010118">Thian010118</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/sa.png"> Saudi Arabia					</p>
+	</div>
+	</td>
+											<td class="text-center">1 month ago</td>
+											<td class="text-center"><h5>10,315.21</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=KGY">
+									<img title="KGY" width="45" height="45" class="img-circle" src="https://myprofitland.com/img/user.jpg">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="KGY" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=KGY">KGY</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist" class="icon icon-crosshairs "></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/tw.png"> Taiwan					</p>
+	</div>
+	</td>
+											<td class="text-center">24 seconds ago</td>
+											<td class="text-center"><h5>8,185.18</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=HOMER">
+									<img title="HOMER" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/5133182f58ec5b0478c9c2b0ef0fbaa4.jpg?1772638204">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="HOMER" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=HOMER">HOMER</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/sa.png"> Saudi Arabia					</p>
+	</div>
+	</td>
+											<td class="text-center">3 hours ago</td>
+											<td class="text-center"><h5>6,853.77</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=SuperKhrys">
+									<img title="SuperKhrys" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/ba709ca6c97b5a1fe043dcaf1ecaeee5.jpg?1784049953">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="SuperKhrys" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=SuperKhrys">SuperKhrys</a></b> <a href="https://myprofitland.com/my_weapons.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="War Specialist" class="icon icon-crosshairs "></i></a>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/il.png"> Israel					</p>
+	</div>
+	</td>
+											<td class="text-center">7 hours ago</td>
+											<td class="text-center"><h5>6,830.45</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=radekx970602">
+									<img title="radekx970602" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/c869d27e69a89a2e632bb372487a2c5d.jpg?1599944333">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="radekx970602" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=radekx970602">radekx970602</a></b>   <a href="https://myprofitland.com/northkorea.php?key=2e5c93c862a524e8f5364139ac168b71122665"><i data-toggle="tooltip" title="North Korean Badge of Honor" class="flag-icon-kp flag-circle"></i></a>			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/rs.png"> Serbia					</p>
+	</div>
+	</td>
+											<td class="text-center">22 hours ago</td>
+											<td class="text-center"><h5>6,467.38</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=AceHafiz">
+									<img title="AceHafiz" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/78abcbbf891590246c27f0a4f2dbdaec.jpg?1624086871">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="AceHafiz" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=AceHafiz">AceHafiz</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/bn.png"> Brunei					</p>
+	</div>
+	</td>
+											<td class="text-center">3 hours ago</td>
+											<td class="text-center"><h5>5,980.16</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=RADIKAL">
+									<img title="RADIKAL" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/c44f9034b7a4e2a287a985c6b2315b66.jpg?1695304555">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="RADIKAL" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=RADIKAL">RADIKAL</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/sv.png"> El Salvador					</p>
+	</div>
+	</td>
+											<td class="text-center">36 minutes ago</td>
+											<td class="text-center"><h5>5,885.69</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=skirch">
+									<img title="skirch" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/55e31b743b584084a83d1d82b066f254.jpg?1565971308">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="skirch" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=skirch">skirch</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/xk.png"> Kosovo					</p>
+	</div>
+	</td>
+											<td class="text-center">7 hours ago</td>
+											<td class="text-center"><h5>4,456.94</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Johny">
+									<img title="Johny" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/c3dd7f3530fafb11bda1122dcf4405ff.jpg?1538430546">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="Johny" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=Johny">Johny</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/pa.png"> Panama					</p>
+	</div>
+	</td>
+											<td class="text-center">15 minutes ago</td>
+											<td class="text-center"><h5>3,963.07</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=gonaku">
+									<img title="gonaku" width="45" height="45" class="img-circle" src="https://myprofitland.com/img/user.jpg">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="gonaku" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=gonaku">gonaku</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/mv.png"> Maldives					</p>
+	</div>
+	</td>
+											<td class="text-center">1 hour ago</td>
+											<td class="text-center"><h5>3,703.08</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=rakelcc">
+									<img title="rakelcc" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/5171edb6be8a81db32c491c0ef8340ea.jpg?1610135968">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="rakelcc" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=rakelcc">rakelcc</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/bz.png"> Belize					</p>
+	</div>
+	</td>
+											<td class="text-center">9 hours ago</td>
+											<td class="text-center"><h5>3,688.20</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=RobyR">
+									<img title="RobyR" width="45" height="45" class="img-circle" src="https://myprofitland.com/img/user.jpg">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="RobyR" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=RobyR">RobyR</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/cl.png"> Chile					</p>
+	</div>
+	</td>
+											<td class="text-center">2 days ago</td>
+											<td class="text-center"><h5>3,191.16</h5></td>
+										</tr>
+																				<tr>
+											<td>	<div style="position:relative; padding-left:55px">
+		<div style="position:absolute; left:0; top:0">
+			<a href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=EMIR">
+									<img title="EMIR" width="45" height="45" class="img-circle" src="https://mplstatic.com/avatars/1c3698100cb6ce3796415fa2f0c30dfa.jpg?1603285004">
+								</a>
+					</div>
+
+		<p class="small">
+			<b><a title="EMIR" href="https://myprofitland.com/profile.php?key=2e5c93c862a524e8f5364139ac168b71122665&id=EMIR">EMIR</a></b>  			<br>
+			<img width="13" height="13" src="https://myprofitland.com/img/country_flags/16/qa.png"> Qatar					</p>
+	</div>
+	</td>
+											<td class="text-center">5 minutes ago</td>
+											<td class="text-center"><h5>3,041.44</h5></td>
+										</tr>
+																		</table>
+								
+									<div class="pagination
+		 pagination-sm pagination-right		">
+		
+		<div class="pagination-text"><span><b>1</b>-<b>15</b> of <b>2032</b></span></div>		
+		
+		<ul>
+		<li class="active"><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=1">1</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2">2</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=3">3</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=4">4</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=5">5</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=6">6</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=7">7</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=8">8</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=9">9</a></li><li ><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=10">10</a></li><li><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=2"><i class="icon-angle-right"></i></a></li><li><a href="https://myprofitland.com/rankings_gold.php?key=2e5c93c862a524e8f5364139ac168b71122665&page=136">Last</a></li>		</ul>
+				</div>
+									
+							
+						
+      </div>
+    </div>
+  </main>
+</div>
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
+</body>
+</html>

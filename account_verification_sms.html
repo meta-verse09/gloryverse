@@ -1,172 +1,83 @@
-
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<html lang="id">
 <head>
-	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-<title>My Profit Land - Online Strategy Browser Game Account Verification</title>
-
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="My Profit Land" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="My Profit Land - Online Strategy Browser Game Account Verification" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
-
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
-
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
-
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glory Verse - Online Strategy Browser Game Account Verification · GloryVerse</title>
+<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
-			}
-		});
-	};
-
+  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
 </script>
-
-
-
-
-
-
-
-
-
-	<meta name="robots" content="noindex, nofollow">
-	
-	<!-- Firebase SDK -->
-	<script type="module">
-			import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-			import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-	
-			const firebaseConfig = {
-				apiKey: "AIzaSyB2wOi2wigCgR6kwNYBPGh5KYRNPWoSkDg",
-				authDomain: "my-profit-land-1528747259776.firebaseapp.com",
-				projectId: "my-profit-land-1528747259776",
-				storageBucket: "my-profit-land-1528747259776.firebasestorage.app",
-				messagingSenderId: "900742102216",
-				appId: "1:900742102216:web:6b5d793444a200f7d0b9fd",
-				measurementId: "G-NZR9DSHLL5"
-			};
-	
-			// Initialize Firebase
-			const app = initializeApp(firebaseConfig);
-			const auth = getAuth(app);
-	
-			if (!auth.settings) {
-				auth.settings = {};
-			}
-			if (typeof auth.settings.appVerificationDisabledForTesting === 'undefined') {
-				auth.settings.appVerificationDisabledForTesting = false;
-			}
-	
-			// Make auth available globally
-			window.firebaseAuth = auth;
-			window.RecaptchaVerifier = RecaptchaVerifier;
-			window.signInWithPhoneNumber = signInWithPhoneNumber;
-
-			// Wait for the DOM to be ready, then initialize reCAPTCHA and event handlers
-			$(document).ready(function() {
-				initializeRecaptcha();
-
-				// Send verification code (.off first so a re-run never double-binds and sends two SMS)
-				$('#sendCodeBtn').off('click.sms').on('click.sms', function() {
-					sendVerificationCode();
-				});
-
-				// Verify code
-				$('#verifyCodeBtn').off('click.sms').on('click.sms', function() {
-					verifyCode();
-				});
-
-				// Resend code
-				$('#resendCodeBtn').off('click.sms').on('click.sms', function() {
-					sendVerificationCode();
-				});
-			});
-		</script>
+<style>
+  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
+  .legacy-content table { width:100%; border-collapse:collapse; }
+  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
+  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
+  .legacy-content tr:hover td { background:#f1f5f9; }
+  .legacy-content a { color:#7c3aed; font-weight:600; }
+  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
+  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
+  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
+</style>
+<link rel="stylesheet" href="css/gloryverse.css">
+<script src="js/gloryverse.js"></script>
 </head>
+<body class="min-h-screen font-sans text-slate-800">
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+    <a href="index.html" class="flex items-center gap-2 font-black text-xl">
+      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
+      GLORY<span class="text-yellow-300">VERSE</span>
+    </a>
+    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
+      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
+      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
+    </div>
+    <a href="index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
+  </div>
+</nav>
+<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
+  <aside class="w-64 shrink-0 hidden lg:block">
+    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
+      <div class="text-center mb-3">
+        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
+        <div class="font-black text-slate-800">ADVAN</div>
+        <div class="text-xs text-slate-500">Maldives · Krsko</div>
+      </div>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
+        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
+        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
+        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
+      </div>
+      <ul class="mt-4 space-y-1 text-sm">
+        <li><a href="skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
+        <li><a href="skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
+        <li><a href="skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
+        <li><a href="skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
+      </ul>
+    </div>
+  </aside>
+  <main class="flex-1 min-w-0">
+    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
+      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Glory Verse - Online Strategy Browser Game Account Verification</h1>
+      <div class="legacy-content">
+<h4>Phone Verification (SMS)</h4>
+								
+							<p>Making sure the game is fair for everyone is very important for us. For this reason we ask players to verify their accounts using their phone. This way we limit the amount of active duplicate accounts within the game. Phone validation is <b>free</b> for everyone and the process is fairly simple.</p>
 
-<body>
-
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
-
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://mplstatic.com/img/game-head.jpg)">
-		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.php">
-				<img alt="gloryverse.id" src="https://mplstatic.com/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-					
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+															<div class="alert alert-success">Account verified with the phone number: <b>85263477631</b></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="text/javascript">
 
 						var currenttime = 'September 16, 2026 01:21:00' 
 
@@ -200,503 +111,13 @@
 
 
 					</script>
-
-											<a href="https://gloryverse.id/my_medals.php" data-toggle="tooltip" title="Next Medal Session: 30.7% (613 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">01:21:00</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 30.7%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.php">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.php", "#modal_ajax")'>Income (20264)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.php", "#modal_ajax")'>Alerts (9572)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.php">Messages (0)</a>&nbsp;&nbsp; <a class="label label-info" data-toggle="modal tooltip" title="Open last used company" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.php&id=55835", "#modal_ajax")'><i class="icon-shop"></i></a> <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.php", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.php"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.php"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
-					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
-	<nav class="topnav">
-		<div class="topnav-inner">
-			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li class="active" > <a href="https://gloryverse.id/dashboard.php">Home</a> </li>
-
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.php"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.php"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.php"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.php"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.php"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.php"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.php"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.php"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.php"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.php"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.php"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.php"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.php"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.php"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.php"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.php"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.php"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.php"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.php"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Monaco <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.php"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.php"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.php"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.php"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.php"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.php"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.php"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.php"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.php"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.php"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.php"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.php"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.php"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.php"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_manage.php", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
-															</ul>
-						</li>
-
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.php"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.php"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.php"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.php"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.php"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.php"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.php"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.php"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.php"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.php"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.php"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.php"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.php"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.php"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.php"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.php"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.php"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.php"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.php"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.php"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.php"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.php"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.php"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.php"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.php"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.php"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
-
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.php"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.php"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.php"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.php"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.php"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.php"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.php"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.php"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.php"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.php"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.php"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.php"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
-
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
-	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
-
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.php&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.php&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/mc.png"> <span class="small"><a href="https://gloryverse.id/country.php&id=MC">Monaco</a>
-				<br>
-				<a href="https://gloryverse.id/region.php&id=445">Monaco</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 59.36% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.php", "#modal_ajax")'></a> 		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="59.36" aria-valuemin="0" aria-valuemax="100" style="width: 59.36%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 100.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.php", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100.0" aria-valuemin="0" aria-valuemax="100" style="width: 100.0%;">
-			</div>
-		</div>
-
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 29		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 12045/16091&nbsp;&nbsp;&nbsp;74%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="74" aria-valuemin="0" aria-valuemax="100" style="width: 74%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.php">Working (2 hours)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.php", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="113.67">113.670</span> sVCT <a href="https://gloryverse.id/my_vct.php"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 0.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 40.49 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.php"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/mc.png"> MFR: 547.25</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.php">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.php">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.php">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.php">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.php">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.php">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.php">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.php">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.php">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.php">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.php">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.php">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.php">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.php">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
+<script type="text/javascript">
 				function googleTranslateElementInit() {
 				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
 				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-
-														
-							<h4>Phone Verification (SMS)</h4>
-								
-							<p>Making sure the game is fair for everyone is very important for us. For this reason we ask players to verify their accounts using their phone. This way we limit the amount of active duplicate accounts within the game. Phone validation is <b>free</b> for everyone and the process is fairly simple.</p>
-
-															<div class="alert alert-success">Account verified with the phone number: <b>85263477631</b></div>
-														</div><!-- end .main -->			
-						
-							
-
-						<div class="rightbar">
-	
-							<h6>My Friends</h6>
-
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 14 minutes ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=julienoor"></a> <a href="https://gloryverse.id/profile.php&id=julienoor">julienoor</a> <a href="https://gloryverse.id/country.php&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 16 minutes ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=kurniawan214"></a> <a href="https://gloryverse.id/profile.php&id=kurniawan214">kurniawan214</a> <a href="https://gloryverse.id/country.php&id=TW"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tw.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 24 minutes ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Phoenix"></a> <a href="https://gloryverse.id/profile.php&id=Phoenix">Phoenix</a> <a href="https://gloryverse.id/country.php&id=EH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/eh.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 25 minutes ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Eagle"></a> <a href="https://gloryverse.id/profile.php&id=Eagle">Eagle</a> <a href="https://gloryverse.id/country.php&id=IM"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/im.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 26 minutes ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Reingkarnasi"></a> <a href="https://gloryverse.id/profile.php&id=Reingkarnasi">Reingkarnasi</a> <a href="https://gloryverse.id/country.php&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 34 minutes ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Tedong_Naga819"></a> <a href="https://gloryverse.id/profile.php&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://gloryverse.id/country.php&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 38 minutes ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Bulux"></a> <a href="https://gloryverse.id/profile.php&id=Bulux">Bulux</a> <a href="https://gloryverse.id/country.php&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 53 minutes ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Dingdong"></a> <a href="https://gloryverse.id/profile.php&id=Dingdong">Dingdong</a> <a href="https://gloryverse.id/country.php&id=AD"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ad.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=archameera"></a> <a href="https://gloryverse.id/profile.php&id=archameera">archameera</a> <a href="https://gloryverse.id/country.php&id=SV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Pepa"></a> <a href="https://gloryverse.id/profile.php&id=Pepa">Pepa</a> <a href="https://gloryverse.id/country.php&id=ES"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/es.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 8 hours ago, Send a Message to Aris" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Aris"></a> <a href="https://gloryverse.id/profile.php&id=Aris">Aris</a> <a href="https://gloryverse.id/country.php&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 11 hours ago, Send a Message to Nicotin" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=Nicotin"></a> <a href="https://gloryverse.id/profile.php&id=Nicotin">Nicotin</a> <a href="https://gloryverse.id/country.php&id=MV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 12 hours ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.php&to=515"></a> <a href="https://gloryverse.id/profile.php&id=515">515</a> <a href="https://gloryverse.id/country.php&id=XK"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/xk.png"></a>
-						</div>
-					
-				
-				<a class="small" href="https://gloryverse.id/my_friends.php">View All</a>
-						<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					We are looking for workers in Libya:<br />
-<br />
-Workbonus: 6g<br />
-Min wage: 0.3g/h<br />
-<br />
-Monthly income: +175g				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=Only">Only</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sg.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Tunísia open for 2 more worker, cheap real estate and companies , for sell milkcoffee shop upgrade 4 ,Castle 12.000 días , join today!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=Villano">Villano</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tn.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					I am renting out my attack-weapon company; anyone interested can message me.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=ZONE_GAMER">ZONE_GAMER</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Selling wood, selling all chain Company in Australia very good price. Selling jug PM ME				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=Giuros">Giuros</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sk.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					wts new private plane				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mk.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Israel is hiring workers; there is a good local market and rentals available for everyone. Work Bonus: 4 gold + 1 gold per job. Welcome bonus: 50 gold.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=SuperKhrys">SuperKhrys</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/il.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Hungary need 2 workers, we please you to come, we are running max work bonus time to time, we are runing to profit someone also time to time. Let me hear you - text me, we will talk. Regards, Luko!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=lukosius7">lukosius7</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/hu.png"><br>
-						4 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Macedonia active work and war, wts general castle inside Macedonia				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.php&id=chandra6682">chandra6682</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mk.png"><br>
-						4 days ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.php" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
-					</div>
-				</div>
-
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
-			</form>
-		
-
-		
-
-
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-
-
-			</div><!-- end .contents -->
-			<div class="footer">
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			
-				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.php">Privacy policy</a> | <a href="https://gloryverse.id/tos.php">Terms and conditions</a> <small>(5) 0.008s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
-</div>
-
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using Glory Verse, you agree to our <a href="https://gloryverse.id/tos.php">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
-
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
-
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
-	<script>
+			</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
 			let confirmationResult = null;
 			let recaptchaVerifier = null;
 			let isRecaptchaReady = false;
@@ -1031,7 +452,9 @@ Monthly income: +175g				</span>
 					});
 			}
 		</script>
-	
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v31edd6df95cf4e85bb4c19e7a9bdbcba1788362987495" integrity="sha512-iIg7k2xntmwu6/uSb5tpc/hySgZc4eoL31yB29W6tJFo2akwjPWcEqnCEdJvGexCL0KEQwVYv5BlowfhVz26hg==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+
+<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+
 </body>
 </html>
