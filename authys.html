@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GloryVerse – Sign in</title>
+<style>
+  :root{
+    --navy:#0b1a33; --panel:#12264a; --line:#2a4170; --gold:#d4a64a; --gold-d:#b88a32;
+    --text:#eef2fa; --muted:#9db0d3; --err:#ff7b7b; --ok:#7be0a4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{
+    background:var(--navy); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .card{
+    width:100%; max-width:380px; background:var(--panel);
+    border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+  }
+  .brand{font-family:Palatino,Georgia,serif; font-size:26px; font-weight:700; color:var(--gold); margin:0 0 4px}
+  .sub{margin:0 0 20px; color:var(--muted); font-size:14px}
+  .tabs{display:flex; background:var(--navy); border-radius:10px; padding:3px; margin-bottom:18px}
+  .tabs button{
+    flex:1; border:0; background:transparent; color:var(--muted); padding:10px;
+    font-size:14px; font-weight:600; border-radius:8px; cursor:pointer;
+  }
+  .tabs button.on{background:var(--gold); color:#1a1405}
+  label{display:block; font-size:13px; color:var(--muted); margin:12px 0 5px}
+  input{
+    width:100%; padding:12px; font-size:15px; color:var(--text);
+    background:var(--navy); border:1px solid var(--line); border-radius:10px;
+  }
+  input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+  .go{
+    width:100%; margin-top:18px; padding:13px; border:0; border-radius:10px;
+    background:var(--gold); color:#1a1405; font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .go:hover{background:var(--gold-d)}
+  .go:disabled{opacity:.55; cursor:wait}
+  .msg{min-height:20px; margin:14px 0 0; font-size:13px; line-height:1.45}
+  .msg.err{color:var(--err)} .msg.ok{color:var(--ok)}
+  .link{background:none; border:0; color:var(--muted); font-size:13px; margin-top:12px; cursor:pointer; text-decoration:underline; padding:0}
+  .hide{display:none}
+  .check{text-align:center; color:var(--muted); padding:30px 0}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1 class="brand">GloryVerse</h1>
+  <p class="sub" id="sub">Checking your session…</p>
+
+  <div id="checking" class="check">Please wait</div>
+
+  <div id="authBox" class="hide">
+    <div class="tabs" role="tablist">
+      <button type="button" id="tabLogin" class="on" role="tab">Log in</button>
+      <button type="button" id="tabRegister" role="tab">Register</button>
+    </div>
+
+    <form id="form" novalidate>
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="email" required>
+
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+
+      <div id="confirmWrap" class="hide">
+        <label for="confirm">Confirm password</label>
+        <input id="confirm" type="password" autocomplete="new-password">
+      </div>
+
+      <button class="go" id="submitBtn" type="submit">Log in</button>
+    </form>
+
+    <button class="link" id="forgotBtn" type="button">Forgot password?</button>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== 1. CONFIG – isi dengan data proyek Supabase kamu =====
+   Ambil dari Supabase > Project Settings > API:
+   - Project URL
+   - anon public key (BUKAN service_role)
+   Kalau dashboard.html kamu sudah punya client "sb", copy URL & key yang sama dari sana. */
+const SUPABASE_URL  = 'https://gfhcqbosxtcuvxttmzsm.supabase.co
+';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
+const DASHBOARD_URL = 'dashboard.html';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ===== 2. Elemen ===== */
+const $ = id => document.getElementById(id);
+const checking = $('checking'), authBox = $('authBox'), sub = $('sub');
+const form = $('form'), msg = $('msg'), submitBtn = $('submitBtn');
+let mode = 'login';
+
+/* ===== 3. Tampilan ===== */
+function setMode(m){
+  mode = m;
+  const reg = m === 'register';
+  $('tabLogin').classList.toggle('on', !reg);
+  $('tabRegister').classList.toggle('on', reg);
+  $('confirmWrap').classList.toggle('hide', !reg);
+  $('password').autocomplete = reg ? 'new-password' : 'current-password';
+  submitBtn.textContent = reg ? 'Create account' : 'Log in';
+  $('forgotBtn').classList.toggle('hide', reg);
+  sub.textContent = reg ? 'Create your player account.' : 'Welcome back. Log in to continue.';
+  say('');
+}
+function say(text, type){
+  msg.textContent = text;
+  msg.className = 'msg' + (type ? ' ' + type : '');
+}
+function goDashboard(){ window.location.replace(DASHBOARD_URL); }
+
+/* ===== 4. Cek sesi dulu (gerbang) ===== */
+async function init(){
+  if (SUPABASE_URL.startsWith('https://gfhcqbosxtcuvxttmzsm.supabase.co
+') || SUPABASE_KEY.startsWith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg')){
+    checking.textContent = 'Supabase URL and key are not set yet. Edit authys.html (section CONFIG).';
+    return;
+  }
+  const { data, error } = await sb.auth.getSession();
+  if (!error && data.session){ goDashboard(); return; }
+
+  checking.classList.add('hide');
+  authBox.classList.remove('hide');
+  const wanted = new URLSearchParams(location.search).get('mode');
+  setMode(wanted === 'register' ? 'register' : 'login');
+}
+
+/* ===== 5. Login / Register ===== */
+function friendly(err){
+  const t = (err.message || '').toLowerCase();
+  if (t.includes('invalid login')) return 'Wrong email or password.';
+  if (t.includes('email not confirmed')) return 'Email not confirmed yet. Open the link we sent to your inbox.';
+  if (t.includes('already registered')) return 'This email is already registered. Use Log in instead.';
+  if (t.includes('rate limit')) return 'Too many attempts. Wait a few minutes and try again.';
+  return err.message || 'Something went wrong. Try again.';
+}
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const email = $('email').value.trim();
+  const password = $('password').value;
+
+  if (!email || !password){ say('Enter your email and password.', 'err'); return; }
+  if (mode === 'register'){
+    if (password.length < 6){ say('Password must be at least 6 characters.', 'err'); return; }
+    if (password !== $('confirm').value){ say('Passwords do not match.', 'err'); return; }
+  }
+
+  submitBtn.disabled = true; say('');
+  try{
+    if (mode === 'login'){
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      goDashboard();
+    } else {
+      const { data, error } = await sb.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: location.origin + location.pathname }
+      });
+      if (error) throw error;
+      if (data.session){ goDashboard(); }
+      else { say('Account created. Check your email and open the confirmation link, then log in.', 'ok'); }
+    }
+  }catch(err){
+    say(friendly(err), 'err');
+  }finally{
+    submitBtn.disabled = false;
+  }
+});
+
+$('forgotBtn').addEventListener('click', async () => {
+  const email = $('email').value.trim();
+  if (!email){ say('Type your email above first, then press Forgot password.', 'err'); return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
+  say(error ? friendly(error) : 'Reset link sent. Check your email.', error ? 'err' : 'ok');
+});
+
+$('tabLogin').addEventListener('click', () => setMode('login'));
+$('tabRegister').addEventListener('click', () => setMode('register'));
+
+/* Setelah klik link konfirmasi email, Supabase mengirim sesi balik ke halaman ini */
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'SIGNED_IN' && session) goDashboard();
+});
+
+init();
+</script>
+</body>
+</html>
