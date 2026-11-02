@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<head>
+	<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>My Profit Land - Online Strategy Browser Game</title>
+
+<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
+<meta name="description" content="" />
+<meta name="copyright" content="My Profit Land" />
+	
+<!-- For Sharing ++ -->
+<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="website" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Favicon -->
+<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
+<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+
+<!-- Core CSS -->
+<link rel="stylesheet" href="https://gloryverse.id/css-site/base.css?t=1493636609">
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<!-- Core JS -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="https://gloryverse.id/js/base.js"></script>
+<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+
+<!-- Extra JS -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<script type="text/javascript">
+	var newwindow;
+	var intId;
+	function login(url){
+		var  screenX    = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
+			 screenY    = typeof window.screenY != 'undefined' ? window.screenY : window.screenTop,
+			 outerWidth = typeof window.outerWidth != 'undefined' ? window.outerWidth : document.body.clientWidth,
+			 outerHeight = typeof window.outerHeight != 'undefined' ? window.outerHeight : (document.body.clientHeight - 22),
+			 width    = 500,
+			 height   = 270,
+			 left     = parseInt(screenX + ((outerWidth - width) / 2), 10),
+			 top      = parseInt(screenY + ((outerHeight - height) / 2.5), 10),
+			 features = (
+				'width=' + width +
+				',height=' + height +
+				',left=' + left +
+				',top=' + top
+			  );
+
+		newwindow=window.open(url,'Login_by_facebook',features);
+
+	   if (window.focus) {newwindow.focus()}
+	  return false;
+	}
+</script>
+
+
+<script>
+
+	function ajaxcall(my_url, my_div, my_data){
+		$.ajax({
+			url: my_url,
+			data: my_data,
+			type: 'get',
+			crossDomain: true,
+			success: function(output){
+				$(my_div).html(output);
+			}
+		});
+	};
+
+</script>
+
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-5136240-6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-5136240-6');
+</script>
+
+
+
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+</head>
+
+<body>
+
+	<div class="viewport">
+		<div class="page">
+			
+			<div class="contents">
+				<!-- TOPNAV --------------------------------
+---------------------------------------- -->
+<nav class="topnav">
+	
+	<div class="topnav-inner">
+		<div class="container">
+			<div class="topnav-header">
+
+				<a class="brand" href="https://gloryverse.id/dashboard.html?key=9245056a59767ad2815c211802112ced122665">
+					<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
+				</a>
+
+				<button type="button" class="topnav-toggle" data-toggle="collapse" data-target="#topnav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+			</div>
+	
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse topnav-collapse" id="topnav-collapse">
+				<ul class="nav topnav-nav">
+					
+					<li>
+						<a href="https://gloryverse.id">Home</a>
+					</li>
+
+					<li>
+						<a href="https://gloryverse.id/register.html">Register</a>
+					</li>
+
+					<li>
+						<a href="https://gloryverse.id/account_recovery.html">Lost Password</a>
+					</li>
+					
+					<li>
+						<a href="https://gloryverse.id/documentation.html">Documentation</a>
+					</li>
+
+					<li>
+						<a href="https://gloryverse.id/contact.html">Contact</a>
+					</li>
+											<li>
+							<a href="https://gloryverse.id/dashboard.html?key=9245056a59767ad2815c211802112ced122665"><span class="blue"><i class="icon-login"></i>&nbsp;&nbsp;Back to game</span></a>
+						</li>
+						
+				</ul>
+			</div><!-- end .topnav-collapse -->
+		</div><!-- end .container -->
+	</div><!-- end .topnav-inner -->
+	
+</nav>
+<!-- end topnav ----------------------------
+---------------------------------------- -->
+				<!-- CONTENT AREA -------------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+
+				<div class="container">
+
+						<div class="row">
+						
+							<!-- MAIN COL ------------------------------------- -->
+							<div class="col-xs-12 col-md-8 col-md-offset-2">
+								<h2 class="subsection-header light">
+									Account Recovery
+								</h2>
+								
+
+									
+																			<form method="post" action="https://gloryverse.id/account_recovery.html" class="form-horizontal">
+											<input type="hidden" name="acn" value="sendemail">
+
+											<p>If you lost your password, don't worry, we can help you reset it. Write your email address in the box below and we will send you a confirmation email. Follow the link in that email to set a new password.</p><br>
+										
+											<div class="form-cols-row">
+												<label class="control-label form-col-xs-12 form-col-sm-4 form-col-lg-3" for="email">
+													Your Email<!--
+												 --><i class="icon-flash red" data-toggle="tooltip" title="Required!"></i>
+												</label>
+												<div class="form-col-xs-12 form-col-sm-8 form-col-lg-9">
+													<input type="email" class="form-control" id="email" name="recover_email">
+												</div><!-- end .form-col-*-* -->
+											</div><!-- end .form-cols-row -->
+		
+		
+											<div class="form-cols-row pull-right">
+
+												<div class="form-col-xs-12 form-col-sm-12">
+													<div class="g-recaptcha" data-sitekey="6Lek5ygTAAAAAPpJ-nek3EiCfY3ATQc0gZ77a2C3"></div>
+												</div>
+
+
+												<div class="form-col-xs-12 form-col-sm-4 pull-right">
+													<button type="submit" class="btn btn-primary-flt btn-block">Send</button>
+												</div><!-- end .form-col-*-* -->
+											</div><!-- end .form-cols-row -->
+
+										</form>
+																		
+							</div><!-- end .col -->
+							<!-- end main col --------------------------------- -->
+						
+						</div><!-- end .row -->
+
+
+						
+
+						
+				</div>
+
+				<!-- end content area ---------------------------------------------------------------
+				--------------------------------------------------------------------------------- -->
+				
+				
+
+
+
+			</div><!-- end .contents -->
+			<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+
+          <script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+        
+				<div class="copyright">
+					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(2) 0.003s</small>
+				</div><!-- end .copyright -->
+			
+			</div><!-- end .col -->
+		</div><!-- end .row -->
+	</div><!-- end .container -->
+</div>
+
+<div class="accept-cookies-notice">
+	<div class="container">
+		<div class="inner">
+			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
+			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
+		</div><!-- end .inner -->
+	</div><!-- end .container -->
+</div>
+
+<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+
+			
+		</div><!-- end .page -->
+	</div><!-- end .viewport -->
+
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
