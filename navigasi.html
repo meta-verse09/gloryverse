@@ -1,0 +1,74 @@
+
+<!-- TEMPAT NAVIGASI DIMUAT -->
+<div id="nav-container">
+  <!-- TARUH KODE TOPBAR & SIDEBAR KAMU DI SINI — TIDAK DIUBAH -->
+  <!-- [Tulis kode topbar & sidebar kamu di bagian ini] -->
+</div>
+
+<!-- ISI HALAMAN (nanti kamu isi sendiri per halaman) -->
+<main class="main-content">
+  <!-- Jam London kamu -->
+  <span class="label label-light">
+    <span class="icon-clock"></span>
+    <b id="server_time">05:24:44</b>
+  </span>
+  <div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
+    <div id="time-progress" style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
+  </div>
+
+  <!-- Nanti isi konten masing-masing halaman taruh di sini -->
+  <div id="page-content">
+    <!-- Isi halaman kamu nanti di sini -->
+  </div>
+
+  <!-- Nanti kode Adsterra taruh di sini -->
+  <div class="iklan">
+    <!-- Adsterra -->
+  </div>
+</main>
+
+<!-- SEMUA JS DI BAWAH INI — TINGGAL SALIN -->
+<script type="module">
+  // === 1. INISIALISASI SUPABASE ===
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+  const SUPABASE_URL = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+  // Fungsi ambil data dari Supabase — panggil di halaman masing-masing
+  window.ambilData = async function(namaTabel) {
+    const { data, error } = await supabase
+      .from(namaTabel)
+      .select('*')
+      .order('waktu', { ascending: false })
+
+    if (error) console.error('Error ambil data:', error)
+    return data
+  }
+
+  // === 2. JAM LONDON OTOMATIS ===
+  function updateLondonClock() {
+    const now = new Date()
+    const londonTime = now.toLocaleTimeString('en-GB', {
+      timeZone: 'Europe/London',
+      hour12: false
+    })
+    document.getElementById("server_time").innerHTML = londonTime
+
+    // Update garis kemajuan waktu
+    const d = new Date()
+    const detikHarian = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds()
+    const persen = (detikHarian / 86400) * 100
+    document.getElementById("time-progress").style.width = persen.toFixed(1) + '%'
+  }
+
+  setInterval(updateLondonClock, 1000)
+  updateLondonClock()
+</script>
+
+<style>
+  body { margin: 0; font-family: system-ui; }
+  .main-content { margin-left: 220px; margin-top: 56px; padding: 25px; min-height: 100vh; }
+</style>
