@@ -1,74 +1,190 @@
 
-<!-- TEMPAT NAVIGASI DIMUAT -->
-<div id="nav-container">
-  <!-- TARUH KODE TOPBAR & SIDEBAR KAMU DI SINI — TIDAK DIUBAH -->
-  <!-- [Tulis kode topbar & sidebar kamu di bagian ini] -->
+<!-- HEADER -->
+<div class="game-head">
+  <div class="container">
+    <a class="brand" href="#"><img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png"></a>
+    <div class="pull-right">
+      <div class="pull-left" style="margin-right:16px;">
+        <a href="#" style="display:inline-block;text-decoration:none;">
+          <span class="label label-light"><span class="icon-clock"></span><b id="server_time">00:00:00</b></span>
+          <div style="height:2px;background:rgba(255,255,255,.15);border-radius:1px;">
+            <div id="time-progress" style="height:100%;width:0%;border-radius:1px;background:#f0ad4e;"></div>
+          </div>
+        </a>
+      </div>
+      <div class="pull-left" style="margin-right:16px;margin-top:-3px;">
+        <form method="post" action="#">
+          <input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px;">
+        </form>
+      </div>
+      <div class="pull-left">
+        <div class="text-right">
+          <a class="label label-success" href="#">Income (0)</a>
+          <a class="label label-warning" href="#">Alerts (0)</a>
+          <a class="label label-light" href="#">Messages (0)</a>&nbsp;&nbsp;
+          <a class="label label-danger" href="#"><i class="icon-warning"></i></a>
+          <a class="label label-info" title="Personal Notepad" href="#"><i class="icon-file-text-o"></i></a>
+          <a class="label label-info" title="Personal Settings" href="#"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;
+          <a class="label label-info" title="Logout" href="#"><i class="icon icon-logout"></i></a>
+          <br><small></small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ISI HALAMAN (nanti kamu isi sendiri per halaman) -->
-<main class="main-content">
-  <!-- Jam London kamu -->
-  <span class="label label-light">
-    <span class="icon-clock"></span>
-    <b id="server_time">05:24:44</b>
-  </span>
-  <div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-    <div id="time-progress" style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
+<!-- TOPNAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <div class="container">
+      <div class="topnav-collapse">
+        <ul class="nav topnav-nav">
+          <li class="active"><a href="#">Home</a></li>
+          <li><a>Activities <span class="icon-stopwatch blue"></span> <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><span class="icon-briefcase"></span>&nbsp;&nbsp;Work <span class="icon-stopwatch blue"></span></a></li>
+              <li class="divider"></li>
+              <li><a href="#"><span class="icon-crosshairs"></span>&nbsp;&nbsp;War Activity</a></li>
+              <li><a href="#"><span class="icon-star yellow"></span>&nbsp;&nbsp;Daily Hero</a></li>
+              <li><a href="#"><span class="icon-flag"></span>&nbsp;&nbsp;Lookout Posts</a></li>
+              <li><a href="#"><span class="icon-news"></span>&nbsp;&nbsp;Newspapers</a></li>
+              <li><a href="#"><span class="icon-glass"></span>&nbsp;&nbsp;The Local Bar</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><span class="icon-tag"></span>&nbsp;&nbsp;Offers</a></li>
+              <li><a href="#"><span class="icon-tag"></span>&nbsp;&nbsp;Offers Contest</a></li>
+            </ul>
+          </li>
+          <li><a>Markets <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
+              <li><a href="#"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
+              <li><a href="#"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li>
+              <li><a href="#"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
+              <li><a href="#"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
+              <li><a href="#"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
+              <li><a href="#"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
+            </ul>
+          </li>
+          <li><a>Country <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
+              <li><a href="#"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
+              <li><a href="#"><span class="icon-flag"></span>&nbsp;&nbsp;Regions</a></li>
+              <li><a href="#"><span class="icon-bin-open"></span>&nbsp;&nbsp;Resources</a></li>
+              <li><a href="#"><span class="icon-database"></span>&nbsp;&nbsp;Storage</a></li>
+              <li><a href="#"><span class="icon-documents"></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
+              <li><a href="#"><span class="icon-users"></span>&nbsp;&nbsp;Government Members</a></li>
+              <li><a href="#"><span class="icon-feather"></span>&nbsp;&nbsp;Law Proposals</a></li>
+              <li><a href="#"><span class="icon-v-card"></span>&nbsp;&nbsp;Government Elections</a></li>
+              <li><a href="#"><span class="icon-hand-o-up"></span>&nbsp;&nbsp;Patriots</a></li>
+              <li><a href="#"><span class="icon-crosshairs"></span>&nbsp;&nbsp;Army</a></li>
+              <li><a href="#"><span class="icon-shop"></span>&nbsp;&nbsp;Companies</a></li>
+            </ul>
+          </li>
+          <li><a>Organizations <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
+              <li><a href="#"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
+            </ul>
+          </li>
+          <li><a>Partners <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><span class="icon-area-chart"></span>&nbsp;&nbsp;The Fund</a></li>
+              <li><a href="#"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Share Market</a></li>
+              <li><a href="#"><span class="icon-list"></span>&nbsp;&nbsp;Shareholders</a></li>
+              <li><a href="#"><span class="icon-wallet"></span>&nbsp;&nbsp;My Shares</a></li>
+            </ul>
+          </li>
+          <li><a>Rankings <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
+              <li><a href="#"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
+              <li><a href="#"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+              <li><a href="#"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+              <li><a href="#"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
+              <li><a href="#"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+              <li><a href="#"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
+            </ul>
+          </li>
+          <li><a>Community <span class="caret"></span></a>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+              <li><a href="#"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+              <li><a href="#"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
+              <li><a href="#"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
+              <li><a href="#"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
+              <li><a href="#"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
+              <li class="divider"></li>
+              <li><a href="#"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+              <li><a href="#"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
+              <li><a href="#"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
+              <li><a href="#"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
+</nav>
 
-  <!-- Nanti isi konten masing-masing halaman taruh di sini -->
-  <div id="page-content">
-    <!-- Isi halaman kamu nanti di sini -->
-  </div>
+<!-- LEFT SIDEBAR -->
+<div class="container">
+  <div class="clearfix">
+    <div class="leftbar">
+      <div style="position:relative;padding-left:85px;height:78px;">
+        <div style="position:absolute;left:0;top:0;">
+          <a href="#"><img title="Player" width="75" height="75" class="img-circle" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='75' height='75'><rect width='75' height='75' fill='%232a3038'/><circle cx='37.5' cy='28' r='13' fill='%23555f70'/><path d='M12 70c0-16 12-24 25.5-24S63 54 63 70z' fill='%23555f70'/></svg>"></a>
+        </div>
+        <p class="nw">
+          <b><a href="#">Player</a></b><br>
+          <span class="small">—</span>
+        </p>
+      </div>
+      <div class="text-center small"><b>Energy:</b> 0%</div>
+      <div class="progress progress-xs mb-sm-10"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+      <div class="text-center small"><b>Health:</b> 0%</div>
+      <div class="progress progress-xs mb-sm-10"><div class="progress-bar progress-bar-danger" style="width:0%;"></div></div>
+      <div class="text-center small"><b>XP Level:</b> —</div>
+      <div class="progress progress-xs mb-sm-10"><div class="progress-bar progress-bar-info" style="width:0%;"></div></div>
+      <p style="margin-bottom:5px;"><i class="fa-solid fa-v yellow" style="margin-right:5px;"></i></p>
+      <p style="margin-bottom:5px;">Diamond: 0.00</p>
+      <p style="margin-bottom:5px;">Gold: 0.00</p>
+      <p>Currency: 0.00</p>
+      <ul class="list-group">
+        <li class="list-group-item"><a href="#">My Companies</a></li>
+        <li class="list-group-item"><a href="#">My Inventory</a></li>
+        <li class="list-group-item"><a href="#">My Companion</a></li>
+        <li class="list-group-item"><a href="#">My Vehicles</a></li>
+        <li class="list-group-item"><a href="#">My Finances</a></li>
+        <li class="list-group-item"><a href="#">My Weapons &amp; Info</a></li>
+        <li class="list-group-item"><a href="#">My Clothing</a></li>
+        <li class="list-group-item"><a href="#">My Real Estate</a></li>
+        <li class="list-group-item"><a href="#">My Recruits</a></li>
+        <li class="list-group-item"><a href="#">My Medals</a></li>
+        <li class="list-group-item"><a href="#">My Newspaper Articles</a></li>
+        <li class="list-group-item"><a href="#">My Regions</a></li>
+      </ul>
+      <p class="text-center">
+        <a class="btn btn-success btn-sm" href="#">Invest <i class="icon icon-download"></i></a>
+        <a class="btn btn-danger btn-sm" href="#">Withdraw <i class="icon icon-upload"></i></a>
+      </p>
+      <br>
+      <div id="google_translate_element"></div>
+      <br>
+    </div>
 
-  <!-- Nanti kode Adsterra taruh di sini -->
-  <div class="iklan">
-    <!-- Adsterra -->
-  </div>
-</main>
-
-<!-- SEMUA JS DI BAWAH INI — TINGGAL SALIN -->
-<script type="module">
-  // === 1. INISIALISASI SUPABASE ===
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
-
-  const SUPABASE_URL = 'https://gfhcqbosxtcuvxttmzsm.supabase.co'
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-  // Fungsi ambil data dari Supabase — panggil di halaman masing-masing
-  window.ambilData = async function(namaTabel) {
-    const { data, error } = await supabase
-      .from(namaTabel)
-      .select('*')
-      .order('waktu', { ascending: false })
-
-    if (error) console.error('Error ambil data:', error)
-    return data
-  }
-
-  // === 2. JAM LONDON OTOMATIS ===
-  function updateLondonClock() {
-    const now = new Date()
-    const londonTime = now.toLocaleTimeString('en-GB', {
-      timeZone: 'Europe/London',
-      hour12: false
-    })
-    document.getElementById("server_time").innerHTML = londonTime
-
-    // Update garis kemajuan waktu
-    const d = new Date()
-    const detikHarian = d.getHours() * 3600 + d.getMinutes() * 60 + d.getSeconds()
-    const persen = (detikHarian / 86400) * 100
-    document.getElementById("time-progress").style.width = persen.toFixed(1) + '%'
-  }
-
-  setInterval(updateLondonClock, 1000)
-  updateLondonClock()
-</script>
-
-<style>
-  body { margin: 0; font-family: system-ui; }
-  .main-content { margin-left: 220px; margin-top: 56px; padding: 25px; min-height: 100vh; }
-</style>
+    
