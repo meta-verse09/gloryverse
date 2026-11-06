@@ -434,8 +434,19 @@ img { max-width: 100%; vertical-align: middle; }
 .table-hover tr:hover { background: #f6f8fa; }
 
 /* GRID */
-.row { display: flex; flex-wrap: wrap; margin: 0 -8px; }
-.row > [class*="col-"] { padding: 0 8px; }
+.row { 
+  display: grid; 
+  grid-template-columns: 280px 1fr 320px; 
+  gap: 16px; 
+  align-items: start; 
+  margin: 0;
+}
+.row > [class*="col-"] {
+  padding: 0;
+  max-width: 100% !important;
+  flex: none !important;
+  align-self: start;
+}
 .col-sm-2  { flex: 0 0 16.666%; max-width: 16.666%; }
 .col-sm-4  { flex: 0 0 33.333%; max-width: 33.333%; }
 .col-sm-5  { flex: 0 0 41.666%; max-width: 41.666%; }
