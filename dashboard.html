@@ -1,1299 +1,486 @@
 
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Dashboard</title>
+	<meta name="description" content="Glory Verse - Online Strategy Browser Game Dashboard">
+	<meta name="copyright" content="Glory Verse">
 
-<title>Glory Verse - Online Strategy Browser Game</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="Glory Verse" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="Glory Verse - Online Strategy Browser Game" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches index.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches index.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css?1">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
-
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
-
-
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
-
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
-			}
-		});
-	};
-
-</script>
-
-	<script>
-		$(document).ready(function(){
-
-			discordInvite.init({
-			inviteCode: '2Jg3Vru',
-			miniMode: true,
-			title: 'Glory Verse',
-			});
-			discordInvite.render();
-
-			// Selectize INI
-			var $selectize = $('#check_country_id').selectize({
-				onFocus(){
-                	$selectize[0].selectize.clear(true);
-				},
-				// Need to check for both onItemAdd and onChange because onChange listens for any change on the real input and onItemAdd does not wait for the real input update.
-				// by nienn
-				onItemAdd: function() {
-					newSelectizeSelection = 1;
-				},
-				onChange: function () {
-					if(newSelectizeSelection == 1){
-						$('#check_country_id').closest("form").submit();
-					}
-				},
-				render: {
-					option: function (data, escape) {
-						//return '<div class="option"><img  width="14" height="14" src="https://gloryverse.id/img/country_flags/16/' + data.iso2 + '.png"> ' + data.text + '</div>';
-						return '<div class="option"><span class="flag-icon-' + data.iso2 + ' flag-circle" aria-hidden="true"></span> ' + data.text + '</div>';
-					}
-				}
-			});
-
-		});
-	</script>
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/js/base.js"></script>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (INDEX.HTML STYLE) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data stabil &amp; tidak berkedip.</span>
+		</div>
+		<div>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
+				<i class="fa-solid fa-arrows-rotate"></i> Refresh Halaman (F5)
+			</button>
+			<span id="firebase-connection-status" class="label label-light" style="margin-left: 6px; background: #e2e8f0; color: #475569;">
+				Menghubungkan ke Firebase...
+			</span>
+		</div>
+	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (game-head with Gloryverse branding) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-					
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 06, 2026 02:46:37' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 33.5% (671 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">02:46:37</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 33.5%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (21301)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9753)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a>  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- Server Clock Simulation -->
+				<div style="text-align: right;">
+					<span class="label label-light"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b></span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 220px;">
+					<form method="get" action="/leaderboard.html" onsubmit="event.preventDefault(); window.location.href='/leaderboard.html';">
+						<input type="text" class="form-control" placeholder="Cari Pemain / Negara..." style="width: 220px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<span class="label label-success" id="player-income-badge">Income (0)</span>
+					<span class="label label-warning" id="player-alerts-badge">Alerts (0)</span>
+					<span class="label label-light" id="player-messages-badge">Messages (0)</span>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/index.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Clean light bar with uppercase Roboto Slab font matching index.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li class="active" > <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li class="active"><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_create.html", "#modal_ajax")'><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Create a new Organization</a></li>
-															</ul>
-						</li>
+					<li><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/marketplace.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Military Power</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/my_profile.html"><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i> My Profile</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/ph.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=425">Hail</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 58.46% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a>  <a href="https://gloryverse.id/hospital.html" data-toggle="tooltip" title="Infected with Common Cold. Visit a Hospital to get vaccinated."><i class="fa-solid fa-virus" style="color:#d9534f"></i></a>		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="58.46" aria-valuemin="0" aria-valuemax="100" style="width: 58.46%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 98.8% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="98.8" aria-valuemin="0" aria-valuemax="100" style="width: 98.8%;">
-			</div>
-		</div>
-
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 664/17867&nbsp;&nbsp;&nbsp;3%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" style="width: 3%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.html">Working (1 hour)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.html", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="383.33">383.330</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 1.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 110.21 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"> html: 264.83</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-
-							
-							
-							
-
-														
-							<div class="row">
-								<div class="col-sm-6">
-									<img width="48" height="48" src="https://gloryverse.id/img/country_flags/48/ph.png">
-
-									Your Nationality is from: <a href="https://gloryverse.id/country.html&id=PH">Philippines</a><br>
-									You are in Philippines (<a href="https://gloryverse.id/region.html&id=425">Hail</a>)<br>
-									Available jobs in <a href="https://gloryverse.id/region.html&id=425">Hail</a>: 2 of 3<br><br>
-
-									<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_travel.html", "#modal_ajax")' class="btn btn-default">Change Region <i class="icon icon-location-pin"></i></a>
-
-																		
-																		
-									
-																			<br>
-										<br>
-										<div id="discordInviteBox"></div>
-										<br>
-																			
-								</div>
-
-
-
-								<div class="col-sm-6 text-center">
-									
-
-																			<a href="https://gloryverse.id/my_real_estate.html"><img width="150" height="150" src="https://gloryverse.id/img/assets/general_castle.png"></a>
-										
-												<div data-toggle="tooltip" title="Condition: 44%" class="progress progress-xs mb-sm-10 center-block" style="width:150px;">
-			<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="44" aria-valuemin="0" aria-valuemax="100" style="width: 44%;">
-			</div>
-		</div>
-		
-																				<br>
-										<span class="label label-success">You have a roof over your head</span>
-																		</div>
-							</div>
-							
-							
-
-							
-
-
-
-							
-							<div style="margin-top: 20px;" class="row">
-
-								<div class="col-sm-7">
-									<h5>Wars with Philippines (5)</h5>
-								</div>
-
-								<div class="col-sm-5">
-                                    <form action="https://gloryverse.id/dashboard.html" class="form-horizontal" method="post">
-                                        <!-- SELECTIZE -->
-                                        <div class="form-cols-row">				
-                                            <label class="control-label form-col-sm-4" for="check_country_id">Country</label>
-
-                                            <div class="form-col-sm-8">
-                                            
-                                                <select name="check_country_id" id="check_country_id" class="demo-default" placeholder="Select country...">
-                                                    <option value="">Select country...</option>
-                                                                                                            <option  value="2" data-data='{"iso2": "ax"}'>Aland Islands</option>
-                                                                                                                <option  value="3" data-data='{"iso2": "al"}'>Albania</option>
-                                                                                                                <option  value="4" data-data='{"iso2": "dz"}'>Algeria</option>
-                                                                                                                <option  value="6" data-data='{"iso2": "ad"}'>Andorra</option>
-                                                                                                                <option  value="10" data-data='{"iso2": "ag"}'>Antigua and Barbuda</option>
-                                                                                                                <option  value="11" data-data='{"iso2": "ar"}'>Argentina</option>
-                                                                                                                <option  value="12" data-data='{"iso2": "am"}'>Armenia</option>
-                                                                                                                <option  value="14" data-data='{"iso2": "au"}'>Australia</option>
-                                                                                                                <option  value="15" data-data='{"iso2": "at"}'>Austria</option>
-                                                                                                                <option  value="17" data-data='{"iso2": "bs"}'>Bahamas</option>
-                                                                                                                <option  value="20" data-data='{"iso2": "bb"}'>Barbados</option>
-                                                                                                                <option  value="21" data-data='{"iso2": "by"}'>Belarus</option>
-                                                                                                                <option  value="22" data-data='{"iso2": "be"}'>Belgium</option>
-                                                                                                                <option  value="23" data-data='{"iso2": "bz"}'>Belize</option>
-                                                                                                                <option  value="27" data-data='{"iso2": "bo"}'>Bolivia</option>
-                                                                                                                <option  value="29" data-data='{"iso2": "ba"}'>Bosnia and Herzegovina</option>
-                                                                                                                <option  value="32" data-data='{"iso2": "br"}'>Brazil</option>
-                                                                                                                <option  value="34" data-data='{"iso2": "bn"}'>Brunei</option>
-                                                                                                                <option  value="35" data-data='{"iso2": "bg"}'>Bulgaria</option>
-                                                                                                                <option  value="40" data-data='{"iso2": "ca"}'>Canada</option>
-                                                                                                                <option  value="41" data-data='{"iso2": "cv"}'>Cape Verde</option>
-                                                                                                                <option  value="42" data-data='{"iso2": "ky"}'>Cayman Islands</option>
-                                                                                                                <option  value="45" data-data='{"iso2": "cl"}'>Chile</option>
-                                                                                                                <option  value="46" data-data='{"iso2": "cn"}'>China</option>
-                                                                                                                <option  value="49" data-data='{"iso2": "co"}'>Colombia</option>
-                                                                                                                <option  value="53" data-data='{"iso2": "cr"}'>Costa Rica</option>
-                                                                                                                <option  value="55" data-data='{"iso2": "hr"}'>Croatia</option>
-                                                                                                                <option  value="56" data-data='{"iso2": "cu"}'>Cuba</option>
-                                                                                                                <option  value="58" data-data='{"iso2": "cy"}'>Cyprus</option>
-                                                                                                                <option  value="59" data-data='{"iso2": "cz"}'>Czech Republic</option>
-                                                                                                                <option  value="61" data-data='{"iso2": "dk"}'>Denmark</option>
-                                                                                                                <option  value="64" data-data='{"iso2": "do"}'>Dominican Republic</option>
-                                                                                                                <option  value="65" data-data='{"iso2": "ec"}'>Ecuador</option>
-                                                                                                                <option  value="66" data-data='{"iso2": "eg"}'>Egypt</option>
-                                                                                                                <option  value="67" data-data='{"iso2": "sv"}'>El Salvador</option>
-                                                                                                                <option  value="70" data-data='{"iso2": "ee"}'>Estonia</option>
-                                                                                                                <option  value="73" data-data='{"iso2": "fo"}'>Faroe Islands</option>
-                                                                                                                <option  value="76" data-data='{"iso2": "fr"}'>France</option>
-                                                                                                                <option  value="82" data-data='{"iso2": "ge"}'>Georgia</option>
-                                                                                                                <option  value="83" data-data='{"iso2": "de"}'>Germany</option>
-                                                                                                                <option  value="85" data-data='{"iso2": "gi"}'>Gibraltar</option>
-                                                                                                                <option  value="86" data-data='{"iso2": "gr"}'>Greece</option>
-                                                                                                                <option  value="87" data-data='{"iso2": "gl"}'>Greenland</option>
-                                                                                                                <option  value="88" data-data='{"iso2": "gd"}'>Grenada</option>
-                                                                                                                <option  value="92" data-data='{"iso2": "gg"}'>Guernsey</option>
-                                                                                                                <option  value="95" data-data='{"iso2": "gy"}'>Guyana</option>
-                                                                                                                <option  value="100" data-data='{"iso2": "hu"}'>Hungary</option>
-                                                                                                                <option  value="101" data-data='{"iso2": "is"}'>Iceland</option>
-                                                                                                                <option  value="102" data-data='{"iso2": "in"}'>India</option>
-                                                                                                                <option  value="103" data-data='{"iso2": "id"}'>Indonesia</option>
-                                                                                                                <option  value="106" data-data='{"iso2": "ie"}'>Ireland</option>
-                                                                                                                <option  value="107" data-data='{"iso2": "im"}'>Isle of Man</option>
-                                                                                                                <option  value="108" data-data='{"iso2": "il"}'>Israel</option>
-                                                                                                                <option  value="109" data-data='{"iso2": "it"}'>Italy</option>
-                                                                                                                <option  value="111" data-data='{"iso2": "jp"}'>Japan</option>
-                                                                                                                <option  value="112" data-data='{"iso2": "je"}'>Jersey</option>
-                                                                                                                <option  value="117" data-data='{"iso2": "xk"}'>Kosovo</option>
-                                                                                                                <option  value="122" data-data='{"iso2": "lb"}'>Lebanon</option>
-                                                                                                                <option  value="125" data-data='{"iso2": "ly"}'>Libya</option>
-                                                                                                                <option  value="126" data-data='{"iso2": "li"}'>Liechtenstein</option>
-                                                                                                                <option  value="128" data-data='{"iso2": "lu"}'>Luxembourg</option>
-                                                                                                                <option  value="130" data-data='{"iso2": "mk"}'>Macedonia</option>
-                                                                                                                <option  value="131" data-data='{"iso2": "mg"}'>Madagascar</option>
-                                                                                                                <option  value="251" data-data='{"iso2": "rm"}'>Madeira</option>
-                                                                                                                <option  value="133" data-data='{"iso2": "my"}'>Malaysia</option>
-                                                                                                                <option  value="134" data-data='{"iso2": "mv"}'>Maldives</option>
-                                                                                                                <option  value="136" data-data='{"iso2": "mt"}'>Malta</option>
-                                                                                                                <option  value="142" data-data='{"iso2": "mx"}'>Mexico</option>
-                                                                                                                <option  value="144" data-data='{"iso2": "md"}'>Moldova</option>
-                                                                                                                <option  value="145" data-data='{"iso2": "mc"}'>Monaco</option>
-                                                                                                                <option  value="147" data-data='{"iso2": "me"}'>Montenegro</option>
-                                                                                                                <option  value="149" data-data='{"iso2": "ma"}'>Morocco</option>
-                                                                                                                <option  value="155" data-data='{"iso2": "nl"}'>Netherlands</option>
-                                                                                                                <option  value="157" data-data='{"iso2": "nz"}'>New Zealand</option>
-                                                                                                                <option  value="160" data-data='{"iso2": "ng"}'>Nigeria</option>
-                                                                                                                <option  value="163" data-data='{"iso2": "kp"}'>North Korea</option>
-                                                                                                                <option  value="165" data-data='{"iso2": "no"}'>Norway</option>
-                                                                                                                <option  value="169" data-data='{"iso2": "ps"}'>Palestine</option>
-                                                                                                                <option  value="170" data-data='{"iso2": "pa"}'>Panama</option>
-                                                                                                                <option selected value="174" data-data='{"iso2": "ph"}'>Philippines</option>
-                                                                                                                <option  value="176" data-data='{"iso2": "pl"}'>Poland</option>
-                                                                                                                <option  value="177" data-data='{"iso2": "pt"}'>Portugal</option>
-                                                                                                                <option  value="178" data-data='{"iso2": "pr"}'>Puerto Rico</option>
-                                                                                                                <option  value="179" data-data='{"iso2": "qa"}'>Qatar</option>
-                                                                                                                <option  value="181" data-data='{"iso2": "ro"}'>Romania</option>
-                                                                                                                <option  value="182" data-data='{"iso2": "ru"}'>Russia</option>
-                                                                                                                <option  value="192" data-data='{"iso2": "sm"}'>San Marino</option>
-                                                                                                                <option  value="194" data-data='{"iso2": "sa"}'>Saudi Arabia</option>
-                                                                                                                <option  value="196" data-data='{"iso2": "rs"}'>Serbia</option>
-                                                                                                                <option  value="199" data-data='{"iso2": "sg"}'>Singapore</option>
-                                                                                                                <option  value="201" data-data='{"iso2": "sk"}'>Slovakia</option>
-                                                                                                                <option  value="202" data-data='{"iso2": "si"}'>Slovenia</option>
-                                                                                                                <option  value="205" data-data='{"iso2": "za"}'>South Africa</option>
-                                                                                                                <option  value="207" data-data='{"iso2": "kr"}'>South Korea</option>
-                                                                                                                <option  value="209" data-data='{"iso2": "es"}'>Spain</option>
-                                                                                                                <option  value="215" data-data='{"iso2": "se"}'>Sweden</option>
-                                                                                                                <option  value="216" data-data='{"iso2": "ch"}'>Switzerland</option>
-                                                                                                                <option  value="217" data-data='{"iso2": "sy"}'>Syria</option>
-                                                                                                                <option  value="218" data-data='{"iso2": "tw"}'>Taiwan</option>
-                                                                                                                <option  value="221" data-data='{"iso2": "th"}'>Thailand</option>
-                                                                                                                <option  value="222" data-data='{"iso2": "tl"}'>Timor-Leste</option>
-                                                                                                                <option  value="227" data-data='{"iso2": "tn"}'>Tunisia</option>
-                                                                                                                <option  value="228" data-data='{"iso2": "tr"}'>Turkey</option>
-                                                                                                                <option  value="234" data-data='{"iso2": "ae"}'>United Arab Emirates</option>
-                                                                                                                <option  value="235" data-data='{"iso2": "gb"}'>United Kingdom</option>
-                                                                                                                <option  value="236" data-data='{"iso2": "us"}'>United States</option>
-                                                                                                                <option  value="238" data-data='{"iso2": "uy"}'>Uruguay</option>
-                                                                                                                <option  value="241" data-data='{"iso2": "va"}'>Vatican City</option>
-                                                                                                                <option  value="242" data-data='{"iso2": "ve"}'>Venezuela</option>
-                                                                                                                <option  value="243" data-data='{"iso2": "vn"}'>Vietnam</option>
-                                                                                                                <option  value="245" data-data='{"iso2": "vi"}'>Virgin Islands, US</option>
-                                                                                                                <option  value="247" data-data='{"iso2": "eh"}'>Western Sahara</option>
-                                                                                                        </select>
-
-                                            </div><!-- end .form-col-* -->
-                                        </div><!-- end .form-row -->
-                                        <!-- end SELECTIZE -->
-                                    </form>
-								</div>
-
-
-
-							</div>
-
-
-															<table class="table table-condensed table-hover">
-									<thead>
-										<th width="210">Region</th>
-										<th>Attackers</th>
-										<th>Defenders</th>
-										<th width="110">Started</th>
-										<th width="40"></th>
-									</thead>
-									
-																			<tr >
-											<td>
-												
-												<b><a href="https://gloryverse.id/region.html&id=436">Dumaran</a></b>
-																							</td>
-											<td class="small bold"><a href="https://gloryverse.id/country.html&id=SV">El Salvador</a> 50%</td>
-											<td class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a> 50%</td>
-											<td class="small">1 hour ago</td>
-											<td class="small">
-												<a href="https://gloryverse.id/war.html&id=99583" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
-											</td>
-										</tr>
-																				<tr >
-											<td>
-												
-												<b><a href="https://gloryverse.id/region.html&id=432">Cabanatuan</a></b>
-																							</td>
-											<td class="small bold"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a> 50%</td>
-											<td class="small"><a href="https://gloryverse.id/country.html&id=SG">Singapore</a> 50%</td>
-											<td class="small">2 hours ago</td>
-											<td class="small">
-												<a href="https://gloryverse.id/war.html&id=99582" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
-											</td>
-										</tr>
-																				<tr >
-											<td>
-												
-												<b><a href="https://gloryverse.id/region.html&id=560">Penonome</a></b>
-												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>											</td>
-											<td class="small bold"><a href="https://gloryverse.id/country.html&id=SG">Singapore</a> 0%</td>
-											<td class="small"><a href="https://gloryverse.id/country.html&id=LY">Libya</a> 100%</td>
-											<td class="small">4 hours ago</td>
-											<td class="small">
-												<a href="https://gloryverse.id/war.html&id=99580" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
-											</td>
-										</tr>
-																				<tr >
-											<td>
-												
-												<b><a href="https://gloryverse.id/region.html&id=415">Karamay</a></b>
-												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>											</td>
-											<td class="small bold"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a> 23%</td>
-											<td class="small"><a href="https://gloryverse.id/country.html&id=SV">El Salvador</a> 77%</td>
-											<td class="small">12 hours ago</td>
-											<td class="small">
-												<a href="https://gloryverse.id/war.html&id=99572" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
-											</td>
-										</tr>
-																				<tr >
-											<td>
-												
-												<b><a href="https://gloryverse.id/region.html&id=413">Harbin</a></b>
-												<i class="icon icon-fighter-jet icon-big" data-toggle="tooltip" title="Military vehicles activity in the area"></i>											</td>
-											<td class="small bold"><a href="https://gloryverse.id/country.html&id=SV">El Salvador</a> 100%</td>
-											<td class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a> 0%</td>
-											<td class="small">23 hours ago</td>
-											<td class="small">
-												<a href="https://gloryverse.id/war.html&id=99558" class="btn btn-info btn-sm"><i class="icon icon-search"></i></a>
-											</td>
-										</tr>
-										
-								</table>
-								
-
-							<div class="row">
-								
-								<div class="col-sm-6">
-									<h5>Latest local shouts <a id="toggleNewShout" class="icon icon-circle-plus "></a></h5>
-									
-									<script>
-
-										function ToggleHide(){
-											$('#new_shout').hide();
-											$('#toggleNewShout').removeClass('active');
-										};
-											
-										$(document).ready(function() {
-											$("#toggleNewShout").click(function(e){
-												if($('#toggleNewShout').hasClass('active')){
-													ToggleHide();
-												}
-												else{
-													$('#toggleNewShout').addClass('active');
-													$('#new_shout').show();
-													
-												}//end else
-												e.preventDefault();
-											});
-										
-										});
-									</script>
-									
-									<div id="new_shout" class="hide">
-										<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal form-horizontal-bordered">
-											<input name="acn" type="hidden" value="newshout" />
-
-											<div class="form-cols-row">
-												<div class="form-col-sm-12">
-													<label for="user_shout_text">Message</label>
-													<textarea maxlength="255" name="user_shout_text" class="form-control" rows="5"></textarea>
-
-													<label class="checkbox">
-														<input type="checkbox" name="votingshout" value="1"> Yes/No voting enabled
-													</label>
-
-												</div>
-											</div>
-											
-											
-
-											<button type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout</button>
-
-										</form>
-
-										<small>By writing in this section you agree with our <a href="https://gloryverse.id/code_of_conduct.html">code of conduct</a></small>
-										<br><br><br>
-									</div>
-									
-
-
-									
-																					<div class="row">
-												<div class="col-sm-2">
-													<a href="https://gloryverse.id/profile.html&id=Bitebs">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/a59e27b6b9c74097cf83087b7e3dcda9.jpg?1791234033">
-														</a>
-												</div>
-
-												<div class="col-sm-10">
-													Hi lovely people! :)													
-													<div class="text-center small">
-														<br>
-														<a href="https://gloryverse.id/profile.html&id=Bitebs">Bitebs</a> posted 1 week ago <br>
-
-															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/shout_comments.html&id=53515", "#modal_ajax")'>3 comments</a> 														<br><br>
-													</div>
-												</div>
-
-											</div>
-																						<div class="row">
-												<div class="col-sm-2">
-													<a href="https://gloryverse.id/profile.html&id=xaoex">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/4b080e825b0b03b5345e75b53ab21670.jpg?1590548688">
-														</a>
-												</div>
-
-												<div class="col-sm-10">
-													Sell 2 general castle 22.000 html													
-													<div class="text-center small">
-														<br>
-														<a href="https://gloryverse.id/profile.html&id=xaoex">xaoex</a> posted 1 month ago <br>
-
-															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/shout_comments.html&id=53431", "#modal_ajax")'>0 comments</a> 														<br><br>
-													</div>
-												</div>
-
-											</div>
-																						<div class="row">
-												<div class="col-sm-2">
-													<a href="https://gloryverse.id/profile.html&id=Bulux">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/9a7e08b88df4877bffa21d2d5f9332a5.jpg?1793789099">
-														</a>
-												</div>
-
-												<div class="col-sm-10">
-													Vote Mave_rick guys for better Philippines. Thanks													
-													<div class="text-center small">
-														<br>
-														<a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a> posted 2 months ago <br>
-
-															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/shout_comments.html&id=53329", "#modal_ajax")'>5 comments</a> 														<br><br>
-													</div>
-												</div>
-
-											</div>
-																						<div class="row">
-												<div class="col-sm-2">
-													<a href="https://gloryverse.id/profile.html&id=Cokaka03">														<img width="40" height="40" class="img-circle" src="https://mplstatic.com/avatars/2ab07c5ca1c5f434d9580314e968d045.jpg?1791112592">
-														</a>
-												</div>
-
-												<div class="col-sm-10">
-													Yoww... Saya kembali ke ...													
-													<div class="text-center small">
-														<br>
-														<a href="https://gloryverse.id/profile.html&id=Cokaka03">Cokaka03</a> posted 2 months ago <br>
-
-															<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/shout_comments.html&id=53323", "#modal_ajax")'>2 comments</a> 														<br><br>
-													</div>
-												</div>
-
-											</div>
-																				
-									<a class="small" href="https://gloryverse.id/local_shouts.html">View all</a>
-
-
-									<br><br>
-
-									<h5>Latest Forum Posts</h5>
-
-									
-																			<table style="margin-bottom: 5px" class="table table-condensed table-hover">
-											<thead>
-												<tr>
-													<th>Topic</th>
-													<th width="90"></th>
-												</tr>
-											</thead>
-																							<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4757&topic=loan">Loan</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														1 hour ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4764&topic=shares">Shares</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														9 hours ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4763&topic=buying-castle-for-150-gold-for-indonesia">Buying Castle for 150 Gold for Indonesia</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														12 hours ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4761&topic=buying-chocolate-for-my-group">Buying Chocolate for my group</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														1 day ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4762&topic=buring-company">Buring Company</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														1 day ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4760&topic=where-do-i-get-licensing-form-to-extend-license-of-my-water-production">Where do I get licensing form to extend license of my water production?</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														2 days ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4723&topic=chocolate">chocolate</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														2 days ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4759&topic=wts-chocolate">WTS Chocolate</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														3 days ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<a href="https://gloryverse.id/forum_topic.html?tid=4643&topic=singapore-share-offering">Singapore Share Offering</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														3 days ago
-													</td>
-												</tr>
-																								<tr>
-													<td class="small" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-														<i class="fa-solid fa-bullhorn" style="margin-right: 5px;"></i><a href="https://gloryverse.id/forum_topic.html?tid=4484&topic=updates-and-tweaks-23-02-26">Updates and Tweaks 23/02/26</a>
-													</td>
-													<td class="small" style="padding-right: 1px">
-														5 days ago
-													</td>
-												</tr>
-																						</table>
-										
-									<a class="small" href="https://gloryverse.id/forum.html">View all</a>
-
-								</div>
-
-								<div class="col-sm-6">
-									
-									<h5>Offers Statistics</h5>
-	
-									<div class="row">
-										<div class="col-sm-8">
-											<b>Completed:</b> 2,458,327 Offers<br>
-											<b>Total Paid:</b> 73,023.78 Euro
-										</div>
-
-										<div class="col-sm-4">
-											<a href="https://gloryverse.id/fund_offers.html" class="btn btn-danger btn-lg">GO</a>
-										</div>
-									</div>
-
-									<br>
-
-
-									<h5>Latest Newspapers in Philippines</h5>
-									
-																		
-																			
-																					<div class="well well-sm well-shadow">
-												<table width="100%" border="0" cellspacing="0" cellpadding="0">
-													<tr>
-														<td class="text-center" width="100">
-
-															<a href="https://gloryverse.id/newspaper_article.html&id=1275556ad4a6b53c9a4"><img title="Stocks bounce back on bargain hunting; peso hovers at 62 vs" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1275556ad4a6b53c9a4/1275556ad4a6b53c9a4.jpg?1792321330">
-																<div class="np-thumbs-vote" id="np-thumbs-vote-1275556ad4a6b53c9a4">
-		<a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556ad4a6b53c9a4&vote=up", "#np-thumbs-vote-1275556ad4a6b53c9a4")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">2</span> 
-        <a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556ad4a6b53c9a4&vote=down", "#np-thumbs-vote-1275556ad4a6b53c9a4")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
-	</div>
-	 
-																
-														</td>
-														<td valign="top">
-															<b><a href="https://gloryverse.id/newspaper_article.html&id=1275556ad4a6b53c9a4">Stocks bounce back on bargain hunting; peso hovers at 62 vs</a></b> <br>
-															<small>by <a href="https://gloryverse.id/profile.html&id=shortbread">shortbread</a> on <a href="https://gloryverse.id/company.html&id=52786">Shortbread Chronicles</a></small> <img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"><br><br>
-															<div class="small text-center">16 views | 16 sales | 0 comments | 2 weeks ago | <b><a href="https://gloryverse.id/newspapers.html&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
-														</td>
-													</tr>
-												</table>
-											</div>
-																						<div class="well well-sm well-shadow">
-												<table width="100%" border="0" cellspacing="0" cellpadding="0">
-													<tr>
-														<td class="text-center" width="100">
-
-															<a href="https://gloryverse.id/newspaper_article.html&id=1275556a8aac41a3a97"><img title="'Habagat' to bring rains over Luzon" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1275556a8aac41a3a97/1275556a8aac41a3a97.jpg?1787473011">
-																<div class="np-thumbs-vote" id="np-thumbs-vote-1275556a8aac41a3a97">
-		<a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556a8aac41a3a97&vote=up", "#np-thumbs-vote-1275556a8aac41a3a97")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">1</span> 
-        <a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556a8aac41a3a97&vote=down", "#np-thumbs-vote-1275556a8aac41a3a97")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
-	</div>
-	 
-																
-														</td>
-														<td valign="top">
-															<b><a href="https://gloryverse.id/newspaper_article.html&id=1275556a8aac41a3a97">'Habagat' to bring rains over Luzon</a></b> <br>
-															<small>by <a href="https://gloryverse.id/profile.html&id=shortbread">shortbread</a> on <a href="https://gloryverse.id/company.html&id=52786">Shortbread Chronicles</a></small> <img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"><br><br>
-															<div class="small text-center">23 views | 19 sales | 0 comments | 2 months ago | <b><a href="https://gloryverse.id/newspapers.html&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
-														</td>
-													</tr>
-												</table>
-											</div>
-																						<div class="well well-sm well-shadow">
-												<table width="100%" border="0" cellspacing="0" cellpadding="0">
-													<tr>
-														<td class="text-center" width="100">
-
-															<a href="https://gloryverse.id/newspaper_article.html&id=1275556a68ae6ae97a7"><img title="DOJ OKs filing of multiple raps vs Baligod, 18 ‘Maleta Boys’" class="img-thumbnail" style="margin-bottom: 10px;" width="85" height="65" src="https://mplstatic.com/newspaper_articles/1275556a68ae6ae97a7/1275556a68ae6ae97a7.jpg?1785245433">
-																<div class="np-thumbs-vote" id="np-thumbs-vote-1275556a68ae6ae97a7">
-		<a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556a68ae6ae97a7&vote=up", "#np-thumbs-vote-1275556a68ae6ae97a7")' data-toggle="tooltip" title="Like" class="icon-thumbs-up up"></a> <span class="count">3</span> 
-        <a onclick='ajaxcall("https://gloryverse.id/ajax/newspaper_article_votes.html&id=1275556a68ae6ae97a7&vote=down", "#np-thumbs-vote-1275556a68ae6ae97a7")' data-toggle="tooltip" title="Dislike" class="icon-thumbs-down down"></a> <span class="count">0</span>
-	</div>
-	 
-																
-														</td>
-														<td valign="top">
-															<b><a href="https://gloryverse.id/newspaper_article.html&id=1275556a68ae6ae97a7">DOJ OKs filing of multiple raps vs Baligod, 18 ‘Maleta Boys’</a></b> <br>
-															<small>by <a href="https://gloryverse.id/profile.html&id=shortbread">shortbread</a> on <a href="https://gloryverse.id/company.html&id=52786">Shortbread Chronicles</a></small> <img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"><br><br>
-															<div class="small text-center">19 views | 18 sales | 0 comments | 3 months ago | <b><a href="https://gloryverse.id/newspapers.html&acn=filter&newspfilter_type=5">Not Game Related</a></b></div>
-														</td>
-													</tr>
-												</table>
-											</div>
-											
-										
-									<a class="small" href="https://gloryverse.id/newspapers.html">View all</a>
-
-									<h5>Regions Bonuses in Philippines</h5>
-
-									<div class="alert alert-danger alert-sm mb-sm-5">Productivity Bonus: <b>0%</b></div>
-									<div class="alert alert-danger alert-sm mb-sm-5">War Damage Bonus: <b>0%</b></div>									
-									<div class="alert alert-danger alert-sm mb-sm-5">Offers Payout Bonus: <b>0%</b></div>
-									<br>
-									
-									<h5>Infrastructure in Philippines</h5>
-
-									<div class="alert alert-danger alert-sm mb-sm-5">Homeless Shelter: <b>No</b></div>									
-
-									<div class="alert alert-success alert-sm mb-sm-5">Public Transport: <b>Level 1</b></div>									
-
-									<div class="alert alert-danger alert-sm mb-sm-5">Central Intelligence Agency: <b>No</b></div>
-									<br>
-
-									<h5>Bonuses in Philippines</h5>
-
-									<div class="row">
-										<div class="col-sm-12">
-											<div class="well text-center">
-												<b>Work Bonus</b><br>
-												<small>After 3 full worked days in a row you get a bonus.</small><br>
-												<b>300.00 html</b>
-											</div>
-										</div>
-										<div class="col-sm-12">
-											<div class="well text-center">
-												<b>Army Wage</b><br>
-												<small>Paid daily, if your organization is part of the army.</small><br>
-												<b>0.00 html</b>
-											</div>
-										</div>
-										<div class="col-sm-12">
-											<div class="well text-center">
-												<b>Minimum Wage</b><br>
-												<small>Companies must pay atleast this much wage per hour.</small><br>
-												<b>10.00 html</b>
-											</div>
-										</div>
-									</div>
-
-
-								</div>
-
-							</div>
-
-							
-
-						</div><!-- end .main -->			
-					
-						<div class="rightbar">
-	
-							<h6>My Friends</h6>
-
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to aleksokubo" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=aleksokubo"></a> <a href="https://gloryverse.id/profile.html&id=aleksokubo">aleksokubo</a> <a href="https://gloryverse.id/country.html&id=VE"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ve.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to Tedong_Naga819" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=Tedong_Naga819"></a> <a href="https://gloryverse.id/profile.html&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 6 minutes ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=kurniawan214"></a> <a href="https://gloryverse.id/profile.html&id=kurniawan214">kurniawan214</a> <a href="https://gloryverse.id/country.html&id=TW"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tw.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 36 minutes ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Phoenix"></a> <a href="https://gloryverse.id/profile.html&id=Phoenix">Phoenix</a> <a href="https://gloryverse.id/country.html&id=EH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/eh.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 40 minutes ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=julienoor"></a> <a href="https://gloryverse.id/profile.html&id=julienoor">julienoor</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 45 minutes ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Reingkarnasi"></a> <a href="https://gloryverse.id/profile.html&id=Reingkarnasi">Reingkarnasi</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Aris" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Aris"></a> <a href="https://gloryverse.id/profile.html&id=Aris">Aris</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Eagle"></a> <a href="https://gloryverse.id/profile.html&id=Eagle">Eagle</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Bulux"></a> <a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=archameera"></a> <a href="https://gloryverse.id/profile.html&id=archameera">archameera</a> <a href="https://gloryverse.id/country.html&id=SV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to RAJAPERDANAINTI" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=RAJAPERDANAINTI"></a> <a href="https://gloryverse.id/profile.html&id=RAJAPERDANAINTI">RAJAPERDANAINTI</a> <a href="https://gloryverse.id/country.html&id=LY"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Dingdong"></a> <a href="https://gloryverse.id/profile.html&id=Dingdong">Dingdong</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 3 hours ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Pepa"></a> <a href="https://gloryverse.id/profile.html&id=Pepa">Pepa</a> <a href="https://gloryverse.id/country.html&id=ES"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/es.png"></a>
-						</div>
-					
-				
-				<a class="small" href="https://gloryverse.id/my_friends.html">View All</a>
-						<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					New general's castle for sale, can be anywhere you want.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=GeneraLCommander.IDN">GeneraLCommander.IDN</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Israel is hiring more Workers, good market & rentals. 1.33 golds is paying in every Work shift, no requirements or conditions just join.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=SuperKhrys">SuperKhrys</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/il.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Hello <br />
-Selling some companies . If you interest, I listen to offers . Thanks				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Minanashaat">Minanashaat</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/id.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					wtb coal company or vegetables company or winery or . contact PM				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/nz.png"><br>
-						4 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					TUNISIA IS RECRUITING — 5 WORKERS WANTED!<br />
-<br />
-JOIN TODAY AND GET REWARDED!<br />
-<br />
-28 GOLD welcome bonus, paid in 2 instalments!<br />
-Salaries of up to 5 DIA/hour<br />
-? 6 GOLD Work Bonus<br />
-Food and wine provided<br />
-Affordable castle rentals<br />
-Build your future				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Villano">Villano</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tn.png"><br>
-						5 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					New ZEaland open for new workers. Cheap meals , good salary. Cheap wine ,clothes and weapon. Also free local market. Come to buy it				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/nz.png"><br>
-						5 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Selling Clothes Chain in Austria upgrade lvl 8. Message me if interested				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Ciprian">Ciprian</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ba.png"><br>
-						5 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Looking for lads to join Sweden! We need players!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Tyras91">Tyras91</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/se.png"><br>
-						6 days ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="clearfix">
+
+			<!-- LEFT SIDEBAR: Clean Dynamic Player Card (Empty slots ready for Firebase) -->
+			<div class="leftbar">
+				<!-- Player Avatar & Name -->
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
 					</div>
 				</div>
 
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
-			</form>
-		
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
 
-		
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
 
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
 
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
+				<!-- Currency Balances (Ready for Firebase) -->
+				<div class="well well-sm" style="margin: 14px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">10.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Mata Uang:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
 
+				<!-- Navigation List Group -->
+				<ul class="list-group">
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-box-archive" style="margin-right: 6px; color: var(--accent);"></i> My Inventory</a></li>
+					<li class="list-group-item"><a href="/financial.html"><i class="fa-solid fa-wallet" style="margin-right: 6px; color: var(--green);"></i> My Finances</a></li>
+					<li class="list-group-item"><a href="/workplaces.html"><i class="fa-solid fa-building" style="margin-right: 6px; color: var(--accent);"></i> My Companies &amp; Jobs</a></li>
+					<li class="list-group-item"><a href="/wars.html"><i class="fa-solid fa-shield-halved" style="margin-right: 6px; color: var(--red);"></i> My Military Status</a></li>
+					<li class="list-group-item"><a href="/referral.html"><i class="fa-solid fa-users" style="margin-right: 6px; color: #f1b21c;"></i> My Recruits</a></li>
+				</ul>
 
-			</div><!-- end .contents -->
-			<div class="footer">
+				<!-- Action Buttons -->
+				<div class="row" style="margin: 0 -4px;">
+					<div class="col-sm-6" style="padding: 0 4px;">
+						<a class="btn btn-warning-bvl btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-arrow-down"></i> Top Up</a>
+					</div>
+					<div class="col-sm-6" style="padding: 0 4px;">
+						<a class="btn btn-default btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-arrow-up"></i> Withdraw</a>
+					</div>
+				</div>
+
+				<div id="auth-prompt-sidebar" style="margin-top: 14px; text-align: center;">
+					<!-- Filled dynamically with Login / User status -->
+				</div>
+			</div>
+
+			<!-- MAIN CONTENT: Nationality, Wars, Shouts, Forum, Newspapers -->
+			<div class="main">
+
+				<!-- Nationality & Residence Status -->
+				<div class="row">
+					<div class="col-sm-6">
+						<div style="display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px;">
+							<div style="width: 48px; height: 48px; border-radius: 6px; background: #deeff7; display: flex; align-items: center; justify-content: center; border: 1px solid #bce1f1;">
+								<i class="fa-solid fa-flag" style="font-size: 22px; color: var(--accent);"></i>
+							</div>
+							<div>
+								<div style="font-size: 13.5px;">Kebangsaan: <b><span id="dash-nationality" style="color: var(--text-dark);">Indonesia</span></b></div>
+								<div class="small" style="color: var(--muted);">Lokasi saat ini: <b id="dash-location" style="color: var(--text-dark);">Indonesia (Jakarta)</b></div>
+								<div class="small" style="color: var(--muted); margin-top: 2px;">Lowongan kerja: <span id="dash-jobs">0 dari 0</span></div>
+							</div>
+						</div>
+						<a class="btn btn-default btn-sm" href="/activity_work.html"><i class="fa-solid fa-location-dot"></i> Pindah Wilayah</a>
+						<a class="btn btn-primary btn-sm" href="/workplaces.html" style="margin-left: 4px;"><i class="fa-solid fa-briefcase"></i> Cari Pekerjaan</a>
+					</div>
+
+					<div class="col-sm-6 text-center">
+						<div style="width: 76px; height: 76px; margin: 0 auto 8px; border-radius: 8px; background: #f4f5f8; display: flex; align-items: center; justify-content: center; border: 1px solid var(--border);">
+							<i class="fa-solid fa-landmark" style="font-size: 34px; color: #9aa0ac;"></i>
+						</div>
+						<div class="progress progress-xs center-block" style="width: 140px; margin: 6px auto;">
+							<div id="dash-residence-bar" class="progress-bar progress-bar-warning" style="width: 0%;"></div>
+						</div>
+						<span id="dash-residence-status" class="label label-light" style="background: #e2e8f0; color: #475569;">Belum memiliki tempat tinggal</span>
+					</div>
+				</div>
+
+				<!-- ACTIVE WARS (Dynamic One-Time Fetch / Clean Empty State) -->
+				<div style="margin-top: 24px;" class="row">
+					<div class="col-sm-7">
+						<h5 id="wars-header-title"><i class="fa-solid fa-crosshairs red" style="margin-right: 6px;"></i> Perang Aktif (0)</h5>
+					</div>
+					<div class="col-sm-5 text-right">
+						<select id="check_country_id" class="form-control" style="display: inline-block; width: auto; font-size: 12px; padding: 4px 8px;">
+							<option value="ALL">Semua Negara</option>
+							<option value="ID" selected>Indonesia</option>
+							<option value="PH">Philippines</option>
+							<option value="MY">Malaysia</option>
+							<option value="SG">Singapore</option>
+							<option value="US">United States</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="well well-sm" style="padding: 0; overflow-x: auto; background: #ffffff;">
+					<table class="table table-hover" style="margin: 0;">
+						<thead>
+							<tr>
+								<th width="180">Wilayah / Region</th>
+								<th>Penyerang (Attackers)</th>
+								<th>Bertahan (Defenders)</th>
+								<th width="100">Status</th>
+								<th width="60" class="text-right">Aksi</th>
+							</tr>
+						</thead>
+						<tbody id="dashboard-wars-body">
+							<tr>
+								<td colspan="5" class="text-center" style="padding: 26px 14px; color: #88898b;">
+									<i class="fa-solid fa-shield-halved" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.5; color: var(--accent);"></i>
+									Belum ada perang aktif di database.<br>
+									<small style="color: var(--accent);">Tempat kosong siap diisi data baru dari Firebase saat halaman di-refresh (F5)</small>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- SHOUTS & FORUMS & NEWSPAPERS ROW -->
+				<div class="row" style="margin-top: 18px;">
+					<!-- Left Column: Local Shouts & Forum -->
+					<div class="col-sm-6">
+						<h5>
+							<i class="fa-solid fa-comment-dots blue" style="margin-right: 6px;"></i> Shout Lokal Wilayah
+							<button type="button" id="toggleNewShout" class="btn btn-default btn-sm pull-right" style="padding: 2px 8px; font-size: 11px;">
+								<i class="fa-solid fa-plus"></i> Tulis Pesan
+							</button>
+						</h5>
+
+						<!-- Input Shout Form (Hidden by default) -->
+						<div id="new_shout_box" class="well hide" style="background: #ffffff; border-color: #ccd0d6;">
+							<form id="form-local-shout">
+								<label for="local_shout_text" style="font-weight: 700; color: var(--text-dark);">Tulis pesan untuk pemain di wilayah ini:</label>
+								<textarea id="local_shout_text" maxlength="255" class="form-control" rows="3" placeholder="Tuliskan pesan Anda di sini..."></textarea>
+								<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+									<small style="color: var(--muted);">Patuhi tata tertib Glory Verse</small>
+									<button type="submit" class="btn btn-primary btn-sm"><i class="fa-solid fa-paper-plane"></i> Kirim</button>
+								</div>
+							</form>
+						</div>
+
+						<!-- Dynamic Local Shouts Container -->
+						<div id="dashboard-local-shouts">
+							<div class="well well-sm" style="text-align: center; padding: 22px 14px; color: #88898b; background: #ffffff;">
+								<i class="fa-solid fa-message" style="font-size: 22px; display: block; margin-bottom: 8px; opacity: 0.5; color: var(--accent);"></i>
+								Belum ada shout lokal di wilayah ini.<br>
+								<small style="color: var(--accent);">Klik "Tulis Pesan" untuk mengirim pesan baru</small>
+							</div>
+						</div>
+
+						<h5 style="margin-top: 24px;"><i class="fa-solid fa-comments" style="margin-right: 6px;"></i> Diskusi Forum Terbaru</h5>
+						<div class="well well-sm" style="padding: 0; background: #ffffff;">
+							<table class="table table-hover" style="margin: 0;">
+								<thead><tr><th>Topik</th><th width="90" class="text-right">Waktu</th></tr></thead>
+								<tbody id="dashboard-forum-posts">
+									<tr>
+										<td colspan="2" class="text-center" style="padding: 18px; color: #88898b;">
+											Belum ada kiriman forum terbaru.<br>
+											<a href="/forum.html" class="small" style="color: var(--accent);">Buka forum komunitas &rarr;</a>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<!-- Right Column: Offers, Newspapers, Bonuses -->
+					<div class="col-sm-6">
+						<h5><i class="fa-solid fa-chart-pie yellow" style="margin-right: 6px;"></i> Statistik Penawaran (Offers)</h5>
+						<div class="well well-sm" style="background: #ffffff;">
+							<div class="row" style="align-items: center;">
+								<div class="col-sm-8">
+									<b>Terselesaikan:</b> <span id="stat-offers-completed">0</span> Penawaran<br>
+									<b>Total Terbayar:</b> <span id="stat-offers-paid">0.00</span> Euro
+								</div>
+								<div class="col-sm-4 text-right">
+									<a href="/marketplace.html" class="btn btn-warning-bvl btn-sm">Buka Pasar</a>
+								</div>
+							</div>
+						</div>
+
+						<h5><i class="fa-solid fa-newspaper" style="margin-right: 6px;"></i> Koran &amp; Berita Terbaru</h5>
+						<div id="dashboard-newspapers">
+							<div class="well well-sm" style="text-align: center; padding: 18px; color: #88898b; background: #ffffff;">
+								<i class="fa-solid fa-newspaper" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.5; color: var(--accent);"></i>
+								Belum ada koran diterbitkan saat ini.<br>
+								<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+							</div>
+						</div>
+
+						<h5><i class="fa-solid fa-gift green" style="margin-right: 6px;"></i> Bonus Wilayah &amp; Kerja</h5>
+						<div class="alert alert-info alert-sm" style="margin-bottom: 6px;">Bonus Produktivitas: <b id="bonus-prod">0%</b></div>
+						<div class="alert alert-info alert-sm" style="margin-bottom: 6px;">Bonus Kerusakan Perang: <b id="bonus-war">0%</b></div>
+						<div class="well well-sm text-center" style="margin-top: 8px; background: #ffffff;">
+							<b>Bonus Kerja Berturut-turut</b><br>
+							<small style="color: var(--muted);">Bekerja 3 hari berturut-turut untuk mendapatkan bonus koin.</small><br>
+							<b style="color: var(--gold-dark); font-size: 13px;">0.00 Gold</b>
+						</div>
+					</div>
+				</div>
+
+			</div><!-- end .main -->
+
+			<!-- RIGHT SIDEBAR: Friends & Worldwide Shouts -->
+			<div class="rightbar">
+				<h6><i class="fa-solid fa-user-group" style="margin-right: 6px;"></i> Teman Saya</h6>
+				<div id="dashboard-friends">
+					<div class="well well-sm" style="text-align: center; padding: 16px 10px; color: #88898b; background: #ffffff;">
+						<i class="fa-solid fa-user-plus" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.5; color: var(--accent);"></i>
+						Belum ada teman yang ditambahkan.<br>
+						<a class="small" href="/leaderboard.html" style="color: var(--accent);">Jelajahi daftar pemain</a>
+					</div>
+				</div>
+
+				<h6 style="margin-top: 24px;"><i class="fa-solid fa-bullhorn yellow" style="margin-right: 6px;"></i> Shout Global (Worldwide)</h6>
+				<div id="dashboard-worldwide-shouts">
+					<div class="well well-sm" style="text-align: center; padding: 16px 10px; color: #88898b; background: #ffffff;">
+						<i class="fa-solid fa-earth-americas" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.5; color: var(--accent);"></i>
+						Belum ada pesan shout global.<br>
+						<small style="color: #88898b;">Pesan global dari pemain lain akan muncul di sini.</small>
+					</div>
+				</div>
+
+				<!-- Worldwide Shout Form -->
+				<div class="well well-sm" style="background: #fafbfc; border-color: #ccd0d6; margin-top: 10px;">
+					<form id="form-worldwide-shout">
+						<label style="margin-top: 0; font-weight: 700; color: var(--text-dark);">Kirim Pesan Global</label>
+						<textarea id="worldwide_shout_text" maxlength="255" class="form-control" rows="2" placeholder="Pesan global untuk semua negara..."></textarea>
+						<button type="submit" class="btn btn-warning-bvl btn-block btn-sm" style="margin-top: 6px;">
+							<i class="fa-solid fa-paper-plane"></i> Kirim Shout Global
+						</button>
+						<small style="display: block; text-align: center; margin-top: 4px; color: var(--gold-dark); font-weight: 600;">*Biaya: 2 Gold per kirim</small>
+					</form>
+				</div>
+			</div><!-- end .rightbar -->
+
+		</div><!-- end .clearfix -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- FOOTER (Matches index.html clean style) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
-				<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(20) 0.028s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi.<br>
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- CLIENT-SIDE SCRIPT: Clock & UI Toggles -->
+<script>
+var serverdate = new Date();
+function pad(n) { return n < 10 ? '0' + n : n; }
+function displaytime() {
+	serverdate.setSeconds(serverdate.getSeconds() + 1);
+	var el = document.getElementById('server_time');
+	if (el) el.textContent = pad(serverdate.getHours()) + ":" + pad(serverdate.getMinutes()) + ":" + pad(serverdate.getSeconds());
+}
+setInterval(displaytime, 1000);
+displaytime();
 
+document.getElementById('btn-manual-refresh').addEventListener('click', function() {
+	window.location.reload();
+});
 
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+var toggleShoutBtn = document.getElementById('toggleNewShout');
+var shoutBox = document.getElementById('new_shout_box');
+if (toggleShoutBtn && shoutBox) {
+	toggleShoutBtn.addEventListener('click', function(e) {
+		e.preventDefault();
+		if (shoutBox.classList.contains('hide')) {
+			shoutBox.classList.remove('hide');
+			toggleShoutBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Batal';
+		} else {
+			shoutBox.classList.add('hide');
+			toggleShoutBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Tulis Pesan';
+		}
+	});
+}
+</script>
+
+<!-- FIREBASE REFRESH-BASED INTEGRATION MODULE -->
+<script type="module">
+import { initDashboardFirebase } from '/js/dashboard.js';
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initDashboardFirebase);
+} else {
+	initDashboardFirebase();
+}
+</script>
+
 </body>
 </html>
