@@ -1,205 +1,686 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GloryVerse – Sign in</title>
+<title>Glory Verse – Autentikasi Pemain</title>
+<meta name="description" content="Masuk atau Daftar akun pemain Glory Verse - Game Strategi Online">
+<link rel="shortcut icon" href="/favicon.ico">
+
+<!-- FontAwesome 6 -->
+<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
+
 <style>
-  :root{
-    --navy:#0b1a33; --panel:#12264a; --line:#2a4170; --gold:#d4a64a; --gold-d:#b88a32;
-    --text:#eef2fa; --muted:#9db0d3; --err:#ff7b7b; --ok:#7be0a4;
+  :root {
+    --navy: #0e1520;
+    --navy-deep: #080c13;
+    --panel: #162030;
+    --panel-sub: #1b273b;
+    --line: #293b58;
+    --line-focus: #4a6fa5;
+    --gold: #d4a64a;
+    --gold-hover: #b88a32;
+    --text: #eef2fa;
+    --muted: #95a5c0;
+    --err: #ff6b6b;
+    --err-bg: rgba(255, 107, 107, 0.12);
+    --ok: #51cf66;
+    --ok-bg: rgba(81, 207, 102, 0.12);
+    --radius: 12px;
   }
-  *{box-sizing:border-box}
-  html,body{margin:0;min-height:100%}
-  body{
-    background:var(--navy); color:var(--text);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    display:flex; align-items:center; justify-content:center; padding:20px;
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; }
+  body {
+    background: radial-gradient(circle at 50% 20%, #16253d 0%, var(--navy-deep) 100%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    min-height: 100vh;
   }
-  .card{
-    width:100%; max-width:380px; background:var(--panel);
-    border:1px solid var(--line); border-radius:16px; padding:26px 22px;
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
-  .brand{font-family:Palatino,Georgia,serif; font-size:26px; font-weight:700; color:var(--gold); margin:0 0 4px}
-  .sub{margin:0 0 20px; color:var(--muted); font-size:14px}
-  .tabs{display:flex; background:var(--navy); border-radius:10px; padding:3px; margin-bottom:18px}
-  .tabs button{
-    flex:1; border:0; background:transparent; color:var(--muted); padding:10px;
-    font-size:14px; font-weight:600; border-radius:8px; cursor:pointer;
+  .brand-header {
+    text-align: center;
+    margin-bottom: 20px;
   }
-  .tabs button.on{background:var(--gold); color:#1a1405}
-  label{display:block; font-size:13px; color:var(--muted); margin:12px 0 5px}
-  input{
-    width:100%; padding:12px; font-size:15px; color:var(--text);
-    background:var(--navy); border:1px solid var(--line); border-radius:10px;
+  .brand-logo {
+    display: inline-block;
+    max-width: 150px;
+    height: auto;
+    margin-bottom: 10px;
   }
-  input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
-  .go{
-    width:100%; margin-top:18px; padding:13px; border:0; border-radius:10px;
-    background:var(--gold); color:#1a1405; font-size:15px; font-weight:700; cursor:pointer;
+  .brand-title {
+    font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold);
+    margin: 0 0 6px;
+    letter-spacing: 0.5px;
   }
-  .go:hover{background:var(--gold-d)}
-  .go:disabled{opacity:.55; cursor:wait}
-  .msg{min-height:20px; margin:14px 0 0; font-size:13px; line-height:1.45}
-  .msg.err{color:var(--err)} .msg.ok{color:var(--ok)}
-  .link{background:none; border:0; color:var(--muted); font-size:13px; margin-top:12px; cursor:pointer; text-decoration:underline; padding:0}
-  .hide{display:none}
-  .check{text-align:center; color:var(--muted); padding:30px 0}
+  .sub-title {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .tabs {
+    display: flex;
+    background: var(--navy-deep);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 3px;
+    margin: 18px 0;
+  }
+  .tabs button {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 9px 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tabs button.on {
+    background: var(--gold);
+    color: #12161f;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  .already-banner {
+    background: var(--panel-sub);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .already-banner .btn-sm {
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 0;
+    font-weight: 600;
+  }
+  .form-group {
+    margin-bottom: 14px;
+  }
+  label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .input-wrap i {
+    position: absolute;
+    left: 12px;
+    color: var(--muted);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  input {
+    width: 100%;
+    padding: 11px 12px 11px 36px;
+    font-size: 14.5px;
+    color: var(--text);
+    background: var(--navy-deep);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(212, 166, 74, 0.2);
+  }
+  .btn-submit {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--gold);
+    color: #12161f;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-submit:hover:not(:disabled) {
+    background: var(--gold-hover);
+  }
+  .btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin: 18px 0;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--line);
+  }
+  .divider span {
+    padding: 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .btn-google {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s;
+  }
+  .btn-google:hover {
+    background: #f1f3f5;
+  }
+  .links-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    font-size: 13px;
+  }
+  .link-btn {
+    background: none;
+    border: 0;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    font-size: 13px;
+  }
+  .link-btn:hover {
+    color: var(--gold);
+  }
+  .msg-box {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.4;
+    display: none;
+  }
+  .msg-box.err {
+    display: block;
+    background: var(--err-bg);
+    border: 1px solid var(--err);
+    color: var(--err);
+  }
+  .msg-box.ok {
+    display: block;
+    background: var(--ok-bg);
+    border: 1px solid var(--ok);
+    color: var(--ok);
+  }
+  .hide { display: none !important; }
+  .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: currentColor;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .status-init {
+    text-align: center;
+    color: var(--muted);
+    padding: 28px 0;
+  }
+  .back-home {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .back-home:hover {
+    color: var(--text);
+  }
 </style>
 </head>
 <body>
 
 <div class="card">
-  <h1 class="brand">GloryVerse</h1>
-  <p class="sub" id="sub">Checking your session…</p>
+  <div class="brand-header">
+    <a href="/index.html"><img src="/img/logo-site.png" alt="Glory Verse" class="brand-logo" onerror="this.style.display='none'"></a>
+    <h1 class="brand-title">Glory Verse</h1>
+    <p class="sub-title" id="sub-title">Menghubungkan ke layanan autentikasi Firebase…</p>
+  </div>
 
-  <div id="checking" class="check">Please wait</div>
+  <!-- Loading State -->
+  <div id="init-status" class="status-init">
+    <div class="spinner" style="width:24px; height:24px; border-width:3px; margin-bottom:10px; color:var(--gold);"></div>
+    <div>Memeriksa sesi akun...</div>
+  </div>
 
-  <div id="authBox" class="hide">
-    <div class="tabs" role="tablist">
-      <button type="button" id="tabLogin" class="on" role="tab">Log in</button>
-      <button type="button" id="tabRegister" role="tab">Register</button>
+  <!-- Main Auth Box -->
+  <div id="auth-box" class="hide">
+
+    <!-- Banner when already signed in -->
+    <div id="already-signed-in" class="already-banner hide">
+      <div>
+        <div style="font-weight:600; color:var(--text);"><i class="fa-solid fa-circle-check" style="color:var(--ok);"></i> Sudah login:</div>
+        <div id="signed-in-user-email" style="color:var(--muted); font-size:12px;">user@example.com</div>
+      </div>
+      <div style="display:flex; gap:6px;">
+        <a href="/dashboard.html" class="btn-sm" style="background:var(--gold); color:#111; text-decoration:none;">Dashboard</a>
+        <button type="button" id="btn-signout-here" class="btn-sm" style="background:#495057; color:#fff;">Ganti Akun</button>
+      </div>
     </div>
 
-    <form id="form" novalidate>
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="email" required>
+    <!-- Tabs: Login vs Register -->
+    <div class="tabs" role="tablist">
+      <button type="button" id="tab-login" class="on" role="tab"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
+      <button type="button" id="tab-register" role="tab"><i class="fa-solid fa-user-plus"></i> Daftar Baru</button>
+    </div>
 
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-
-      <div id="confirmWrap" class="hide">
-        <label for="confirm">Confirm password</label>
-        <input id="confirm" type="password" autocomplete="new-password">
+    <form id="auth-form" novalidate autocomplete="on">
+      <div class="form-group" id="group-username" class="hide" style="display:none;">
+        <label for="username">Nama Karakter / Username</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-user"></i>
+          <input id="username" type="text" autocomplete="nickname" placeholder="Nama karakter di game" maxlength="30">
+        </div>
       </div>
 
-      <button class="go" id="submitBtn" type="submit">Log in</button>
+      <div class="form-group">
+        <label for="email">Alamat Email</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-envelope"></i>
+          <input id="email" type="email" autocomplete="email" placeholder="nama@email.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Kata Sandi</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-lock"></i>
+          <input id="password" type="password" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
+        </div>
+      </div>
+
+      <div class="form-group hide" id="confirm-wrap">
+        <label for="confirm-password">Konfirmasi Kata Sandi</label>
+        <div class="input-wrap">
+          <i class="fa-solid fa-shield-halved"></i>
+          <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Ketik ulang kata sandi">
+        </div>
+      </div>
+
+      <button class="btn-submit" id="submit-btn" type="submit">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang
+      </button>
     </form>
 
-    <button class="link" id="forgotBtn" type="button">Forgot password?</button>
-    <p class="msg" id="msg" role="status" aria-live="polite"></p>
-  </div>
+    <div class="divider"><span>Atau</span></div>
+
+    <button type="button" class="btn-google" id="btn-google">
+      <img width="18" height="18" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      <span>Masuk dengan Akun Google</span>
+    </button>
+
+    <div class="links-row">
+      <button class="link-btn" id="btn-forgot" type="button">Lupa kata sandi?</button>
+      <a href="/index.html" class="link-btn" style="text-decoration:none;">&larr; Halaman Depan</a>
+    </div>
+
+    <div class="msg-box" id="msg-box" role="alert"></div>
+
+  </div><!-- end #auth-box -->
+
+  <a href="/index.html" class="back-home">&larr; Kembali ke Glory Verse</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script>
-/* ===== 1. CONFIG – isi dengan data proyek Supabase kamu =====
-   Ambil dari Supabase > Project Settings > API:
-   - Project URL
-   - anon public key (BUKAN service_role)
-   Kalau dashboard.html kamu sudah punya client "sb", copy URL & key yang sama dari sana. */
-const SUPABASE_URL  = 'https://gfhcqbosxtcuvxttmzsm.supabase.co
-';
-const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg';
-const DASHBOARD_URL = 'dashboard.html';
+<!-- Firebase ESM Modules -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+  sendPasswordResetEmail,
+  signOut,
+  onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-/* ===== 2. Elemen ===== */
-const $ = id => document.getElementById(id);
-const checking = $('checking'), authBox = $('authBox'), sub = $('sub');
-const form = $('form'), msg = $('msg'), submitBtn = $('submitBtn');
-let mode = 'login';
-
-/* ===== 3. Tampilan ===== */
-function setMode(m){
-  mode = m;
-  const reg = m === 'register';
-  $('tabLogin').classList.toggle('on', !reg);
-  $('tabRegister').classList.toggle('on', reg);
-  $('confirmWrap').classList.toggle('hide', !reg);
-  $('password').autocomplete = reg ? 'new-password' : 'current-password';
-  submitBtn.textContent = reg ? 'Create account' : 'Log in';
-  $('forgotBtn').classList.toggle('hide', reg);
-  sub.textContent = reg ? 'Create your player account.' : 'Welcome back. Log in to continue.';
-  say('');
+// Bersihkan token Supabase lama dari localStorage agar tidak bentrok
+try {
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const k = localStorage.key(i);
+    if (k && (k.startsWith('sb-') || k.includes('supabase'))) {
+      localStorage.removeItem(k);
+    }
+  }
+} catch (e) {
+  // abaikan error storage
 }
-function say(text, type){
-  msg.textContent = text;
-  msg.className = 'msg' + (type ? ' ' + type : '');
-}
-function goDashboard(){ window.location.replace(DASHBOARD_URL); }
 
-/* ===== 4. Cek sesi dulu (gerbang) ===== */
-async function init(){
-  if (SUPABASE_URL.startsWith('https://gfhcqbosxtcuvxttmzsm.supabase.co
-') || SUPABASE_KEY.startsWith('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg')){
-    checking.textContent = 'Supabase URL and key are not set yet. Edit authys.html (section CONFIG).';
+const DASHBOARD_URL = '/dashboard.html';
+
+let auth = null;
+let db = null;
+let currentMode = 'login'; // 'login' | 'register'
+let signedInUser = null;
+
+// DOM Elements
+const initStatus = document.getElementById('init-status');
+const authBox = document.getElementById('auth-box');
+const subTitle = document.getElementById('sub-title');
+const tabLogin = document.getElementById('tab-login');
+const tabRegister = document.getElementById('tab-register');
+const form = document.getElementById('auth-form');
+const groupUsername = document.getElementById('group-username');
+const confirmWrap = document.getElementById('confirm-wrap');
+const submitBtn = document.getElementById('submit-btn');
+const btnGoogle = document.getElementById('btn-google');
+const btnForgot = document.getElementById('btn-forgot');
+const msgBox = document.getElementById('msg-box');
+const alreadySignedIn = document.getElementById('already-signed-in');
+const signedInUserEmail = document.getElementById('signed-in-user-email');
+const btnSignoutHere = document.getElementById('btn-signout-here');
+
+function showMsg(text, type = 'err') {
+  if (!text) {
+    msgBox.className = 'msg-box';
+    msgBox.textContent = '';
     return;
   }
-  const { data, error } = await sb.auth.getSession();
-  if (!error && data.session){ goDashboard(); return; }
-
-  checking.classList.add('hide');
-  authBox.classList.remove('hide');
-  const wanted = new URLSearchParams(location.search).get('mode');
-  setMode(wanted === 'register' ? 'register' : 'login');
+  msgBox.textContent = text;
+  msgBox.className = `msg-box ${type}`;
 }
 
-/* ===== 5. Login / Register ===== */
-function friendly(err){
-  const t = (err.message || '').toLowerCase();
-  if (t.includes('invalid login')) return 'Wrong email or password.';
-  if (t.includes('email not confirmed')) return 'Email not confirmed yet. Open the link we sent to your inbox.';
-  if (t.includes('already registered')) return 'This email is already registered. Use Log in instead.';
-  if (t.includes('rate limit')) return 'Too many attempts. Wait a few minutes and try again.';
-  return err.message || 'Something went wrong. Try again.';
+function setMode(mode) {
+  currentMode = mode;
+  const isRegister = (mode === 'register');
+  tabLogin.classList.toggle('on', !isRegister);
+  tabRegister.classList.toggle('on', isRegister);
+  confirmWrap.classList.toggle('hide', !isRegister);
+  groupUsername.style.display = isRegister ? 'block' : 'none';
+
+  const pwd = document.getElementById('password');
+  pwd.autocomplete = isRegister ? 'new-password' : 'current-password';
+
+  if (isRegister) {
+    subTitle.textContent = 'Daftar akun pemain baru Glory Verse.';
+    submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Buat Akun Baru';
+    btnForgot.classList.add('hide');
+  } else {
+    subTitle.textContent = 'Selamat datang kembali. Masuk ke akun Anda.';
+    submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang';
+    btnForgot.classList.remove('hide');
+  }
+  showMsg('');
 }
 
-form.addEventListener('submit', async e => {
+function goDashboard() {
+  window.location.replace(DASHBOARD_URL);
+}
+
+// Inisialisasi profil Firestore jika pemain baru
+async function ensureUserProfile(user, preferredUsername = '') {
+  if (!user) return;
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      const uname = preferredUsername || user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain');
+      await setDoc(userRef, {
+        id: user.uid,
+        username: uname,
+        email: user.email || '',
+        country_code: 'ID',
+        country_name: 'Indonesia',
+        region_name: 'Jakarta',
+        level: 1,
+        xp: 0,
+        energy: 100,
+        health: 100,
+        gold: 10,
+        euro: 0,
+        svct: 0,
+        currency: 0,
+        income: 0,
+        alerts: 0,
+        messages: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      });
+    }
+  } catch (err) {
+    console.warn('Gagal sinkronisasi profil user:', err);
+  }
+}
+
+function translateFirebaseError(err) {
+  const code = err.code || '';
+  const msg = err.message || '';
+  if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
+    return 'Email atau kata sandi tidak cocok. Silakan periksa kembali.';
+  }
+  if (code === 'auth/email-already-in-use') {
+    return 'Alamat email ini sudah terdaftar. Silakan pilih tab Masuk.';
+  }
+  if (code === 'auth/weak-password') {
+    return 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.';
+  }
+  if (code === 'auth/invalid-email') {
+    return 'Format alamat email tidak valid.';
+  }
+  if (code === 'auth/popup-closed-by-user') {
+    return 'Jendela login Google ditutup sebelum selesai.';
+  }
+  if (code === 'auth/too-many-requests') {
+    return 'Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat atau reset kata sandi.';
+  }
+  return msg || 'Terjadi kesalahan autentikasi. Silakan coba lagi.';
+}
+
+async function init() {
+  try {
+    const res = await fetch('/firebase-applet-config.json');
+    if (!res.ok) throw new Error('Tidak dapat membaca firebase-applet-config.json');
+    const config = await res.json();
+    const app = initializeApp(config);
+    db = getFirestore(app, config.firestoreDatabaseId);
+    auth = getAuth(app);
+
+    const params = new URLSearchParams(window.location.search);
+    const requestedMode = params.get('mode') === 'register' ? 'register' : 'login';
+
+    // Dengarkan status sesi Firebase
+    onAuthStateChanged(auth, async (user) => {
+      signedInUser = user;
+      initStatus.classList.add('hide');
+      authBox.classList.remove('hide');
+
+      if (user) {
+        signedInUserEmail.textContent = user.email || user.displayName || 'Akun Aktif';
+
+        // JIKA user sengaja membuka ?mode=register, JANGAN auto-redirect!
+        // Tampilkan banner bahwa mereka sudah login, dan biarkan form register tetap terbuka jika ingin buat akun baru
+        if (requestedMode === 'register') {
+          alreadySignedIn.classList.remove('hide');
+          setMode('register');
+        } else {
+          // Jika mode login biasa dan user sudah login, langsung ke dashboard
+          goDashboard();
+        }
+      } else {
+        alreadySignedIn.classList.add('hide');
+        setMode(requestedMode);
+      }
+    });
+
+  } catch (err) {
+    console.error('Inisialisasi Firebase gagal:', err);
+    initStatus.innerHTML = `
+      <div style="color:var(--err); margin-bottom:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Konfigurasi Firebase tidak ditemukan.</div>
+      <small style="color:var(--muted);">Pastikan file firebase-applet-config.json tersedia.</small>
+    `;
+  }
+}
+
+// Tab handlers
+tabLogin.addEventListener('click', () => setMode('login'));
+tabRegister.addEventListener('click', () => setMode('register'));
+
+// Logout button if user wants to switch account on register page
+btnSignoutHere.addEventListener('click', async () => {
+  try {
+    await signOut(auth);
+    alreadySignedIn.classList.add('hide');
+    showMsg('Anda telah keluar. Silakan masukkan data akun baru.', 'ok');
+  } catch (e) {
+    showMsg('Gagal keluar: ' + e.message, 'err');
+  }
+});
+
+// Form submission (Email/Password Login & Register)
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  const email = $('email').value.trim();
-  const password = $('password').value;
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const username = document.getElementById('username').value.trim();
 
-  if (!email || !password){ say('Enter your email and password.', 'err'); return; }
-  if (mode === 'register'){
-    if (password.length < 6){ say('Password must be at least 6 characters.', 'err'); return; }
-    if (password !== $('confirm').value){ say('Passwords do not match.', 'err'); return; }
+  if (!email || !password) {
+    showMsg('Silakan isi email dan kata sandi.', 'err');
+    return;
   }
 
-  submitBtn.disabled = true; say('');
-  try{
-    if (mode === 'login'){
-      const { error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+  if (currentMode === 'register') {
+    if (password.length < 6) {
+      showMsg('Kata sandi minimal harus 6 karakter.', 'err');
+      return;
+    }
+    const confirm = document.getElementById('confirm-password').value;
+    if (password !== confirm) {
+      showMsg('Konfirmasi kata sandi tidak cocok.', 'err');
+      return;
+    }
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
+  showMsg('');
+
+  try {
+    if (currentMode === 'login') {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+      await ensureUserProfile(cred.user);
       goDashboard();
     } else {
-      const { data, error } = await sb.auth.signUp({
-        email, password,
-        options: { emailRedirectTo: location.origin + location.pathname }
-      });
-      if (error) throw error;
-      if (data.session){ goDashboard(); }
-      else { say('Account created. Check your email and open the confirmation link, then log in.', 'ok'); }
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await ensureUserProfile(cred.user, username);
+      showMsg('Pendaftaran berhasil! Mengalihkan ke dashboard...', 'ok');
+      setTimeout(goDashboard, 800);
     }
-  }catch(err){
-    say(friendly(err), 'err');
-  }finally{
+  } catch (err) {
+    showMsg(translateFirebaseError(err), 'err');
     submitBtn.disabled = false;
+    submitBtn.innerHTML = currentMode === 'register' 
+      ? '<i class="fa-solid fa-user-plus"></i> Buat Akun Baru' 
+      : '<i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang';
   }
 });
 
-$('forgotBtn').addEventListener('click', async () => {
-  const email = $('email').value.trim();
-  if (!email){ say('Type your email above first, then press Forgot password.', 'err'); return; }
-  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-  say(error ? friendly(error) : 'Reset link sent. Check your email.', error ? 'err' : 'ok');
+// Google Sign In
+btnGoogle.addEventListener('click', async () => {
+  if (!auth) return;
+  showMsg('');
+  btnGoogle.disabled = true;
+  try {
+    const provider = new GoogleAuthProvider();
+    const cred = await signInWithPopup(auth, provider);
+    await ensureUserProfile(cred.user);
+    goDashboard();
+  } catch (err) {
+    showMsg(translateFirebaseError(err), 'err');
+  } finally {
+    btnGoogle.disabled = false;
+  }
 });
 
-$('tabLogin').addEventListener('click', () => setMode('login'));
-$('tabRegister').addEventListener('click', () => setMode('register'));
-
-/* Setelah klik link konfirmasi email, Supabase mengirim sesi balik ke halaman ini */
-sb.auth.onAuthStateChange((event, session) => {
-  if (event === 'SIGNED_IN' && session) goDashboard();
+// Forgot Password
+btnForgot.addEventListener('click', async () => {
+  const email = document.getElementById('email').value.trim();
+  if (!email) {
+    showMsg('Ketik alamat email Anda di atas terlebih dahulu, lalu klik Lupa kata sandi.', 'err');
+    return;
+  }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showMsg('Tautan reset kata sandi telah dikirim ke email Anda. Silakan periksa inbox atau spam.', 'ok');
+  } catch (err) {
+    showMsg(translateFirebaseError(err), 'err');
+  }
 });
 
-init();
+// Jalankan inisialisasi
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
 </script>
 
-  <script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-  
 </body>
 </html>
