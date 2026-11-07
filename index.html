@@ -365,6 +365,7 @@ import {
   onAuthStateChanged, 
   GoogleAuthProvider, 
   signInWithPopup, 
+  signInWithEmailAndPassword,
   signOut 
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 import { 
@@ -467,6 +468,29 @@ function setupAuthUI() {
         logoutBtn.addEventListener('click', () => signOut(auth));
       }
     } else {
+      const formLogin = document.getElementById('form_login');
+      if (formLogin) {
+        formLogin.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const emailInput = document.getElementById('login_email');
+          const passInput = document.getElementById('login_password');
+          const email = emailInput ? emailInput.value.trim() : '';
+          const password = passInput ? passInput.value : '';
+          if (!email || !password) {
+            window.location.href = '/authys.html';
+            return;
+          }
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.href = '/dashboard.html';
+          } catch (err) {
+            console.error('Login error:', err);
+            // Alihkan ke authys.html dengan pesan error agar user dapat melihat opsi reset sandi/daftar
+            window.location.href = '/authys.html';
+          }
+        });
+      }
+
       const googleBtn = document.getElementById('btn-google-login');
       if (googleBtn) {
         googleBtn.addEventListener('click', async (e) => {
@@ -474,6 +498,7 @@ function setupAuthUI() {
           try {
             const provider = new GoogleAuthProvider();
             await signInWithPopup(auth, provider);
+            window.location.href = '/dashboard.html';
           } catch (err) {
             console.error('Google Sign In failed:', err);
             alert('Login gagal: ' + (err.message || 'Silakan coba lagi.'));
@@ -635,5 +660,9 @@ if (document.readyState === 'loading') {
   initFirebase();
 }
 </script>
+
+				<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+	
 </body>
 </html>
