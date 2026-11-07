@@ -1,3 +1,4 @@
+
   
 
 <!DOCTYPE html>
@@ -9,27 +10,27 @@
 <title>Glory Verse - Online Strategy Browser Game</title>
 
 <meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="My Profit Land" />
+<meta name="description" content="Glory Verse - Online Strategy Browser Game" />
+<meta name="copyright" content="Glory Verse" />
 	
 <!-- For Sharing ++ -->
-<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
-<meta property="og:description" content="" />
+<meta property="og:title" content="Glory Verse - Online Strategy Browser Game" />
+<meta property="og:description" content="Glory Verse - Online Strategy Browser Game" />
 <meta property="og:type" content="website" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
 <!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-site/base.css?t=1493636609">
+<link rel="stylesheet" href="/css-site/base.css?t=1493636609">
 
 <!-- Core JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+<script src="/js/base.js"></script>
+<script src="/js/plugins/jquery.form.js"></script>
 
 <!-- Extra JS -->
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -95,8 +96,8 @@
 		<div class="container">
 			<div class="topnav-header">
 
-				<a class="brand" href="https://gloryverse.id/dashboard.html">
-					<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
+				<a class="brand" href="/dashboard.html">
+					<img alt="gloryverse.id" src="/img/logo-site.png">
 				</a>
 
 				<button type="button" class="topnav-toggle" data-toggle="collapse" data-target="#topnav-collapse">
@@ -111,23 +112,23 @@
 				<ul class="nav topnav-nav">
 					
 					<li>
-						<a href="https://gloryverse.id">Home</a>
+						<a href="/">Home</a>
 					</li>
 
 					<li>
-						<a href="https://gloryverse.id/register.html">Register</a>
+						<a href="/register.html">Register</a>
 					</li>
 
 					<li>
-						<a href="https://gloryverse.id/account_recovery.html">Lost Password</a>
+						<a href="/account_recovery.html">Lost Password</a>
 					</li>
 					
 					<li>
-						<a href="https://gloryverse.id/documentation.html">Documentation</a>
+						<a href="/documentation.html">Documentation</a>
 					</li>
 
 					<li>
-						<a href="https://gloryverse.id/contact.html">Contact</a>
+						<a href="/contact.html">Contact</a>
 					</li>
 					
 				</ul>
@@ -142,7 +143,7 @@
 				<!-- HEADER AREA ---------------------------
 				---------------------------------------- -->
 				<div class="header banner large">
-					<div class="banner-inner" style="background-image: url(https://gloryverse.id/img/banner-home.jpeg)">
+					<div class="banner-inner" style="background-image: url(/img/banner-home.jpeg)">
 					
 						<div class="container">
 						
@@ -160,46 +161,29 @@
 							---------------------------------------- -->
 														
 							<div class="login-box">
-																	<form class="form-default" id="form_login" method="post" action="https://gloryverse.id/authys.html">
-										<div class="form-row">
-											<input type="email" class="form-control" name="user_email" placeholder="Email" value=""/>
-										</div><!-- end .form-row -->
-										<div class="form-row">
-												<input type="password" class="form-control" name="user_password" placeholder="Password" autocomplete="off" />
-										</div><!-- end .form-row -->
-
-																					<div class="form-row">
-													<div class="g-recaptcha" data-sitekey="6Lek5ygTAAAAAPpJ-nek3EiCfY3ATQc0gZ77a2C3" style="transform:scale(0.85);-webkit-transform:scale(0.85);transform-origin:0 0;-webkit-transform-origin:0 0;"></div>
-											</div><!-- end .form-row -->
-											
-										<div class="form-row">
-
-											<button class="btn btn-default" type="submit">Login</button>
-											or
-											<a href="https://gloryverse.id/google_auth.php" class="btn btn-danger" data-toggle="tooltip" title="Login with Google">
-												<i class="icon-google "></i>
-											</a>
-
-
-											<!--<div class="form-col-sm-3">
-												
-											</div>
-											<div class="form-col-sm-9">
-												<label class="checkbox">
-													<input type="checkbox" name="remember" value="1"> Remembe
-												</label>
-											</div>-->
-												
-										</div><!-- end .form-row -->
-
-
-										<div class="form-row">
-											<div class="connect-social-fb-container">
-												<small><a href="https://gloryverse.id/account_recovery.php">Lost Password</a></small>
-											</div>
-										</div><!-- end .form-row -->
-									</form>
-																</div><!-- end .login-box -->
+								<form class="form-default" id="form_login" method="post" action="/authys.html">
+									<div class="form-row">
+										<input type="email" class="form-control" name="user_email" id="login_email" placeholder="Email" value=""/>
+									</div><!-- end .form-row -->
+									<div class="form-row">
+										<input type="password" class="form-control" name="user_password" id="login_password" placeholder="Password" autocomplete="off" />
+									</div><!-- end .form-row -->
+									<div class="form-row" style="display:flex; align-items:center; gap:8px;">
+										<button class="btn btn-default" type="submit" style="flex:1;">Login</button>
+										<a href="/authys.html?mode=register" class="btn btn-warning" style="color:#111; font-weight:600;">Register</a>
+									</div><!-- end .form-row -->
+									<div class="form-row" style="margin-top: 6px;">
+										<button type="button" id="btn-google-login" class="btn btn-danger btn-block" style="font-weight:600; display:flex; align-items:center; justify-content:center; gap:6px;">
+											<i class="icon-google"></i> Sign in with Google (Firebase)
+										</button>
+									</div><!-- end .form-row -->
+									<div class="form-row">
+										<div class="connect-social-fb-container">
+											<small><a href="/account_recovery.html">Lost Password?</a></small>
+										</div>
+									</div><!-- end .form-row -->
+								</form>
+							</div><!-- end .login-box -->
 							<!-- end login ----------------------------
 							---------------------------------------- -->
 							
@@ -225,7 +209,7 @@
 								<p>Glory Verse is a strategy game. It is an online browser game, therefore you do not need any other programs installed in order to play. It is one of the few business games where you are rewarded for your daily activity. As a simulation game, it offers you the possibility to fight, work, open companies, start wars. It is a very complex game, and the more you play it, the more options you will find for your own development.</p>
 								<br>
 				
-								<div class="text-center"><a class="btn btn-warning-bvl btn-lg" href="https://gloryverse.id/register.php">Register now. It's free</a></div>
+								<div class="text-center"><a class="btn btn-warning-bvl btn-lg" href="/register.html">Register now. It's free</a></div>
 								
 
 							</div><!-- end .col-* -->
@@ -253,95 +237,16 @@
 										<th width="60" class="text-right">Jobs</th>
 										<th width="90" class="text-right">Citizens</th>
 									</thead>
-																			<tr>
-											<td>1º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/id.png" title="Indonesia"></td>
-											<td><a href="#">Indonesia</a></td>
-											<td class="text-right">
-																									2.2 Gold
-																								</td>
-											<td class="text-right">
-																									203																								</td>
-											<td class="text-right">292</td>
+									<tbody id="countries-ranking-body">
+										<tr>
+											<td colspan="6" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+												<i class="icon icon-globe" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+												Belum ada data ranking negara.<br>
+												<small style="color: #6cb6ff;">Tempat kosong siap disinkronkan dengan Firebase</small>
+											</td>
 										</tr>
-																				<tr>
-											<td>2º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/us.png" title="United States"></td>
-											<td><a href="#">United States</a></td>
-											<td class="text-right">
-																									4.01 Gold
-																								</td>
-											<td class="text-right">
-																									124																								</td>
-											<td class="text-right">155</td>
-										</tr>
-																				<tr>
-											<td>3º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/ve.png" title="Venezuela"></td>
-											<td><a href="#">Venezuela</a></td>
-											<td class="text-right">
-																									0.15 Gold
-																								</td>
-											<td class="text-right">
-																									97																								</td>
-											<td class="text-right">102</td>
-										</tr>
-																				<tr>
-											<td>4º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/sv.png" title="El Salvador"></td>
-											<td><a href="#">El Salvador</a></td>
-											<td class="text-right">
-																									0.03 Gold
-																								</td>
-											<td class="text-right">
-																									119																								</td>
-											<td class="text-right">93</td>
-										</tr>
-																				<tr>
-											<td>5º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/ph.png" title="Philippines"></td>
-											<td><a href="#">Philippines</a></td>
-											<td class="text-right">
-																									3.88 Gold
-																								</td>
-											<td class="text-right">
-																									57																								</td>
-											<td class="text-right">92</td>
-										</tr>
-																				<tr>
-											<td>6º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/mk.png" title="Macedonia"></td>
-											<td><a href="#">Macedonia</a></td>
-											<td class="text-right">
-																									1.6 Gold
-																								</td>
-											<td class="text-right">
-																									137																								</td>
-											<td class="text-right">80</td>
-										</tr>
-																				<tr>
-											<td>7º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/es.png" title="Spain"></td>
-											<td><a href="#">Spain</a></td>
-											<td class="text-right">
-																									2.3 Gold
-																								</td>
-											<td class="text-right">
-																									184																								</td>
-											<td class="text-right">71</td>
-										</tr>
-																				<tr>
-											<td>8º</td>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/qa.png" title="Qatar"></td>
-											<td><a href="#">Qatar</a></td>
-											<td class="text-right">
-																									4.11 Gold
-																								</td>
-											<td class="text-right">
-																									71																								</td>
-											<td class="text-right">66</td>
-										</tr>
-																		</table>
+									</tbody>
+								</table>
 
 
 							</div><!-- end .col-* -->
@@ -356,55 +261,16 @@
 										<th>When</th>
 										<th width="150" class="text-right">Amount</th>
 									</thead>
-																			<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/pt.png" title="Portugal"></td>
-											<td><a href="#">Fpggol</a></td>
-											<td>10 hours ago</td>
-											<td class="text-right">20.00 Euro</td>
+									<tbody id="latest-withdrawals-body">
+										<tr>
+											<td colspan="4" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+												<i class="icon icon-wallet" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+												Belum ada data penarikan pemain.<br>
+												<small style="color: #6cb6ff;">Tempat kosong siap disinkronkan dengan Firebase</small>
+											</td>
 										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/at.png" title="Austria"></td>
-											<td><a href="#">mykyice</a></td>
-											<td>10 hours ago</td>
-											<td class="text-right">25.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/sv.png" title="El Salvador"></td>
-											<td><a href="#">Mujahid144</a></td>
-											<td>10 hours ago</td>
-											<td class="text-right">21.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/sg.png" title="Singapore"></td>
-											<td><a href="#">Okresamu</a></td>
-											<td>1 day ago</td>
-											<td class="text-right">340.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/fo.png" title="Faroe Islands"></td>
-											<td><a href="#">Pioner</a></td>
-											<td>1 day ago</td>
-											<td class="text-right">21.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/id.png" title="Indonesia"></td>
-											<td><a href="#">medalion</a></td>
-											<td>1 day ago</td>
-											<td class="text-right">90.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/md.png" title="Moldova"></td>
-											<td><a href="#">iamroyal</a></td>
-											<td>3 days ago</td>
-											<td class="text-right">25.00 Euro</td>
-										</tr>
-																				<tr>
-											<td><img width="20" height="20" src="https://gloryverse.id/img/country_flags/24/es.png" title="Spain"></td>
-											<td><a href="#">Elvag</a></td>
-											<td>3 days ago</td>
-											<td class="text-right">22.00 Euro</td>
-										</tr>
-																		</table>
+									</tbody>
+								</table>
 							</div><!-- end .col-* -->
 							
 						</div><!-- end .row -->
@@ -412,37 +278,17 @@
 
 
 
-						<div class="row">
+						<div class="row" style="margin-top: 15px;">
 						
 							<div class="col-xs-12 col-md-6">
 								<h4>Euro/Gold Exchange Rate</h4>
 								
-								<br>
-								
-								
-								<canvas id="myChart" height="150"></canvas>
-								<script>
-									var ctx = document.getElementById('myChart').getContext('2d');
-									var myChart = new Chart(ctx, {
-									  type: 'line',
-									  data: {
-									    labels: ['01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', '01', ],
-									    datasets: [{
-									      label: 'Exchange rate',
-									      data: [24.0210000000, 24.0810000000, 24.0010000000, 23.9990000000, 23.9510000000, 23.9490000000, 23.9470000000, 23.9530000000, 23.9550000000, 23.9570000000, 23.9590000000, 23.9570000000, 23.9590000000, 23.9570000000, 23.9550000000, 23.9570000000, 23.9590000000, 23.9650000000, 23.9870000000, 23.9890000000, 23.9870000000, 23.9890000000, 23.9850000000, 23.9870000000, 23.9770000000, 23.9790000000, 23.9810000000, 23.9830000000, 23.9850000000, 23.9890000000, ],
-									      fill: false
-									    }]
-									  },
-									  options: {
-								         legend: {
-								            display: false
-								         }
-								    	}
-									});
-
-								</script>
-								
-								1 Euro is currently worth 23.989 Gold
+								<div id="exchange-rate-container" style="background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.15); border-radius: 8px; padding: 36px 16px; text-align: center; margin-top: 12px;">
+									<i class="icon icon-line-chart" style="font-size: 24px; display: block; margin-bottom: 8px; color: #8b95a7; opacity: 0.7;"></i>
+									<p style="margin: 0 0 6px; font-size: 14px; color: #d8dde6;"><b>Grafik Kurs Euro / Gold</b></p>
+									<p style="color: #8b95a7; margin: 0 0 10px; font-size: 12px;">Data kurs realtime belum tersedia.</p>
+									<small style="color: #6cb6ff;">Tempat kosong siap diisi data rate dari Firebase</small>
+								</div>
 
 							</div>
 
@@ -450,123 +296,25 @@
 							<div class="col-xs-12 col-md-6">
 								<h4>Active Wars</h4>
 
-								
-																	<table class="table table-condensed table-hover">
-										<thead>
-											<th>Region</th>
-											<th width="88" class="text-center">Attackers</th>
-											<th width="42" class="text-right"></th>
-											<th width="80"></th>
-											<th width="42" class="text-right"></th>
-											<th width="88" class="text-center">Defenders</th>
-										</thead>
-										
-																					<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Lulea</a></b></span></td>
-												<td class="text-center"><a href="#" title="Indonesia" data-toggle="tooltip">ID</a></td>
-												<td class="text-right"><small>0%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 0%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Andorra" data-toggle="tooltip">AD</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Ioannina</a></b></span></td>
-												<td class="text-center"><a href="#" title="Faroe Islands" data-toggle="tooltip">FO</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Andorra" data-toggle="tooltip">AD</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Erzurum</a></b></span></td>
-												<td class="text-center"><a href="#" title="Taiwan" data-toggle="tooltip">TW</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Maldives" data-toggle="tooltip">MV</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Harbin</a></b></span></td>
-												<td class="text-center"><a href="#" title="Philippines" data-toggle="tooltip">PH</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="El Salvador" data-toggle="tooltip">SV</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Koper</a></b></span></td>
-												<td class="text-center"><a href="#" title="San Marino" data-toggle="tooltip">SM</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Maldives" data-toggle="tooltip">MV</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Subotica</a></b></span></td>
-												<td class="text-center"><a href="#" title="Singapore" data-toggle="tooltip">SG</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Qatar" data-toggle="tooltip">QA</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Medellin</a></b></span></td>
-												<td class="text-center"><a href="#" title="Venezuela" data-toggle="tooltip">VE</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="Ecuador" data-toggle="tooltip">EC</a></td>
-											</tr>
-																						<tr>
-												<td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">Karlstad</a></b></span></td>
-												<td class="text-center"><a href="#" title="United States" data-toggle="tooltip">US</a></td>
-												<td class="text-right"><small>100%</small></td>
-												<td>
-													<div class="progress progress-xs">
-														<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 100%"></div>
-														<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 0%"></div>
-													</div>
-												</td>
-												<td class="text-right"><small>0%</small></td>
-												<td class="text-center"><a href="#" title="El Salvador" data-toggle="tooltip">SV</a></td>
-											</tr>
-											
-									</table>
+								<table class="table table-condensed table-hover">
+									<thead>
+										<th>Region</th>
+										<th width="88" class="text-center">Attackers</th>
+										<th width="42" class="text-right"></th>
+										<th width="80"></th>
+										<th width="42" class="text-right"></th>
+										<th width="88" class="text-center">Defenders</th>
+									</thead>
+									<tbody id="active-wars-body">
+										<tr>
+											<td colspan="6" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+												<i class="icon icon-crosshairs" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+												Tidak ada perang aktif saat ini.<br>
+												<small style="color: #6cb6ff;">Tempat kosong siap disinkronkan dengan Firebase</small>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 									
 							</div>
 
@@ -586,7 +334,7 @@
 <div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
         
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(6) 0.008s</small>
+					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="/privacy_policy.html">Privacy policy</a> | <a href="/tos.html">Terms and conditions</a> <small>(6) 0.008s</small>
 				</div><!-- end .copyright -->
 			
 			</div><!-- end .col -->
@@ -598,7 +346,7 @@
 	<div class="container">
 		<div class="inner">
 			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using GloryVerse, you agree to our <a href="https://gloryverse.id/tos.php">Privacy Policy</a>
+			We use cookies to ensure you get the best possible experience. By using GloryVerse, you agree to our <a href="/tos.html">Privacy Policy</a>
 		</div><!-- end .inner -->
 	</div><!-- end .container -->
 </div>
@@ -610,5 +358,282 @@
 	</div><!-- end .viewport -->
 
 <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import { 
+  getAuth, 
+  onAuthStateChanged, 
+  GoogleAuthProvider, 
+  signInWithPopup, 
+  signOut 
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+import { 
+  getFirestore, 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs,
+  setDoc,
+  getDocFromServer,
+  query, 
+  orderBy, 
+  limit 
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+
+let app = null;
+let db = null;
+let auth = null;
+
+async function initFirebase() {
+  try {
+    const res = await fetch('/firebase-applet-config.json');
+    if (!res.ok) {
+      console.warn('Could not load firebase-applet-config.json');
+      return;
+    }
+    const firebaseConfig = await res.json();
+    app = initializeApp(firebaseConfig);
+    db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+    auth = getAuth(app);
+
+    try {
+      await getDocFromServer(doc(db, 'test', 'connection'));
+    } catch (err) {
+      console.log('Firebase connection initialized:', firebaseConfig.projectId);
+    }
+
+    setupAuthUI();
+    // One-time data fetch on page load (no realtime listeners, no auto-polling)
+    await Promise.all([
+      loadCountriesRanking(),
+      loadLatestWithdrawals(),
+      loadActiveWars(),
+      loadExchangeRate()
+    ]);
+  } catch (err) {
+    console.error('Firebase initialization error:', err);
+  }
+}
+
+function setupAuthUI() {
+  const loginBox = document.querySelector('.login-box');
+  if (!loginBox) return;
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const userRef = doc(db, 'users', user.uid);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) {
+          await setDoc(userRef, {
+            id: user.uid,
+            username: user.displayName || user.email.split('@')[0],
+            email: user.email,
+            country_code: 'ID',
+            country_name: 'Indonesia',
+            level: 1,
+            xp: 0,
+            energy: 100,
+            health: 100,
+            gold: 10,
+            euro: 0,
+            work_bonus: 0,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+        }
+      } catch (e) {
+        console.warn('Profile sync:', e);
+      }
+
+      loginBox.innerHTML = `
+        <div style="background: rgba(18, 38, 74, 0.85); border: 1px solid #2a4170; border-radius: 10px; padding: 18px 16px; color: #eef2fa;">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#d4a64a; color:#111; display:flex; align-items:center; justify-content:center; font-weight:700;">
+              ${(user.displayName || user.email || 'P')[0].toUpperCase()}
+            </div>
+            <div style="overflow:hidden;">
+              <div style="font-weight:600; font-size:13.5px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;">${user.displayName || user.email}</div>
+              <small style="color:#7be0a4;">● Terhubung ke Firebase</small>
+            </div>
+          </div>
+          <a href="/dashboard.html" class="btn btn-warning btn-block" style="color:#111; font-weight:700; margin-bottom:8px;">Buka Dashboard Game</a>
+          <button id="firebase-logout-btn" class="btn btn-default btn-sm btn-block" style="font-size:11.5px; opacity:0.85;">Logout</button>
+        </div>
+      `;
+
+      const logoutBtn = document.getElementById('firebase-logout-btn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => signOut(auth));
+      }
+    } else {
+      const googleBtn = document.getElementById('btn-google-login');
+      if (googleBtn) {
+        googleBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          try {
+            const provider = new GoogleAuthProvider();
+            await signInWithPopup(auth, provider);
+          } catch (err) {
+            console.error('Google Sign In failed:', err);
+            alert('Login gagal: ' + (err.message || 'Silakan coba lagi.'));
+          }
+        });
+      }
+    }
+  });
+}
+
+// 1. Countries Ranking: One-time fetch on page load
+async function loadCountriesRanking() {
+  const countriesBody = document.getElementById('countries-ranking-body');
+  if (!countriesBody) return;
+  try {
+    const q = query(collection(db, 'countries'), orderBy('citizens', 'desc'), limit(10));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      let html = '';
+      let rank = 1;
+      snapshot.forEach((d) => {
+        const data = d.data();
+        const flag = data.country_code ? `/img/country_flags/24/${data.country_code.toLowerCase()}.png` : '/img/logo-site.png';
+        html += `
+          <tr>
+            <td>${rank}º</td>
+            <td><img width="20" height="20" src="${flag}" title="${data.name || ''}" onerror="this.src='/img/logo-site.png'"></td>
+            <td><a href="#">${data.name || 'Negara'}</a></td>
+            <td class="text-right">${Number(data.work_bonus || 0).toFixed(2)} Gold</td>
+            <td class="text-right">${data.jobs || 0}</td>
+            <td class="text-right">${data.citizens || 0}</td>
+          </tr>
+        `;
+        rank++;
+      });
+      countriesBody.innerHTML = html;
+    } else {
+      countriesBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+            <i class="icon icon-globe" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+            Belum ada data ranking negara di database.<br>
+            <small style="color: #6cb6ff;">Data dimuat saat halaman di-refresh (F5)</small>
+          </td>
+        </tr>
+      `;
+    }
+  } catch (e) {
+    console.warn('Countries query error:', e);
+  }
+}
+
+// 2. Latest Withdrawals: One-time fetch on page load
+async function loadLatestWithdrawals() {
+  const withdrawalsBody = document.getElementById('latest-withdrawals-body');
+  if (!withdrawalsBody) return;
+  try {
+    const q = query(collection(db, 'withdrawals'), orderBy('created_at', 'desc'), limit(10));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      let html = '';
+      snapshot.forEach((d) => {
+        const data = d.data();
+        const flag = data.country_code ? `/img/country_flags/24/${data.country_code.toLowerCase()}.png` : '/img/logo-site.png';
+        html += `
+          <tr>
+            <td><img width="20" height="20" src="${flag}" title="${data.country_name || ''}" onerror="this.src='/img/logo-site.png'"></td>
+            <td><a href="#">${data.username || 'Citizen'}</a></td>
+            <td>${data.created_at ? new Date(data.created_at).toLocaleDateString() : 'Baru saja'}</td>
+            <td class="text-right">${Number(data.amount_euro || 0).toFixed(2)} Euro</td>
+          </tr>
+        `;
+      });
+      withdrawalsBody.innerHTML = html;
+    } else {
+      withdrawalsBody.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+            <i class="icon icon-wallet" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+            Belum ada data penarikan pemain di database.<br>
+            <small style="color: #6cb6ff;">Data dimuat saat halaman di-refresh (F5)</small>
+          </td>
+        </tr>
+      `;
+    }
+  } catch (e) {
+    console.warn('Withdrawals query error:', e);
+  }
+}
+
+// 3. Active Wars: One-time fetch on page load
+async function loadActiveWars() {
+  const warsBody = document.getElementById('active-wars-body');
+  if (!warsBody) return;
+  try {
+    const q = query(collection(db, 'wars'), limit(10));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      let html = '';
+      snapshot.forEach((d) => {
+        const data = d.data();
+        html += `
+          <tr>
+            <td><span class="nwe"><i class="icon icon-crosshairs red icon-big"></i> <b><a href="#">${data.region || 'Region'}</a></b></span></td>
+            <td class="text-center"><span class="label label-danger">${data.attacker_country_code || 'ATK'}</span></td>
+            <td class="text-right"><small>${data.attacker_percent || 0}%</small></td>
+            <td>
+              <div class="progress progress-xs" style="margin: 4px 0 0;">
+                <div class="progress-bar progress-bar-warning progress-bar-striped" style="width: ${data.attacker_percent || 0}%"></div>
+                <div class="progress-bar progress-bar-info progress-bar-striped" style="width: ${data.defender_percent || 0}%"></div>
+              </div>
+            </td>
+            <td class="text-right"><small>${data.defender_percent || 0}%</small></td>
+            <td class="text-center"><span class="label label-info">${data.defender_country_code || 'DEF'}</span></td>
+          </tr>
+        `;
+      });
+      warsBody.innerHTML = html;
+    } else {
+      warsBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center" style="padding: 28px 14px; color: #8b95a7;">
+            <i class="icon icon-crosshairs" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.6;"></i>
+            Tidak ada perang aktif saat ini.<br>
+            <small style="color: #6cb6ff;">Data dimuat saat halaman di-refresh (F5)</small>
+          </td>
+        </tr>
+      `;
+    }
+  } catch (e) {
+    console.warn('Wars query error:', e);
+  }
+}
+
+// 4. Exchange Rate: One-time fetch on page load
+async function loadExchangeRate() {
+  const rateContainer = document.getElementById('exchange-rate-container');
+  if (!rateContainer) return;
+  try {
+    const q = query(collection(db, 'exchange_rates'), orderBy('timestamp', 'desc'), limit(1));
+    const snapshot = await getDocs(q);
+    if (!snapshot.empty) {
+      const docData = snapshot.docs[0].data();
+      rateContainer.innerHTML = `
+        <i class="icon icon-line-chart" style="font-size: 24px; display: block; margin-bottom: 8px; color: #2e9e5b;"></i>
+        <p style="margin: 0 0 4px; font-size: 13px; color: #8b95a7;">Kurs Euro / Gold</p>
+        <p style="font-size: 18px; color: #f0c04a; margin: 0 0 6px;"><b>1 Euro = ${Number(docData.rate || 0).toFixed(3)} Gold</b></p>
+        <small style="color: #7be0a4;">Tercatat: ${docData.timestamp ? new Date(docData.timestamp).toLocaleTimeString() : 'Tersedia'}</small>
+      `;
+    }
+  } catch (e) {
+    console.warn('Rate query error:', e);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFirebase);
+} else {
+  initFirebase();
+}
+</script>
 </body>
 </html>
