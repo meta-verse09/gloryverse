@@ -1,4 +1,4 @@
- 
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
@@ -24,6 +24,46 @@
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="/js/base.js"></script>
+
+	<style>
+		/* ============================================================
+		   FIX 3-COLUMN GRID LAYOUT (RATA ATAS)
+		   ============================================================ */
+		.dashboard-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr 320px;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
+
+		.leftbar,
+		.main,
+		.rightbar {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
+
+		@media (max-width: 1100px) {
+			.dashboard-wrapper {
+				grid-template-columns: 260px 1fr;
+			}
+			.rightbar {
+				grid-column: 1 / -1;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.dashboard-wrapper {
+				grid-template-columns: 1fr;
+			}
+			.rightbar {
+				grid-column: auto;
+			}
+		}
+	</style>
 </head>
 
 <body>
@@ -35,7 +75,7 @@
 	<div class="refresh-notice-bar">
 		<div>
 			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
-			<span>Game Yang Bisa Cuan: <b>Glory Verse (G V)</b> — Ajak Teman Anda &amp; Bermain Bersama.</span>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data stabil &amp; tidak berkedip.</span>
 		</div>
 		<div>
 			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
@@ -56,23 +96,12 @@
 
 			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
 				<!-- Server Clock Simulation -->
-						<span class="label label-light"><span class="icon-clock"></span><b id="server_time">05:24:44</b></span>
-<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-  <div style="height: 100%; width: 63.4%; border-radius: 1px; background: #f0ad4e;"></div>
-</div>
-<script>
-function updateLondonClock(){
-  var now = new Date();
-  // JAM LONDON BENERAN - AUTO GANTI BST/GMT MARET & OKTOBER
-  var londonTime = now.toLocaleTimeString('en-GB', {
-    timeZone: 'Europe/London',
-    hour12: false
-  });
-  document.getElementById("server_time").innerHTML = londonTime;
-}
-setInterval(updateLondonClock, 1000);
-updateLondonClock();
-</script>
+				<div style="text-align: right;">
+					<span class="label label-light"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b></span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
+					</div>
+				</div>
 
 				<!-- Quick Search -->
 				<div style="min-width: 220px;">
@@ -148,7 +177,7 @@ updateLondonClock();
 
 	<!-- MAIN CONTENT CONTAINER -->
 	<div class="container">
-		<div class="clearfix">
+		<div class="dashboard-wrapper">
 
 			<!-- LEFT SIDEBAR: Clean Dynamic Player Card (Empty slots ready for Firebase) -->
 			<div class="leftbar">
@@ -207,7 +236,7 @@ updateLondonClock();
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
-						<b><span id="stat-gold">0.00</span></b>
+						<b><span id="stat-gold">10.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
 						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Mata Uang:</span>
@@ -303,7 +332,7 @@ updateLondonClock();
 								<td colspan="5" class="text-center" style="padding: 26px 14px; color: #88898b;">
 									<i class="fa-solid fa-shield-halved" style="font-size: 24px; display: block; margin-bottom: 8px; opacity: 0.5; color: var(--accent);"></i>
 									Belum ada perang aktif di database.<br>
-									<small style="color: var(--accent);">Tempat kosong siap diisi data baru dari Firebase saat halaman di-refresh</small>
+									<small style="color: var(--accent);">Tempat kosong siap diisi data baru dari Firebase saat halaman di-refresh (F5)</small>
 								</td>
 							</tr>
 						</tbody>
@@ -428,21 +457,20 @@ updateLondonClock();
 				</div>
 			</div><!-- end .rightbar -->
 
-		</div><!-- end .clearfix -->
+		</div><!-- end .dashboard-wrapper -->
 	</div><!-- end .container -->
 
 </div><!-- end .contents -->
 
+					<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+	
 <!-- FOOTER (Matches index.html clean style) -->
 <div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
 				<div class="copyright">
-
-						<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-					
 					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi.<br>
 					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
 				</div>
