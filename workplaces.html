@@ -1,785 +1,1280 @@
 
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Tempat Kerja (Workplaces)</title>
+	<meta name="description" content="Glory Verse - Online Strategy Browser Game Workplaces & Jobs">
+	<meta name="copyright" content="Glory Verse">
 
-<title>Glory Verse - Online Strategy Browser Game - Workplaces</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="Glory Verse" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="Glory Verse - Online Strategy Browser Game - Workplaces" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches index.html & dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css?1">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/js/base.js"></script>
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+	<style>
+		/* ============================================================
+		   WORKPLACES 2-COLUMN GRID (MATCHES DASHBOARD THEME)
+		   ============================================================ */
+		.workplaces-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
 
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+		.leftbar,
+		.main {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
 
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
-
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
+		@media (max-width: 900px) {
+			.workplaces-wrapper {
+				grid-template-columns: 1fr;
 			}
-		});
-	};
+		}
 
-</script>
+		/* Skills Overview Box */
+		.skills-card {
+			background: #fafbfc;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 14px 16px;
+			margin-bottom: 16px;
+		}
+		.skill-row {
+			margin-bottom: 10px;
+		}
+		.skill-header {
+			display: flex;
+			justify-content: space-between;
+			font-size: 12px;
+			font-weight: 600;
+			margin-bottom: 3px;
+		}
 
+		/* Work Tabs */
+		.nav-tabs-custom {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+			border-bottom: 2px solid var(--border);
+			margin: 16px 0 14px;
+			padding: 0;
+			list-style: none;
+		}
+		.nav-tabs-custom li {
+			margin-bottom: -2px;
+		}
+		.nav-tabs-custom li a {
+			display: block;
+			padding: 8px 14px;
+			background: #f1f3f6;
+			border: 1px solid var(--border);
+			border-bottom: 2px solid transparent;
+			border-radius: 6px 6px 0 0;
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 600;
+			text-decoration: none;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.nav-tabs-custom li a:hover {
+			background: #e8ecf1;
+			color: var(--accent);
+		}
+		.nav-tabs-custom li.active a {
+			background: #ffffff;
+			color: var(--accent);
+			border-color: var(--border);
+			border-bottom-color: #ffffff;
+			box-shadow: 0 -2px 0 var(--accent);
+		}
 
+		.tab-pane-content {
+			display: none;
+		}
+		.tab-pane-content.active {
+			display: block;
+		}
 
+		/* Productivity Banner */
+		.prod-banner {
+			background: #f5fbf7;
+			border: 1px solid #c3e6cb;
+			border-radius: 6px;
+			padding: 12px 16px;
+			margin-bottom: 14px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+		.prod-score {
+			font-size: 15px;
+			font-weight: 700;
+			color: var(--green);
+		}
 
-
-
-
-
+		/* Job Table Customizations */
+		.job-employer-cell {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+		.job-employer-avatar {
+			width: 44px;
+			height: 44px;
+			border-radius: 50%;
+			border: 1px solid var(--border);
+			object-fit: cover;
+		}
+	</style>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (MATCHES DASHBOARD.HTML) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data stabil &amp; tidak berkedip.</span>
+		</div>
+		<div>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
+				<i class="fa-solid fa-arrows-rotate"></i> Refresh Halaman (F5)
+			</button>
+			<span id="firebase-connection-status" class="label label-light" style="margin-left: 6px; background: #e2e8f0; color: #475569;">
+				Menghubungkan ke Firebase...
+			</span>
+		</div>
+	</div>
 
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
-
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (game-head with Gloryverse branding) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-					
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 08, 2026 01:05:44' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 98.9% (1979 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">01:05:44</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 98.9%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (21337)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9758)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a>  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- Server Clock: London Time (Europe/London) -->
+				<div style="text-align: right;">
+					<span class="label label-light" title="Waktu Resmi Server (London / GMT)"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b></span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 200px;">
+					<form method="get" action="/leaderboard.html" onsubmit="event.preventDefault(); window.location.href='/leaderboard.html';">
+						<input type="text" class="form-control" placeholder="Cari Lowongan / Pemain..." style="width: 200px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<span class="label label-success" id="player-income-badge">Income (0)</span>
+					<span class="label label-warning" id="player-alerts-badge">Alerts (0)</span>
+					<span class="label label-light" id="player-messages-badge">Messages (0)</span>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Clean light bar with uppercase Roboto Slab font matching dashboard.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li> <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li class="active" > <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_create.html", "#modal_ajax")'><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Create a new Organization</a></li>
-															</ul>
-						</li>
+					<li class="active"><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/marketplace.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/dashboard.html"><i class="fa-solid fa-gauge-high" style="margin-right: 4px;"></i> Dashboard</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="workplaces-wrapper">
 
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://gloryverse.id/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/ph.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=425">Hail</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 63.94% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a> 		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="63.94" aria-valuemin="0" aria-valuemax="100" style="width: 63.94%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 95.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="95.0" aria-valuemin="0" aria-valuemax="100" style="width: 95.0%;">
-			</div>
-		</div>
+			<!-- LEFT SIDEBAR: Dynamic Player Card (Connected to Firebase, mirrors dashboard.html) -->
+			<div class="leftbar">
+				<!-- Player Avatar & Name -->
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
+					</div>
+				</div>
 
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
 
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
 
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
 
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 789/17867&nbsp;&nbsp;&nbsp;4%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100" style="width: 4%;"></div>
-        </div>
+				<!-- Work Shift Status -->
+				<div class="text-center" style="margin: 10px 0;">
+					<span class="label label-info" id="work-shift-status">Siap Bekerja (Tersedia 2 Shift)</span>
+				</div>
 
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.html">Working (3 hours)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.html", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
+				<!-- Currency Balances (Mirrors dashboard.html) -->
+				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">10.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
 
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="383.33">383.330</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 1.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 110.21 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"> html: 450.14</p>
-		
+				<!-- Sidebar Quick Navigation (Connected to dashboard.html) -->
+				<ul class="list-group" style="margin-bottom: 14px;">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Kembali ke Dashboard</a></li>
+					<li class="list-group-item active"><a href="/workplaces.html" style="color:#fff;"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Lowongan Tempat Kerja</a></li>
+					<li class="list-group-item"><a href="/my_companies.html"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> Perusahaan Saya</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Inventaris Barang</a></li>
+					<li class="list-group-item"><a href="/financial.html"><i class="fa-solid fa-chart-line" style="margin-right: 6px;"></i> Pasar Finansial</a></li>
+				</ul>
 
+				<!-- Action Buttons -->
+				<div style="display: flex; gap: 6px; margin-bottom: 12px;">
+					<a class="btn btn-success btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-download"></i> Invest</a>
+					<a class="btn btn-danger btn-sm btn-block" href="/withdraw.html"><i class="fa-solid fa-upload"></i> Withdraw</a>
+				</div>
 
+				<!-- Prompt login if guest -->
+				<div id="auth-prompt-sidebar" style="margin-top: 10px;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: Workplace & Jobs -->
+			<div class="main">
 				
+				<!-- Page Title & Region Header -->
+				<div class="row">
+					<div class="col-sm-8">
+						<h4 style="margin-bottom: 6px;">
+							<i class="fa-solid fa-briefcase" style="color: var(--accent); margin-right: 8px;"></i>
+							Lowongan Kerja di <span id="work-region-name">Jakarta</span> (<span id="work-country-name">Indonesia</span>)
+						</h4>
+						<p class="small" style="color: #64748b; line-height: 1.6; margin-bottom: 10px;">
+							Di bawah ini tercantum lowongan kerja yang tersedia di wilayah ini berdasarkan upah tertinggi.
+							Satu giliran kerja (shift) berlangsung selama <b>4 jam</b>. Anda dapat bekerja maksimal <b>2 kali sehari</b>. 
+							Upah dibayarkan sesuai tingkat produktivitas Anda.
+						</p>
+					</div>
 
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->
-						<div class="main main-lg">
-
-
-							
-							<div class="row">
-								<div class="col-sm-9">
-									<h4>Work in Hail (Philippines)</h4>
-
-									<p>Below you can see the available jobs in this region, ordered by the offered wage. You can only work at the company that offers the highest wage. A work shift lasts for 4 hours. You can only work twice a day, you have worked <b>1</b> times today, not counting overtime. For as long as you work, you cant fight or travel. You can work only in the country where you have citizenship.</p>
-									<p>The offered wage refers to a player with 100% productivity. You will only be paid the percentage written in green.</p>
-									<p>On the right you can see your work skills, they will influence your productivity, along with your energy and economic score.</p>
-
-																	</div>
-
-
-								<div class="col-sm-3">
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=1", "#modal_ajax")'>Gathering <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												100/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-												</div>
-											</div>
-										</div>
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=2", "#modal_ajax")'>Hand Working <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												0/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-												</div>
-											</div>
-										</div>
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=3", "#modal_ajax")'>Guest Servicing <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												100/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-												</div>
-											</div>
-										</div>
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=4", "#modal_ajax")'>Engineering <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												0/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-												</div>
-											</div>
-										</div>
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=5", "#modal_ajax")'>Writing and Aesthetics <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												0/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-												</div>
-											</div>
-										</div>
-																			<div class="row">
-											<div class="pull-left small">
-												<b><a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_skills.html&id=6", "#modal_ajax")'>Extraction <i class="icon icon-circle-info"></i> </a></b>
-											</div>
-
-											<div class="pull-right small">
-												100/100
-											</div>
-										</div>
-
-										<div class="row">
-											<div class="progress progress-xs mb-sm-10">
-												<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
-												</div>
-											</div>
-										</div>
-									
-									<div class="row">
-										<div class="pull-left">
-											Total Skill Points
-										</div>
-
-										<div class="pull-right">
-											300/300
-										</div>
-									</div>
-
-								</div>
-
+					<!-- Skills Overview Panel -->
+					<div class="col-sm-4">
+						<div class="skills-card">
+							<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; border-bottom: 1px solid var(--border-light); padding-bottom: 4px;">
+								<b style="font-size: 12.5px; color: var(--text-dark);"><i class="fa-solid fa-dumbbell" style="margin-right: 5px; color: var(--accent);"></i> Keahlian Kerja (Skills)</b>
+								<a href="#modal_productivity" data-toggle="modal" class="small" style="color: var(--accent);" title="Rumus Produktivitas"><i class="fa-solid fa-circle-question"></i></a>
 							</div>
 
-
-							<br>
-
-							<div role="tabpanel">
-
-								<!-- Nav tabs -->
-
-								<ul class="nav nav-tabs small" role="tablist">
-																			<li class="active" ><a href="#gathering" aria-controls="gathering" role="tab" data-toggle="tab">Gathering (0)</a></li>
-																			<li ><a href="#hand_working" aria-controls="hand_working" role="tab" data-toggle="tab">Hand Working (0)</a></li>
-																			<li ><a href="#guest_servicing" aria-controls="guest_servicing" role="tab" data-toggle="tab">Guest Servicing (0)</a></li>
-																			<li ><a href="#engineering" aria-controls="engineering" role="tab" data-toggle="tab">Engineering (0)</a></li>
-																			<li ><a href="#writing_aesthetics" aria-controls="writing_aesthetics" role="tab" data-toggle="tab">Writing and Aesthetics (0)</a></li>
-																			<li ><a href="#extraction" aria-controls="extraction" role="tab" data-toggle="tab">Extraction (0)</a></li>
-																	</ul>
-
-								<!-- Tab panes -->
-
-								<div class="tab-content">
-
-																			<div role="tabpanel" class="tab-pane active" id="gathering">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (100*0.25) + 0 + 0 = <span class="label label-success">~83.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 41% energy to work in Gathering jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Gathering</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-																			<div role="tabpanel" class="tab-pane " id="hand_working">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (0*0.25) + 0 + 0 = <span class="label label-success">~58.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 29% energy to work in Hand Working jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Hand Working</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-																			<div role="tabpanel" class="tab-pane " id="guest_servicing">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (100*0.25) + 0 + 0 = <span class="label label-success">~83.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 41% energy to work in Guest Servicing jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Guest Servicing</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-																			<div role="tabpanel" class="tab-pane " id="engineering">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (0*0.25) + 0 + 0 = <span class="label label-success">~58.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 29% energy to work in Engineering jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Engineering</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-																			<div role="tabpanel" class="tab-pane " id="writing_aesthetics">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (0*0.25) + 0 + 0 = <span class="label label-success">~58.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 29% energy to work in Writing and Aesthetics jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Writing and Aesthetics</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-																			<div role="tabpanel" class="tab-pane " id="extraction">
-
-											<br>
-
-											<div class="big text-center">
-												Your Productivity: (63.94*0.45) + (100*0.30) + (100*0.25) + 0 + 0 = <span class="label label-success">~83.77%</span> <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about Productivity" href="#modal_productivity"></a>
-											</div>
-
-											<div class="sm text-center">
-												You need at least 41% energy to work in Extraction jobs.
-											</div>
-
-											<br>
-												<div class="alert alert-warning">There are no <b>Extraction</b> jobs available right now. Look in a different skill or region.</div>
-										</div>
-									
+							<!-- Gathering -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Gathering (Pengumpulan)</span>
+									<span id="skill-val-gathering">100 / 100</span>
 								</div>
-
+								<div class="progress progress-xs">
+									<div id="skill-bar-gathering" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+								</div>
 							</div>
 
+							<!-- Hand Working -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Hand Working (Kerajinan Tangan)</span>
+									<span id="skill-val-hand_working">0 / 100</span>
+								</div>
+								<div class="progress progress-xs">
+									<div id="skill-bar-hand_working" class="progress-bar progress-bar-success" style="width: 0%;"></div>
+								</div>
+							</div>
 
+							<!-- Guest Servicing -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Guest Servicing (Pelayanan)</span>
+									<span id="skill-val-guest_servicing">100 / 100</span>
+								</div>
+								<div class="progress progress-xs">
+									<div id="skill-bar-guest_servicing" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+								</div>
+							</div>
 
+							<!-- Engineering -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Engineering (Teknik Mesin)</span>
+									<span id="skill-val-engineering">0 / 100</span>
+								</div>
+								<div class="progress progress-xs">
+									<div id="skill-bar-engineering" class="progress-bar progress-bar-success" style="width: 0%;"></div>
+								</div>
+							</div>
 
+							<!-- Writing and Aesthetics -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Writing &amp; Aesthetics (Penulisan)</span>
+									<span id="skill-val-writing">0 / 100</span>
+								</div>
+								<div class="progress progress-xs">
+									<div id="skill-bar-writing" class="progress-bar progress-bar-success" style="width: 0%;"></div>
+								</div>
+							</div>
 
+							<!-- Extraction -->
+							<div class="skill-row">
+								<div class="skill-header">
+									<span>Extraction (Pertambangan)</span>
+									<span id="skill-val-extraction">100 / 100</span>
+								</div>
+								<div class="progress progress-xs">
+									<div id="skill-bar-extraction" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+								</div>
+							</div>
 
+							<div style="display:flex; justify-content:space-between; font-size: 11.5px; font-weight: 700; color: var(--text-dark); margin-top: 6px;">
+								<span>Total Poin Keahlian:</span>
+								<span id="total-skill-points">300 / 600</span>
+							</div>
+						</div>
+					</div>
+				</div>
 
+				<!-- Tabs for Work Categories -->
+				<ul class="nav-tabs-custom" id="workSkillTabs" role="tablist">
+					<li class="active"><a data-tab="gathering"><i class="fa-solid fa-wheat-awn"></i> Gathering (<span id="count-gathering">0</span>)</a></li>
+					<li><a data-tab="hand_working"><i class="fa-solid fa-hands"></i> Hand Working (<span id="count-hand_working">0</span>)</a></li>
+					<li><a data-tab="guest_servicing"><i class="fa-solid fa-bell-concierge"></i> Guest Servicing (<span id="count-guest_servicing">0</span>)</a></li>
+					<li><a data-tab="engineering"><i class="fa-solid fa-gears"></i> Engineering (<span id="count-engineering">0</span>)</a></li>
+					<li><a data-tab="writing_aesthetics"><i class="fa-solid fa-feather-pointed"></i> Writing &amp; Aesthetics (<span id="count-writing">0</span>)</a></li>
+					<li><a data-tab="extraction"><i class="fa-solid fa-gem"></i> Extraction (<span id="count-extraction">0</span>)</a></li>
+				</ul>
 
-							<a class="small" href="https://gloryverse.id/my_work_history.html">Work History</a>
+				<!-- Productivity Banner (Calculated Dynamically) -->
+				<div class="prod-banner">
+					<div>
+						<span style="font-weight: 600; color: var(--text-dark);">Perkiraan Produktivitas Kerja Anda:</span>
+						<span class="prod-score" id="user-calculated-prod">~82.8%</span>
+						<a href="#modal_productivity" data-toggle="modal" class="small" style="color: var(--accent); margin-left: 6px;"><i class="fa-solid fa-circle-info"></i> Rincian Rumus</a>
+					</div>
+					<div class="small" style="color: #64748b;">
+						<i class="fa-solid fa-battery-three-quarters" style="color: var(--green); margin-right: 4px;"></i>
+						Minimal energi yang dibutuhkan: <b>28% - 41%</b>
+					</div>
+				</div>
 
-						</div><!-- end .main -->
+				<!-- Panes for each Tab -->
+				<div class="tab-content" id="tabContentContainer">
 
-						
+					<!-- 1. Gathering Pane -->
+					<div class="tab-pane-content active" id="pane-gathering">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-gathering">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-wheat-awn" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Gathering</b> aktif di wilayah ini.<br>
+											<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5). Buka lowongan atau coba keahlian lain.</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
+					<!-- 2. Hand Working Pane -->
+					<div class="tab-pane-content" id="pane-hand_working">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-hand_working">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-hands" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Hand Working</b> aktif di wilayah ini.<br>
+											<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
+					<!-- 3. Guest Servicing Pane -->
+					<div class="tab-pane-content" id="pane-guest_servicing">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-guest_servicing">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-bell-concierge" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Guest Servicing</b> aktif di wilayah ini.<br>
+											<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
+					<!-- 4. Engineering Pane -->
+					<div class="tab-pane-content" id="pane-engineering">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-engineering">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-gears" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Engineering</b> aktif di wilayah ini.<br>
+											<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
-						<div id="modal_productivity" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
+					<!-- 5. Writing and Aesthetics Pane -->
+					<div class="tab-pane-content" id="pane-writing_aesthetics">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-writing_aesthetics">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-feather-pointed" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Writing and Aesthetics</b> aktif di wilayah ini.<br>
+											<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
-									<div class="modal-header">
-										<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-										<div class="h3 modal-title">About Productivity</div>
-									</div><!-- end .modal-header -->
+					<!-- 6. Extraction Pane -->
+					<div class="tab-pane-content" id="pane-extraction">
+						<div class="table-responsive">
+							<table class="table table-hover" style="background: #ffffff; border: 1px solid var(--border); border-radius: 6px;">
+								<thead>
+									<tr style="background: #fafbfc;">
+										<th>Perusahaan / Pemilik</th>
+										<th width="160">Jenis Usaha</th>
+										<th class="text-center" width="140">Upah Ditawarkan</th>
+										<th class="text-center" width="130">Aksi Kerja</th>
+									</tr>
+								</thead>
+								<tbody id="jobs-body-extraction">
+									<tr>
+										<td colspan="4" class="text-center" style="padding: 32px 14px; color: #88898b;">
+											<i class="fa-solid fa-gem" style="font-size: 26px; display: block; margin-bottom: 8px; opacity: 0.4; color: var(--accent);"></i>
+											Belum ada lowongan pekerjaan <b>Extraction</b> aktif di database.<br>
+											<small style="color: var(--accent);">Tempat kosong siap diisi data lowongan baru dari Firebase saat halaman di-refresh (F5).</small>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
 
-									<div class="modal-body">
+				</div><!-- end #tabContentContainer -->
 
+				<!-- Post a Job / Quick Action Bar -->
+				<div class="well well-sm" style="background: #ffffff; border: 1px solid var(--border); margin-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+					<div>
+						<b style="color: var(--text-dark);"><i class="fa-solid fa-briefcase yellow" style="margin-right: 6px;"></i> Punya Perusahaan?</b>
+						<span class="small" style="color: var(--muted); margin-left: 4px;">Buka lowongan kerja untuk mempercepat produksi perusahaan Anda.</span>
+					</div>
+					<div>
+						<button id="btn-open-create-job" class="btn btn-warning-bvl btn-sm">
+							<i class="fa-solid fa-plus"></i> Pasang Lowongan Kerja
+						</button>
+						<a href="/dashboard.html" class="btn btn-default btn-sm" style="margin-left: 6px;">
+							<i class="fa-solid fa-arrow-left"></i> Dashboard
+						</a>
+					</div>
+				</div>
 
-										<p>
-											The offered wage refers to a player with 100% productivity, same happens with the work bonus paid by your country. If for example you only have 50% final productivity then you will only get paid half of what you could.
-										</p>
+				<!-- Form Pasang Lowongan Baru (Toggles) -->
+				<div id="create-job-box" class="well well-sm hide" style="background: #fafbfc; border-color: #cbd5e1; margin-top: 10px;">
+					<form id="form-create-job">
+						<div class="row">
+							<div class="col-sm-4">
+								<label style="font-size: 11.5px; font-weight: 700; color: var(--text-dark);">Nama Perusahaan</label>
+								<input type="text" id="job_company_name" class="form-control input-sm" placeholder="Contoh: Tambang Emas Nusantara" required>
+							</div>
+							<div class="col-sm-3">
+								<label style="font-size: 11.5px; font-weight: 700; color: var(--text-dark);">Kategori Keahlian</label>
+								<select id="job_skill_category" class="form-control input-sm">
+									<option value="gathering">Gathering</option>
+									<option value="hand_working">Hand Working</option>
+									<option value="guest_servicing">Guest Servicing</option>
+									<option value="engineering">Engineering</option>
+									<option value="writing_aesthetics">Writing & Aesthetics</option>
+									<option value="extraction" selected>Extraction</option>
+								</select>
+							</div>
+							<div class="col-sm-3">
+								<label style="font-size: 11.5px; font-weight: 700; color: var(--text-dark);">Upah per Jam (Gold/Uang)</label>
+								<input type="number" id="job_wage" step="0.1" min="1" class="form-control input-sm" value="10.0" required>
+							</div>
+							<div class="col-sm-2">
+								<label style="visibility: hidden; font-size: 11.5px;">Aksi</label>
+								<button type="submit" class="btn btn-warning-bvl btn-sm btn-block">
+									<i class="fa-solid fa-check"></i> Simpan
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
 
-										<p>
-											You can increase productivity in many ways, every time you work you earn economic score, you also learn a skill when you work, these will influence your productivity, the more you work the better you will be overtime. When you consume products that increase your energy, you are also increasing your productivity.
-										</p>
+			</div><!-- end .main -->
 
-										<p>
-											Productivity is based on the formula <u>PROD=(E*0.45)+(ES*0.30)+(SKILL*0.25)+CountryProdBonus+OrganizationProdBonus</u>, where E=Energy, ES=economic score and SKILL=your relevant skill level. Your country productivity bonus is <b>+0%</b>. Your organization productivity bonus is <b>+0%</b>. Economic score drops daily by <b>1 point</b> and increases after every worked shift by <b>1 point</b>.
-										</p>
+		</div><!-- end .workplaces-wrapper -->
+	</div><!-- end .container -->
 
+</div><!-- end .contents -->
 
-									</div><!-- end .modal-body -->
+<!-- MODAL: About Productivity Formula -->
+<div id="modal_productivity" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style="border-radius: 8px;">
+			<div class="modal-header" style="background: #fafbfc; border-bottom: 1px solid #e2e8f0;">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<h4 class="modal-title" style="font-weight: 700; color: var(--text-dark);">
+					<i class="fa-solid fa-calculator" style="color: var(--accent); margin-right: 6px;"></i> Tentang Produktivitas Kerja
+				</h4>
+			</div>
+			<div class="modal-body" style="font-size: 13px; line-height: 1.6; color: var(--text);">
+				<p>
+					Upah yang ditawarkan perusahaan mengacu pada pemain dengan <b>100% produktivitas</b>. Begitu pula dengan bonus kerja yang diberikan oleh negara Anda. Jika produktivitas akhir Anda adalah 50%, maka Anda akan mendapatkan 50% dari upah penuh.
+				</p>
+				<div class="well well-sm" style="background: #f8fafc; border-color: #cbd5e1; font-family: monospace; font-size: 12px; color: #0f172a;">
+					PROD = (Energi * 0.45) + (Skor Ekonomi * 0.30) + (Level Keahlian * 0.25) + Bonus Negara + Bonus Organisasi
+				</div>
+				<p>
+					Setiap kali Anda bekerja, Anda memperoleh <b>1 Poin Skor Ekonomi</b> dan meningkatkan keahlian kerja yang bersangkutan. Poin ekonomi berkurang 1 per hari dan bertambah setiap kali selesai bekerja.
+				</p>
+			</div>
+			<div class="modal-footer" style="background: #fafbfc; border-top: 1px solid #e2e8f0;">
+				<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Tutup</button>
+			</div>
+		</div>
+	</div>
+</div>
 
-									<div class="modal-footer">
-										<div class="hidden-xs form-col-sm-4"></div>
-										<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Close</button>
-									</div><!-- end .modal-footer -->
-
-
-								</div><!-- end .modal-content -->
-							</div><!-- end .modal-dialog -->
-						</div><!-- end .modal -->
-
-
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-
-
-			</div><!-- end .contents -->
-			<div class="footer">
+<!-- FOOTER (Matches dashboard.html & index.html clean style) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			 
-								<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-			
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(10) 0.004s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi.<br>
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- CLIENT-SIDE SCRIPT: London Clock (Europe/London) & UI Interactivity -->
+<script>
+// Jam Server Resmi London (Europe/London: GMT/BST) tanpa mengubah tampilan
+function updateLondonClock() {
+	try {
+		var now = new Date();
+		var londonFormatter = new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		});
+		var clockEl = document.getElementById('server_time');
+		if (clockEl) {
+			clockEl.textContent = londonFormatter.format(now);
+		}
+	} catch (e) {
+		// Fallback ke UTC jika browser lama
+		var d = new Date();
+		var pad = function(n) { return n < 10 ? '0' + n : n; };
+		var clockEl = document.getElementById('server_time');
+		if (clockEl) {
+			clockEl.textContent = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
+		}
+	}
+}
+setInterval(updateLondonClock, 1000);
+updateLondonClock();
 
+// Manual Refresh F5 button
+document.getElementById('btn-manual-refresh').addEventListener('click', function() {
+	window.location.reload();
+});
 
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
+// Toggle Create Job Box
+var btnOpenJob = document.getElementById('btn-open-create-job');
+var createJobBox = document.getElementById('create-job-box');
+if (btnOpenJob && createJobBox) {
+	btnOpenJob.addEventListener('click', function() {
+		createJobBox.classList.toggle('hide');
+	});
+}
 
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+// Client-side Tab Switcher
+var tabLinks = document.querySelectorAll('#workSkillTabs a');
+tabLinks.forEach(function(link) {
+	link.addEventListener('click', function(e) {
+		e.preventDefault();
+		tabLinks.forEach(function(l) { l.parentElement.classList.remove('active'); });
+		link.parentElement.classList.add('active');
+
+		var targetTab = link.getAttribute('data-tab');
+		document.querySelectorAll('.tab-pane-content').forEach(function(p) {
+			p.classList.remove('active');
+		});
+		var targetPane = document.getElementById('pane-' + targetTab);
+		if (targetPane) targetPane.classList.add('active');
+	});
+});
+</script>
+
+<!-- FIREBASE REFRESH-BASED WORKPLACES INTEGRATION MODULE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  addDoc
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+
+let app = null;
+let db = null;
+let auth = null;
+let currentUser = null;
+let currentUserProfile = null;
+
+async function initWorkplacesFirebase() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		const res = await fetch('/firebase-applet-config.json');
+		if (!res.ok) {
+			console.warn('Could not load firebase-applet-config.json');
+			if (statusEl) {
+				statusEl.className = 'label label-danger';
+				statusEl.textContent = 'Config Error';
+			}
+			return;
+		}
+
+		const firebaseConfig = await res.json();
+		app = initializeApp(firebaseConfig);
+		db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = getAuth(app);
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.textContent = 'Firebase Terhubung';
+		}
+
+		// Auth observer (One-time getDoc on user auth resolution)
+		setupAuth();
+
+		// One-time data fetch for jobs across skills (One-time fetch on page load)
+		await loadWorkplaceJobs();
+
+		// Setup job creation form
+		setupJobForm();
+
+	} catch (err) {
+		console.error('Firebase init error:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+	}
+}
+
+function setupAuth() {
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					currentUserProfile = {
+						id: user.uid,
+						username: user.displayName || user.email.split('@')[0],
+						email: user.email,
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 0,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						shifts_worked_today: 0,
+						gathering_skill: 100,
+						hand_working_skill: 0,
+						guest_servicing_skill: 100,
+						engineering_skill: 0,
+						writing_skill: 0,
+						extraction_skill: 100,
+						created_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				renderPlayerProfile(currentUserProfile, user);
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+			} catch (err) {
+				console.warn('Error fetching user profile in workplaces:', err);
+			}
+		} else {
+			currentUserProfile = null;
+			renderGuestState();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk mulai bekerja &amp; mendapatkan gaji:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
+	});
+}
+
+function renderPlayerProfile(p, user) {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
+
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	const workCountryEl = document.getElementById('work-country-name');
+	const workRegionEl = document.getElementById('work-region-name');
+
+	if (countryEl) countryEl.textContent = p.country_name || 'Indonesia';
+	if (regionEl) regionEl.textContent = p.region_name || 'Jakarta';
+	if (workCountryEl) workCountryEl.textContent = p.country_name || 'Indonesia';
+	if (workRegionEl) workRegionEl.textContent = p.region_name || 'Jakarta';
+
+	const energy = Number(p.energy !== undefined ? p.energy : 100);
+	const health = Number(p.health !== undefined ? p.health : 100);
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	const energyVal = document.getElementById('stat-energy-val');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyVal) energyVal.textContent = energy + '%';
+	if (energyBar) energyBar.style.width = Math.min(100, Math.max(0, energy)) + '%';
+
+	const healthVal = document.getElementById('stat-health-val');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthVal) healthVal.textContent = health + '%';
+	if (healthBar) healthBar.style.width = Math.min(100, Math.max(0, health)) + '%';
+
+	const levelVal = document.getElementById('stat-level-val');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (levelVal) levelVal.textContent = `Level ${level} (${xp} XP)`;
+	if (xpBar) xpBar.style.width = Math.min(100, (xp % 100)) + '%';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = Number(p.svct || 0).toFixed(3);
+	if (euroEl) euroEl.textContent = Number(p.euro || 0).toFixed(2);
+	if (goldEl) goldEl.textContent = Number(p.gold !== undefined ? p.gold : 10).toFixed(2);
+	if (currEl) currEl.textContent = Number(p.currency || 0).toFixed(2);
+
+	const incomeBadge = document.getElementById('player-income-badge');
+	const alertsBadge = document.getElementById('player-alerts-badge');
+	const msgBadge = document.getElementById('player-messages-badge');
+	if (incomeBadge) incomeBadge.textContent = `Income (${p.income || 0})`;
+	if (alertsBadge) alertsBadge.textContent = `Alerts (${p.alerts || 0})`;
+	if (msgBadge) msgBadge.textContent = `Messages (${p.messages || 0})`;
+
+	// Work shift status
+	const shiftWorked = Number(p.shifts_worked_today || 0);
+	const shiftStatus = document.getElementById('work-shift-status');
+	if (shiftStatus) {
+		if (shiftWorked >= 2) {
+			shiftStatus.className = 'label label-danger';
+			shiftStatus.textContent = 'Shift Hari Ini Selesai (2/2)';
+		} else {
+			shiftStatus.className = 'label label-info';
+			shiftStatus.textContent = `Shift Sisa: ${2 - shiftWorked} Kali`;
+		}
+	}
+
+	// Calculate productivity: (Energy * 0.45) + (XP * 0.30) + (Skill * 0.25)
+	const extractionSkill = Number(p.extraction_skill !== undefined ? p.extraction_skill : 100);
+	const prod = ((energy * 0.45) + (Math.min(100, xp) * 0.30) + (extractionSkill * 0.25)).toFixed(1);
+	const prodEl = document.getElementById('user-calculated-prod');
+	if (prodEl) prodEl.textContent = `~${prod}%`;
+}
+
+function renderGuestState() {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = 'Tamu (Belum Login)';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	if (countryEl) countryEl.textContent = 'Indonesia';
+	if (regionEl) regionEl.textContent = 'Jakarta';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = '0.00';
+	if (euroEl) euroEl.textContent = '0.00';
+	if (goldEl) goldEl.textContent = '0.00';
+	if (currEl) currEl.textContent = '0.00';
+
+	const shiftStatus = document.getElementById('work-shift-status');
+	if (shiftStatus) {
+		shiftStatus.className = 'label label-light';
+		shiftStatus.textContent = 'Silakan Login untuk Bekerja';
+	}
+}
+
+// One-time Fetch: Load Jobs from Firestore 'workplaces' or 'jobs' collection
+async function loadWorkplaceJobs() {
+	const categories = ['gathering', 'hand_working', 'guest_servicing', 'engineering', 'writing_aesthetics', 'extraction'];
+	const counts = {
+		gathering: 0,
+		hand_working: 0,
+		guest_servicing: 0,
+		engineering: 0,
+		writing_aesthetics: 0,
+		extraction: 0
+	};
+
+	try {
+		const q = query(collection(db, 'jobs'), limit(30));
+		const snap = await getDocs(q);
+
+		const jobsByCategory = {
+			gathering: [],
+			hand_working: [],
+			guest_servicing: [],
+			engineering: [],
+			writing_aesthetics: [],
+			extraction: []
+		};
+
+		if (!snap.empty) {
+			snap.forEach((d) => {
+				const job = { id: d.id, ...d.data() };
+				const cat = (job.category || 'extraction').toLowerCase();
+				if (jobsByCategory[cat]) {
+					jobsByCategory[cat].push(job);
+					counts[cat]++;
+				}
+			});
+
+			// Render rows for each category that has data
+			categories.forEach((cat) => {
+				const tbody = document.getElementById(`jobs-body-${cat}`);
+				const countBadge = document.getElementById(`count-${cat === 'writing_aesthetics' ? 'writing' : cat}`);
+				if (countBadge) countBadge.textContent = counts[cat];
+
+				if (tbody && jobsByCategory[cat].length > 0) {
+					let html = '';
+					jobsByCategory[cat].forEach((j) => {
+						html += `
+							<tr>
+								<td>
+									<div class="job-employer-cell">
+										<img src="${j.employer_avatar || '/img/logo-site.png'}" class="job-employer-avatar" onerror="this.src='/img/logo-site.png'">
+										<div>
+											<b><a href="#">${escapeHtml(j.company_name || 'Perusahaan')}</a></b><br>
+											<span class="small" style="color: var(--muted);">
+												Pemilik: <a href="#">${escapeHtml(j.employer_name || 'Manajer')}</a>
+												<span class="label label-light" style="padding: 1px 5px; font-size: 10px; margin-left: 4px;">${escapeHtml(j.country_code || 'ID')}</span>
+											</span>
+										</div>
+									</div>
+								</td>
+								<td style="vertical-align: middle;">
+									<span class="label label-info" style="font-size: 11px;">${escapeHtml(j.type || 'Pabrik')}</span>
+								</td>
+								<td class="text-center" style="vertical-align: middle;">
+									<b style="font-size: 14px; color: var(--gold-dark);">${Number(j.wage || 10).toFixed(1)}</b><br>
+									<span class="small" style="color: var(--muted);">Gold / Shift</span>
+								</td>
+								<td class="text-center" style="vertical-align: middle;">
+									<button class="btn btn-warning-bvl btn-sm btn-work-now" data-job-id="${j.id}" data-wage="${j.wage || 10}">
+										<i class="fa-solid fa-hammer"></i> Bekerja
+									</button>
+								</td>
+							</tr>
+						`;
+					});
+					tbody.innerHTML = html;
+				}
+			});
+
+			// Attach click events to "Bekerja" buttons
+			document.querySelectorAll('.btn-work-now').forEach((btn) => {
+				btn.addEventListener('click', handleWorkAction);
+			});
+		} else {
+			// All collections empty - empty states remain clean
+			categories.forEach((cat) => {
+				const countBadge = document.getElementById(`count-${cat === 'writing_aesthetics' ? 'writing' : cat}`);
+				if (countBadge) countBadge.textContent = 0;
+			});
+		}
+	} catch (err) {
+		console.warn('Error fetching jobs:', err);
+	}
+}
+
+// Work Action: User works a shift, earns gold/xp, uses energy
+async function handleWorkAction(e) {
+	const btn = e.currentTarget;
+	const wage = Number(btn.getAttribute('data-wage') || 10);
+
+	if (!currentUser) {
+		alert('Silakan login terlebih dahulu untuk mulai bekerja!');
+		window.location.href = '/authys.html';
+		return;
+	}
+
+	const currentEnergy = Number(currentUserProfile?.energy !== undefined ? currentUserProfile.energy : 100);
+	if (currentEnergy < 20) {
+		alert('Energi Anda tidak mencukupi untuk bekerja (minimal 20%). Silakan konsumsi makanan atau tunggu pemulihan energi.');
+		return;
+	}
+
+	const shiftsWorked = Number(currentUserProfile?.shifts_worked_today || 0);
+	if (shiftsWorked >= 2) {
+		alert('Anda sudah bekerja 2 kali hari ini. Tunggu hingga reset hari berikutnya untuk mengambil shift baru.');
+		return;
+	}
+
+	btn.disabled = true;
+	btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Bekerja...';
+
+	try {
+		const newEnergy = Math.max(0, currentEnergy - 20);
+		const newGold = Number(currentUserProfile?.gold || 10) + wage;
+		const newXp = Number(currentUserProfile?.xp || 0) + 15;
+		const newShifts = shiftsWorked + 1;
+
+		const userRef = doc(db, 'users', currentUser.uid);
+		await updateDoc(userRef, {
+			energy: newEnergy,
+			gold: newGold,
+			xp: newXp,
+			shifts_worked_today: newShifts,
+			updated_at: new Date().toISOString()
+		});
+
+		// Catat riwayat kerja
+		await addDoc(collection(db, 'work_history'), {
+			uid: currentUser.uid,
+			username: currentUserProfile?.username || 'Pemain',
+			wage_earned: wage,
+			timestamp: new Date().toISOString()
+		});
+
+		currentUserProfile.energy = newEnergy;
+		currentUserProfile.gold = newGold;
+		currentUserProfile.xp = newXp;
+		currentUserProfile.shifts_worked_today = newShifts;
+		renderPlayerProfile(currentUserProfile, currentUser);
+
+		alert(`Selamat! Anda telah menyelesaikan 1 shift kerja.\nUpah diterima: +${wage.toFixed(2)} Gold\nXP diperoleh: +15 XP\nEnergi berkurang: -20%`);
+	} catch (err) {
+		console.error('Work action error:', err);
+		alert('Gagal memproses giliran kerja: ' + err.message);
+	} finally {
+		btn.disabled = false;
+		btn.innerHTML = '<i class="fa-solid fa-hammer"></i> Bekerja';
+	}
+}
+
+// Setup Create Job Form Handler
+function setupJobForm() {
+	const form = document.getElementById('form-create-job');
+	if (!form) return;
+
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!currentUser) {
+			alert('Silakan login terlebih dahulu untuk memasang lowongan kerja.');
+			window.location.href = '/authys.html';
+			return;
+		}
+
+		const compName = document.getElementById('job_company_name').value.trim();
+		const category = document.getElementById('job_skill_category').value;
+		const wage = parseFloat(document.getElementById('job_wage').value) || 10;
+
+		if (!compName) return;
+
+		try {
+			await addDoc(collection(db, 'jobs'), {
+				company_name: compName,
+				employer_name: currentUserProfile?.username || currentUser.displayName || 'Pemain',
+				employer_uid: currentUser.uid,
+				category: category,
+				type: 'Perusahaan Lokal',
+				wage: wage,
+				country_code: currentUserProfile?.country_code || 'ID',
+				created_at: new Date().toISOString()
+			});
+
+			alert('Lowongan pekerjaan baru berhasil disimpan di database Firebase!');
+			document.getElementById('create-job-box').classList.add('hide');
+			form.reset();
+			// Muat ulang daftar satu kali
+			await loadWorkplaceJobs();
+		} catch (err) {
+			console.error('Create job error:', err);
+			alert('Gagal membuat lowongan kerja: ' + err.message);
+		}
+	});
+}
+
+function escapeHtml(str) {
+	if (!str) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;');
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initWorkplacesFirebase);
+} else {
+	initWorkplacesFirebase();
+}
+</script>
+
 </body>
-
 </html>
