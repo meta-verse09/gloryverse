@@ -227,12 +227,16 @@
 				<!-- Currency Balances (Ready for Firebase) -->
 				<div class="well well-sm" style="margin: 14px 0; background: #fafbfc; border-color: #e2e5e9;">
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
 						<b><span id="stat-euro">0.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
-						<b><span id="stat-gold">0.00</span></b>
+						<b><span id="stat-gold">10.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
 						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Mata Uang:</span>
@@ -458,9 +462,6 @@
 
 </div><!-- end .contents -->
 
-					<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-	
 <!-- FOOTER (Matches index.html clean style) -->
 <div class="footer">
 	<div class="container">
@@ -478,14 +479,26 @@
 </div><!-- end .page -->
 </div><!-- end .viewport -->
 
-<!-- CLIENT-SIDE SCRIPT: Clock & UI Toggles -->
+<!-- CLIENT-SIDE SCRIPT: London Clock & UI Toggles -->
 <script>
-var serverdate = new Date();
-function pad(n) { return n < 10 ? '0' + n : n; }
 function displaytime() {
-	serverdate.setSeconds(serverdate.getSeconds() + 1);
-	var el = document.getElementById('server_time');
-	if (el) el.textContent = pad(serverdate.getHours()) + ":" + pad(serverdate.getMinutes()) + ":" + pad(serverdate.getSeconds());
+	try {
+		var now = new Date();
+		var londonFormatter = new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		});
+		var el = document.getElementById('server_time');
+		if (el) el.textContent = londonFormatter.format(now);
+	} catch (e) {
+		var d = new Date();
+		var pad = function(n) { return n < 10 ? '0' + n : n; };
+		var el = document.getElementById('server_time');
+		if (el) el.textContent = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
+	}
 }
 setInterval(displaytime, 1000);
 displaytime();
@@ -521,5 +534,8 @@ if (document.readyState === 'loading') {
 }
 </script>
 
+			<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+	
 </body>
 </html>
