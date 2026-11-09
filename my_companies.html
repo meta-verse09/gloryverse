@@ -1,1540 +1,1252 @@
 
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Perusahaan Saya (My Companies)</title>
+	<meta name="description" content="Glory Verse - Kelola perusahaan, produksi, cabang, dan lowongan kerja pemain">
+	<meta name="copyright" content="Glory Verse">
 
-<title>My Profit Land - Online Strategy Browser Game</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="My Profit Land" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css?1">
+	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/js/base.js"></script>
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+	<style>
+		/* ============================================================
+		   MY COMPANIES 2-COLUMN GRID (MATCHES DASHBOARD THEME)
+		   ============================================================ */
+		.companies-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
 
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+		.leftbar,
+		.main {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
 
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
+		@media (max-width: 900px) {
+			.companies-wrapper {
+				grid-template-columns: 1fr;
 			}
-		});
-	};
+		}
 
-</script>
+		/* Company Card */
+		.company-card {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 16px 18px;
+			margin-bottom: 14px;
+			transition: box-shadow 0.2s ease, border-color 0.2s ease;
+		}
+		.company-card:hover {
+			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+			border-color: #cbd5e1;
+		}
+		.company-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			border-bottom: 1px solid var(--border-light);
+			padding-bottom: 12px;
+			margin-bottom: 12px;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+		.company-title-wrap {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+		.company-icon-box {
+			width: 48px;
+			height: 48px;
+			border-radius: 8px;
+			background: #eef7fc;
+			border: 1px solid #c7e3f4;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 22px;
+			color: var(--accent);
+		}
+		.company-meta-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+			gap: 10px;
+			background: #fafbfc;
+			border: 1px solid #f1f3f6;
+			border-radius: 6px;
+			padding: 10px 12px;
+			margin-bottom: 12px;
+		}
+		.company-meta-item .meta-label {
+			font-size: 11px;
+			color: var(--muted);
+			display: block;
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+		}
+		.company-meta-item .meta-val {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--text-dark);
+		}
+		.company-actions {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
 
+		/* Stats Summary Bar */
+		.summary-strip {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 12px;
+			margin-bottom: 18px;
+		}
+		.summary-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			text-align: center;
+		}
+		.summary-box .num {
+			font-family: 'Roboto Slab', serif;
+			font-size: 20px;
+			font-weight: 700;
+			color: var(--accent);
+			margin: 2px 0;
+		}
+		.summary-box .lbl {
+			font-size: 11.5px;
+			color: var(--muted);
+		}
 
-
-
-
-
-
-
+		/* Filter Tabs */
+		.company-filter-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 16px;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 8px 12px;
+		}
+		.filter-pills {
+			display: flex;
+			gap: 4px;
+			flex-wrap: wrap;
+		}
+		.filter-btn {
+			border: 1px solid var(--border);
+			background: #f8fafc;
+			color: var(--text);
+			padding: 4px 10px;
+			border-radius: 4px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s;
+		}
+		.filter-btn.active, .filter-btn:hover {
+			background: var(--accent);
+			color: #fff;
+			border-color: var(--accent);
+		}
+	</style>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (MATCHES DASHBOARD.HTML) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data stabil &amp; tidak berkedip.</span>
+		</div>
+		<div>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
+				<i class="fa-solid fa-arrows-rotate"></i> Refresh Halaman (F5)
+			</button>
+			<span id="firebase-connection-status" class="label label-light" style="margin-left: 6px; background: #e2e8f0; color: #475569;">
+				Menghubungkan ke Firebase...
+			</span>
+		</div>
+	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (game-head with Gloryverse branding) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 09, 2026 00:56:18' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 36.8% (736 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">00:56:18</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 36.8%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (21363)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9760)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a> <a class="label label-info" data-toggle="modal tooltip" title="Open last used company" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=47692", "#modal_ajax")'><i class="icon-shop"></i></a> <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- Server Clock: London Time (Europe/London) -->
+				<div style="text-align: right;">
+					<span class="label label-light" title="Waktu Resmi Server (London / GMT)"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b></span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 200px;">
+					<form method="get" action="/leaderboard.html" onsubmit="event.preventDefault(); window.location.href='/leaderboard.html';">
+						<input type="text" class="form-control" placeholder="Cari Pemain / Perusahaan..." style="width: 200px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<span class="label label-success" id="player-income-badge">Income (0)</span>
+					<span class="label label-warning" id="player-alerts-badge">Alerts (0)</span>
+					<span class="label label-light" id="player-messages-badge">Messages (0)</span>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Clean light bar with all dropdowns preserved matching dashboard.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li class="active" > <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_create.html", "#modal_ajax")'><i class="fa-solid fa-plus"></i>&nbsp;&nbsp;Create a new Organization</a></li>
-															</ul>
-						</li>
+					<li><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li class="active"><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/marketplace.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li><a href="/my_companies.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;My Companies</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/dashboard.html"><i class="fa-solid fa-gauge-high" style="margin-right: 4px;"></i> Dashboard</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://gloryverse.id/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/ph.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=203">Montreal</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 66.48% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a> 		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="66.48" aria-valuemin="0" aria-valuemax="100" style="width: 66.48%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 99.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="99.0" aria-valuemin="0" aria-valuemax="100" style="width: 99.0%;">
-			</div>
-		</div>
-
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 889/17867&nbsp;&nbsp;&nbsp;4%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100" style="width: 4%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.html">Working (3 hours)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.html", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="418.71">418.710</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 1.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 110.21 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"> html: 527.21</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-							
-							<div class="row">
-								<div class="col-sm-9">
-									<h4>My Companies</h4>
-								</div>
-
-								<div class="col-sm-3">
-									<a class="btn btn-info btn-sm" href="https://gloryverse.id/company_create.html">Start a new Company</a>
-								</div>
-							</div>
-
-							<p>In the list below you will find the companies that you own right now. To manage a company press the Manage button next to it. In order to produce goods, you need to have raw materials and a valid and active license. Always check the status of your license when you activate the workplaces. Use the menu above to start a new company.</p>
-
-							<div style="position:relative">
-								<input type="text" id="company_search" class="form-control" placeholder="Search companies by name..." autocomplete="off">
-								<a id="company_search_clear" style="display:none; position:absolute; right:10px; top:7px; cursor:pointer; color:#999; font-size:16px; z-index:10">&times;</a>
-							</div>
-
-							<br>
-
-															<div class="row ">
-																			<div class="col-sm-6 mb-sm-30 nw company-card" data-name="⏪♻closeup #1♻⏩">
-
-
-											<div style="position:relative; background-color:pink; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=34704", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/newspaper.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=34704">⏪♻closeup #1♻⏩</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 10.94&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/id.png"> IDR: 388.72</span><br>
-
-													<span class="small">Newspaper | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=34704", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=34704" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-												
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_34704_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_34704_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="34704" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option selected value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="⏪♻closeup #2♻⏩">
-
-
-											<div style="position:relative; background-color:yellow; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=37852", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/newspaper.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=37852">⏪♻closeup #2♻⏩</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 1&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/id.png"> IDR: 96.17</span><br>
-
-													<span class="small">Newspaper | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=37852", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=37852" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=37852" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_37852_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_37852_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="37852" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option selected value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹 advan 🌹- solar panel farm">
-
-
-											<div style="position:relative; background-color:linen; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=47692", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Solar Panel Farm" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/solar-panel-farm.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=47692">🌹 ADVAN 🌹- Solar Panel Farm</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 17.93&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/md.png"> LEU: 0</span><br>
-
-													<span class="small">Solar Panel Farm | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=47692", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=47692" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=47692" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_47692_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_47692_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="47692" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option selected value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="⏪♻closeup #3♻⏩">
-
-
-											<div style="position:relative; background-color:linen; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=22033", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Newspaper" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/newspaper.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=22033">⏪♻closeup #3♻⏩</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 0&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/id.png"> IDR: 82.42</span><br>
-
-													<span class="small">Newspaper | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=22033", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=22033" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=22033" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_22033_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_22033_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="22033" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option selected value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹advan🌹 - clothes factory">
-
-
-											<div style="position:relative; background-color:cyan; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=53359", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Clothes Factory" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/clothes-factory.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=53359">🌹ADVAN🌹 - Clothes Factory</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 4.18&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/ar.png"> ARS: 132.57</span><br>
-
-													<span class="small">Clothes Factory | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=53359", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=53359" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=53359" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_53359_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_53359_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="53359" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option selected value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹advan🌹 - recycling center">
-
-
-											<div style="position:relative; background-color:cyan; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=49684", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Recycling Center" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/recycling-center.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=49684">🌹ADVAN🌹 - Recycling Center</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 0.37&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/es.png"> ESP: 55.61</span><br>
-
-													<span class="small">Recycling Center | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=49684", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=49684" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=49684" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_49684_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_49684_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="49684" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option selected value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹advan🌹 - milk and coffee shop">
-
-
-											<div style="position:relative; background-color:pink; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=51097", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Milk and Coffee Shop" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/milk-and-coffee-shop.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=51097">🌹ADVAN🌹 - Milk and Coffee Shop</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 13.04&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/md.png"> LEU: 10.21</span><br>
-
-													<span class="small">Milk and Coffee Shop | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=51097", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=51097" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=51097" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_51097_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_51097_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="51097" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option selected value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹advan🌹 - attack weapons factory">
-
-
-											<div style="position:relative; background-color:pink; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=39637", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Attack Weapons Factory" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/attack-weapons-factory.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=39637">🌹ADVAN🌹 - Attack Weapons Factory</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 4.75&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/cl.png"> CLP: 66.07</span><br>
-
-													<span class="small">Attack Weapons Factory | Workplaces: 3</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=39637", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=39637" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=39637" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_39637_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_39637_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="39637" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option selected value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹advan🌹 - pig farm">
-
-
-											<div style="position:relative; background-color:pink; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=55835", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Pig Farm" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/pig-farm.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=55835">🌹ADVAN🌹 - Pig Farm</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 4.22&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/ro.png"> RON: 459.59</span><br>
-
-													<span class="small">Pig Farm | Workplaces: 2</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=55835", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																									<a data-toggle="tooltip" title="Move Down in Order" href="https://gloryverse.id/my_companies.html&acn=movedown&id=55835" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-down"></i></a>
-																									
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=55835" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_55835_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_55835_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="55835" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option  value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option selected value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																				<div class="col-sm-6 mb-sm-30 nw company-card" data-name="🌹 advan 🌹 - refinery">
-
-
-											<div style="position:relative; background-color:azure; padding-left:95px">
-
-
-												<div style="position:absolute; left:0; top:0;">
-
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=35921", "#modal_ajax")'>
-													
-													
-														<img style="margin-top: 10px;" title="Refinery" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/refinery.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=35921">🌹 ADVAN 🌹 - Refinery</a></span></b><br>
-
-													<span class="small"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> Gold: 0.7&nbsp;&nbsp;&nbsp;<img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/md.png"> LEU: 905.39</span><br>
-
-													<span class="small">Refinery | Workplaces: 1</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=35921", "#modal_ajax")'>Management</a>&nbsp;&nbsp;&nbsp;
-												
-																								
-																									<a data-toggle="tooltip" title="Move Up in Order" href="https://gloryverse.id/my_companies.html&acn=moveup&id=35921" class="btn btn-default btn-xs"><i class="icon icon-arrow-bold-up"></i></a> 
-													
-												&nbsp;&nbsp;
-												
-												<a data-toggle="modal tooltip" title="Change color" data-target="#comp_bg_35921_modal" class="btn btn-default btn-xs"><i class="icon icon-brush"></i></a> 
-
-
-												<div id="comp_bg_35921_modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-													<div class="modal-dialog">
-														<div class="modal-content">
-															<form action="https://gloryverse.id/my_companies.html" class="form-horizontal form-horizontal-bordered" method="post">
-																<input name="acn" type="hidden" value="changebgcolor" />
-																<input name="id" type="hidden" value="35921" />
-
-																<div class="modal-header">
-																	<button type="button" class="close" data-dismiss="modal">×</button>
-																	<h4>Change background color</h4>
-																</div><!-- end .modal-header -->
-																
-																<div class="modal-body">
-																
-																	<div class="form-cols-row">				
-																		<label class="control-label form-col-sm-3">
-																			Color
-																		</label>
-																		<div class="form-col-sm-6">
-																			<select class="form-control" name="user_company_bg_color">
-																				<option value="0">&mdash; Select color &mdash;</option>
-																																									<option  value="0">White</option>
-																																										<option  value="1">Darksalmon</option>
-																																										<option  value="2">Chartreuse</option>
-																																										<option  value="3">Yellow</option>
-																																										<option selected value="4">Azure</option>
-																																										<option  value="5">Cyan</option>
-																																										<option  value="6">Tan</option>
-																																										<option  value="7">Linen</option>
-																																										<option  value="8">Pink</option>
-																																										<option  value="9">Ivory</option>
-																																								</select>
-																		</div><!-- end .form-col-* -->
-																	</div><!-- end .form-row -->
-
-																</div><!-- end .modal-body -->
-
-																<div class="modal-footer">
-																	<a class="btn btn-default-flt" data-dismiss="modal">Close</a>
-																	<button type="submit" name="travel" value="travel" class="btn btn-primary-flt save">Save</button>
-																</div><!-- end .modal-footer -->
-															
-															</form>
-														</div><!-- end .modal-content -->
-													</div><!-- end .modal-dialog -->
-												</div>
-													
-
-											</div>
-
-
-
-										</div>
-																		</div>
-								
-															
-							
-							<h5>Managing Companies</h5>
-
-							<p>These are the companies you manage that belong to other players.</p>
-							
-							
-															<div class="row ">
-																			<div class="col-sm-6 mb-sm-30 company-card" data-name="bulux - philippines iron mine corp.">
-
-											<div style="position:relative; padding-left:95px">
-												<div style="position:absolute; left:0; top:0;">
-													<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=50040", "#modal_ajax")'>
-
-														
-														<img style="margin-top: 10px;" title="Iron Mine" width="85" height="85" src="https://gloryverse.id/img/assets/buildings-companies/iron-mine.png">													</a>
-												</div>
-
-												<b><span class="small"><a href="https://gloryverse.id/company.html&id=50040">Bulux - Philippines iron mine corp.</a></span></b><br>
-													<span class="small">Owner: <a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a>
-													Country: Philippines</span> <img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/ph.png"><br>
-													<span class="small">Iron Mine | Workplaces: 5</span>
-												<br>
-												<a class="btn btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/company_manage.html&id=50040", "#modal_ajax")'>Management</a>
-											</div>
-											
-										</div>
-																		</div>
-								
-								
-
-						</div><!-- end .main -->			
-					
-						<div class="rightbar">
-	
-							<h6>My Friends</h6>
-
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to aleksokubo" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=aleksokubo"></a> <a href="https://gloryverse.id/profile.html&id=aleksokubo">aleksokubo</a> <a href="https://gloryverse.id/country.html&id=VE"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ve.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to Reingkarnasi" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=Reingkarnasi"></a> <a href="https://gloryverse.id/profile.html&id=Reingkarnasi">Reingkarnasi</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to kurniawan214" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=kurniawan214"></a> <a href="https://gloryverse.id/profile.html&id=kurniawan214">kurniawan214</a> <a href="https://gloryverse.id/country.html&id=TW"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tw.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to Nicotin" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=Nicotin"></a> <a href="https://gloryverse.id/profile.html&id=Nicotin">Nicotin</a> <a href="https://gloryverse.id/country.html&id=MV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 11 minutes ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Eagle"></a> <a href="https://gloryverse.id/profile.html&id=Eagle">Eagle</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 47 minutes ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=julienoor"></a> <a href="https://gloryverse.id/profile.html&id=julienoor">julienoor</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 50 minutes ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Tedong_Naga819"></a> <a href="https://gloryverse.id/profile.html&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 53 minutes ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Dingdong"></a> <a href="https://gloryverse.id/profile.html&id=Dingdong">Dingdong</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 54 minutes ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Bulux"></a> <a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 59 minutes ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Phoenix"></a> <a href="https://gloryverse.id/profile.html&id=Phoenix">Phoenix</a> <a href="https://gloryverse.id/country.html&id=EH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/eh.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Aris" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Aris"></a> <a href="https://gloryverse.id/profile.html&id=Aris">Aris</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Pepa"></a> <a href="https://gloryverse.id/profile.html&id=Pepa">Pepa</a> <a href="https://gloryverse.id/country.html&id=ES"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/es.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 3 hours ago, Send a Message to archameera" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=archameera"></a> <a href="https://gloryverse.id/profile.html&id=archameera">archameera</a> <a href="https://gloryverse.id/country.html&id=SV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"></a>
-						</div>
-					
-				
-				<a class="small" href="https://gloryverse.id/my_friends.html">View All</a>
-						<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					New general's castle for sale, can be anywhere you want.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=GeneraLCommander.IDN">GeneraLCommander.IDN</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"><br>
-						5 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Israel is hiring more Workers, good market & rentals. 1.33 golds is paying in every Work shift, no requirements or conditions just join.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=SuperKhrys">SuperKhrys</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/il.png"><br>
-						6 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Hello <br />
-Selling some companies . If you interest, I listen to offers . Thanks				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Minanashaat">Minanashaat</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/id.png"><br>
-						6 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					wtb coal company or vegetables company or winery or . contact PM				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/nz.png"><br>
-						1 week ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					TUNISIA IS RECRUITING — 5 WORKERS WANTED!<br />
-<br />
-JOIN TODAY AND GET REWARDED!<br />
-<br />
-28 GOLD welcome bonus, paid in 2 instalments!<br />
-Salaries of up to 5 DIA/hour<br />
-? 6 GOLD Work Bonus<br />
-Food and wine provided<br />
-Affordable castle rentals<br />
-Build your future				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Villano">Villano</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/tn.png"><br>
-						1 week ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					New ZEaland open for new workers. Cheap meals , good salary. Cheap wine ,clothes and weapon. Also free local market. Come to buy it				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=evelmoney">evelmoney</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/nz.png"><br>
-						1 week ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Selling Clothes Chain in Austria upgrade lvl 8. Message me if interested				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Ciprian">Ciprian</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ba.png"><br>
-						1 week ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Looking for lads to join Sweden! We need players!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Tyras91">Tyras91</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/se.png"><br>
-						1 week ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="companies-wrapper">
+
+			<!-- LEFT SIDEBAR: Dynamic Player Card (Connected to Firebase, mirrors dashboard.html) -->
+			<div class="leftbar">
+				<!-- Player Avatar & Name -->
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
 					</div>
 				</div>
 
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
+
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
+
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
+
+				<!-- Currency Balances (Mirrors dashboard.html) -->
+				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">10.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
+
+				<!-- Sidebar Quick Navigation (All connected to site pages) -->
+				<ul class="list-group" style="margin-bottom: 14px;">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Kembali ke Dashboard</a></li>
+					<li class="list-group-item active"><a href="/my_companies.html" style="color:#fff;"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> Perusahaan Saya</a></li>
+					<li class="list-group-item"><a href="/workplaces.html"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Lowongan Tempat Kerja</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Inventaris Barang</a></li>
+					<li class="list-group-item"><a href="/financial.html"><i class="fa-solid fa-chart-line" style="margin-right: 6px;"></i> Pasar Finansial</a></li>
+					<li class="list-group-item"><a href="/wars.html"><i class="fa-solid fa-crosshairs" style="margin-right: 6px;"></i> Aktivitas Perang</a></li>
+				</ul>
+
+				<!-- Action Buttons -->
+				<div style="display: flex; gap: 6px; margin-bottom: 12px;">
+					<a class="btn btn-success btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-download"></i> Invest</a>
+					<a class="btn btn-danger btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-upload"></i> Withdraw</a>
+				</div>
+
+				<!-- Prompt login if guest -->
+				<div id="auth-prompt-sidebar" style="margin-top: 10px;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: My Companies List & Actions -->
+			<div class="main">
+
+				<!-- Page Header -->
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+					<div>
+						<h4 style="margin: 0 0 4px;">
+							<i class="fa-solid fa-building" style="color: var(--accent); margin-right: 8px;"></i>
+							Perusahaan Saya (My Companies)
+						</h4>
+						<p class="small" style="color: #64748b; margin: 0;">
+							Kelola pabrik, tambang, perkebunan, dan tempat kerja milik Anda di negara <b id="company-country-tag">Indonesia</b>.
+						</p>
+					</div>
+
+					<div style="display: flex; gap: 8px;">
+						<button id="btn-open-create-modal" class="btn btn-warning-bvl btn-sm">
+							<i class="fa-solid fa-plus"></i> Buka Perusahaan Baru
+						</button>
+						<a href="/documentation.html" class="btn btn-default btn-sm" title="Panduan Perusahaan di Dokumentasi">
+							<i class="fa-solid fa-book"></i> Panduan
+						</a>
+					</div>
+				</div>
+
+				<!-- Summary Stats Strip -->
+				<div class="summary-strip">
+					<div class="summary-box">
+						<div class="lbl">Total Perusahaan</div>
+						<div class="num" id="stat-total-companies">0</div>
+						<div class="lbl">Unit Aktif</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Tempat Kerja (WP)</div>
+						<div class="num" id="stat-total-workplaces">0</div>
+						<div class="lbl">Slot Tersedia</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Pekerja Hari Ini</div>
+						<div class="num" id="stat-total-workers" style="color: var(--green);">0</div>
+						<div class="lbl">Orang Telah Bekerja</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Nilai Aset Bisnis</div>
+						<div class="num" id="stat-portfolio-val" style="color: var(--gold-dark);">0.00</div>
+						<div class="lbl">Gold</div>
+					</div>
+				</div>
+
+				<!-- Filter Bar -->
+				<div class="company-filter-bar">
+					<div class="filter-pills" id="filter-pills">
+						<button class="filter-btn active" data-filter="all">Semua Tipe (<span id="count-filter-all">0</span>)</button>
+						<button class="filter-btn" data-filter="utilities">Utilitas Gratis (<span id="count-filter-utilities">0</span>)</button>
+						<button class="filter-btn" data-filter="gathering">Perkebunan &amp; Tambang (<span id="count-filter-gathering">0</span>)</button>
+						<button class="filter-btn" data-filter="services">Pabrik &amp; Industri (<span id="count-filter-services">0</span>)</button>
+					</div>
+
+					<div class="small" style="color: var(--muted);">
+						<i class="fa-solid fa-info-circle" style="color: var(--accent);"></i>
+						Data perusahaan tersinkronisasi dengan Firebase
+					</div>
+				</div>
+
+				<!-- Company Cards Container -->
+				<div id="company-cards-container">
+					<!-- Empty State (Placeholder ready for Firebase data) -->
+					<div class="well well-sm" style="text-align: center; padding: 36px 18px; background: #ffffff; border-color: var(--border);">
+						<div style="width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 50%; background: #eef7fc; display: flex; align-items: center; justify-content: center;">
+							<i class="fa-solid fa-building-wheat" style="font-size: 28px; color: var(--accent); opacity: 0.7;"></i>
+						</div>
+						<h5 style="margin-bottom: 6px; border-bottom: none; font-size: 16px;">Belum Ada Perusahaan Dimiliki</h5>
+						<p style="color: #64748b; max-width: 500px; margin: 0 auto 16px; font-size: 13px;">
+							Setiap pemain dapat membuka <b>Solar Panel Farm</b> (Pembangkit Listrik) dan <b>Water Well Drilling</b> (Sumur Air) secara <b>GRATIS</b> untuk mulai menghasilkan sumber daya otomatis!
+						</p>
+						<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+							<button class="btn btn-warning-bvl btn-sm btn-quick-free" data-type="Solar Panel Farm" data-cat="utilities">
+								<i class="fa-solid fa-solar-panel"></i> Buka Solar Panel Farm (Gratis)
+							</button>
+							<button class="btn btn-default btn-sm btn-quick-free" data-type="Water Well Drilling" data-cat="utilities">
+								<i class="fa-solid fa-faucet-drip" style="color: var(--accent);"></i> Buka Water Well Drilling (Gratis)
+							</button>
+						</div>
+						<div style="margin-top: 14px;">
+							<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+						</div>
+					</div>
+				</div>
+
+			</div><!-- end .main -->
+
+		</div><!-- end .companies-wrapper -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- MODAL: Buka Perusahaan Baru -->
+<div id="modal_create_company" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content" style="border-radius: 8px;">
+			<div class="modal-header" style="background: #fafbfc; border-bottom: 1px solid #e2e8f0;">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<h4 class="modal-title" style="font-weight: 700; color: var(--text-dark);">
+					<i class="fa-solid fa-plus-circle" style="color: var(--accent); margin-right: 6px;"></i> Buka Perusahaan Baru
+				</h4>
+			</div>
+			<form id="form-new-company">
+				<div class="modal-body" style="font-size: 13px; line-height: 1.6; color: var(--text);">
+					<div class="alert alert-info alert-sm" style="margin-bottom: 14px;">
+						<i class="fa-solid fa-info-circle"></i> Perusahaan akan terdaftar di negara kewarganegaraan Anda (<b id="modal-country-name">Indonesia</b>).
+					</div>
+
+					<div class="form-group" style="margin-bottom: 12px;">
+						<label style="font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 4px;">Pilih Jenis Perusahaan:</label>
+						<select id="modal_company_type" class="form-control input-sm" style="width: 100%;" required>
+							<optgroup label="Perusahaan Utilitas (Gratis Pertama Kali)">
+								<option value="Solar Panel Farm" data-cat="utilities" data-cost="0">Solar Panel Farm (Produksi Listrik) — GRATIS</option>
+								<option value="Water Well Drilling" data-cat="utilities" data-cost="0">Water Well Drilling (Produksi Air) — GRATIS</option>
+							</optgroup>
+							<optgroup label="Pengumpulan & Perkebunan (Gathering)">
+								<option value="Cereal Farm" data-cat="gathering" data-cost="30">Cereal Farm (Gandum & Jagung) — 30 Euro</option>
+								<option value="Coffee Plantation" data-cat="gathering" data-cost="30">Coffee Plantation (Biji Kopi) — 30 Euro</option>
+								<option value="Cotton Plantation" data-cat="gathering" data-cost="30">Cotton Plantation (Kapas) — 30 Euro</option>
+								<option value="Wood Cutter" data-cat="gathering" data-cost="30">Wood Cutter (Kayu) — 30 Euro</option>
+								<option value="Vineyard" data-cat="gathering" data-cost="30">Vineyard (Kebun Anggur) — 30 Euro</option>
+							</optgroup>
+							<optgroup label="Pertambangan (Extraction)">
+								<option value="Coal Mine" data-cat="gathering" data-cost="30">Coal Mine (Batu Bara) — 30 Euro</option>
+								<option value="Iron Mine" data-cat="gathering" data-cost="30">Iron Mine (Bijih Besi) — 30 Euro</option>
+								<option value="Sand Pit" data-cat="gathering" data-cost="30">Sand Pit (Pasir Silika) — 30 Euro</option>
+								<option value="Stone Quarry" data-cat="gathering" data-cost="30">Stone Quarry (Batu Bangunan) — 30 Euro</option>
+							</optgroup>
+							<optgroup label="Manufaktur & Layanan (Services)">
+								<option value="Bakery" data-cat="services" data-cost="30">Bakery (Toko Roti & Makanan) — 30 Euro</option>
+								<option value="Cow Farm" data-cat="services" data-cost="30">Cow Farm (Peternakan Sapi & Susu) — 30 Euro</option>
+								<option value="Foundry" data-cat="services" data-cost="30">Foundry (Peleburan Baja) — 30 Euro</option>
+								<option value="Glass Factory" data-cat="services" data-cost="30">Glass Factory (Pabrik Kaca & Jendela) — 30 Euro</option>
+							</optgroup>
+						</select>
+					</div>
+
+					<div class="form-group" style="margin-bottom: 12px;">
+						<label style="font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 4px;">Nama Perusahaan:</label>
+						<input type="text" id="modal_company_name" class="form-control input-sm" placeholder="Contoh: Nusantara Energy & Water" maxlength="50" required>
+					</div>
+
+					<div class="form-group" style="margin-bottom: 12px;">
+						<label style="font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 4px;">Wilayah / Region:</label>
+						<input type="text" id="modal_company_region" class="form-control input-sm" value="Jakarta" required>
+					</div>
+
+					<div class="form-group" style="margin-bottom: 12px;">
+						<label style="font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 4px;">Upah Pekerja per Jam (Gold):</label>
+						<input type="number" id="modal_company_wage" class="form-control input-sm" value="10.0" min="1" step="0.5" required>
+					</div>
+				</div>
+				<div class="modal-footer" style="background: #fafbfc; border-top: 1px solid #e2e8f0;">
+					<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Batal</button>
+					<button type="submit" id="btn-submit-new-company" class="btn btn-warning-bvl btn-sm">
+						<i class="fa-solid fa-check"></i> Dirikan Perusahaan
+					</button>
+				</div>
 			</form>
-		
+		</div>
+	</div>
+</div>
 
-		
-
-
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-
-
-			</div><!-- end .contents -->
-			<div class="footer">
+<!-- FOOTER (Matches dashboard.html clean style) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(7) 0.010s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi.<br>
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using GloryVerse, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
-
-			
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
+<!-- CLIENT-SIDE SCRIPT: London Clock (Europe/London) & UI Interactivity -->
 <script>
-$('#company_search').on('keyup', function() {
-	var q = $(this).val().toLowerCase();
-	$('#company_search_clear').toggle(q.length > 0);
-	$('.company-card').each(function() {
-		$(this).toggle($(this).data('name').indexOf(q) > -1);
-	});
+// Jam Server Resmi London (Europe/London: GMT/BST) tanpa mengubah tampilan
+function updateLondonClock() {
+	try {
+		var now = new Date();
+		var londonFormatter = new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		});
+		var clockEl = document.getElementById('server_time');
+		if (clockEl) {
+			clockEl.textContent = londonFormatter.format(now);
+		}
+	} catch (e) {
+		var d = new Date();
+		var pad = function(n) { return n < 10 ? '0' + n : n; };
+		var clockEl = document.getElementById('server_time');
+		if (clockEl) {
+			clockEl.textContent = pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()) + ":" + pad(d.getUTCSeconds());
+		}
+	}
+}
+setInterval(updateLondonClock, 1000);
+updateLondonClock();
+
+// Manual Refresh F5 button
+document.getElementById('btn-manual-refresh').addEventListener('click', function() {
+	window.location.reload();
 });
-$('#company_search_clear').on('click', function() {
-	$('#company_search').val('').trigger('keyup');
+
+// Modal toggle for create company
+document.getElementById('btn-open-create-modal').addEventListener('click', function() {
+	$('#modal_create_company').modal('show');
 });
 </script>
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+
+<!-- FIREBASE REFRESH-BASED MY COMPANIES INTEGRATION MODULE -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  addDoc
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut,
+  GoogleAuthProvider,
+  signInWithPopup
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+
+let app = null;
+let db = null;
+let auth = null;
+let currentUser = null;
+let currentUserProfile = null;
+let userCompanies = [];
+let activeFilter = 'all';
+
+async function initMyCompaniesFirebase() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		const res = await fetch('/firebase-applet-config.json');
+		if (!res.ok) {
+			console.warn('Could not load firebase-applet-config.json');
+			if (statusEl) {
+				statusEl.className = 'label label-danger';
+				statusEl.textContent = 'Config Error';
+			}
+			return;
+		}
+
+		const firebaseConfig = await res.json();
+		app = initializeApp(firebaseConfig);
+		db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = getAuth(app);
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.textContent = 'Firebase Terhubung';
+		}
+
+		// Auth observer (One-time getDoc on user auth resolution)
+		setupAuth();
+
+		// Setup Filter buttons
+		setupFilterButtons();
+
+		// Setup New Company Form
+		setupCompanyForm();
+
+	} catch (err) {
+		console.error('Firebase init error in my_companies:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+	}
+}
+
+function setupAuth() {
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					currentUserProfile = {
+						id: user.uid,
+						username: user.displayName || user.email.split('@')[0],
+						email: user.email,
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 0,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				renderPlayerProfile(currentUserProfile, user);
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					document.getElementById('btn-logout').addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+				// One-time fetch: Load companies owned by this player
+				await loadUserCompanies(user.uid);
+
+			} catch (err) {
+				console.warn('Error fetching user profile in my_companies:', err);
+			}
+		} else {
+			currentUserProfile = null;
+			renderGuestState();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk mengelola perusahaan Anda:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+
+			// Render guest company view
+			renderCompaniesList([]);
+		}
+	});
+}
+
+function renderPlayerProfile(p, user) {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
+
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	const countryTag = document.getElementById('company-country-tag');
+	const modalCountry = document.getElementById('modal-country-name');
+
+	if (countryEl) countryEl.textContent = p.country_name || 'Indonesia';
+	if (regionEl) regionEl.textContent = p.region_name || 'Jakarta';
+	if (countryTag) countryTag.textContent = p.country_name || 'Indonesia';
+	if (modalCountry) modalCountry.textContent = p.country_name || 'Indonesia';
+
+	const energy = Number(p.energy !== undefined ? p.energy : 100);
+	const health = Number(p.health !== undefined ? p.health : 100);
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	const energyVal = document.getElementById('stat-energy-val');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyVal) energyVal.textContent = energy + '%';
+	if (energyBar) energyBar.style.width = Math.min(100, Math.max(0, energy)) + '%';
+
+	const healthVal = document.getElementById('stat-health-val');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthVal) healthVal.textContent = health + '%';
+	if (healthBar) healthBar.style.width = Math.min(100, Math.max(0, health)) + '%';
+
+	const levelVal = document.getElementById('stat-level-val');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (levelVal) levelVal.textContent = `Level ${level} (${xp} XP)`;
+	if (xpBar) xpBar.style.width = Math.min(100, (xp % 100)) + '%';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = Number(p.svct || 0).toFixed(3);
+	if (euroEl) euroEl.textContent = Number(p.euro || 0).toFixed(2);
+	if (goldEl) goldEl.textContent = Number(p.gold !== undefined ? p.gold : 10).toFixed(2);
+	if (currEl) currEl.textContent = Number(p.currency || 0).toFixed(2);
+
+	const incomeBadge = document.getElementById('player-income-badge');
+	const alertsBadge = document.getElementById('player-alerts-badge');
+	const msgBadge = document.getElementById('player-messages-badge');
+	if (incomeBadge) incomeBadge.textContent = `Income (${p.income || 0})`;
+	if (alertsBadge) alertsBadge.textContent = `Alerts (${p.alerts || 0})`;
+	if (msgBadge) msgBadge.textContent = `Messages (${p.messages || 0})`;
+}
+
+function renderGuestState() {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = 'Tamu (Belum Login)';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	if (countryEl) countryEl.textContent = 'Indonesia';
+	if (regionEl) regionEl.textContent = 'Jakarta';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = '0.00';
+	if (euroEl) euroEl.textContent = '0.00';
+	if (goldEl) goldEl.textContent = '0.00';
+	if (currEl) currEl.textContent = '0.00';
+}
+
+// One-time Fetch: Load user companies from Firestore
+async function loadUserCompanies(uid) {
+	try {
+		const q = query(collection(db, 'companies'), where('owner_uid', '==', uid));
+		const snap = await getDocs(q);
+
+		userCompanies = [];
+		if (!snap.empty) {
+			snap.forEach((d) => {
+				userCompanies.push({ id: d.id, ...d.data() });
+			});
+		}
+
+		updateCompanySummary();
+		renderCompaniesList(userCompanies);
+
+	} catch (err) {
+		console.warn('Error fetching user companies:', err);
+		renderCompaniesList([]);
+	}
+}
+
+function updateCompanySummary() {
+	const countAll = userCompanies.length;
+	let countUtilities = 0;
+	let countGathering = 0;
+	let countServices = 0;
+	let totalWp = 0;
+	let totalVal = 0;
+
+	userCompanies.forEach((c) => {
+		const cat = c.category || 'gathering';
+		if (cat === 'utilities') countUtilities++;
+		else if (cat === 'gathering') countGathering++;
+		else if (cat === 'services') countServices++;
+
+		totalWp += Number(c.workplaces || 1);
+		totalVal += Number(c.funds_gold || 5) + (Number(c.level || 1) * 20);
+	});
+
+	document.getElementById('stat-total-companies').textContent = countAll;
+	document.getElementById('stat-total-workplaces').textContent = totalWp;
+	document.getElementById('stat-portfolio-val').textContent = totalVal.toFixed(2);
+
+	document.getElementById('count-filter-all').textContent = countAll;
+	document.getElementById('count-filter-utilities').textContent = countUtilities;
+	document.getElementById('count-filter-gathering').textContent = countGathering;
+	document.getElementById('count-filter-services').textContent = countServices;
+}
+
+function renderCompaniesList(companies) {
+	const container = document.getElementById('company-cards-container');
+	if (!container) return;
+
+	let filtered = companies;
+	if (activeFilter !== 'all') {
+		filtered = companies.filter((c) => (c.category || 'gathering') === activeFilter);
+	}
+
+	if (filtered.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm" style="text-align: center; padding: 36px 18px; background: #ffffff; border-color: var(--border);">
+				<div style="width: 64px; height: 64px; margin: 0 auto 12px; border-radius: 50%; background: #eef7fc; display: flex; align-items: center; justify-content: center;">
+					<i class="fa-solid fa-building-wheat" style="font-size: 28px; color: var(--accent); opacity: 0.7;"></i>
+				</div>
+				<h5 style="margin-bottom: 6px; border-bottom: none; font-size: 16px;">Belum Ada Perusahaan Dimiliki</h5>
+				<p style="color: #64748b; max-width: 500px; margin: 0 auto 16px; font-size: 13px;">
+					Setiap pemain dapat membuka <b>Solar Panel Farm</b> (Pembangkit Listrik) dan <b>Water Well Drilling</b> (Sumur Air) secara <b>GRATIS</b> untuk mulai menghasilkan sumber daya otomatis!
+				</p>
+				<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+					<button class="btn btn-warning-bvl btn-sm btn-quick-free" data-type="Solar Panel Farm" data-cat="utilities">
+						<i class="fa-solid fa-solar-panel"></i> Buka Solar Panel Farm (Gratis)
+					</button>
+					<button class="btn btn-default btn-sm btn-quick-free" data-type="Water Well Drilling" data-cat="utilities">
+						<i class="fa-solid fa-faucet-drip" style="color: var(--accent);"></i> Buka Water Well Drilling (Gratis)
+					</button>
+				</div>
+				<div style="margin-top: 14px;">
+					<small style="color: var(--accent);">Data dimuat saat halaman di-refresh (F5)</small>
+				</div>
+			</div>
+		`;
+
+		// Reattach quick free buttons
+		document.querySelectorAll('.btn-quick-free').forEach((btn) => {
+			btn.addEventListener('click', handleQuickFreeCompany);
+		});
+		return;
+	}
+
+	let html = '';
+	filtered.forEach((c) => {
+		const isUt = c.category === 'utilities';
+		const iconClass = getCompanyIcon(c.type || '');
+		html += `
+			<div class="company-card">
+				<div class="company-header">
+					<div class="company-title-wrap">
+						<div class="company-icon-box">
+							<i class="${iconClass}"></i>
+						</div>
+						<div>
+							<b style="font-size: 15px; color: var(--text-dark);">${escapeHtml(c.name || 'Perusahaan Saya')}</b>
+							<span class="label label-info" style="font-size: 10px; margin-left: 6px;">Level ${c.level || 1}</span>
+							<span class="label label-success" style="font-size: 10px; margin-left: 3px;">${escapeHtml(c.production_status || 'Aktif')}</span>
+							<div class="small" style="color: var(--muted); margin-top: 2px;">
+								Tipe: <b>${escapeHtml(c.type || 'Industri')}</b> &bull; Lokasi: ${escapeHtml(c.region || 'Jakarta')} (${escapeHtml(c.country_code || 'ID')})
+							</div>
+						</div>
+					</div>
+
+					<div class="company-actions">
+						<a href="/workplaces.html" class="btn btn-warning-bvl btn-sm" title="Buka Lowongan Kerja di Workplaces">
+							<i class="fa-solid fa-briefcase"></i> Pasang Lowongan WP
+						</a>
+						<button class="btn btn-default btn-sm btn-upgrade-comp" data-id="${c.id}" data-level="${c.level || 1}">
+							<i class="fa-solid fa-arrow-up text-success"></i> Upgrade (+10% Prod)
+						</button>
+						<button class="btn btn-default btn-sm btn-toggle-prod" data-id="${c.id}" data-status="${c.production_status || 'Aktif'}">
+							<i class="fa-solid fa-power-off"></i> ${c.production_status === 'Berhenti' ? 'Mulai' : 'Jeda'}
+						</button>
+					</div>
+				</div>
+
+				<div class="company-meta-grid">
+					<div class="company-meta-item">
+						<span class="meta-label">Tempat Kerja (WP)</span>
+						<span class="meta-val">${c.workplaces || 1} / 8 Slot</span>
+					</div>
+					<div class="company-meta-item">
+						<span class="meta-label">Upah per Jam</span>
+						<span class="meta-val" style="color: var(--gold-dark);">${Number(c.wage || 10).toFixed(1)} Gold</span>
+					</div>
+					<div class="company-meta-item">
+						<span class="meta-label">Kas Perusahaan</span>
+						<span class="meta-val">${Number(c.funds_gold || 5).toFixed(2)} Gold</span>
+					</div>
+					<div class="company-meta-item">
+						<span class="meta-label">Kas Mata Uang</span>
+						<span class="meta-val">${Number(c.funds_currency || 100).toFixed(2)}</span>
+					</div>
+					<div class="company-meta-item">
+						<span class="meta-label">Lisensi Usaha</span>
+						<span class="meta-val" style="color: var(--green);">${escapeHtml(c.license_status || 'Aktif')}</span>
+					</div>
+					<div class="company-meta-item">
+						<span class="meta-label">Kapasitas Gudang</span>
+						<span class="meta-val">${c.raw_storage || 200} Unit</span>
+					</div>
+				</div>
+			</div>
+		`;
+	});
+
+	container.innerHTML = html;
+
+	// Attach action events
+	document.querySelectorAll('.btn-upgrade-comp').forEach((b) => {
+		b.addEventListener('click', handleUpgradeCompany);
+	});
+	document.querySelectorAll('.btn-toggle-prod').forEach((b) => {
+		b.addEventListener('click', handleToggleProduction);
+	});
+}
+
+function getCompanyIcon(type) {
+	const t = type.toLowerCase();
+	if (t.includes('solar')) return 'fa-solid fa-solar-panel';
+	if (t.includes('water')) return 'fa-solid fa-faucet-drip';
+	if (t.includes('cereal') || t.includes('wheat') || t.includes('farm')) return 'fa-solid fa-wheat-awn';
+	if (t.includes('coffee')) return 'fa-solid fa-mug-saucer';
+	if (t.includes('cotton')) return 'fa-solid fa-shirt';
+	if (t.includes('wood')) return 'fa-solid fa-tree';
+	if (t.includes('mine') || t.includes('coal') || t.includes('iron')) return 'fa-solid fa-gem';
+	if (t.includes('bakery')) return 'fa-solid fa-bread-slice';
+	if (t.includes('foundry')) return 'fa-solid fa-fire';
+	if (t.includes('glass')) return 'fa-solid fa-window-maximize';
+	return 'fa-solid fa-industry';
+}
+
+// Fast Creation for Free Starter Companies
+async function handleQuickFreeCompany(e) {
+	const btn = e.currentTarget;
+	const compType = btn.getAttribute('data-type');
+	const cat = btn.getAttribute('data-cat') || 'utilities';
+
+	if (!currentUser) {
+		alert('Silakan login terlebih dahulu untuk membuka perusahaan!');
+		window.location.href = '/authys.html';
+		return;
+	}
+
+	btn.disabled = true;
+	btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+	try {
+		const newDoc = {
+			name: `${currentUserProfile?.username || 'Pemain'} - ${compType}`,
+			type: compType,
+			category: cat,
+			level: 1,
+			owner_uid: currentUser.uid,
+			owner_name: currentUserProfile?.username || currentUser.displayName || 'Pemain',
+			country_code: currentUserProfile?.country_code || 'ID',
+			country_name: currentUserProfile?.country_name || 'Indonesia',
+			region: currentUserProfile?.region_name || 'Jakarta',
+			workplaces: 1,
+			wage: 10.0,
+			funds_gold: 5.0,
+			funds_currency: 100.0,
+			raw_storage: 200,
+			product_storage: 400,
+			license_status: 'Aktif (500/500)',
+			production_status: 'Aktif',
+			created_at: new Date().toISOString(),
+			updated_at: new Date().toISOString()
+		};
+
+		await addDoc(collection(db, 'companies'), newDoc);
+		alert(`Selamat! ${compType} berhasil dibuka gratis! Perusahaan Anda siap beroperasi.`);
+		await loadUserCompanies(currentUser.uid);
+
+	} catch (err) {
+		console.error('Error creating free company:', err);
+		alert('Gagal membuka perusahaan: ' + err.message);
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+// Form Submission for New Company Modal
+function setupCompanyForm() {
+	const form = document.getElementById('form-new-company');
+	if (!form) return;
+
+	form.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!currentUser) {
+			alert('Silakan login terlebih dahulu.');
+			window.location.href = '/authys.html';
+			return;
+		}
+
+		const typeSelect = document.getElementById('modal_company_type');
+		const compType = typeSelect.value;
+		const selectedOption = typeSelect.options[typeSelect.selectedIndex];
+		const cat = selectedOption.getAttribute('data-cat') || 'gathering';
+		const cost = parseFloat(selectedOption.getAttribute('data-cost')) || 0;
+		const compName = document.getElementById('modal_company_name').value.trim();
+		const region = document.getElementById('modal_company_region').value.trim() || 'Jakarta';
+		const wage = parseFloat(document.getElementById('modal_company_wage').value) || 10.0;
+
+		if (!compName) return;
+
+		const submitBtn = document.getElementById('btn-submit-new-company');
+		submitBtn.disabled = true;
+		submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mendirikan...';
+
+		try {
+			const newComp = {
+				name: compName,
+				type: compType,
+				category: cat,
+				cost_euro: cost,
+				level: 1,
+				owner_uid: currentUser.uid,
+				owner_name: currentUserProfile?.username || currentUser.displayName || 'Pemain',
+				country_code: currentUserProfile?.country_code || 'ID',
+				country_name: currentUserProfile?.country_name || 'Indonesia',
+				region: region,
+				workplaces: 1,
+				wage: wage,
+				funds_gold: 5.0,
+				funds_currency: 100.0,
+				raw_storage: 200,
+				product_storage: 400,
+				license_status: 'Aktif',
+				production_status: 'Aktif',
+				created_at: new Date().toISOString(),
+				updated_at: new Date().toISOString()
+			};
+
+			await addDoc(collection(db, 'companies'), newComp);
+
+			// Automatically also register a vacancy in 'jobs' so players can work!
+			await addDoc(collection(db, 'jobs'), {
+				company_name: compName,
+				employer_name: currentUserProfile?.username || 'Pemain',
+				employer_uid: currentUser.uid,
+				category: cat === 'utilities' ? 'extraction' : (cat === 'gathering' ? 'gathering' : 'hand_working'),
+				type: compType,
+				wage: wage,
+				country_code: currentUserProfile?.country_code || 'ID',
+				created_at: new Date().toISOString()
+			});
+
+			alert(`Perusahaan ${compName} (${compType}) berhasil didirikan! Data tersimpan di Firebase.`);
+			$('#modal_create_company').modal('hide');
+			form.reset();
+			await loadUserCompanies(currentUser.uid);
+
+		} catch (err) {
+			console.error('Error creating company:', err);
+			alert('Gagal mendirikan perusahaan: ' + err.message);
+		} finally {
+			submitBtn.disabled = false;
+			submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Dirikan Perusahaan';
+		}
+	});
+}
+
+// Upgrade Company
+async function handleUpgradeCompany(e) {
+	const btn = e.currentTarget;
+	const compId = btn.getAttribute('data-id');
+	const currentLevel = parseInt(btn.getAttribute('data-level')) || 1;
+
+	if (currentLevel >= 8) {
+		alert('Perusahaan telah mencapai level maksimum (Level 8: +80% produktivitas)!');
+		return;
+	}
+
+	if (!confirm(`Tingkatkan level perusahaan ke Level ${currentLevel + 1}? (+10% bonus produktivitas)`)) {
+		return;
+	}
+
+	btn.disabled = true;
+	try {
+		const compRef = doc(db, 'companies', compId);
+		await updateDoc(compRef, {
+			level: currentLevel + 1,
+			updated_at: new Date().toISOString()
+		});
+
+		alert(`Selamat! Perusahaan berhasil ditingkatkan ke Level ${currentLevel + 1}.`);
+		await loadUserCompanies(currentUser.uid);
+	} catch (err) {
+		console.error('Upgrade error:', err);
+		alert('Gagal melakukan upgrade: ' + err.message);
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+// Toggle Production Status
+async function handleToggleProduction(e) {
+	const btn = e.currentTarget;
+	const compId = btn.getAttribute('data-id');
+	const currentStatus = btn.getAttribute('data-status');
+	const newStatus = (currentStatus === 'Berhenti') ? 'Aktif' : 'Berhenti';
+
+	btn.disabled = true;
+	try {
+		const compRef = doc(db, 'companies', compId);
+		await updateDoc(compRef, {
+			production_status: newStatus,
+			updated_at: new Date().toISOString()
+		});
+
+		alert(`Status produksi perusahaan diubah menjadi: ${newStatus}`);
+		await loadUserCompanies(currentUser.uid);
+	} catch (err) {
+		console.error('Toggle error:', err);
+		alert('Gagal mengubah status produksi: ' + err.message);
+	} finally {
+		btn.disabled = false;
+	}
+}
+
+// Filter buttons handler
+function setupFilterButtons() {
+	const filterBtns = document.querySelectorAll('.filter-btn');
+	filterBtns.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			filterBtns.forEach((b) => b.classList.remove('active'));
+			btn.classList.add('active');
+			activeFilter = btn.getAttribute('data-filter');
+			renderCompaniesList(userCompanies);
+		});
+	});
+}
+
+function escapeHtml(str) {
+	if (!str) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;');
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initMyCompaniesFirebase);
+} else {
+	initMyCompaniesFirebase();
+}
+</script>
+
 </body>
 </html>
