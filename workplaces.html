@@ -1,4 +1,4 @@
-  
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
@@ -18,8 +18,7 @@
 
 	<!-- Core Stylesheets: Matches dashboard.html color palette -->
 	<link rel="stylesheet" href="/dashboard.css">
-	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css?1">
-	<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -314,12 +313,16 @@
 				<!-- Currency Balances (Mirrors dashboard.html) -->
 				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
 						<b><span id="stat-euro">0.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
-						<b><span id="stat-gold">0.00</span></b>
+						<b><span id="stat-gold">10.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
 						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
@@ -375,7 +378,7 @@
 							<div class="skill-row">
 								<div class="skill-header">
 									<span>Gathering (Pengumpulan)</span>
-									<span id="skill-val-gathering">0 / 100</span>
+									<span id="skill-val-gathering">100 / 100</span>
 								</div>
 								<div class="progress progress-xs">
 									<div id="skill-bar-gathering" class="progress-bar progress-bar-success" style="width: 100%;"></div>
@@ -397,7 +400,7 @@
 							<div class="skill-row">
 								<div class="skill-header">
 									<span>Guest Servicing (Pelayanan)</span>
-									<span id="skill-val-guest_servicing">0 / 100</span>
+									<span id="skill-val-guest_servicing">100 / 100</span>
 								</div>
 								<div class="progress progress-xs">
 									<div id="skill-bar-guest_servicing" class="progress-bar progress-bar-success" style="width: 100%;"></div>
@@ -430,7 +433,7 @@
 							<div class="skill-row">
 								<div class="skill-header">
 									<span>Extraction (Pertambangan)</span>
-									<span id="skill-val-extraction">0 / 100</span>
+									<span id="skill-val-extraction">100 / 100</span>
 								</div>
 								<div class="progress progress-xs">
 									<div id="skill-bar-extraction" class="progress-bar progress-bar-success" style="width: 100%;"></div>
@@ -439,7 +442,7 @@
 
 							<div style="display:flex; justify-content:space-between; font-size: 11.5px; font-weight: 700; color: var(--text-dark); margin-top: 6px;">
 								<span>Total Poin Keahlian:</span>
-								<span id="total-skill-points">0 / 600</span>
+								<span id="total-skill-points">300 / 600</span>
 							</div>
 						</div>
 					</div>
@@ -706,9 +709,10 @@
 		</div>
 	</div>
 </div>
-			<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
 
+					<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
+<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
+	
 <!-- FOOTER (Matches dashboard.html & index.html clean style) -->
 <div class="footer">
 	<div class="container">
@@ -818,20 +822,22 @@ let auth = null;
 let currentUser = null;
 let currentUserProfile = null;
 
+const firebaseConfig = {
+	projectId: "gen-lang-client-0514427323",
+	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+	apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+	authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+	firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+	storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+	messagingSenderId: "16121083015",
+	measurementId: "",
+	oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+	recaptchaSiteKey: ""
+};
+
 async function initWorkplacesFirebase() {
 	const statusEl = document.getElementById('firebase-connection-status');
 	try {
-		const res = await fetch('/firebase-applet-config.json');
-		if (!res.ok) {
-			console.warn('Could not load firebase-applet-config.json');
-			if (statusEl) {
-				statusEl.className = 'label label-danger';
-				statusEl.textContent = 'Config Error';
-			}
-			return;
-		}
-
-		const firebaseConfig = await res.json();
 		app = initializeApp(firebaseConfig);
 		db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 		auth = getAuth(app);
