@@ -385,14 +385,21 @@ let app = null;
 let db = null;
 let auth = null;
 
+const firebaseConfig = {
+  projectId: "gen-lang-client-0514427323",
+  appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+  apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+  authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+  storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+  messagingSenderId: "16121083015",
+  measurementId: "",
+  oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+  recaptchaSiteKey: ""
+};
+
 async function initFirebase() {
   try {
-    const res = await fetch('/firebase-applet-config.json');
-    if (!res.ok) {
-      console.warn('Could not load firebase-applet-config.json');
-      return;
-    }
-    const firebaseConfig = await res.json();
     app = initializeApp(firebaseConfig);
     db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
     auth = getAuth(app);
@@ -660,9 +667,5 @@ if (document.readyState === 'loading') {
   initFirebase();
 }
 </script>
- 
-				<script async="async" data-cfasync="false" src="https://bauval.org/21/155237578e6f84c2a6d93ea22b88ea6d"></script>
-<div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div>
-	
 </body>
 </html>
