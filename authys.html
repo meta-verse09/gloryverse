@@ -8,8 +8,8 @@
 <meta name="description" content="Masuk atau Daftar akun pemain Glory Verse - Game Strategi Online">
 <link rel="shortcut icon" href="/favicon.ico">
 
-<!-- FontAwesome 6 -->
-<link rel="stylesheet" href="/css-game/fa6.5.1/css/all.min.css">
+<!-- FontAwesome 6 (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
   :root {
@@ -534,13 +534,24 @@ function translateFirebaseError(err) {
   return msg || 'Terjadi kesalahan autentikasi. Silakan coba lagi.';
 }
 
+// Konfigurasi Firebase langsung sebagai JavaScript Object (tanpa fetch / JSON.parse)
+const firebaseConfig = {
+  projectId: "gen-lang-client-0514427323",
+  appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+  apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+  authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+  storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+  messagingSenderId: "16121083015",
+  measurementId: "",
+  oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+  recaptchaSiteKey: ""
+};
+
 async function init() {
   try {
-    const res = await fetch('/firebase-applet-config.json');
-    if (!res.ok) throw new Error('Tidak dapat membaca firebase-applet-config.json');
-    const config = await res.json();
-    const app = initializeApp(config);
-    db = getFirestore(app, config.firestoreDatabaseId);
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
     auth = getAuth(app);
 
     const params = new URLSearchParams(window.location.search);
@@ -573,8 +584,8 @@ async function init() {
   } catch (err) {
     console.error('Inisialisasi Firebase gagal:', err);
     initStatus.innerHTML = `
-      <div style="color:var(--err); margin-bottom:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Konfigurasi Firebase tidak ditemukan.</div>
-      <small style="color:var(--muted);">Pastikan file firebase-applet-config.json tersedia.</small>
+      <div style="color:var(--err); margin-bottom:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Inisialisasi Firebase gagal: ${escapeHtml(err.message || String(err))}</div>
+      <small style="color:var(--muted);">Silakan muat ulang halaman atau hubungi administrator.</small>
     `;
   }
 }
