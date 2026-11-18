@@ -1,0 +1,317 @@
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all unknown documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == "m.gazali1975@gmail.com" && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['id', 'username']) &&
+             data.keys().hasOnly([
+               'id', 'username', 'email', 'country_code', 'country_name',
+               'region', 'region_name', 'level', 'xp', 'energy', 'health',
+               'gold', 'euro', 'svct', 'currency', 'income', 'alerts', 'messages',
+               'work_bonus', 'shifts_worked_today',
+               'gathering_skill', 'hand_working_skill', 'guest_servicing_skill',
+               'engineering_skill', 'writing_aesthetics_skill', 'extraction_skill',
+               'created_at', 'updated_at'
+             ]) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.username is string && data.username.size() > 0 && data.username.size() <= 50 &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 128)) &&
+             (!('country_code' in data) || (data.country_code is string && data.country_code.size() <= 5)) &&
+             (!('country_name' in data) || (data.country_name is string && data.country_name.size() <= 60)) &&
+             (!('region' in data) || (data.region is string && data.region.size() <= 100)) &&
+             (!('region_name' in data) || (data.region_name is string && data.region_name.size() <= 100)) &&
+             (!('level' in data) || (data.level is number && data.level >= 1)) &&
+             (!('xp' in data) || (data.xp is number && data.xp >= 0)) &&
+             (!('energy' in data) || (data.energy is number && data.energy >= 0 && data.energy <= 100)) &&
+             (!('health' in data) || (data.health is number && data.health >= 0 && data.health <= 100)) &&
+             (!('gold' in data) || (data.gold is number && data.gold >= 0)) &&
+             (!('euro' in data) || (data.euro is number && data.euro >= 0)) &&
+             (!('svct' in data) || (data.svct is number && data.svct >= 0)) &&
+             (!('currency' in data) || (data.currency is number && data.currency >= 0)) &&
+             (!('income' in data) || data.income is number) &&
+             (!('alerts' in data) || data.alerts is number) &&
+             (!('messages' in data) || data.messages is number) &&
+             (!('work_bonus' in data) || data.work_bonus is number) &&
+             (!('shifts_worked_today' in data) || data.shifts_worked_today is number) &&
+             (!('gathering_skill' in data) || data.gathering_skill is number) &&
+             (!('hand_working_skill' in data) || data.hand_working_skill is number) &&
+             (!('guest_servicing_skill' in data) || data.guest_servicing_skill is number) &&
+             (!('engineering_skill' in data) || data.engineering_skill is number) &&
+             (!('writing_aesthetics_skill' in data) || data.writing_aesthetics_skill is number) &&
+             (!('extraction_skill' in data) || data.extraction_skill is number) &&
+             (!('created_at' in data) || (data.created_at is string && data.created_at.size() <= 64)) &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
+    function isValidInventoryItem(data) {
+      return data.keys().hasAll(['id', 'owner_id', 'item_id', 'item_name', 'category', 'quantity']) &&
+             data.keys().hasOnly(['id', 'owner_id', 'item_id', 'item_name', 'item_icon', 'category', 'quality', 'quantity', 'updated_at']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.owner_id is string && data.owner_id.size() > 0 && data.owner_id.size() <= 128 &&
+             data.item_id is string && data.item_id.size() > 0 && data.item_id.size() <= 64 &&
+             data.item_name is string && data.item_name.size() > 0 && data.item_name.size() <= 80 &&
+             (!('item_icon' in data) || (data.item_icon is string && data.item_icon.size() <= 64)) &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 40 &&
+             (!('quality' in data) || (data.quality is number && data.quality >= 1 && data.quality <= 5)) &&
+             data.quantity is number && data.quantity >= 0 &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
+    function isValidMarketTransaction(data) {
+      return data.keys().hasAll(['id', 'user_id', 'type', 'description', 'amount', 'currency_type', 'status', 'created_at']) &&
+             data.keys().hasOnly(['id', 'user_id', 'type', 'description', 'amount', 'currency_type', 'status', 'created_at']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() > 0 && data.user_id.size() <= 128 &&
+             data.type is string && data.type.size() > 0 && data.type.size() <= 32 &&
+             data.description is string && data.description.size() > 0 && data.description.size() <= 200 &&
+             data.amount is number &&
+             data.currency_type in ['local', 'gold'] &&
+             data.status is string && data.status.size() > 0 && data.status.size() <= 30 &&
+             data.created_at is string && data.created_at.size() <= 64;
+    }
+
+    function isValidMarketplaceListing(data) {
+      return data.keys().hasAll(['id', 'seller_id', 'seller_name', 'item_id', 'item_name', 'category', 'quantity', 'price_per_unit', 'currency_type', 'country_code', 'status']) &&
+             data.keys().hasOnly(['id', 'seller_id', 'seller_name', 'item_id', 'item_name', 'item_icon', 'category', 'quality', 'quantity', 'price_per_unit', 'currency_type', 'country_code', 'country_name', 'region', 'status', 'created_at', 'updated_at']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.seller_id is string && data.seller_id.size() > 0 && data.seller_id.size() <= 128 &&
+             data.seller_name is string && data.seller_name.size() > 0 && data.seller_name.size() <= 50 &&
+             data.item_id is string && data.item_id.size() > 0 && data.item_id.size() <= 64 &&
+             data.item_name is string && data.item_name.size() > 0 && data.item_name.size() <= 80 &&
+             (!('item_icon' in data) || (data.item_icon is string && data.item_icon.size() <= 64)) &&
+             data.category is string && data.category.size() > 0 && data.category.size() <= 40 &&
+             (!('quality' in data) || (data.quality is number && data.quality >= 1 && data.quality <= 5)) &&
+             data.quantity is number && data.quantity >= 0 &&
+             data.price_per_unit is number && data.price_per_unit > 0 &&
+             data.currency_type in ['local', 'gold'] &&
+             data.country_code is string && data.country_code.size() > 0 && data.country_code.size() <= 5 &&
+             (!('country_name' in data) || (data.country_name is string && data.country_name.size() <= 60)) &&
+             (!('region' in data) || (data.region is string && data.region.size() <= 100)) &&
+             data.status in ['active', 'sold', 'cancelled'] &&
+             (!('created_at' in data) || (data.created_at is string && data.created_at.size() <= 64)) &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
+    function isValidMarketOrder(data) {
+      return data.keys().hasAll(['id', 'listing_id', 'buyer_id', 'seller_id', 'item_name', 'quantity', 'net_amount', 'currency_type', 'claimed', 'created_at']) &&
+             data.keys().hasOnly(['id', 'listing_id', 'buyer_id', 'buyer_name', 'seller_id', 'item_name', 'quantity', 'net_amount', 'currency_type', 'claimed', 'created_at', 'claimed_at']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.listing_id is string && data.listing_id.size() > 0 && data.listing_id.size() <= 128 &&
+             data.buyer_id is string && data.buyer_id.size() > 0 && data.buyer_id.size() <= 128 &&
+             (!('buyer_name' in data) || (data.buyer_name is string && data.buyer_name.size() <= 50)) &&
+             data.seller_id is string && data.seller_id.size() > 0 && data.seller_id.size() <= 128 &&
+             data.item_name is string && data.item_name.size() > 0 && data.item_name.size() <= 80 &&
+             data.quantity is number && data.quantity > 0 &&
+             data.net_amount is number && data.net_amount >= 0 &&
+             data.currency_type in ['local', 'gold'] &&
+             data.claimed is bool &&
+             data.created_at is string && data.created_at.size() <= 64 &&
+             (!('claimed_at' in data) || (data.claimed_at is string && data.claimed_at.size() <= 64));
+    }
+
+    function isValidCountryRanking(data) {
+      return data.keys().hasAll(['id', 'name', 'country_code']) &&
+             data.keys().hasOnly(['id', 'name', 'country_code', 'work_bonus', 'jobs', 'citizens', 'updated_at']) &&
+             data.id is string && data.id.size() <= 50 &&
+             data.name is string && data.name.size() <= 60 &&
+             data.country_code is string && data.country_code.size() <= 5 &&
+             (!('work_bonus' in data) || data.work_bonus is number) &&
+             (!('jobs' in data) || data.jobs is number) &&
+             (!('citizens' in data) || data.citizens is number) &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
+    function isValidWithdrawal(data) {
+      return data.keys().hasAll(['id', 'userId', 'username', 'amount_euro']) &&
+             data.keys().hasOnly(['id', 'userId', 'username', 'country_code', 'country_name', 'amount_euro', 'created_at']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.userId is string && data.userId == request.auth.uid &&
+             data.username is string && data.username.size() <= 50 &&
+             (!('country_code' in data) || (data.country_code is string && data.country_code.size() <= 5)) &&
+             (!('country_name' in data) || (data.country_name is string && data.country_name.size() <= 60)) &&
+             data.amount_euro is number && data.amount_euro > 0 &&
+             (!('created_at' in data) || (data.created_at is string && data.created_at.size() <= 64));
+    }
+
+    function isValidActiveWar(data) {
+      return data.keys().hasAll(['id', 'region', 'attacker_country_code', 'defender_country_code']) &&
+             data.keys().hasOnly(['id', 'region', 'attacker_country_code', 'defender_country_code', 'attacker_percent', 'defender_percent', 'status', 'updated_at']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.region is string && data.region.size() <= 100 &&
+             data.attacker_country_code is string && data.attacker_country_code.size() <= 5 &&
+             data.defender_country_code is string && data.defender_country_code.size() <= 5 &&
+             (!('attacker_percent' in data) || data.attacker_percent is number) &&
+             (!('defender_percent' in data) || data.defender_percent is number) &&
+             (!('status' in data) || (data.status is string && data.status.size() <= 30)) &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
+    function isValidExchangeRate(data) {
+      return data.keys().hasAll(['id', 'rate']) &&
+             data.keys().hasOnly(['id', 'rate', 'timestamp']) &&
+             data.id is string && data.id.size() <= 128 &&
+             data.rate is number &&
+             (!('timestamp' in data) || (data.timestamp is string && data.timestamp.size() <= 64));
+    }
+
+    // Connection health check document
+    match /test/connection {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // Admins Collection
+    match /admins/{adminId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+    }
+
+    // Users Collection (PII isolated to owner or admin)
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming()) && incoming().id == userId;
+      allow update: if (isOwner(userId) || isAdmin()) && isValidId(userId) && isValidUserProfile(incoming()) && incoming().id == existing().id;
+      allow delete: if isAdmin();
+
+      // Player Inventory Subcollection
+      match /inventory/{itemId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidId(itemId) && isValidInventoryItem(incoming()) && incoming().owner_id == userId;
+        allow update: if (isOwner(userId) || isAdmin()) && isValidId(itemId) && isValidInventoryItem(incoming()) && incoming().owner_id == existing().owner_id;
+        allow delete: if isOwner(userId) || isAdmin();
+      }
+
+      // Player Transactions Subcollection
+      match /transactions/{txId} {
+        allow get, list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && isValidId(txId) && isValidMarketTransaction(incoming()) && incoming().user_id == userId;
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // Marketplace Listings Collection (Public catalog of goods)
+    match /marketplace_listings/{listingId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && isValidId(listingId) && isValidMarketplaceListing(incoming()) &&
+                    incoming().seller_id == request.auth.uid && incoming().status == 'active' && incoming().quantity > 0;
+      allow update: if isSignedIn() && isValidId(listingId) && isValidMarketplaceListing(incoming()) && (
+                      isAdmin() ||
+                      // Seller cancels active listing
+                      (existing().seller_id == request.auth.uid && existing().status == 'active' &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updated_at']) &&
+                       incoming().status == 'cancelled') ||
+                      // Buyer purchases quantity from active listing
+                      (existing().status == 'active' &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['quantity', 'status', 'updated_at']) &&
+                       incoming().quantity >= 0 && incoming().quantity < existing().quantity &&
+                       ((incoming().quantity == 0 && incoming().status == 'sold') || (incoming().quantity > 0 && incoming().status == 'active')))
+                    );
+      allow delete: if isSignedIn() && (existing().seller_id == request.auth.uid || isAdmin());
+    }
+
+    // Market Orders (Escrow payout receipts for seller to claim proceeds safely)
+    match /market_orders/{orderId} {
+      allow get: if isSignedIn() && (existing().buyer_id == request.auth.uid || existing().seller_id == request.auth.uid || isAdmin());
+      allow list: if isSignedIn() && (resource.data.seller_id == request.auth.uid || resource.data.buyer_id == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && isValidId(orderId) && isValidMarketOrder(incoming()) &&
+                    incoming().buyer_id == request.auth.uid && incoming().claimed == false;
+      allow update: if isSignedIn() && isValidId(orderId) && isValidMarketOrder(incoming()) && (
+                      isAdmin() ||
+                      (existing().seller_id == request.auth.uid && existing().claimed == false &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['claimed', 'claimed_at']) &&
+                       incoming().claimed == true)
+                    );
+      allow delete: if isAdmin();
+    }
+
+    // Country Rankings Collection
+    match /countries/{countryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Withdrawals Collection
+    match /withdrawals/{withdrawalId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isValidId(withdrawalId) && isValidWithdrawal(incoming());
+      allow update, delete: if isAdmin();
+    }
+
+    // Active Wars Collection
+    match /wars/{warId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Exchange Rates Collection
+    match /exchange_rates/{rateId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Dashboard Shouts, Newspapers, Jobs, Companies (Existing game collections)
+    match /shouts/{shoutId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+
+    match /newspapers/{paperId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /jobs/{jobId} {
+      allow read: if true;
+      allow create: if isSignedIn() && incoming().employer_uid == request.auth.uid;
+      allow update, delete: if isSignedIn() && (existing().employer_uid == request.auth.uid || isAdmin());
+    }
+
+    match /companies/{companyId} {
+      allow read: if isSignedIn() && (resource.data.owner_uid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().owner_uid == request.auth.uid;
+      allow update, delete: if isSignedIn() && (existing().owner_uid == request.auth.uid || isAdmin());
+    }
+
+    match /work_history/{historyId} {
+      allow read: if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && incoming().uid == request.auth.uid;
+      allow update, delete: if isAdmin();
+    }
+  }
+}
