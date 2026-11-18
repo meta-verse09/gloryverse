@@ -1,649 +1,2081 @@
 
-
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Pasar Barang Lokal (Local Goods Market)</title>
+	<meta name="description" content="Glory Verse - Beli dan jual barang kebutuhan, makanan, senjata, dan bahan baku antar pemain di Pasar Lokal & Global">
+	<meta name="copyright" content="Glory Verse">
 
-<title>My Profit Land - Online Strategy Browser Game - Local Market</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="My Profit Land" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="My Profit Land - Online Strategy Browser Game - Local Market" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+	<style>
+		/* ============================================================
+		   LOCAL GOODS MARKET 2-COLUMN GRID (MATCHES DASHBOARD THEME)
+		   ============================================================ */
+		.market-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+		.leftbar,
+		.main {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
 
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-	<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
-
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
+		@media (max-width: 900px) {
+			.market-wrapper {
+				grid-template-columns: 1fr;
 			}
-		});
-	};
+		}
 
-</script>
+		/* Summary Strip */
+		.summary-strip {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 12px;
+			margin-bottom: 18px;
+		}
+		.summary-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			text-align: center;
+		}
+		.summary-box .num {
+			font-family: 'Roboto Slab', serif;
+			font-size: 20px;
+			font-weight: 700;
+			color: var(--accent);
+			margin: 2px 0;
+		}
+		.summary-box .lbl {
+			font-size: 11px;
+			color: var(--muted);
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+		}
 
+		/* Market Mode Switcher (Local vs Global) */
+		.market-mode-switch {
+			display: inline-flex;
+			background: #eef1f5;
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 3px;
+			gap: 4px;
+		}
+		.mode-btn {
+			padding: 6px 14px;
+			border-radius: 4px;
+			border: none;
+			background: transparent;
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.mode-btn.active {
+			background: var(--accent);
+			color: #ffffff;
+			box-shadow: 0 1px 3px rgba(5, 122, 158, 0.25);
+		}
+		.mode-btn.active-gold {
+			background: var(--gold-dark);
+			color: #ffffff;
+			box-shadow: 0 1px 3px rgba(192, 127, 16, 0.25);
+		}
 
+		/* Tabs (Matches workplaces.html) */
+		.nav-tabs-custom {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+			border-bottom: 2px solid var(--border);
+			margin: 14px 0 14px;
+			padding: 0;
+			list-style: none;
+		}
+		.nav-tabs-custom li {
+			margin-bottom: -2px;
+		}
+		.nav-tabs-custom li button {
+			display: block;
+			padding: 8px 14px;
+			background: #f1f3f6;
+			border: 1px solid var(--border);
+			border-bottom: 2px solid transparent;
+			border-radius: 6px 6px 0 0;
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s ease;
+			font-family: 'Roboto', sans-serif;
+		}
+		.nav-tabs-custom li button:hover {
+			background: #e8ecf1;
+			color: var(--accent);
+		}
+		.nav-tabs-custom li.active button {
+			background: #ffffff;
+			color: var(--accent);
+			border-color: var(--border);
+			border-bottom-color: #ffffff;
+			box-shadow: 0 -2px 0 var(--accent);
+		}
 
+		/* Filter Toolbar */
+		.market-filter-bar {
+			background: #fafbfc;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			margin-bottom: 16px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+		.filter-pills {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+		}
+		.filter-btn {
+			padding: 5px 11px;
+			border-radius: 20px;
+			border: 1px solid var(--border);
+			background: #ffffff;
+			color: var(--text-dark);
+			font-size: 11.5px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.filter-btn:hover {
+			background: #f1f5f9;
+			border-color: #cbd5e1;
+		}
+		.filter-btn.active {
+			background: var(--accent);
+			color: #ffffff;
+			border-color: var(--accent);
+		}
 
+		/* Item & Listing Cards */
+		.market-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			gap: 14px;
+		}
+		.listing-card {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			transition: box-shadow 0.2s ease, border-color 0.2s ease;
+		}
+		.listing-card:hover {
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+			border-color: #cbd5e1;
+		}
+		.item-icon-box {
+			width: 44px;
+			height: 44px;
+			border-radius: 8px;
+			background: #eef7fc;
+			border: 1px solid #c7e3f4;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+			color: var(--accent);
+			flex-shrink: 0;
+		}
+		.quality-stars {
+			color: var(--gold);
+			font-size: 10px;
+			letter-spacing: 1px;
+		}
+		.listing-meta-box {
+			background: #fafbfc;
+			border: 1px solid #eef0f4;
+			border-radius: 5px;
+			padding: 8px 10px;
+			margin: 10px 0 12px;
+			font-size: 12px;
+		}
+		.listing-meta-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 2px 0;
+		}
 
+		/* Custom Modals (Pure CSS/JS, no Bootstrap conflict) */
+		.gv-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			background: rgba(15, 18, 24, 0.65);
+			z-index: 2000;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 16px;
+		}
+		.gv-modal-backdrop.open {
+			display: flex;
+		}
+		.gv-modal-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			max-width: 440px;
+			width: 100%;
+			box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+			overflow: hidden;
+		}
+		.gv-modal-header {
+			background: #fafbfc;
+			border-bottom: 1px solid var(--border);
+			padding: 12px 16px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.gv-modal-header h5 {
+			margin: 0;
+			border: none;
+			padding: 0;
+			font-size: 15px;
+		}
+		.gv-modal-close {
+			background: transparent;
+			border: none;
+			font-size: 18px;
+			color: var(--muted);
+			cursor: pointer;
+			line-height: 1;
+		}
+		.gv-modal-close:hover {
+			color: var(--text-dark);
+		}
+		.gv-modal-body {
+			padding: 16px;
+		}
+		.gv-modal-footer {
+			background: #fafbfc;
+			border-top: 1px solid var(--border);
+			padding: 10px 16px;
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+		}
 
+		/* Feedback Banner */
+		#market-feedback-banner {
+			display: none;
+			margin-bottom: 14px;
+		}
 
-
+		/* Form select compact */
+		.select-compact {
+			height: 30px;
+			padding: 4px 8px;
+			font-size: 12px;
+			border: 1px solid #ccd0d6;
+			border-radius: 4px;
+			background: #ffffff;
+			color: var(--text-dark);
+		}
+	</style>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (Matches dashboard.html) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-arrows-rotate" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Sistem Pembaruan: <b>Refresh Manual (F5)</b>. Data pasar dimuat sekali saat halaman dibuka tanpa polling latar belakang.</span>
+		</div>
+		<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+			<span id="firebase-connection-status" class="label label-light" style="background: #e2e8f0; color: #475569;">
+				<i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan Firebase...
+			</span>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm">
+				<i class="fa-solid fa-arrow-rotate-right"></i> Refresh Halaman (F5)
+			</button>
+		</div>
+	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (game-head matching dashboard.html) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-					
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 18, 2026 01:15:08' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 65.4% (1309 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">01:15:08</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 65.4%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (86)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9786)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a>  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- London Server Clock -->
+				<div style="text-align: right;">
+					<span class="label label-light" style="background: rgba(255,255,255,0.92); color: #333; border: 1px solid #cbd5e1;">
+						<i class="fa-regular fa-clock" style="margin-right: 4px; color: var(--accent);"></i>
+						<b id="server_time">--:--:--</b> London
+					</span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 65%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 210px;">
+					<form method="get" action="/market_local.html" onsubmit="event.preventDefault(); document.getElementById('market-search-input').focus();">
+						<input type="text" class="form-control" placeholder="Cari Barang / Penjual..." style="width: 210px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<a href="/financial.html" class="label label-success" id="player-income-badge">Income (0)</a>
+					<a href="/dashboard.html" class="label label-warning" id="player-alerts-badge">Alerts (0)</a>
+					<a href="/dashboard.html" class="label label-light" id="player-messages-badge">Messages (0)</a>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Masuk</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Clean light bar with all dropdowns matching dashboard.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li> <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="icon-stopwatch blue"></span>
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		<span class="icon-stopwatch blue"></span>
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li class="active" > <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_manage.html", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
-															</ul>
-						</li>
+					<li><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li class="active"><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/market_local.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li><a href="/my_companies.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;My Companies</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Military Power</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/my_profile.html"><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i> My Profile</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://gloryverse.id/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/sv.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=SV">El Salvador</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=432">Cabanatuan</a></span><a data-toggle="tooltip" title="Active War" href="https://gloryverse.id/war.html&id=99869" class="icon icon-crosshairs red icon-big"></a>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 94.1% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a>  <a href="https://gloryverse.id/hospital.html" data-toggle="tooltip" title="Infected with Common Cold. Visit a Hospital to get vaccinated."><i class="fa-solid fa-virus" style="color:#d9534f"></i></a>		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="94.1" aria-valuemin="0" aria-valuemax="100" style="width: 94.1%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 97.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="97.0" aria-valuemin="0" aria-valuemax="100" style="width: 97.0%;">
-			</div>
-		</div>
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="market-wrapper">
 
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 1809/17867&nbsp;&nbsp;&nbsp;10%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-											</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="528.6">528.600</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 2.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 106.79 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/sv.png"> SAL: 0.00</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-
-														
-							<h4>Local Market</h4>
-								
-							<p class="small">In the local market you can buy all the products that the local companies are selling.</p>
-							
-							<script type="text/javascript">
-								ajaxcall("https://gloryverse.id/ajax/market_local.html&type=1&sub=0&prod=0", "#market_ajax")
-							</script>
-
-							<div id="market_ajax"></div>
-							
-							
-						</div><!-- end .main -->			
-					
-						<div class="rightbar">
-	
-							<h6>My Friends</h6>
-
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to aleksokubo" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=aleksokubo"></a> <a href="https://gloryverse.id/profile.html&id=aleksokubo">aleksokubo</a> <a href="https://gloryverse.id/country.html&id=VE"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ve.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to kurniawan214" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=kurniawan214"></a> <a href="https://gloryverse.id/profile.html&id=kurniawan214">kurniawan214</a> <a href="https://gloryverse.id/country.html&id=ID"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/id.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 10 minutes ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Dingdong"></a> <a href="https://gloryverse.id/profile.html&id=Dingdong">Dingdong</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 14 minutes ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Tedong_Naga819"></a> <a href="https://gloryverse.id/profile.html&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 14 minutes ago, Send a Message to Phoenix" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Phoenix"></a> <a href="https://gloryverse.id/profile.html&id=Phoenix">Phoenix</a> <a href="https://gloryverse.id/country.html&id=EH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/eh.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 33 minutes ago, Send a Message to RAJAPERDANAINTI" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=RAJAPERDANAINTI"></a> <a href="https://gloryverse.id/profile.html&id=RAJAPERDANAINTI">RAJAPERDANAINTI</a> <a href="https://gloryverse.id/country.html&id=LY"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 41 minutes ago, Send a Message to Aris" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Aris"></a> <a href="https://gloryverse.id/profile.html&id=Aris">Aris</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Bulux"></a> <a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Reingkarnasi"></a> <a href="https://gloryverse.id/profile.html&id=Reingkarnasi">Reingkarnasi</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=julienoor"></a> <a href="https://gloryverse.id/profile.html&id=julienoor">julienoor</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Pepa"></a> <a href="https://gloryverse.id/profile.html&id=Pepa">Pepa</a> <a href="https://gloryverse.id/country.html&id=ES"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/es.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 6 hours ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Eagle"></a> <a href="https://gloryverse.id/profile.html&id=Eagle">Eagle</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 6 hours ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=515"></a> <a href="https://gloryverse.id/profile.html&id=515">515</a> <a href="https://gloryverse.id/country.html&id=XK"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/xk.png"></a>
-						</div>
-					
-				
-				<a class="small" href="https://gloryverse.id/my_friends.html">View All</a>
-						<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					New General's Castle. Can be placed wherever you like. Send me a private message (PM) right away!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=AlLQaeda">AlLQaeda</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Libya is looking for more workers, and for those who wish to begin their journey as warriors, we serve as a training center. Come and join us! For more information, contact the Prime Minister.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=victorh007">victorh007</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					WTS: Coal mining company in Brazil, production upgrade level 4				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Assasin">Assasin</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/br.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					i sell my companie Attack Weapons  in Indonesia , give me your offer				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=speedtuning">speedtuning</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/gi.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					El Salvador Looking for 5 Active Elite Warriors. Those who own Coffee Shop will be given priority. Many Benefit here. Thx.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=DonCareLeone">DonCareLeone</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Hello everyone, I am currently employed and am looking for a country where I can receive my salary via a bank account. Thank you.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Eeag_96">Eeag_96</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					If you are looking for a good job and a bonus, please join us in Gibraltar—there is also a joining bonus.welcome				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Denoman76">Denoman76</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/gi.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Want to buy coffee bean & Chocolate via bank pm me				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=CryptoGuy">CryptoGuy</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ve.png"><br>
-						4 days ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+			<!-- LEFT SIDEBAR: Dynamic Player Card (No legacy ADVAN data; populated by Firebase) -->
+			<div class="leftbar">
+				<!-- Player Avatar & Name -->
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
 					</div>
 				</div>
 
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
-			</form>
-		
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
 
-		
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
 
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
 
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
+				<!-- Currency Balances (Connected to Firebase users/{uid}) -->
+				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
 
+				<!-- Sidebar Quick Navigation -->
+				<ul class="list-group" style="margin-bottom: 14px;">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Kembali ke Dashboard</a></li>
+					<li class="list-group-item active" style="background: var(--accent); border-color: var(--accent);"><a href="/market_local.html" style="color: #fff;"><i class="fa-solid fa-store" style="margin-right: 6px;"></i> Pasar Barang Lokal</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Inventaris Saya</a></li>
+					<li class="list-group-item"><a href="/my_companies.html"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> Perusahaan Saya</a></li>
+					<li class="list-group-item"><a href="/workplaces.html"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Tempat Kerja</a></li>
+					<li class="list-group-item"><a href="/financial.html"><i class="fa-solid fa-chart-line" style="margin-right: 6px;"></i> Pasar Finansial</a></li>
+					<li class="list-group-item"><a href="/wars.html"><i class="fa-solid fa-crosshairs" style="margin-right: 6px;"></i> Aktivitas Perang</a></li>
+				</ul>
 
-			</div><!-- end .contents -->
-			<div class="footer">
+				<!-- Action Buttons -->
+				<div style="display: flex; gap: 6px; margin-bottom: 12px;">
+					<a class="btn btn-success btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-download"></i> Invest</a>
+					<a class="btn btn-danger btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-upload"></i> Withdraw</a>
+				</div>
+
+				<!-- Prompt login if guest -->
+				<div id="auth-prompt-sidebar" style="margin-top: 10px;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: Local & Global Goods Market -->
+			<div class="main">
+
+				<!-- Feedback Banner (replaces window.alert) -->
+				<div id="market-feedback-banner" class="alert alert-success"></div>
+
+				<!-- Page Header + Market Mode Switch -->
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+					<div>
+						<h4 style="margin: 0 0 4px;">
+							<i class="fa-solid fa-store" style="color: var(--accent); margin-right: 8px;"></i>
+							Pasar Barang Lokal (Local Goods Market)
+						</h4>
+						<p class="small" style="color: #64748b; margin: 0;">
+							Wilayah aktif: <b id="market-country-label">Indonesia (ID)</b> &bull; Pajak Transaksi Pasar: <b>2.5%</b> &bull; Data langsung dari Firebase Firestore.
+						</p>
+					</div>
+
+					<div class="market-mode-switch" role="group" aria-label="Pilih mode pasar">
+						<button type="button" id="btn-mode-local" class="mode-btn active">
+							<i class="fa-solid fa-location-dot"></i> Pasar Lokal (Local)
+						</button>
+						<button type="button" id="btn-mode-global" class="mode-btn">
+							<i class="fa-solid fa-globe"></i> Pasar Global (Gold)
+						</button>
+					</div>
+				</div>
+
+				<!-- Summary Stats Strip -->
+				<div class="summary-strip">
+					<div class="summary-box">
+						<div class="lbl">Listing Aktif</div>
+						<div class="num" id="stat-market-listings">0</div>
+						<div class="lbl">Penawaran Tersedia</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Inventaris Anda</div>
+						<div class="num" id="stat-my-inventory-qty" style="color: var(--green);">0</div>
+						<div class="lbl">Total Unit Barang</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Listing Anda</div>
+						<div class="num" id="stat-my-active-listings" style="color: var(--orange);">0</div>
+						<div class="lbl">Sedang Dijual</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Pemasukan Pending</div>
+						<div class="num" id="stat-pending-payouts" style="color: var(--gold-dark);">0</div>
+						<div class="lbl">Pesanan Terjual</div>
+					</div>
+				</div>
+
+				<!-- Market Navigation Tabs -->
+				<ul class="nav-tabs-custom" id="market-tabs">
+					<li class="active"><button type="button" data-tab="buy"><i class="fa-solid fa-cart-shopping"></i> Beli Barang (<span id="badge-tab-buy">0</span>)</button></li>
+					<li><button type="button" data-tab="sell"><i class="fa-solid fa-tags"></i> Jual dari Inventaris (<span id="badge-tab-sell">0</span>)</button></li>
+					<li><button type="button" data-tab="mylistings"><i class="fa-solid fa-list-check"></i> Listing Saya (<span id="badge-tab-mine">0</span>)</button></li>
+					<li><button type="button" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Transaksi (<span id="badge-tab-history">0</span>)</button></li>
+				</ul>
+
+				<!-- Filter Toolbar (shown in Buy tab) -->
+				<div class="market-filter-bar" id="buy-filter-toolbar">
+					<div class="filter-pills" id="category-filter-pills">
+						<button type="button" class="filter-btn active" data-cat="all">Semua</button>
+						<button type="button" class="filter-btn" data-cat="food"><i class="fa-solid fa-utensils"></i> Makanan &amp; Energi</button>
+						<button type="button" class="filter-btn" data-cat="weapons"><i class="fa-solid fa-gun"></i> Senjata &amp; Militer</button>
+						<button type="button" class="filter-btn" data-cat="raw"><i class="fa-solid fa-cubes"></i> Bahan Baku</button>
+						<button type="button" class="filter-btn" data-cat="utilities"><i class="fa-solid fa-bolt"></i> Utilitas</button>
+						<button type="button" class="filter-btn" data-cat="other"><i class="fa-solid fa-box"></i> Lainnya</button>
+					</div>
+
+					<div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+						<input type="text" id="market-search-input" class="form-control" placeholder="Cari nama item..." style="width: 170px; height: 30px; font-size: 12px;">
+						<select id="market-sort-select" class="select-compact" title="Urutkan barang">
+							<option value="price_asc">Harga Termurah</option>
+							<option value="price_desc">Harga Termahal</option>
+							<option value="newest">Terbaru</option>
+							<option value="qty_desc">Stok Terbanyak</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- Dynamic Tab Content Area -->
+				<div id="market-content-area">
+					<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+						<i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: var(--accent); margin-bottom: 10px;"></i>
+						<div style="color: var(--muted);">Memuat data pasar dari Firebase Firestore...</div>
+					</div>
+				</div>
+
+				<!-- Market Info / Rules Box -->
+				<div class="well well-sm" style="margin-top: 18px; background: #fafbfc; border-color: var(--border);">
+					<h5 style="margin: 0 0 6px; font-size: 13px; border: none; padding: 0;">
+						<i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>
+						Informasi Perdagangan Pasar Lokal &amp; Global:
+					</h5>
+					<ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #64748b; line-height: 1.6;">
+						<li><b>Pasar Lokal (Local Market)</b> menggunakan saldo <b>Uang Lokal</b> untuk transaksi barang di dalam negara Anda.</li>
+						<li><b>Pasar Global (Global Market)</b> menggunakan saldo <b>Gold</b> untuk perdagangan lintas negara.</li>
+						<li>Hasil penjualan barang dikenakan biaya pasar <b>2.5%</b> dan otomatis masuk ke saldo penjual saat halaman dimuat atau melalui tombol klaim.</li>
+						<li>Data dimuat menggunakan sistem <b>Refresh Halaman (F5)</b> agar stabil dan hemat pembacaan database Firebase.</li>
+					</ul>
+				</div>
+
+			</div><!-- end .main -->
+
+		</div><!-- end .market-wrapper -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- FOOTER (Matches dashboard.html) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(6) 0.004s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					<b>Glory Verse</b> &copy; 2026. Online Economic &amp; Military Strategy Browser Game.<br>
+					Server Time (London): <span id="footer_server_time">--:--:--</span> &bull;
+					<a href="/dashboard.html">Dashboard</a> &bull;
+					<a href="/workplaces.html">Workplaces</a> &bull;
+					<a href="/my_companies.html">My Companies</a> &bull;
+					<a href="/wars.html">Wars</a> &bull;
+					<a href="/market_local.html">Local Market</a> &bull;
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
+</div><!-- end .page -->
+</div><!-- end .viewport -->
+
+<!-- MODAL: KONFIRMASI BELI BARANG -->
+<div id="modal-buy" class="gv-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-buy-title">
+	<div class="gv-modal-box">
+		<div class="gv-modal-header">
+			<h5 id="modal-buy-title"><i class="fa-solid fa-cart-shopping" style="color: var(--accent); margin-right: 6px;"></i> Konfirmasi Pembelian</h5>
+			<button type="button" class="gv-modal-close" id="btn-close-buy-modal" aria-label="Tutup">&times;</button>
+		</div>
+		<div class="gv-modal-body">
+			<div class="well well-sm" style="background: #fafbfc; margin-bottom: 12px;">
+				<div class="listing-meta-row"><span>Barang:</span><b id="buy-item-name">-</b></div>
+				<div class="listing-meta-row"><span>Penjual:</span><b id="buy-seller-name">-</b></div>
+				<div class="listing-meta-row"><span>Wilayah:</span><span id="buy-region-name">-</span></div>
+				<div class="listing-meta-row"><span>Stok Tersedia:</span><b id="buy-available-qty">0</b></div>
+				<div class="listing-meta-row"><span>Harga Satuan:</span><b id="buy-unit-price">0</b></div>
+			</div>
+
+			<div style="margin-bottom: 10px;">
+				<label for="buy-qty-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Jumlah yang Dibeli:</label>
+				<div style="display: flex; gap: 6px;">
+					<input type="number" id="buy-qty-input" class="form-control" min="1" value="1">
+					<button type="button" id="btn-buy-max" class="btn btn-default btn-sm">Semua</button>
+				</div>
+			</div>
+
+			<div class="alert alert-info" style="margin-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
+				<span>Total Pembayaran:</span>
+				<b id="buy-total-cost" style="font-size: 15px;">0.00</b>
+			</div>
+		</div>
+		<div class="gv-modal-footer">
+			<button type="button" class="btn btn-default btn-sm" id="btn-cancel-buy">Batal</button>
+			<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-confirm-buy">
+				<i class="fa-solid fa-check"></i> Beli Sekarang
+			</button>
+		</div>
+	</div>
 </div>
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- MODAL: PASANG LISTING JUAL BARANG -->
+<div id="modal-sell" class="gv-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-sell-title">
+	<div class="gv-modal-box">
+		<div class="gv-modal-header">
+			<h5 id="modal-sell-title"><i class="fa-solid fa-tag" style="color: var(--green); margin-right: 6px;"></i> Jual Barang ke Pasar</h5>
+			<button type="button" class="gv-modal-close" id="btn-close-sell-modal" aria-label="Tutup">&times;</button>
+		</div>
+		<div class="gv-modal-body">
+			<div class="well well-sm" style="background: #fafbfc; margin-bottom: 12px;">
+				<div class="listing-meta-row"><span>Item Inventaris:</span><b id="sell-item-name">-</b></div>
+				<div class="listing-meta-row"><span>Kategori / Kualitas:</span><span id="sell-item-meta">-</span></div>
+				<div class="listing-meta-row"><span>Stok Anda:</span><b id="sell-available-qty">0</b></div>
+			</div>
 
-			
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+			<div style="margin-bottom: 10px;">
+				<label for="sell-currency-select" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Target Pasar:</label>
+				<select id="sell-currency-select" class="form-control">
+					<option value="local">Pasar Lokal (Uang Lokal)</option>
+					<option value="gold">Pasar Global (Gold)</option>
+				</select>
+			</div>
+
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+				<div>
+					<label for="sell-qty-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Jumlah Jual:</label>
+					<input type="number" id="sell-qty-input" class="form-control" min="1" value="1">
+				</div>
+				<div>
+					<label for="sell-price-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Harga / Unit:</label>
+					<input type="number" id="sell-price-input" class="form-control" min="0.01" step="0.01" value="1.50">
+				</div>
+			</div>
+
+			<div class="alert alert-warning" style="margin-bottom: 0; font-size: 11.5px;">
+				Estimasi Bersih setelah Pajak Pasar (2.5%): <b id="sell-net-preview">0.00</b>
+			</div>
+		</div>
+		<div class="gv-modal-footer">
+			<button type="button" class="btn btn-default btn-sm" id="btn-cancel-sell">Batal</button>
+			<button type="button" class="btn btn-success btn-sm" id="btn-confirm-sell">
+				<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT: LONDON CLOCK & FIREBASE MARKET INTEGRATION
+     ============================================================ -->
+<script>
+// London Clock (Europe/London)
+function updateLondonClock() {
+	try {
+		const now = new Date();
+		const formatter = new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			hour12: false,
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		});
+		const timeStr = formatter.format(now);
+		const clockEl = document.getElementById('server_time');
+		const footerEl = document.getElementById('footer_server_time');
+		if (clockEl) clockEl.textContent = timeStr;
+		if (footerEl) footerEl.textContent = timeStr;
+	} catch (e) {
+		const d = new Date();
+		const pad = (n) => (n < 10 ? '0' + n : n);
+		const fallback = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+		const clockEl = document.getElementById('server_time');
+		if (clockEl) clockEl.textContent = fallback;
+	}
+}
+setInterval(updateLondonClock, 1000);
+updateLondonClock();
+
+document.getElementById('btn-manual-refresh').addEventListener('click', () => {
+	window.location.reload();
+});
+</script>
+
+<!-- Firebase Refresh-Based Market Module -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import {
+	getAuth,
+	onAuthStateChanged,
+	signOut
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
+import {
+	getFirestore,
+	doc,
+	getDoc,
+	getDocFromServer,
+	setDoc,
+	updateDoc,
+	deleteDoc,
+	collection,
+	getDocs,
+	query,
+	where,
+	orderBy,
+	limit
+} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
+
+// Direct Firebase Configuration Object (no fetch / JSON.parse)
+const firebaseConfig = {
+	projectId: "gen-lang-client-0514427323",
+	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+	apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+	authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+	firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+	storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+	messagingSenderId: "16121083015",
+	measurementId: "",
+	oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+	recaptchaSiteKey: ""
+};
+
+const OperationType = {
+	CREATE: 'create',
+	UPDATE: 'update',
+	DELETE: 'delete',
+	LIST: 'list',
+	GET: 'get',
+	WRITE: 'write'
+};
+
+const MARKET_FEE = 0.025;
+
+let app = null;
+let auth = null;
+let db = null;
+let currentUser = null;
+let currentUserProfile = null;
+
+let activeTab = 'buy';       // 'buy' | 'sell' | 'mylistings' | 'history'
+let marketMode = 'local';    // 'local' | 'global'
+let categoryFilter = 'all';  // 'all' | 'food' | 'weapons' | 'raw' | 'utilities' | 'other'
+let searchKeyword = '';
+let sortMode = 'price_asc';
+
+let allListings = [];
+let myInventory = [];
+let myListings = [];
+let myTransactions = [];
+let pendingOrders = [];
+
+let selectedBuyListing = null;
+let selectedSellItem = null;
+
+function handleFirestoreError(error, operationType, path) {
+	const errInfo = {
+		error: error instanceof Error ? error.message : String(error),
+		authInfo: {
+			userId: auth && auth.currentUser ? auth.currentUser.uid : null,
+			email: auth && auth.currentUser ? auth.currentUser.email : null,
+			emailVerified: auth && auth.currentUser ? auth.currentUser.emailVerified : null
+		},
+		operationType,
+		path
+	};
+	console.error('Firestore Error:', JSON.stringify(errInfo));
+	return errInfo;
+}
+
+async function testConnection() {
+	try {
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (error) {
+		if (error instanceof Error && error.message.includes('the client is offline')) {
+			console.error('Firebase client is offline. Periksa konfigurasi Firebase.');
+		}
+	}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+	initMarketFirebase();
+});
+
+async function initMarketFirebase() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		app = initializeApp(firebaseConfig);
+		db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = getAuth(app);
+
+		await testConnection();
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
+		}
+
+		setupUIEvents();
+		setupAuth();
+
+		// One-time fetch for active marketplace listings on page load
+		await loadMarketplaceListings();
+		renderActiveTab();
+
+	} catch (err) {
+		console.error('Firebase init error in market_local:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+		renderActiveTab();
+	}
+}
+
+function setupAuth() {
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					currentUserProfile = {
+						id: user.uid,
+						username: user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain'),
+						email: user.email || '',
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 100,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					const btnLogout = document.getElementById('btn-logout');
+					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+				// Load user inventory, listings, transactions, and claim any pending seller payouts (one-time fetch)
+				await Promise.all([
+					loadMyInventory(user.uid),
+					loadMyTransactions(user.uid),
+					loadAndClaimPendingOrders(user.uid)
+				]);
+
+				updateMyListingsFromAll();
+				renderPlayerProfile(currentUserProfile, user);
+				updateSummaryStrip();
+				renderActiveTab();
+
+			} catch (err) {
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+			}
+		} else {
+			currentUserProfile = null;
+			myInventory = [];
+			myListings = [];
+			myTransactions = [];
+			pendingOrders = [];
+
+			renderGuestState();
+			updateSummaryStrip();
+			renderActiveTab();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk membeli &amp; menjual barang:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
+	});
+}
+
+function renderPlayerProfile(p, user) {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
+
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const cName = p.country_name || 'Indonesia';
+	const cCode = p.country_code || 'ID';
+	const rName = p.region_name || p.region || 'Jakarta';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	const marketCountryEl = document.getElementById('market-country-label');
+
+	if (countryEl) countryEl.textContent = cName;
+	if (regionEl) regionEl.textContent = rName;
+	if (marketCountryEl) marketCountryEl.textContent = `${cName} (${cCode})`;
+
+	const energy = Math.round(Number(p.energy !== undefined ? p.energy : 100));
+	const health = Math.round(Number(p.health !== undefined ? p.health : 100));
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	const energyVal = document.getElementById('stat-energy-val');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyVal) energyVal.textContent = energy + '%';
+	if (energyBar) energyBar.style.width = Math.min(100, Math.max(0, energy)) + '%';
+
+	const healthVal = document.getElementById('stat-health-val');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthVal) healthVal.textContent = health + '%';
+	if (healthBar) healthBar.style.width = Math.min(100, Math.max(0, health)) + '%';
+
+	const levelVal = document.getElementById('stat-level-val');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (levelVal) levelVal.textContent = `Level ${level} (${xp} XP)`;
+	if (xpBar) xpBar.style.width = Math.min(100, (xp % 100)) + '%';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = Number(p.svct || 0).toFixed(3);
+	if (euroEl) euroEl.textContent = Number(p.euro || 0).toFixed(2);
+	if (goldEl) goldEl.textContent = Number(p.gold !== undefined ? p.gold : 10).toFixed(2);
+	if (currEl) currEl.textContent = Number(p.currency || 0).toFixed(2);
+
+	const incomeBadge = document.getElementById('player-income-badge');
+	const alertsBadge = document.getElementById('player-alerts-badge');
+	const msgBadge = document.getElementById('player-messages-badge');
+	if (incomeBadge) incomeBadge.textContent = `Income (${p.income || 0})`;
+	if (alertsBadge) alertsBadge.textContent = `Alerts (${p.alerts || 0})`;
+	if (msgBadge) msgBadge.textContent = `Messages (${p.messages || 0})`;
+}
+
+function renderGuestState() {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = 'Tamu (Belum Login)';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	if (countryEl) countryEl.textContent = 'Indonesia';
+	if (regionEl) regionEl.textContent = 'Jakarta';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = '0.00';
+	if (euroEl) euroEl.textContent = '0.00';
+	if (goldEl) goldEl.textContent = '0.00';
+	if (currEl) currEl.textContent = '0.00';
+}
+
+// ============================================================
+// ONE-TIME FIRESTORE LOADERS
+// ============================================================
+async function loadMarketplaceListings() {
+	try {
+		const q = query(
+			collection(db, 'marketplace_listings'),
+			where('status', '==', 'active'),
+			limit(100)
+		);
+		const snap = await getDocs(q);
+		allListings = [];
+		snap.forEach((d) => {
+			allListings.push({ id: d.id, ...d.data() });
+		});
+		updateMyListingsFromAll();
+		updateSummaryStrip();
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'marketplace_listings');
+		allListings = [];
+	}
+}
+
+async function loadMyInventory(uid) {
+	const path = `users/${uid}/inventory`;
+	try {
+		const q = query(collection(db, 'users', uid, 'inventory'), limit(100));
+		const snap = await getDocs(q);
+		myInventory = [];
+		snap.forEach((d) => {
+			const data = d.data();
+			if (Number(data.quantity || 0) > 0) {
+				myInventory.push({ id: d.id, ...data });
+			}
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myInventory = [];
+	}
+}
+
+async function loadMyTransactions(uid) {
+	const path = `users/${uid}/transactions`;
+	try {
+		const q = query(
+			collection(db, 'users', uid, 'transactions'),
+			orderBy('created_at', 'desc'),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		myTransactions = [];
+		snap.forEach((d) => {
+			myTransactions.push({ id: d.id, ...d.data() });
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myTransactions = [];
+	}
+}
+
+async function loadAndClaimPendingOrders(uid) {
+	try {
+		const q = query(
+			collection(db, 'market_orders'),
+			where('seller_id', '==', uid),
+			where('claimed', '==', false),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		pendingOrders = [];
+		snap.forEach((d) => pendingOrders.push({ id: d.id, ...d.data() }));
+
+		if (pendingOrders.length > 0 && currentUserProfile) {
+			let addedGold = 0;
+			let addedLocal = 0;
+			const nowIso = new Date().toISOString();
+
+			for (const order of pendingOrders) {
+				const net = Number(order.net_amount || 0);
+				if (order.currency_type === 'gold') addedGold += net;
+				else addedLocal += net;
+
+				await updateDoc(doc(db, 'market_orders', order.id), {
+					claimed: true,
+					claimed_at: nowIso
+				});
+
+				const txId = `tx_sell_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+				const txData = {
+					id: txId,
+					user_id: uid,
+					type: 'market_sell',
+					description: `Terjual ${order.quantity}x ${order.item_name} ke ${order.buyer_name || 'Pembeli'} (Bersih -2.5%)`,
+					amount: Number(net.toFixed(2)),
+					currency_type: order.currency_type || 'local',
+					status: 'completed',
+					created_at: nowIso
+				};
+				await setDoc(doc(db, 'users', uid, 'transactions', txId), txData);
+				myTransactions.unshift(txData);
+			}
+
+			const newGold = Number((Number(currentUserProfile.gold || 0) + addedGold).toFixed(2));
+			const newCurrency = Number((Number(currentUserProfile.currency || 0) + addedLocal).toFixed(2));
+			await updateDoc(doc(db, 'users', uid), {
+				gold: newGold,
+				currency: newCurrency,
+				updated_at: nowIso
+			});
+			currentUserProfile.gold = newGold;
+			currentUserProfile.currency = newCurrency;
+
+			showFeedback(
+				'success',
+				`<i class="fa-solid fa-coins"></i> <b>Hasil Penjualan Diterima!</b> ${pendingOrders.length} pesanan terjual diklaim (+${addedLocal.toFixed(2)} Lokal, +${addedGold.toFixed(2)} Gold).`
+			);
+			pendingOrders = [];
+		}
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'market_orders');
+	}
+}
+
+function updateMyListingsFromAll() {
+	if (!currentUser) {
+		myListings = [];
+		return;
+	}
+	myListings = allListings.filter((l) => l.seller_id === currentUser.uid);
+}
+
+function updateSummaryStrip() {
+	const modeFiltered = getModeListings();
+	const totalInvQty = myInventory.reduce((acc, i) => acc + Number(i.quantity || 0), 0);
+
+	document.getElementById('stat-market-listings').textContent = modeFiltered.length;
+	document.getElementById('stat-my-inventory-qty').textContent = totalInvQty;
+	document.getElementById('stat-my-active-listings').textContent = myListings.length;
+	document.getElementById('stat-pending-payouts').textContent = pendingOrders.length;
+
+	document.getElementById('badge-tab-buy').textContent = modeFiltered.length;
+	document.getElementById('badge-tab-sell').textContent = myInventory.length;
+	document.getElementById('badge-tab-mine').textContent = myListings.length;
+	document.getElementById('badge-tab-history').textContent = myTransactions.length;
+}
+
+function getModeListings() {
+	const targetCurr = marketMode === 'global' ? 'gold' : 'local';
+	return allListings.filter((l) => l.currency_type === targetCurr && Number(l.quantity || 0) > 0);
+}
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function renderActiveTab() {
+	const filterBar = document.getElementById('buy-filter-toolbar');
+	if (filterBar) {
+		filterBar.style.display = activeTab === 'buy' ? 'flex' : 'none';
+	}
+
+	if (activeTab === 'buy') renderBuyTab();
+	else if (activeTab === 'sell') renderSellTab();
+	else if (activeTab === 'mylistings') renderMyListingsTab();
+	else if (activeTab === 'history') renderHistoryTab();
+}
+
+function renderBuyTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	let list = getModeListings();
+
+	if (categoryFilter !== 'all') {
+		list = list.filter((l) => (l.category || 'other') === categoryFilter);
+	}
+
+	if (searchKeyword) {
+		const kw = searchKeyword.toLowerCase();
+		list = list.filter((l) =>
+			(l.item_name && l.item_name.toLowerCase().includes(kw)) ||
+			(l.seller_name && l.seller_name.toLowerCase().includes(kw)) ||
+			(l.country_name && l.country_name.toLowerCase().includes(kw))
+		);
+	}
+
+	list = [...list].sort((a, b) => {
+		if (sortMode === 'price_asc') return Number(a.price_per_unit || 0) - Number(b.price_per_unit || 0);
+		if (sortMode === 'price_desc') return Number(b.price_per_unit || 0) - Number(a.price_per_unit || 0);
+		if (sortMode === 'qty_desc') return Number(b.quantity || 0) - Number(a.quantity || 0);
+		return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+	});
+
+	if (list.length === 0) {
+		const modeLabel = marketMode === 'global' ? 'Pasar Global (Gold)' : 'Pasar Lokal (Uang Lokal)';
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 18px; background: #ffffff; border-color: var(--border);">
+				<div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; background: #eef7fc; display: flex; align-items: center; justify-content: center;">
+					<i class="fa-solid fa-store-slash" style="font-size: 26px; color: var(--accent); opacity: 0.7;"></i>
+				</div>
+				<h5 style="margin-bottom: 6px; border-bottom: none; font-size: 16px;">Belum Ada Penawaran di ${modeLabel}</h5>
+				<p style="color: #64748b; max-width: 480px; margin: 0 auto 16px; font-size: 12.5px;">
+					Belum ada pemain yang memasang barang pada kategori ini di Firebase. Anda dapat menjual barang dari inventaris Anda atau bekerja di perusahaan untuk menghasilkan suplai baru.
+				</p>
+				<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+					<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-empty-go-sell">
+						<i class="fa-solid fa-tags"></i> Jual Barang dari Inventaris
+					</button>
+					<a href="/workplaces.html" class="btn btn-default btn-sm">
+						<i class="fa-solid fa-briefcase"></i> Cari Pekerjaan
+					</a>
+				</div>
+			</div>
+		`;
+		const goSell = document.getElementById('btn-empty-go-sell');
+		if (goSell) goSell.addEventListener('click', () => switchTab('sell'));
+		return;
+	}
+
+	const currLabel = marketMode === 'global' ? 'Gold' : 'Lokal';
+	let html = '<div class="market-grid">';
+	list.forEach((l) => {
+		const quality = Number(l.quality || 1);
+		const stars = '★'.repeat(Math.min(5, Math.max(1, quality)));
+		const isOwn = currentUser && l.seller_id === currentUser.uid;
+		html += `
+			<div class="listing-card">
+				<div>
+					<div style="display: flex; align-items: center; gap: 10px;">
+						<div class="item-icon-box">
+							<i class="${getCategoryIcon(l.category)}"></i>
+						</div>
+						<div style="min-width: 0; flex: 1;">
+							<div style="font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+								${escapeHtml(l.item_name)}
+							</div>
+							<div class="small">
+								<span class="quality-stars" title="Kualitas Q${quality}">${stars}</span>
+								&bull; <span class="label label-light" style="color: var(--text-dark); border: 1px solid #cbd5e1; padding: 1px 6px;">${escapeHtml(l.country_code || 'ID')}</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="listing-meta-box">
+						<div class="listing-meta-row">
+							<span class="text-muted">Penjual:</span>
+							<b>${escapeHtml(l.seller_name || 'Pemain')}</b>
+						</div>
+						<div class="listing-meta-row">
+							<span class="text-muted">Stok Tersedia:</span>
+							<b style="color: var(--green);">${Number(l.quantity).toLocaleString()} unit</b>
+						</div>
+						<div class="listing-meta-row">
+							<span class="text-muted">Harga / Unit:</span>
+							<b style="color: ${marketMode === 'global' ? 'var(--gold-dark)' : 'var(--accent)'}; font-size: 13px;">
+								${Number(l.price_per_unit).toFixed(2)} ${currLabel}
+							</b>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					${isOwn
+						? `<button type="button" class="btn btn-default btn-sm btn-block btn-cancel-own-listing" data-id="${escapeHtml(l.id)}">
+								<i class="fa-solid fa-rotate-left"></i> Tarik Listing Sendiri
+							</button>`
+						: `<button type="button" class="btn btn-warning-bvl btn-sm btn-block btn-open-buy" data-id="${escapeHtml(l.id)}">
+								<i class="fa-solid fa-cart-plus"></i> Beli Barang
+							</button>`
+					}
+				</div>
+			</div>
+		`;
+	});
+	html += '</div>';
+	container.innerHTML = html;
+
+	container.querySelectorAll('.btn-open-buy').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			const listing = allListings.find((x) => x.id === id);
+			if (listing) openBuyModal(listing);
+		});
+	});
+
+	container.querySelectorAll('.btn-cancel-own-listing').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			cancelOwnListing(id);
+		});
+	});
+}
+
+function renderSellTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-lock" style="font-size: 26px; color: var(--orange); margin-bottom: 10px;"></i>
+				<h5 style="border: none; margin-bottom: 6px;">Masuk Akun untuk Menjual Barang</h5>
+				<p class="small" style="color: #64748b; margin-bottom: 14px;">Silakan masuk agar inventaris Anda dimuat dari Firebase Firestore.</p>
+				<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar</a>
+			</div>
+		`;
+		return;
+	}
+
+	if (myInventory.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 18px; background: #ffffff;">
+				<i class="fa-solid fa-box-open" style="font-size: 28px; color: var(--accent); opacity: 0.65; margin-bottom: 10px;"></i>
+				<h5 style="border: none; margin-bottom: 6px;">Inventaris Anda Masih Kosong</h5>
+				<p style="color: #64748b; max-width: 480px; margin: 0 auto 14px; font-size: 12.5px;">
+					Anda belum memiliki barang untuk dijual. Produksi barang melalui perusahaan Anda atau klaim paket suplai pemula gratis di bawah ini untuk mencoba berdagang.
+				</p>
+				<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+					<button type="button" id="btn-claim-starter-pack" class="btn btn-success btn-sm">
+						<i class="fa-solid fa-gift"></i> Klaim Suplai Pemula (Gratis)
+					</button>
+					<a href="/my_companies.html" class="btn btn-default btn-sm">
+						<i class="fa-solid fa-building"></i> Kelola Perusahaan
+					</a>
+				</div>
+			</div>
+		`;
+		const claimBtn = document.getElementById('btn-claim-starter-pack');
+		if (claimBtn) claimBtn.addEventListener('click', claimStarterSupply);
+		return;
+	}
+
+	let html = '<div class="market-grid">';
+	myInventory.forEach((item) => {
+		const quality = Number(item.quality || 1);
+		const stars = '★'.repeat(Math.min(5, Math.max(1, quality)));
+		html += `
+			<div class="listing-card">
+				<div>
+					<div style="display: flex; align-items: center; gap: 10px;">
+						<div class="item-icon-box" style="background: #f5fbf7; border-color: #c3e6cb; color: var(--green);">
+							<i class="${getCategoryIcon(item.category)}"></i>
+						</div>
+						<div>
+							<div style="font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 14px; color: var(--text-dark);">
+								${escapeHtml(item.item_name)}
+							</div>
+							<div class="small">
+								<span class="quality-stars">${stars}</span> &bull; ${escapeHtml(getCategoryLabel(item.category))}
+							</div>
+						</div>
+					</div>
+
+					<div class="listing-meta-box">
+						<div class="listing-meta-row">
+							<span class="text-muted">Stok Tersedia:</span>
+							<b style="color: var(--accent);">${Number(item.quantity).toLocaleString()} unit</b>
+						</div>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn-success btn-sm btn-block btn-open-sell" data-id="${escapeHtml(item.id)}">
+					<i class="fa-solid fa-tag"></i> Jual ke Pasar
+				</button>
+			</div>
+		`;
+	});
+	html += '</div>';
+	container.innerHTML = html;
+
+	container.querySelectorAll('.btn-open-sell').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			const item = myInventory.find((x) => x.id === id);
+			if (item) openSellModal(item);
+		});
+	});
+}
+
+function renderMyListingsTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 32px 16px; background: #ffffff;">
+				<p class="small" style="color: #64748b;">Silakan <a href="/authys.html">masuk akun</a> untuk melihat listing Anda.</p>
+			</div>
+		`;
+		return;
+	}
+
+	if (myListings.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-clipboard-list" style="font-size: 26px; color: var(--muted); margin-bottom: 8px;"></i>
+				<div style="font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">Tidak Ada Listing Aktif Milik Anda</div>
+				<div class="small" style="margin-bottom: 12px;">Buka tab "Jual dari Inventaris" untuk memasang barang di pasar.</div>
+				<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-mine-to-sell"><i class="fa-solid fa-plus"></i> Pasang Listing Baru</button>
+			</div>
+		`;
+		const btn = document.getElementById('btn-mine-to-sell');
+		if (btn) btn.addEventListener('click', () => switchTab('sell'));
+		return;
+	}
+
+	let rows = '';
+	myListings.forEach((l) => {
+		const curr = l.currency_type === 'gold' ? 'Gold' : 'Lokal';
+		rows += `
+			<tr>
+				<td><b>${escapeHtml(l.item_name)}</b> <span class="quality-stars">Q${l.quality || 1}</span></td>
+				<td><span class="label ${l.currency_type === 'gold' ? 'label-warning' : 'label-info'}">${l.currency_type === 'gold' ? 'Global' : 'Lokal'}</span></td>
+				<td><b>${Number(l.quantity).toLocaleString()}</b> unit</td>
+				<td><b>${Number(l.price_per_unit).toFixed(2)} ${curr}</b></td>
+				<td class="text-right">
+					<button type="button" class="btn btn-danger btn-sm btn-cancel-listing-row" data-id="${escapeHtml(l.id)}">
+						<i class="fa-solid fa-xmark"></i> Batalkan
+					</button>
+				</td>
+			</tr>
+		`;
+	});
+
+	container.innerHTML = `
+		<div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+			<table class="table table-hover" style="margin: 0;">
+				<thead>
+					<tr>
+						<th>Barang</th>
+						<th>Pasar</th>
+						<th>Sisa Stok</th>
+						<th>Harga / Unit</th>
+						<th class="text-right">Aksi</th>
+					</tr>
+				</thead>
+				<tbody>${rows}</tbody>
+			</table>
+		</div>
+	`;
+
+	container.querySelectorAll('.btn-cancel-listing-row').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			cancelOwnListing(e.currentTarget.getAttribute('data-id'));
+		});
+	});
+}
+
+function renderHistoryTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 32px 16px; background: #ffffff;">
+				<p class="small" style="color: #64748b;">Silakan <a href="/authys.html">masuk akun</a> untuk melihat riwayat transaksi Anda.</p>
+			</div>
+		`;
+		return;
+	}
+
+	if (myTransactions.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-receipt" style="font-size: 26px; color: var(--muted); margin-bottom: 8px;"></i>
+				<div style="font-weight: 600; color: var(--text-dark);">Belum Ada Riwayat Transaksi</div>
+				<div class="small">Aktivitas pembelian, penjualan, dan pemasangan listing akan tercatat otomatis di sini.</div>
+			</div>
+		`;
+		return;
+	}
+
+	let rows = '';
+	myTransactions.forEach((tx) => {
+		const dateStr = tx.created_at ? new Date(tx.created_at).toLocaleString('id-ID') : '-';
+		const amt = Number(tx.amount || 0);
+		const amtColor = amt < 0 ? 'var(--red)' : (amt > 0 ? 'var(--green)' : 'var(--muted)');
+		const curr = tx.currency_type === 'gold' ? 'Gold' : 'Lokal';
+		rows += `
+			<tr>
+				<td class="small" style="white-space: nowrap;">${escapeHtml(dateStr)}</td>
+				<td><span class="label label-info">${escapeHtml(tx.type || 'market')}</span></td>
+				<td>${escapeHtml(tx.description || '')}</td>
+				<td class="text-right" style="font-weight: 700; color: ${amtColor}; white-space: nowrap;">
+					${amt > 0 ? '+' : ''}${amt.toFixed(2)} ${curr}
+				</td>
+				<td class="text-center"><span class="label label-success">${escapeHtml(tx.status || 'completed')}</span></td>
+			</tr>
+		`;
+	});
+
+	container.innerHTML = `
+		<div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+			<table class="table table-hover" style="margin: 0;">
+				<thead>
+					<tr>
+						<th>Waktu</th>
+						<th>Tipe</th>
+						<th>Deskripsi</th>
+						<th class="text-right">Nominal</th>
+						<th class="text-center">Status</th>
+					</tr>
+				</thead>
+				<tbody>${rows}</tbody>
+			</table>
+		</div>
+	`;
+}
+
+// ============================================================
+// MARKET TRANSACTIONS (BUY / SELL / CANCEL / STARTER SUPPLY)
+// ============================================================
+function openBuyModal(listing) {
+	if (!currentUser) {
+		showFeedback('warning', '<i class="fa-solid fa-right-to-bracket"></i> Silakan <a href="/authys.html">masuk ke akun Anda</a> terlebih dahulu untuk membeli barang.');
+		return;
+	}
+	selectedBuyListing = listing;
+	const curr = listing.currency_type === 'gold' ? 'Gold' : 'Lokal';
+	document.getElementById('buy-item-name').textContent = `${listing.item_name} (Q${listing.quality || 1})`;
+	document.getElementById('buy-seller-name').textContent = listing.seller_name || 'Pemain';
+	document.getElementById('buy-region-name').textContent = `${listing.country_name || listing.country_code || 'ID'} (${listing.region || '-'})`;
+	document.getElementById('buy-available-qty').textContent = `${listing.quantity} unit`;
+	document.getElementById('buy-unit-price').textContent = `${Number(listing.price_per_unit).toFixed(2)} ${curr}`;
+
+	const qtyInput = document.getElementById('buy-qty-input');
+	qtyInput.max = listing.quantity;
+	qtyInput.value = 1;
+	updateBuyTotalPreview();
+
+	document.getElementById('modal-buy').classList.add('open');
+}
+
+function closeBuyModal() {
+	document.getElementById('modal-buy').classList.remove('open');
+	selectedBuyListing = null;
+}
+
+function updateBuyTotalPreview() {
+	if (!selectedBuyListing) return;
+	const qtyInput = document.getElementById('buy-qty-input');
+	let qty = parseInt(qtyInput.value, 10) || 1;
+	if (qty < 1) qty = 1;
+	if (qty > selectedBuyListing.quantity) qty = selectedBuyListing.quantity;
+	const total = qty * Number(selectedBuyListing.price_per_unit || 0);
+	const curr = selectedBuyListing.currency_type === 'gold' ? 'Gold' : 'Uang Lokal';
+	document.getElementById('buy-total-cost').textContent = `${total.toFixed(2)} ${curr}`;
+}
+
+async function confirmPurchase() {
+	if (!selectedBuyListing || !currentUser || !currentUserProfile) return;
+
+	const qty = parseInt(document.getElementById('buy-qty-input').value, 10);
+	if (!qty || qty <= 0 || qty > selectedBuyListing.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah pembelian tidak valid.');
+		closeBuyModal();
+		return;
+	}
+
+	const isGold = selectedBuyListing.currency_type === 'gold';
+	const totalCost = Number((qty * Number(selectedBuyListing.price_per_unit)).toFixed(2));
+	const currentBal = isGold ? Number(currentUserProfile.gold || 0) : Number(currentUserProfile.currency || 0);
+
+	if (currentBal < totalCost) {
+		showFeedback('danger', `<i class="fa-solid fa-wallet"></i> Saldo <b>${isGold ? 'Gold' : 'Uang Lokal'}</b> tidak cukup! Dibutuhkan ${totalCost.toFixed(2)}, saldo Anda ${currentBal.toFixed(2)}.`);
+		closeBuyModal();
+		return;
+	}
+
+	const confirmBtn = document.getElementById('btn-confirm-buy');
+	confirmBtn.disabled = true;
+	confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+	const nowIso = new Date().toISOString();
+	const listing = selectedBuyListing;
+
+	try {
+		// 1. Update buyer balance in users/{uid}
+		const newBal = Number((currentBal - totalCost).toFixed(2));
+		const userPatch = isGold ? { gold: newBal, updated_at: nowIso } : { currency: newBal, updated_at: nowIso };
+		await updateDoc(doc(db, 'users', currentUser.uid), userPatch);
+		if (isGold) currentUserProfile.gold = newBal;
+		else currentUserProfile.currency = newBal;
+
+		// 2. Update marketplace_listings/{listingId}
+		const remainingQty = Number(listing.quantity) - qty;
+		const newStatus = remainingQty <= 0 ? 'sold' : 'active';
+		await updateDoc(doc(db, 'marketplace_listings', listing.id), {
+			quantity: remainingQty,
+			status: newStatus,
+			updated_at: nowIso
+		});
+
+		// 3. Upsert into buyer's inventory subcollection users/{uid}/inventory/{itemId}
+		const invDocId = `${listing.item_id}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevInvQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const updatedInvItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: listing.item_id,
+			item_name: listing.item_name,
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevInvQty + qty,
+			updated_at: nowIso
+		};
+		await setDoc(invRef, updatedInvItem);
+
+		// 4. Create buyer transaction record
+		const txId = `tx_buy_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_buy',
+			description: `Beli ${qty}x ${listing.item_name} dari ${listing.seller_name}`,
+			amount: -totalCost,
+			currency_type: listing.currency_type,
+			status: 'completed',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+
+		// 5. Create escrow order receipt for seller payout
+		const orderId = `ord_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const netAmount = Number((totalCost * (1 - MARKET_FEE)).toFixed(2));
+		await setDoc(doc(db, 'market_orders', orderId), {
+			id: orderId,
+			listing_id: listing.id,
+			buyer_id: currentUser.uid,
+			buyer_name: currentUserProfile.username || 'Pembeli',
+			seller_id: listing.seller_id,
+			item_name: listing.item_name,
+			quantity: qty,
+			net_amount: netAmount,
+			currency_type: listing.currency_type,
+			claimed: false,
+			created_at: nowIso
+		});
+
+		// Update local UI state
+		if (remainingQty <= 0) {
+			allListings = allListings.filter((x) => x.id !== listing.id);
+		} else {
+			listing.quantity = remainingQty;
+		}
+		const existingInvIdx = myInventory.findIndex((i) => i.id === invDocId);
+		if (existingInvIdx >= 0) myInventory[existingInvIdx] = updatedInvItem;
+		else myInventory.push(updatedInvItem);
+		myTransactions.unshift(txData);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		updateSummaryStrip();
+		renderActiveTab();
+		closeBuyModal();
+
+		showFeedback('success', `<i class="fa-solid fa-circle-check"></i> <b>Pembelian Berhasil!</b> ${qty}x ${escapeHtml(listing.item_name)} telah masuk ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `marketplace_listings/${listing.id}`);
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memproses pembelian: ${escapeHtml(err.message)}`);
+	} finally {
+		confirmBtn.disabled = false;
+		confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Beli Sekarang';
+	}
+}
+
+function openSellModal(item) {
+	selectedSellItem = item;
+	document.getElementById('sell-item-name').textContent = item.item_name;
+	document.getElementById('sell-item-meta').textContent = `${getCategoryLabel(item.category)} • Q${item.quality || 1}`;
+	document.getElementById('sell-available-qty').textContent = `${item.quantity} unit`;
+
+	const currSelect = document.getElementById('sell-currency-select');
+	currSelect.value = marketMode === 'global' ? 'gold' : 'local';
+
+	const qtyInput = document.getElementById('sell-qty-input');
+	qtyInput.max = item.quantity;
+	qtyInput.value = 1;
+
+	document.getElementById('sell-price-input').value = marketMode === 'global' ? '0.50' : '5.00';
+	updateSellNetPreview();
+
+	document.getElementById('modal-sell').classList.add('open');
+}
+
+function closeSellModal() {
+	document.getElementById('modal-sell').classList.remove('open');
+	selectedSellItem = null;
+}
+
+function updateSellNetPreview() {
+	const qty = parseInt(document.getElementById('sell-qty-input').value, 10) || 0;
+	const price = parseFloat(document.getElementById('sell-price-input').value) || 0;
+	const curr = document.getElementById('sell-currency-select').value === 'gold' ? 'Gold' : 'Uang Lokal';
+	const net = qty * price * (1 - MARKET_FEE);
+	document.getElementById('sell-net-preview').textContent = `${net.toFixed(2)} ${curr}`;
+}
+
+async function confirmCreateListing() {
+	if (!selectedSellItem || !currentUser || !currentUserProfile) return;
+
+	const qty = parseInt(document.getElementById('sell-qty-input').value, 10);
+	const price = parseFloat(document.getElementById('sell-price-input').value);
+	const currencyType = document.getElementById('sell-currency-select').value === 'gold' ? 'gold' : 'local';
+
+	if (!qty || qty <= 0 || qty > selectedSellItem.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah barang yang dijual melebihi stok inventaris Anda.');
+		return;
+	}
+	if (!price || price <= 0) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Harga per unit harus lebih besar dari 0.');
+		return;
+	}
+
+	const btn = document.getElementById('btn-confirm-sell');
+	btn.disabled = true;
+	btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memasang...';
+
+	const nowIso = new Date().toISOString();
+	const item = selectedSellItem;
+
+	try {
+		// 1. Deduct stock from user's inventory
+		const remQty = Number(item.quantity) - qty;
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', item.id);
+		if (remQty <= 0) {
+			await deleteDoc(invRef);
+			myInventory = myInventory.filter((i) => i.id !== item.id);
+		} else {
+			await updateDoc(invRef, { quantity: remQty, updated_at: nowIso });
+			item.quantity = remQty;
+		}
+
+		// 2. Create listing in marketplace_listings
+		const listingId = `lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const newListing = {
+			id: listingId,
+			seller_id: currentUser.uid,
+			seller_name: currentUserProfile.username || 'Pemain',
+			item_id: item.item_id,
+			item_name: item.item_name,
+			item_icon: item.item_icon || 'fa-solid fa-box',
+			category: item.category || 'other',
+			quality: Number(item.quality || 1),
+			quantity: qty,
+			price_per_unit: Number(price.toFixed(2)),
+			currency_type: currencyType,
+			country_code: currentUserProfile.country_code || 'ID',
+			country_name: currentUserProfile.country_name || 'Indonesia',
+			region: currentUserProfile.region_name || currentUserProfile.region || 'Jakarta',
+			status: 'active',
+			created_at: nowIso,
+			updated_at: nowIso
+		};
+		await setDoc(doc(db, 'marketplace_listings', listingId), newListing);
+		allListings.unshift(newListing);
+		updateMyListingsFromAll();
+
+		// 3. Log transaction
+		const txId = `tx_lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_listing',
+			description: `Pasang jual ${qty}x ${item.item_name} @ ${price.toFixed(2)} ${currencyType === 'gold' ? 'Gold' : 'Lokal'}`,
+			amount: 0,
+			currency_type: currencyType,
+			status: 'active',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+		myTransactions.unshift(txData);
+
+		closeSellModal();
+		setMarketMode(currencyType === 'gold' ? 'global' : 'local');
+		updateSummaryStrip();
+		switchTab('buy');
+		showFeedback('success', `<i class="fa-solid fa-bullhorn"></i> <b>Listing Dipasang!</b> ${qty}x ${escapeHtml(item.item_name)} sekarang tersedia di ${currencyType === 'gold' ? 'Pasar Global' : 'Pasar Lokal'}.`);
+
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'marketplace_listings');
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memasang listing: ${escapeHtml(err.message)}`);
+	} finally {
+		btn.disabled = false;
+		btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar';
+	}
+}
+
+async function cancelOwnListing(listingId) {
+	if (!currentUser) return;
+	const listing = allListings.find((l) => l.id === listingId);
+	if (!listing) return;
+
+	const nowIso = new Date().toISOString();
+	try {
+		await updateDoc(doc(db, 'marketplace_listings', listingId), {
+			status: 'cancelled',
+			updated_at: nowIso
+		});
+
+		const invDocId = `${listing.item_id}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const restoredItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: listing.item_id,
+			item_name: listing.item_name,
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevQty + Number(listing.quantity),
+			updated_at: nowIso
+		};
+		await setDoc(invRef, restoredItem);
+
+		allListings = allListings.filter((l) => l.id !== listingId);
+		updateMyListingsFromAll();
+
+		const idx = myInventory.findIndex((i) => i.id === invDocId);
+		if (idx >= 0) myInventory[idx] = restoredItem;
+		else myInventory.push(restoredItem);
+
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('info', `<i class="fa-solid fa-rotate-left"></i> Listing <b>${escapeHtml(listing.item_name)}</b> dibatalkan. ${listing.quantity} unit dikembalikan ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.UPDATE, `marketplace_listings/${listingId}`);
+		showFeedback('danger', `Gagal membatalkan listing: ${escapeHtml(err.message)}`);
+	}
+}
+
+async function claimStarterSupply() {
+	if (!currentUser) return;
+	const btn = document.getElementById('btn-claim-starter-pack');
+	if (btn) {
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Suplai...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const starterItems = [
+		{ id: 'bread_q1', item_id: 'bread', item_name: 'Roti Gandum (Bread)', item_icon: 'fa-solid fa-bread-slice', category: 'food', quality: 1, quantity: 5 },
+		{ id: 'coffee_q1', item_id: 'coffee', item_name: 'Kopi Energi (Coffee)', item_icon: 'fa-solid fa-mug-hot', category: 'food', quality: 1, quantity: 3 },
+		{ id: 'iron_ore_q1', item_id: 'iron_ore', item_name: 'Bijih Besi (Iron Ore)', item_icon: 'fa-solid fa-cubes', category: 'raw', quality: 1, quantity: 10 }
+	];
+
+	try {
+		for (const s of starterItems) {
+			const payload = {
+				id: s.id,
+				owner_id: currentUser.uid,
+				item_id: s.item_id,
+				item_name: s.item_name,
+				item_icon: s.item_icon,
+				category: s.category,
+				quality: s.quality,
+				quantity: s.quantity,
+				updated_at: nowIso
+			};
+			await setDoc(doc(db, 'users', currentUser.uid, 'inventory', s.id), payload);
+			myInventory.push(payload);
+		}
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('success', '<i class="fa-solid fa-gift"></i> <b>Paket Suplai Pemula Diterima!</b> 5x Roti, 3x Kopi, dan 10x Bijih Besi siap dijual atau digunakan.');
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `users/${currentUser.uid}/inventory`);
+		showFeedback('danger', `Gagal mengklaim suplai pemula: ${escapeHtml(err.message)}`);
+	}
+}
+
+// ============================================================
+// UI EVENT WIRING & HELPERS
+// ============================================================
+function setupUIEvents() {
+	document.getElementById('btn-mode-local').addEventListener('click', () => setMarketMode('local'));
+	document.getElementById('btn-mode-global').addEventListener('click', () => setMarketMode('global'));
+
+	document.getElementById('market-tabs').addEventListener('click', (e) => {
+		const btn = e.target.closest('button[data-tab]');
+		if (!btn) return;
+		switchTab(btn.getAttribute('data-tab'));
+	});
+
+	document.getElementById('category-filter-pills').addEventListener('click', (e) => {
+		const btn = e.target.closest('button[data-cat]');
+		if (!btn) return;
+		document.querySelectorAll('#category-filter-pills .filter-btn').forEach((b) => b.classList.remove('active'));
+		btn.classList.add('active');
+		categoryFilter = btn.getAttribute('data-cat') || 'all';
+		renderActiveTab();
+	});
+
+	document.getElementById('market-search-input').addEventListener('input', (e) => {
+		searchKeyword = e.target.value.trim();
+		renderActiveTab();
+	});
+
+	document.getElementById('market-sort-select').addEventListener('change', (e) => {
+		sortMode = e.target.value;
+		renderActiveTab();
+	});
+
+	// Buy modal controls
+	document.getElementById('btn-close-buy-modal').addEventListener('click', closeBuyModal);
+	document.getElementById('btn-cancel-buy').addEventListener('click', closeBuyModal);
+	document.getElementById('buy-qty-input').addEventListener('input', updateBuyTotalPreview);
+	document.getElementById('btn-buy-max').addEventListener('click', () => {
+		if (selectedBuyListing) {
+			document.getElementById('buy-qty-input').value = selectedBuyListing.quantity;
+			updateBuyTotalPreview();
+		}
+	});
+	document.getElementById('btn-confirm-buy').addEventListener('click', confirmPurchase);
+
+	// Sell modal controls
+	document.getElementById('btn-close-sell-modal').addEventListener('click', closeSellModal);
+	document.getElementById('btn-cancel-sell').addEventListener('click', closeSellModal);
+	document.getElementById('sell-qty-input').addEventListener('input', updateSellNetPreview);
+	document.getElementById('sell-price-input').addEventListener('input', updateSellNetPreview);
+	document.getElementById('sell-currency-select').addEventListener('change', updateSellNetPreview);
+	document.getElementById('btn-confirm-sell').addEventListener('click', confirmCreateListing);
+}
+
+function setMarketMode(mode) {
+	marketMode = mode === 'global' ? 'global' : 'local';
+	const btnLocal = document.getElementById('btn-mode-local');
+	const btnGlobal = document.getElementById('btn-mode-global');
+
+	btnLocal.className = marketMode === 'local' ? 'mode-btn active' : 'mode-btn';
+	btnGlobal.className = marketMode === 'global' ? 'mode-btn active-gold' : 'mode-btn';
+
+	updateSummaryStrip();
+	renderActiveTab();
+}
+
+function switchTab(tabName) {
+	activeTab = tabName;
+	document.querySelectorAll('#market-tabs li').forEach((li) => {
+		const btn = li.querySelector('button');
+		li.classList.toggle('active', btn && btn.getAttribute('data-tab') === tabName);
+	});
+	renderActiveTab();
+}
+
+function showFeedback(type, htmlMsg) {
+	const banner = document.getElementById('market-feedback-banner');
+	if (!banner) return;
+	banner.className = `alert alert-${type}`;
+	banner.innerHTML = htmlMsg;
+	banner.style.display = 'block';
+	window.scrollTo({ top: banner.offsetTop - 20, behavior: 'smooth' });
+}
+
+function getCategoryIcon(cat) {
+	const map = {
+		food: 'fa-solid fa-utensils',
+		weapons: 'fa-solid fa-gun',
+		raw: 'fa-solid fa-cubes',
+		utilities: 'fa-solid fa-bolt',
+		other: 'fa-solid fa-box'
+	};
+	return map[cat] || 'fa-solid fa-box';
+}
+
+function getCategoryLabel(cat) {
+	const map = {
+		food: 'Makanan & Energi',
+		weapons: 'Senjata & Militer',
+		raw: 'Bahan Baku',
+		utilities: 'Utilitas',
+		other: 'Lainnya'
+	};
+	return map[cat] || 'Umum';
+}
+
+function escapeHtml(str) {
+	if (str === null || str === undefined) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+</script>
+
 </body>
 </html>
