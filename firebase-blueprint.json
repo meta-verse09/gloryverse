@@ -1,0 +1,225 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Player profile in Glory Verse",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 128 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "country_name": { "type": "string", "maxLength": 60 },
+        "region": { "type": "string", "maxLength": 100 },
+        "region_name": { "type": "string", "maxLength": 100 },
+        "level": { "type": "number" },
+        "xp": { "type": "number" },
+        "energy": { "type": "number" },
+        "health": { "type": "number" },
+        "gold": { "type": "number" },
+        "euro": { "type": "number" },
+        "svct": { "type": "number" },
+        "currency": { "type": "number" },
+        "income": { "type": "number" },
+        "alerts": { "type": "number" },
+        "messages": { "type": "number" },
+        "work_bonus": { "type": "number" },
+        "shifts_worked_today": { "type": "number" },
+        "gathering_skill": { "type": "number" },
+        "hand_working_skill": { "type": "number" },
+        "guest_servicing_skill": { "type": "number" },
+        "engineering_skill": { "type": "number" },
+        "writing_aesthetics_skill": { "type": "number" },
+        "extraction_skill": { "type": "number" },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "username"]
+    },
+    "CountryRanking": {
+      "title": "CountryRanking",
+      "description": "Ranking data for countries in Glory Verse",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 50 },
+        "name": { "type": "string", "maxLength": 60 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "work_bonus": { "type": "number" },
+        "jobs": { "type": "number" },
+        "citizens": { "type": "number" },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "name", "country_code"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Player withdrawal records",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "country_name": { "type": "string", "maxLength": 60 },
+        "amount_euro": { "type": "number" },
+        "created_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "username", "amount_euro"]
+    },
+    "ActiveWar": {
+      "title": "ActiveWar",
+      "description": "Active military conflicts between nations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "region": { "type": "string", "maxLength": 100 },
+        "attacker_country_code": { "type": "string", "maxLength": 5 },
+        "defender_country_code": { "type": "string", "maxLength": 5 },
+        "attacker_percent": { "type": "number" },
+        "defender_percent": { "type": "number" },
+        "status": { "type": "string", "maxLength": 30 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "region", "attacker_country_code", "defender_country_code"]
+    },
+    "ExchangeRate": {
+      "title": "ExchangeRate",
+      "description": "Euro to Gold exchange rate snapshot",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "rate": { "type": "number" },
+        "timestamp": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "rate"]
+    },
+    "MarketplaceListing": {
+      "title": "MarketplaceListing",
+      "description": "Goods offered for sale on Local or Global market",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "seller_id": { "type": "string", "maxLength": 128 },
+        "seller_name": { "type": "string", "maxLength": 50 },
+        "item_id": { "type": "string", "maxLength": 64 },
+        "item_name": { "type": "string", "maxLength": 80 },
+        "item_icon": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 40 },
+        "quality": { "type": "number" },
+        "quantity": { "type": "number" },
+        "price_per_unit": { "type": "number" },
+        "currency_type": { "type": "string", "enum": ["local", "gold"] },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "country_name": { "type": "string", "maxLength": 60 },
+        "region": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["active", "sold", "cancelled"] },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": [
+        "id",
+        "seller_id",
+        "seller_name",
+        "item_id",
+        "item_name",
+        "category",
+        "quantity",
+        "price_per_unit",
+        "currency_type",
+        "country_code",
+        "status"
+      ]
+    },
+    "InventoryItem": {
+      "title": "InventoryItem",
+      "description": "Item owned by a player in their inventory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "owner_id": { "type": "string", "maxLength": 128 },
+        "item_id": { "type": "string", "maxLength": 64 },
+        "item_name": { "type": "string", "maxLength": 80 },
+        "item_icon": { "type": "string", "maxLength": 64 },
+        "category": { "type": "string", "maxLength": 40 },
+        "quality": { "type": "number" },
+        "quantity": { "type": "number" },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "owner_id", "item_id", "item_name", "category", "quantity"]
+    },
+    "MarketTransaction": {
+      "title": "MarketTransaction",
+      "description": "Player transaction log entry for market activity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "type": { "type": "string", "maxLength": 32 },
+        "description": { "type": "string", "maxLength": 200 },
+        "amount": { "type": "number" },
+        "currency_type": { "type": "string", "enum": ["local", "gold"] },
+        "status": { "type": "string", "maxLength": 30 },
+        "created_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "user_id", "type", "description", "amount", "currency_type", "status", "created_at"]
+    },
+    "MarketOrder": {
+      "title": "MarketOrder",
+      "description": "Escrow payout record created on purchase for seller claim",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "listing_id": { "type": "string", "maxLength": 128 },
+        "buyer_id": { "type": "string", "maxLength": 128 },
+        "buyer_name": { "type": "string", "maxLength": 50 },
+        "seller_id": { "type": "string", "maxLength": 128 },
+        "item_name": { "type": "string", "maxLength": 80 },
+        "quantity": { "type": "number" },
+        "net_amount": { "type": "number" },
+        "currency_type": { "type": "string", "enum": ["local", "gold"] },
+        "claimed": { "type": "boolean" },
+        "created_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "listing_id", "buyer_id", "seller_id", "item_name", "quantity", "net_amount", "currency_type", "claimed", "created_at"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Player profile information"
+    },
+    "/users/{userId}/inventory/{itemId}": {
+      "schema": { "$ref": "#/entities/InventoryItem" },
+      "description": "Items stored in player inventory"
+    },
+    "/users/{userId}/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/MarketTransaction" },
+      "description": "Player transaction history"
+    },
+    "/marketplace_listings/{listingId}": {
+      "schema": { "$ref": "#/entities/MarketplaceListing" },
+      "description": "Public Local and Global goods marketplace listings"
+    },
+    "/market_orders/{orderId}": {
+      "schema": { "$ref": "#/entities/MarketOrder" },
+      "description": "Completed purchase payouts claimable by seller"
+    },
+    "/countries/{countryId}": {
+      "schema": { "$ref": "#/entities/CountryRanking" },
+      "description": "Country ranking and job statistics"
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": { "$ref": "#/entities/Withdrawal" },
+      "description": "Recent player withdrawal records"
+    },
+    "/wars/{warId}": {
+      "schema": { "$ref": "#/entities/ActiveWar" },
+      "description": "Active conflict regions"
+    },
+    "/exchange_rates/{rateId}": {
+      "schema": { "$ref": "#/entities/ExchangeRate" },
+      "description": "Exchange rates over time"
+    }
+  }
+}
