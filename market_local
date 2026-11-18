@@ -739,62 +739,58 @@
      JAVASCRIPT: LONDON CLOCK & FIREBASE MARKET INTEGRATION
      ============================================================ -->
 <script>
-// London Clock (Europe/London)
-function updateLondonClock() {
-	try {
-		const now = new Date();
-		const formatter = new Intl.DateTimeFormat('en-GB', {
-			timeZone: 'Europe/London',
-			hour12: false,
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit'
-		});
-		const timeStr = formatter.format(now);
-		const clockEl = document.getElementById('server_time');
-		const footerEl = document.getElementById('footer_server_time');
-		if (clockEl) clockEl.textContent = timeStr;
-		if (footerEl) footerEl.textContent = timeStr;
-	} catch (e) {
-		const d = new Date();
-		const pad = (n) => (n < 10 ? '0' + n : n);
-		const fallback = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
-		const clockEl = document.getElementById('server_time');
-		if (clockEl) clockEl.textContent = fallback;
-	}
-}
-setInterval(updateLondonClock, 1000);
-updateLondonClock();
+(function () {
+	'use strict';
 
-document.getElementById('btn-manual-refresh').addEventListener('click', () => {
-	window.location.reload();
-});
+	// London Clock (Europe/London)
+	function updateLondonClock() {
+		try {
+			const now = new Date();
+			const formatter = new Intl.DateTimeFormat('en-GB', {
+				timeZone: 'Europe/London',
+				hour12: false,
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit'
+			});
+			const timeStr = formatter.format(now);
+			const clockEl = document.getElementById('server_time');
+			const footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = timeStr;
+			if (footerEl) footerEl.textContent = timeStr;
+		} catch (e) {
+			const d = new Date();
+			const pad = (n) => (n < 10 ? '0' + n : n);
+			const fallback = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+			const clockEl = document.getElementById('server_time');
+			const footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = fallback;
+			if (footerEl) footerEl.textContent = fallback;
+		}
+	}
+
+	function initHeaderControls() {
+		updateLondonClock();
+		setInterval(updateLondonClock, 1000);
+
+		const refreshBtn = document.getElementById('btn-manual-refresh');
+		if (refreshBtn) {
+			refreshBtn.addEventListener('click', () => {
+				window.location.reload();
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initHeaderControls);
+	} else {
+		initHeaderControls();
+	}
+})();
 </script>
 
 <!-- Firebase Refresh-Based Market Module -->
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
-import {
-	getAuth,
-	onAuthStateChanged,
-	signOut
-} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
-import {
-	getFirestore,
-	doc,
-	getDoc,
-	getDocFromServer,
-	setDoc,
-	updateDoc,
-	deleteDoc,
-	collection,
-	getDocs,
-	query,
-	where,
-	orderBy,
-	limit
-} from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-
 // Direct Firebase Configuration Object (no fetch / JSON.parse)
 const firebaseConfig = {
 	projectId: "gen-lang-client-0514427323",
@@ -819,6 +815,12 @@ const OperationType = {
 };
 
 const MARKET_FEE = 0.025;
+const FIREBASE_CDN_BASE = 'https://www.gstatic.com/firebasejs/10.13.2';
+
+// Firebase module references (loaded sequentially: firebase-app first, then firebase-auth & firebase-firestore)
+let fbAppMod = null;
+let fbAuthMod = null;
+let fbFirestoreMod = null;
 
 let app = null;
 let auth = null;
@@ -841,6 +843,50 @@ let pendingOrders = [];
 let selectedBuyListing = null;
 let selectedSellItem = null;
 
+// ============================================================
+// UTILITY HELPERS (Defined before use)
+// ============================================================
+function escapeHtml(str) {
+	if (str === null || str === undefined) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function getCategoryIcon(cat) {
+	const map = {
+		food: 'fa-solid fa-utensils',
+		weapons: 'fa-solid fa-gun',
+		raw: 'fa-solid fa-cubes',
+		utilities: 'fa-solid fa-bolt',
+		other: 'fa-solid fa-box'
+	};
+	return map[cat] || 'fa-solid fa-box';
+}
+
+function getCategoryLabel(cat) {
+	const map = {
+		food: 'Makanan & Energi',
+		weapons: 'Senjata & Militer',
+		raw: 'Bahan Baku',
+		utilities: 'Utilitas',
+		other: 'Lainnya'
+	};
+	return map[cat] || 'Umum';
+}
+
+function showFeedback(type, htmlMsg) {
+	const banner = document.getElementById('market-feedback-banner');
+	if (!banner) return;
+	banner.className = `alert alert-${type}`;
+	banner.innerHTML = htmlMsg;
+	banner.style.display = 'block';
+	window.scrollTo({ top: Math.max(0, banner.offsetTop - 20), behavior: 'smooth' });
+}
+
 function handleFirestoreError(error, operationType, path) {
 	const errInfo = {
 		error: error instanceof Error ? error.message : String(error),
@@ -852,162 +898,13 @@ function handleFirestoreError(error, operationType, path) {
 		operationType,
 		path
 	};
-	console.error('Firestore Error:', JSON.stringify(errInfo));
+	console.warn('Firestore Warning:', JSON.stringify(errInfo));
 	return errInfo;
 }
 
-async function testConnection() {
-	try {
-		await getDocFromServer(doc(db, 'test', 'connection'));
-	} catch (error) {
-		if (error instanceof Error && error.message.includes('the client is offline')) {
-			console.error('Firebase client is offline. Periksa konfigurasi Firebase.');
-		}
-	}
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-	initMarketFirebase();
-});
-
-async function initMarketFirebase() {
-	const statusEl = document.getElementById('firebase-connection-status');
-	try {
-		app = initializeApp(firebaseConfig);
-		db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
-		auth = getAuth(app);
-
-		await testConnection();
-
-		if (statusEl) {
-			statusEl.className = 'label label-success';
-			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
-		}
-
-		setupUIEvents();
-		setupAuth();
-
-		// One-time fetch for active marketplace listings on page load
-		await loadMarketplaceListings();
-		renderActiveTab();
-
-	} catch (err) {
-		console.error('Firebase init error in market_local:', err);
-		if (statusEl) {
-			statusEl.className = 'label label-danger';
-			statusEl.textContent = 'Koneksi Gagal';
-		}
-		renderActiveTab();
-	}
-}
-
-function setupAuth() {
-	const headerAuthContainer = document.getElementById('header-auth-container');
-	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
-
-	onAuthStateChanged(auth, async (user) => {
-		currentUser = user;
-		if (user) {
-			try {
-				const userRef = doc(db, 'users', user.uid);
-				const userSnap = await getDoc(userRef);
-
-				if (userSnap.exists()) {
-					currentUserProfile = userSnap.data();
-				} else {
-					currentUserProfile = {
-						id: user.uid,
-						username: user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain'),
-						email: user.email || '',
-						country_code: 'ID',
-						country_name: 'Indonesia',
-						region_name: 'Jakarta',
-						level: 1,
-						xp: 0,
-						energy: 100,
-						health: 100,
-						gold: 10,
-						euro: 0,
-						svct: 0,
-						currency: 100,
-						income: 0,
-						alerts: 0,
-						messages: 0,
-						created_at: new Date().toISOString(),
-						updated_at: new Date().toISOString()
-					};
-					await setDoc(userRef, currentUserProfile);
-				}
-
-				if (headerAuthContainer) {
-					headerAuthContainer.innerHTML = `
-						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
-							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
-						</a>
-						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
-							<i class="fa-solid fa-right-from-bracket"></i>
-						</button>
-					`;
-					const btnLogout = document.getElementById('btn-logout');
-					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
-				}
-
-				if (authPromptSidebar) {
-					authPromptSidebar.innerHTML = `
-						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
-							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
-						</div>
-					`;
-				}
-
-				// Load user inventory, listings, transactions, and claim any pending seller payouts (one-time fetch)
-				await Promise.all([
-					loadMyInventory(user.uid),
-					loadMyTransactions(user.uid),
-					loadAndClaimPendingOrders(user.uid)
-				]);
-
-				updateMyListingsFromAll();
-				renderPlayerProfile(currentUserProfile, user);
-				updateSummaryStrip();
-				renderActiveTab();
-
-			} catch (err) {
-				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
-			}
-		} else {
-			currentUserProfile = null;
-			myInventory = [];
-			myListings = [];
-			myTransactions = [];
-			pendingOrders = [];
-
-			renderGuestState();
-			updateSummaryStrip();
-			renderActiveTab();
-
-			if (headerAuthContainer) {
-				headerAuthContainer.innerHTML = `
-					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
-						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
-					</a>
-				`;
-			}
-
-			if (authPromptSidebar) {
-				authPromptSidebar.innerHTML = `
-					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
-						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk membeli &amp; menjual barang:</small>
-						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
-							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
-						</a>
-					</div>
-				`;
-			}
-		}
-	});
-}
-
+// ============================================================
+// PLAYER PROFILE & SUMMARY RENDERING
+// ============================================================
 function renderPlayerProfile(p, user) {
 	const usernameEl = document.getElementById('player-username');
 	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
@@ -1087,129 +984,6 @@ function renderGuestState() {
 	if (currEl) currEl.textContent = '0.00';
 }
 
-// ============================================================
-// ONE-TIME FIRESTORE LOADERS
-// ============================================================
-async function loadMarketplaceListings() {
-	try {
-		const q = query(
-			collection(db, 'marketplace_listings'),
-			where('status', '==', 'active'),
-			limit(100)
-		);
-		const snap = await getDocs(q);
-		allListings = [];
-		snap.forEach((d) => {
-			allListings.push({ id: d.id, ...d.data() });
-		});
-		updateMyListingsFromAll();
-		updateSummaryStrip();
-	} catch (err) {
-		handleFirestoreError(err, OperationType.LIST, 'marketplace_listings');
-		allListings = [];
-	}
-}
-
-async function loadMyInventory(uid) {
-	const path = `users/${uid}/inventory`;
-	try {
-		const q = query(collection(db, 'users', uid, 'inventory'), limit(100));
-		const snap = await getDocs(q);
-		myInventory = [];
-		snap.forEach((d) => {
-			const data = d.data();
-			if (Number(data.quantity || 0) > 0) {
-				myInventory.push({ id: d.id, ...data });
-			}
-		});
-	} catch (err) {
-		handleFirestoreError(err, OperationType.LIST, path);
-		myInventory = [];
-	}
-}
-
-async function loadMyTransactions(uid) {
-	const path = `users/${uid}/transactions`;
-	try {
-		const q = query(
-			collection(db, 'users', uid, 'transactions'),
-			orderBy('created_at', 'desc'),
-			limit(30)
-		);
-		const snap = await getDocs(q);
-		myTransactions = [];
-		snap.forEach((d) => {
-			myTransactions.push({ id: d.id, ...d.data() });
-		});
-	} catch (err) {
-		handleFirestoreError(err, OperationType.LIST, path);
-		myTransactions = [];
-	}
-}
-
-async function loadAndClaimPendingOrders(uid) {
-	try {
-		const q = query(
-			collection(db, 'market_orders'),
-			where('seller_id', '==', uid),
-			where('claimed', '==', false),
-			limit(30)
-		);
-		const snap = await getDocs(q);
-		pendingOrders = [];
-		snap.forEach((d) => pendingOrders.push({ id: d.id, ...d.data() }));
-
-		if (pendingOrders.length > 0 && currentUserProfile) {
-			let addedGold = 0;
-			let addedLocal = 0;
-			const nowIso = new Date().toISOString();
-
-			for (const order of pendingOrders) {
-				const net = Number(order.net_amount || 0);
-				if (order.currency_type === 'gold') addedGold += net;
-				else addedLocal += net;
-
-				await updateDoc(doc(db, 'market_orders', order.id), {
-					claimed: true,
-					claimed_at: nowIso
-				});
-
-				const txId = `tx_sell_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-				const txData = {
-					id: txId,
-					user_id: uid,
-					type: 'market_sell',
-					description: `Terjual ${order.quantity}x ${order.item_name} ke ${order.buyer_name || 'Pembeli'} (Bersih -2.5%)`,
-					amount: Number(net.toFixed(2)),
-					currency_type: order.currency_type || 'local',
-					status: 'completed',
-					created_at: nowIso
-				};
-				await setDoc(doc(db, 'users', uid, 'transactions', txId), txData);
-				myTransactions.unshift(txData);
-			}
-
-			const newGold = Number((Number(currentUserProfile.gold || 0) + addedGold).toFixed(2));
-			const newCurrency = Number((Number(currentUserProfile.currency || 0) + addedLocal).toFixed(2));
-			await updateDoc(doc(db, 'users', uid), {
-				gold: newGold,
-				currency: newCurrency,
-				updated_at: nowIso
-			});
-			currentUserProfile.gold = newGold;
-			currentUserProfile.currency = newCurrency;
-
-			showFeedback(
-				'success',
-				`<i class="fa-solid fa-coins"></i> <b>Hasil Penjualan Diterima!</b> ${pendingOrders.length} pesanan terjual diklaim (+${addedLocal.toFixed(2)} Lokal, +${addedGold.toFixed(2)} Gold).`
-			);
-			pendingOrders = [];
-		}
-	} catch (err) {
-		handleFirestoreError(err, OperationType.LIST, 'market_orders');
-	}
-}
-
 function updateMyListingsFromAll() {
 	if (!currentUser) {
 		myListings = [];
@@ -1218,39 +992,459 @@ function updateMyListingsFromAll() {
 	myListings = allListings.filter((l) => l.seller_id === currentUser.uid);
 }
 
-function updateSummaryStrip() {
-	const modeFiltered = getModeListings();
-	const totalInvQty = myInventory.reduce((acc, i) => acc + Number(i.quantity || 0), 0);
-
-	document.getElementById('stat-market-listings').textContent = modeFiltered.length;
-	document.getElementById('stat-my-inventory-qty').textContent = totalInvQty;
-	document.getElementById('stat-my-active-listings').textContent = myListings.length;
-	document.getElementById('stat-pending-payouts').textContent = pendingOrders.length;
-
-	document.getElementById('badge-tab-buy').textContent = modeFiltered.length;
-	document.getElementById('badge-tab-sell').textContent = myInventory.length;
-	document.getElementById('badge-tab-mine').textContent = myListings.length;
-	document.getElementById('badge-tab-history').textContent = myTransactions.length;
-}
-
 function getModeListings() {
 	const targetCurr = marketMode === 'global' ? 'gold' : 'local';
 	return allListings.filter((l) => l.currency_type === targetCurr && Number(l.quantity || 0) > 0);
 }
 
+function updateSummaryStrip() {
+	const modeFiltered = getModeListings();
+	const totalInvQty = myInventory.reduce((acc, i) => acc + Number(i.quantity || 0), 0);
+
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+
+	setTxt('stat-market-listings', modeFiltered.length);
+	setTxt('stat-my-inventory-qty', totalInvQty);
+	setTxt('stat-my-active-listings', myListings.length);
+	setTxt('stat-pending-payouts', pendingOrders.length);
+
+	setTxt('badge-tab-buy', modeFiltered.length);
+	setTxt('badge-tab-sell', myInventory.length);
+	setTxt('badge-tab-mine', myListings.length);
+	setTxt('badge-tab-history', myTransactions.length);
+}
+
 // ============================================================
-// RENDER FUNCTIONS
+// MODALS & TRANSACTION ACTIONS
 // ============================================================
-function renderActiveTab() {
-	const filterBar = document.getElementById('buy-filter-toolbar');
-	if (filterBar) {
-		filterBar.style.display = activeTab === 'buy' ? 'flex' : 'none';
+function updateBuyTotalPreview() {
+	if (!selectedBuyListing) return;
+	const qtyInput = document.getElementById('buy-qty-input');
+	const totalEl = document.getElementById('buy-total-cost');
+	if (!qtyInput || !totalEl) return;
+
+	let qty = parseInt(qtyInput.value, 10) || 1;
+	const maxQty = Number(selectedBuyListing.quantity || 1);
+	if (qty < 1) qty = 1;
+	if (qty > maxQty) qty = maxQty;
+
+	const total = qty * Number(selectedBuyListing.price_per_unit || 0);
+	const curr = selectedBuyListing.currency_type === 'gold' ? 'Gold' : 'Uang Lokal';
+	totalEl.textContent = `${total.toFixed(2)} ${curr}`;
+}
+
+function openBuyModal(listing) {
+	if (!currentUser) {
+		showFeedback('warning', '<i class="fa-solid fa-right-to-bracket"></i> Silakan <a href="/authys.html">masuk ke akun Anda</a> terlebih dahulu untuk membeli barang.');
+		return;
+	}
+	selectedBuyListing = listing;
+	const curr = listing.currency_type === 'gold' ? 'Gold' : 'Lokal';
+
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('buy-item-name', `${listing.item_name || 'Item'} (Q${listing.quality || 1})`);
+	setTxt('buy-seller-name', listing.seller_name || 'Pemain');
+	setTxt('buy-region-name', `${listing.country_name || listing.country_code || 'ID'} (${listing.region || '-'})`);
+	setTxt('buy-available-qty', `${listing.quantity || 0} unit`);
+	setTxt('buy-unit-price', `${Number(listing.price_per_unit || 0).toFixed(2)} ${curr}`);
+
+	const qtyInput = document.getElementById('buy-qty-input');
+	if (qtyInput) {
+		qtyInput.max = listing.quantity || 1;
+		qtyInput.value = 1;
+	}
+	updateBuyTotalPreview();
+
+	const modal = document.getElementById('modal-buy');
+	if (modal) modal.classList.add('open');
+}
+
+function closeBuyModal() {
+	const modal = document.getElementById('modal-buy');
+	if (modal) modal.classList.remove('open');
+	selectedBuyListing = null;
+}
+
+function updateSellNetPreview() {
+	const qtyInput = document.getElementById('sell-qty-input');
+	const priceInput = document.getElementById('sell-price-input');
+	const currSelect = document.getElementById('sell-currency-select');
+	const previewEl = document.getElementById('sell-net-preview');
+	if (!qtyInput || !priceInput || !currSelect || !previewEl) return;
+
+	const qty = parseInt(qtyInput.value, 10) || 0;
+	const price = parseFloat(priceInput.value) || 0;
+	const curr = currSelect.value === 'gold' ? 'Gold' : 'Uang Lokal';
+	const net = qty * price * (1 - MARKET_FEE);
+	previewEl.textContent = `${net.toFixed(2)} ${curr}`;
+}
+
+function openSellModal(item) {
+	selectedSellItem = item;
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('sell-item-name', item.item_name || 'Item');
+	setTxt('sell-item-meta', `${getCategoryLabel(item.category)} • Q${item.quality || 1}`);
+	setTxt('sell-available-qty', `${item.quantity || 0} unit`);
+
+	const currSelect = document.getElementById('sell-currency-select');
+	if (currSelect) currSelect.value = marketMode === 'global' ? 'gold' : 'local';
+
+	const qtyInput = document.getElementById('sell-qty-input');
+	if (qtyInput) {
+		qtyInput.max = item.quantity || 1;
+		qtyInput.value = 1;
 	}
 
-	if (activeTab === 'buy') renderBuyTab();
-	else if (activeTab === 'sell') renderSellTab();
-	else if (activeTab === 'mylistings') renderMyListingsTab();
-	else if (activeTab === 'history') renderHistoryTab();
+	const priceInput = document.getElementById('sell-price-input');
+	if (priceInput) priceInput.value = marketMode === 'global' ? '0.50' : '5.00';
+
+	updateSellNetPreview();
+
+	const modal = document.getElementById('modal-sell');
+	if (modal) modal.classList.add('open');
+}
+
+function closeSellModal() {
+	const modal = document.getElementById('modal-sell');
+	if (modal) modal.classList.remove('open');
+	selectedSellItem = null;
+}
+
+async function confirmPurchase() {
+	if (!selectedBuyListing || !currentUser || !currentUserProfile || !db || !fbFirestoreMod) return;
+
+	const { doc, getDoc, setDoc, updateDoc } = fbFirestoreMod;
+	const qtyInput = document.getElementById('buy-qty-input');
+	const qty = parseInt(qtyInput ? qtyInput.value : '0', 10);
+	if (!qty || qty <= 0 || qty > selectedBuyListing.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah pembelian tidak valid.');
+		closeBuyModal();
+		return;
+	}
+
+	const isGold = selectedBuyListing.currency_type === 'gold';
+	const totalCost = Number((qty * Number(selectedBuyListing.price_per_unit || 0)).toFixed(2));
+	const currentBal = isGold ? Number(currentUserProfile.gold || 0) : Number(currentUserProfile.currency || 0);
+
+	if (currentBal < totalCost) {
+		showFeedback('danger', `<i class="fa-solid fa-wallet"></i> Saldo <b>${isGold ? 'Gold' : 'Uang Lokal'}</b> tidak cukup! Dibutuhkan ${totalCost.toFixed(2)}, saldo Anda ${currentBal.toFixed(2)}.`);
+		closeBuyModal();
+		return;
+	}
+
+	const confirmBtn = document.getElementById('btn-confirm-buy');
+	if (confirmBtn) {
+		confirmBtn.disabled = true;
+		confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const listing = selectedBuyListing;
+
+	try {
+		const newBal = Number((currentBal - totalCost).toFixed(2));
+		const userPatch = isGold ? { gold: newBal, updated_at: nowIso } : { currency: newBal, updated_at: nowIso };
+		await updateDoc(doc(db, 'users', currentUser.uid), userPatch);
+		if (isGold) currentUserProfile.gold = newBal;
+		else currentUserProfile.currency = newBal;
+
+		const remainingQty = Number(listing.quantity) - qty;
+		const newStatus = remainingQty <= 0 ? 'sold' : 'active';
+		await updateDoc(doc(db, 'marketplace_listings', listing.id), {
+			quantity: remainingQty,
+			status: newStatus,
+			updated_at: nowIso
+		});
+
+		const baseItemId = listing.item_id || listing.item_name || 'item';
+		const invDocId = `${baseItemId}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevInvQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const updatedInvItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: String(baseItemId),
+			item_name: listing.item_name || 'Barang',
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevInvQty + qty,
+			updated_at: nowIso
+		};
+		await setDoc(invRef, updatedInvItem);
+
+		const txId = `tx_buy_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_buy',
+			description: `Beli ${qty}x ${listing.item_name || 'Barang'} dari ${listing.seller_name || 'Penjual'}`,
+			amount: -totalCost,
+			currency_type: listing.currency_type,
+			status: 'completed',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+
+		const orderId = `ord_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const netAmount = Number((totalCost * (1 - MARKET_FEE)).toFixed(2));
+		await setDoc(doc(db, 'market_orders', orderId), {
+			id: orderId,
+			listing_id: listing.id,
+			buyer_id: currentUser.uid,
+			buyer_name: currentUserProfile.username || 'Pembeli',
+			seller_id: listing.seller_id,
+			item_name: listing.item_name || 'Barang',
+			quantity: qty,
+			net_amount: netAmount,
+			currency_type: listing.currency_type,
+			claimed: false,
+			created_at: nowIso
+		});
+
+		if (remainingQty <= 0) {
+			allListings = allListings.filter((x) => x.id !== listing.id);
+		} else {
+			listing.quantity = remainingQty;
+		}
+		const existingInvIdx = myInventory.findIndex((i) => i.id === invDocId);
+		if (existingInvIdx >= 0) myInventory[existingInvIdx] = updatedInvItem;
+		else myInventory.push(updatedInvItem);
+		myTransactions.unshift(txData);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		updateSummaryStrip();
+		renderActiveTab();
+		closeBuyModal();
+
+		showFeedback('success', `<i class="fa-solid fa-circle-check"></i> <b>Pembelian Berhasil!</b> ${qty}x ${escapeHtml(listing.item_name)} telah masuk ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `marketplace_listings/${listing.id}`);
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memproses pembelian: ${escapeHtml(err.message)}`);
+	} finally {
+		if (confirmBtn) {
+			confirmBtn.disabled = false;
+			confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Beli Sekarang';
+		}
+	}
+}
+
+async function confirmCreateListing() {
+	if (!selectedSellItem || !currentUser || !currentUserProfile || !db || !fbFirestoreMod) return;
+
+	const { doc, setDoc, updateDoc, deleteDoc } = fbFirestoreMod;
+	const qtyInput = document.getElementById('sell-qty-input');
+	const priceInput = document.getElementById('sell-price-input');
+	const currSelect = document.getElementById('sell-currency-select');
+
+	const qty = parseInt(qtyInput ? qtyInput.value : '0', 10);
+	const price = parseFloat(priceInput ? priceInput.value : '0');
+	const currencyType = currSelect && currSelect.value === 'gold' ? 'gold' : 'local';
+
+	if (!qty || qty <= 0 || qty > selectedSellItem.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah barang yang dijual melebihi stok inventaris Anda.');
+		return;
+	}
+	if (!price || price <= 0) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Harga per unit harus lebih besar dari 0.');
+		return;
+	}
+
+	const btn = document.getElementById('btn-confirm-sell');
+	if (btn) {
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memasang...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const item = selectedSellItem;
+
+	try {
+		const remQty = Number(item.quantity) - qty;
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', item.id);
+		if (remQty <= 0) {
+			await deleteDoc(invRef);
+			myInventory = myInventory.filter((i) => i.id !== item.id);
+		} else {
+			await updateDoc(invRef, { quantity: remQty, updated_at: nowIso });
+			item.quantity = remQty;
+		}
+
+		const listingId = `lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const newListing = {
+			id: listingId,
+			seller_id: currentUser.uid,
+			seller_name: currentUserProfile.username || 'Pemain',
+			item_id: String(item.item_id || item.id || 'item'),
+			item_name: item.item_name || 'Barang',
+			item_icon: item.item_icon || 'fa-solid fa-box',
+			category: item.category || 'other',
+			quality: Number(item.quality || 1),
+			quantity: qty,
+			price_per_unit: Number(price.toFixed(2)),
+			currency_type: currencyType,
+			country_code: currentUserProfile.country_code || 'ID',
+			country_name: currentUserProfile.country_name || 'Indonesia',
+			region: currentUserProfile.region_name || currentUserProfile.region || 'Jakarta',
+			status: 'active',
+			created_at: nowIso,
+			updated_at: nowIso
+		};
+		await setDoc(doc(db, 'marketplace_listings', listingId), newListing);
+		allListings.unshift(newListing);
+		updateMyListingsFromAll();
+
+		const txId = `tx_lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_listing',
+			description: `Pasang jual ${qty}x ${item.item_name} @ ${price.toFixed(2)} ${currencyType === 'gold' ? 'Gold' : 'Lokal'}`,
+			amount: 0,
+			currency_type: currencyType,
+			status: 'active',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+		myTransactions.unshift(txData);
+
+		closeSellModal();
+		setMarketMode(currencyType === 'gold' ? 'global' : 'local');
+		updateSummaryStrip();
+		switchTab('buy');
+		showFeedback('success', `<i class="fa-solid fa-bullhorn"></i> <b>Listing Dipasang!</b> ${qty}x ${escapeHtml(item.item_name)} sekarang tersedia di ${currencyType === 'gold' ? 'Pasar Global' : 'Pasar Lokal'}.`);
+
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'marketplace_listings');
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memasang listing: ${escapeHtml(err.message)}`);
+	} finally {
+		if (btn) {
+			btn.disabled = false;
+			btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar';
+		}
+	}
+}
+
+async function cancelOwnListing(listingId) {
+	if (!currentUser || !db || !fbFirestoreMod) return;
+	const listing = allListings.find((l) => l.id === listingId);
+	if (!listing) return;
+
+	const { doc, getDoc, setDoc, updateDoc } = fbFirestoreMod;
+	const nowIso = new Date().toISOString();
+	try {
+		await updateDoc(doc(db, 'marketplace_listings', listingId), {
+			status: 'cancelled',
+			updated_at: nowIso
+		});
+
+		const baseItemId = listing.item_id || listing.item_name || 'item';
+		const invDocId = `${baseItemId}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const restoredItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: String(baseItemId),
+			item_name: listing.item_name || 'Barang',
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevQty + Number(listing.quantity || 0),
+			updated_at: nowIso
+		};
+		await setDoc(invRef, restoredItem);
+
+		allListings = allListings.filter((l) => l.id !== listingId);
+		updateMyListingsFromAll();
+
+		const idx = myInventory.findIndex((i) => i.id === invDocId);
+		if (idx >= 0) myInventory[idx] = restoredItem;
+		else myInventory.push(restoredItem);
+
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('info', `<i class="fa-solid fa-rotate-left"></i> Listing <b>${escapeHtml(listing.item_name)}</b> dibatalkan. ${listing.quantity} unit dikembalikan ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.UPDATE, `marketplace_listings/${listingId}`);
+		showFeedback('danger', `Gagal membatalkan listing: ${escapeHtml(err.message)}`);
+	}
+}
+
+async function claimStarterSupply() {
+	if (!currentUser || !db || !fbFirestoreMod) return;
+	const { doc, setDoc } = fbFirestoreMod;
+	const btn = document.getElementById('btn-claim-starter-pack');
+	if (btn) {
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Suplai...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const starterItems = [
+		{ id: 'bread_q1', item_id: 'bread', item_name: 'Roti Gandum (Bread)', item_icon: 'fa-solid fa-bread-slice', category: 'food', quality: 1, quantity: 5 },
+		{ id: 'coffee_q1', item_id: 'coffee', item_name: 'Kopi Energi (Coffee)', item_icon: 'fa-solid fa-mug-hot', category: 'food', quality: 1, quantity: 3 },
+		{ id: 'iron_ore_q1', item_id: 'iron_ore', item_name: 'Bijih Besi (Iron Ore)', item_icon: 'fa-solid fa-cubes', category: 'raw', quality: 1, quantity: 10 }
+	];
+
+	try {
+		for (const s of starterItems) {
+			const payload = {
+				id: s.id,
+				owner_id: currentUser.uid,
+				item_id: s.item_id,
+				item_name: s.item_name,
+				item_icon: s.item_icon,
+				category: s.category,
+				quality: s.quality,
+				quantity: s.quantity,
+				updated_at: nowIso
+			};
+			await setDoc(doc(db, 'users', currentUser.uid, 'inventory', s.id), payload);
+			myInventory.push(payload);
+		}
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('success', '<i class="fa-solid fa-gift"></i> <b>Paket Suplai Pemula Diterima!</b> 5x Roti, 3x Kopi, dan 10x Bijih Besi siap dijual atau digunakan.');
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `users/${currentUser.uid}/inventory`);
+		showFeedback('danger', `Gagal mengklaim suplai pemula: ${escapeHtml(err.message)}`);
+	}
+}
+
+// ============================================================
+// RENDER TABS
+// ============================================================
+function switchTab(tabName) {
+	activeTab = tabName;
+	document.querySelectorAll('#market-tabs li').forEach((li) => {
+		const btn = li.querySelector('button');
+		li.classList.toggle('active', Boolean(btn && btn.getAttribute('data-tab') === tabName));
+	});
+	renderActiveTab();
+}
+
+function setMarketMode(mode) {
+	marketMode = mode === 'global' ? 'global' : 'local';
+	const btnLocal = document.getElementById('btn-mode-local');
+	const btnGlobal = document.getElementById('btn-mode-global');
+
+	if (btnLocal) btnLocal.className = marketMode === 'local' ? 'mode-btn active' : 'mode-btn';
+	if (btnGlobal) btnGlobal.className = marketMode === 'global' ? 'mode-btn active-gold' : 'mode-btn';
+
+	updateSummaryStrip();
+	renderActiveTab();
 }
 
 function renderBuyTab() {
@@ -1595,386 +1789,186 @@ function renderHistoryTab() {
 	`;
 }
 
+function renderActiveTab() {
+	const filterBar = document.getElementById('buy-filter-toolbar');
+	if (filterBar) {
+		filterBar.style.display = activeTab === 'buy' ? 'flex' : 'none';
+	}
+
+	if (activeTab === 'buy') renderBuyTab();
+	else if (activeTab === 'sell') renderSellTab();
+	else if (activeTab === 'mylistings') renderMyListingsTab();
+	else if (activeTab === 'history') renderHistoryTab();
+}
+
 // ============================================================
-// MARKET TRANSACTIONS (BUY / SELL / CANCEL / STARTER SUPPLY)
+// ONE-TIME FIRESTORE LOADERS
 // ============================================================
-function openBuyModal(listing) {
-	if (!currentUser) {
-		showFeedback('warning', '<i class="fa-solid fa-right-to-bracket"></i> Silakan <a href="/authys.html">masuk ke akun Anda</a> terlebih dahulu untuk membeli barang.');
-		return;
-	}
-	selectedBuyListing = listing;
-	const curr = listing.currency_type === 'gold' ? 'Gold' : 'Lokal';
-	document.getElementById('buy-item-name').textContent = `${listing.item_name} (Q${listing.quality || 1})`;
-	document.getElementById('buy-seller-name').textContent = listing.seller_name || 'Pemain';
-	document.getElementById('buy-region-name').textContent = `${listing.country_name || listing.country_code || 'ID'} (${listing.region || '-'})`;
-	document.getElementById('buy-available-qty').textContent = `${listing.quantity} unit`;
-	document.getElementById('buy-unit-price').textContent = `${Number(listing.price_per_unit).toFixed(2)} ${curr}`;
-
-	const qtyInput = document.getElementById('buy-qty-input');
-	qtyInput.max = listing.quantity;
-	qtyInput.value = 1;
-	updateBuyTotalPreview();
-
-	document.getElementById('modal-buy').classList.add('open');
-}
-
-function closeBuyModal() {
-	document.getElementById('modal-buy').classList.remove('open');
-	selectedBuyListing = null;
-}
-
-function updateBuyTotalPreview() {
-	if (!selectedBuyListing) return;
-	const qtyInput = document.getElementById('buy-qty-input');
-	let qty = parseInt(qtyInput.value, 10) || 1;
-	if (qty < 1) qty = 1;
-	if (qty > selectedBuyListing.quantity) qty = selectedBuyListing.quantity;
-	const total = qty * Number(selectedBuyListing.price_per_unit || 0);
-	const curr = selectedBuyListing.currency_type === 'gold' ? 'Gold' : 'Uang Lokal';
-	document.getElementById('buy-total-cost').textContent = `${total.toFixed(2)} ${curr}`;
-}
-
-async function confirmPurchase() {
-	if (!selectedBuyListing || !currentUser || !currentUserProfile) return;
-
-	const qty = parseInt(document.getElementById('buy-qty-input').value, 10);
-	if (!qty || qty <= 0 || qty > selectedBuyListing.quantity) {
-		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah pembelian tidak valid.');
-		closeBuyModal();
-		return;
-	}
-
-	const isGold = selectedBuyListing.currency_type === 'gold';
-	const totalCost = Number((qty * Number(selectedBuyListing.price_per_unit)).toFixed(2));
-	const currentBal = isGold ? Number(currentUserProfile.gold || 0) : Number(currentUserProfile.currency || 0);
-
-	if (currentBal < totalCost) {
-		showFeedback('danger', `<i class="fa-solid fa-wallet"></i> Saldo <b>${isGold ? 'Gold' : 'Uang Lokal'}</b> tidak cukup! Dibutuhkan ${totalCost.toFixed(2)}, saldo Anda ${currentBal.toFixed(2)}.`);
-		closeBuyModal();
-		return;
-	}
-
-	const confirmBtn = document.getElementById('btn-confirm-buy');
-	confirmBtn.disabled = true;
-	confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
-
-	const nowIso = new Date().toISOString();
-	const listing = selectedBuyListing;
-
+async function testConnection() {
+	if (!db || !fbFirestoreMod) return;
+	const { doc, getDocFromServer } = fbFirestoreMod;
 	try {
-		// 1. Update buyer balance in users/{uid}
-		const newBal = Number((currentBal - totalCost).toFixed(2));
-		const userPatch = isGold ? { gold: newBal, updated_at: nowIso } : { currency: newBal, updated_at: nowIso };
-		await updateDoc(doc(db, 'users', currentUser.uid), userPatch);
-		if (isGold) currentUserProfile.gold = newBal;
-		else currentUserProfile.currency = newBal;
-
-		// 2. Update marketplace_listings/{listingId}
-		const remainingQty = Number(listing.quantity) - qty;
-		const newStatus = remainingQty <= 0 ? 'sold' : 'active';
-		await updateDoc(doc(db, 'marketplace_listings', listing.id), {
-			quantity: remainingQty,
-			status: newStatus,
-			updated_at: nowIso
-		});
-
-		// 3. Upsert into buyer's inventory subcollection users/{uid}/inventory/{itemId}
-		const invDocId = `${listing.item_id}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
-		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
-		const invSnap = await getDoc(invRef);
-		const prevInvQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
-		const updatedInvItem = {
-			id: invDocId,
-			owner_id: currentUser.uid,
-			item_id: listing.item_id,
-			item_name: listing.item_name,
-			item_icon: listing.item_icon || 'fa-solid fa-box',
-			category: listing.category || 'other',
-			quality: Number(listing.quality || 1),
-			quantity: prevInvQty + qty,
-			updated_at: nowIso
-		};
-		await setDoc(invRef, updatedInvItem);
-
-		// 4. Create buyer transaction record
-		const txId = `tx_buy_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-		const txData = {
-			id: txId,
-			user_id: currentUser.uid,
-			type: 'market_buy',
-			description: `Beli ${qty}x ${listing.item_name} dari ${listing.seller_name}`,
-			amount: -totalCost,
-			currency_type: listing.currency_type,
-			status: 'completed',
-			created_at: nowIso
-		};
-		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
-
-		// 5. Create escrow order receipt for seller payout
-		const orderId = `ord_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-		const netAmount = Number((totalCost * (1 - MARKET_FEE)).toFixed(2));
-		await setDoc(doc(db, 'market_orders', orderId), {
-			id: orderId,
-			listing_id: listing.id,
-			buyer_id: currentUser.uid,
-			buyer_name: currentUserProfile.username || 'Pembeli',
-			seller_id: listing.seller_id,
-			item_name: listing.item_name,
-			quantity: qty,
-			net_amount: netAmount,
-			currency_type: listing.currency_type,
-			claimed: false,
-			created_at: nowIso
-		});
-
-		// Update local UI state
-		if (remainingQty <= 0) {
-			allListings = allListings.filter((x) => x.id !== listing.id);
-		} else {
-			listing.quantity = remainingQty;
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (error) {
+		if (error instanceof Error && error.message.includes('the client is offline')) {
+			console.warn('Firebase client is offline. Periksa koneksi atau konfigurasi Firebase.');
 		}
-		const existingInvIdx = myInventory.findIndex((i) => i.id === invDocId);
-		if (existingInvIdx >= 0) myInventory[existingInvIdx] = updatedInvItem;
-		else myInventory.push(updatedInvItem);
-		myTransactions.unshift(txData);
-
-		renderPlayerProfile(currentUserProfile, currentUser);
-		updateSummaryStrip();
-		renderActiveTab();
-		closeBuyModal();
-
-		showFeedback('success', `<i class="fa-solid fa-circle-check"></i> <b>Pembelian Berhasil!</b> ${qty}x ${escapeHtml(listing.item_name)} telah masuk ke inventaris Anda.`);
-	} catch (err) {
-		handleFirestoreError(err, OperationType.WRITE, `marketplace_listings/${listing.id}`);
-		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memproses pembelian: ${escapeHtml(err.message)}`);
-	} finally {
-		confirmBtn.disabled = false;
-		confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Beli Sekarang';
 	}
 }
 
-function openSellModal(item) {
-	selectedSellItem = item;
-	document.getElementById('sell-item-name').textContent = item.item_name;
-	document.getElementById('sell-item-meta').textContent = `${getCategoryLabel(item.category)} • Q${item.quality || 1}`;
-	document.getElementById('sell-available-qty').textContent = `${item.quantity} unit`;
-
-	const currSelect = document.getElementById('sell-currency-select');
-	currSelect.value = marketMode === 'global' ? 'gold' : 'local';
-
-	const qtyInput = document.getElementById('sell-qty-input');
-	qtyInput.max = item.quantity;
-	qtyInput.value = 1;
-
-	document.getElementById('sell-price-input').value = marketMode === 'global' ? '0.50' : '5.00';
-	updateSellNetPreview();
-
-	document.getElementById('modal-sell').classList.add('open');
-}
-
-function closeSellModal() {
-	document.getElementById('modal-sell').classList.remove('open');
-	selectedSellItem = null;
-}
-
-function updateSellNetPreview() {
-	const qty = parseInt(document.getElementById('sell-qty-input').value, 10) || 0;
-	const price = parseFloat(document.getElementById('sell-price-input').value) || 0;
-	const curr = document.getElementById('sell-currency-select').value === 'gold' ? 'Gold' : 'Uang Lokal';
-	const net = qty * price * (1 - MARKET_FEE);
-	document.getElementById('sell-net-preview').textContent = `${net.toFixed(2)} ${curr}`;
-}
-
-async function confirmCreateListing() {
-	if (!selectedSellItem || !currentUser || !currentUserProfile) return;
-
-	const qty = parseInt(document.getElementById('sell-qty-input').value, 10);
-	const price = parseFloat(document.getElementById('sell-price-input').value);
-	const currencyType = document.getElementById('sell-currency-select').value === 'gold' ? 'gold' : 'local';
-
-	if (!qty || qty <= 0 || qty > selectedSellItem.quantity) {
-		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah barang yang dijual melebihi stok inventaris Anda.');
-		return;
-	}
-	if (!price || price <= 0) {
-		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Harga per unit harus lebih besar dari 0.');
-		return;
-	}
-
-	const btn = document.getElementById('btn-confirm-sell');
-	btn.disabled = true;
-	btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memasang...';
-
-	const nowIso = new Date().toISOString();
-	const item = selectedSellItem;
-
+async function loadMarketplaceListings() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, where, limit, getDocs } = fbFirestoreMod;
 	try {
-		// 1. Deduct stock from user's inventory
-		const remQty = Number(item.quantity) - qty;
-		const invRef = doc(db, 'users', currentUser.uid, 'inventory', item.id);
-		if (remQty <= 0) {
-			await deleteDoc(invRef);
-			myInventory = myInventory.filter((i) => i.id !== item.id);
-		} else {
-			await updateDoc(invRef, { quantity: remQty, updated_at: nowIso });
-			item.quantity = remQty;
-		}
-
-		// 2. Create listing in marketplace_listings
-		const listingId = `lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-		const newListing = {
-			id: listingId,
-			seller_id: currentUser.uid,
-			seller_name: currentUserProfile.username || 'Pemain',
-			item_id: item.item_id,
-			item_name: item.item_name,
-			item_icon: item.item_icon || 'fa-solid fa-box',
-			category: item.category || 'other',
-			quality: Number(item.quality || 1),
-			quantity: qty,
-			price_per_unit: Number(price.toFixed(2)),
-			currency_type: currencyType,
-			country_code: currentUserProfile.country_code || 'ID',
-			country_name: currentUserProfile.country_name || 'Indonesia',
-			region: currentUserProfile.region_name || currentUserProfile.region || 'Jakarta',
-			status: 'active',
-			created_at: nowIso,
-			updated_at: nowIso
-		};
-		await setDoc(doc(db, 'marketplace_listings', listingId), newListing);
-		allListings.unshift(newListing);
+		const q = query(
+			collection(db, 'marketplace_listings'),
+			where('status', '==', 'active'),
+			limit(100)
+		);
+		const snap = await getDocs(q);
+		allListings = [];
+		snap.forEach((d) => {
+			allListings.push({ id: d.id, ...d.data() });
+		});
 		updateMyListingsFromAll();
-
-		// 3. Log transaction
-		const txId = `tx_lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
-		const txData = {
-			id: txId,
-			user_id: currentUser.uid,
-			type: 'market_listing',
-			description: `Pasang jual ${qty}x ${item.item_name} @ ${price.toFixed(2)} ${currencyType === 'gold' ? 'Gold' : 'Lokal'}`,
-			amount: 0,
-			currency_type: currencyType,
-			status: 'active',
-			created_at: nowIso
-		};
-		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
-		myTransactions.unshift(txData);
-
-		closeSellModal();
-		setMarketMode(currencyType === 'gold' ? 'global' : 'local');
 		updateSummaryStrip();
-		switchTab('buy');
-		showFeedback('success', `<i class="fa-solid fa-bullhorn"></i> <b>Listing Dipasang!</b> ${qty}x ${escapeHtml(item.item_name)} sekarang tersedia di ${currencyType === 'gold' ? 'Pasar Global' : 'Pasar Lokal'}.`);
-
 	} catch (err) {
-		handleFirestoreError(err, OperationType.WRITE, 'marketplace_listings');
-		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memasang listing: ${escapeHtml(err.message)}`);
-	} finally {
-		btn.disabled = false;
-		btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar';
+		handleFirestoreError(err, OperationType.LIST, 'marketplace_listings');
+		allListings = [];
 	}
 }
 
-async function cancelOwnListing(listingId) {
-	if (!currentUser) return;
-	const listing = allListings.find((l) => l.id === listingId);
-	if (!listing) return;
-
-	const nowIso = new Date().toISOString();
+async function loadMyInventory(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, limit, getDocs } = fbFirestoreMod;
+	const path = `users/${uid}/inventory`;
 	try {
-		await updateDoc(doc(db, 'marketplace_listings', listingId), {
-			status: 'cancelled',
-			updated_at: nowIso
+		const q = query(collection(db, 'users', uid, 'inventory'), limit(100));
+		const snap = await getDocs(q);
+		myInventory = [];
+		snap.forEach((d) => {
+			const data = d.data();
+			if (Number(data.quantity || 0) > 0) {
+				myInventory.push({ id: d.id, ...data });
+			}
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myInventory = [];
+	}
+}
+
+async function loadMyTransactions(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, orderBy, limit, getDocs } = fbFirestoreMod;
+	const path = `users/${uid}/transactions`;
+	try {
+		const q = query(
+			collection(db, 'users', uid, 'transactions'),
+			orderBy('created_at', 'desc'),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		myTransactions = [];
+		snap.forEach((d) => {
+			myTransactions.push({ id: d.id, ...d.data() });
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myTransactions = [];
+	}
+}
+
+async function loadAndClaimPendingOrders(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, where, limit, getDocs, doc, updateDoc, setDoc } = fbFirestoreMod;
+	try {
+		// Single where() clause avoids composite index errors while respecting Firestore security rules
+		const q = query(
+			collection(db, 'market_orders'),
+			where('seller_id', '==', uid),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		pendingOrders = [];
+		snap.forEach((d) => {
+			const data = d.data();
+			if (data && data.claimed === false) {
+				pendingOrders.push({ id: d.id, ...data });
+			}
 		});
 
-		const invDocId = `${listing.item_id}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
-		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
-		const invSnap = await getDoc(invRef);
-		const prevQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
-		const restoredItem = {
-			id: invDocId,
-			owner_id: currentUser.uid,
-			item_id: listing.item_id,
-			item_name: listing.item_name,
-			item_icon: listing.item_icon || 'fa-solid fa-box',
-			category: listing.category || 'other',
-			quality: Number(listing.quality || 1),
-			quantity: prevQty + Number(listing.quantity),
-			updated_at: nowIso
-		};
-		await setDoc(invRef, restoredItem);
+		if (pendingOrders.length > 0 && currentUserProfile) {
+			let addedGold = 0;
+			let addedLocal = 0;
+			const nowIso = new Date().toISOString();
 
-		allListings = allListings.filter((l) => l.id !== listingId);
-		updateMyListingsFromAll();
+			for (const order of pendingOrders) {
+				const net = Number(order.net_amount || 0);
+				if (order.currency_type === 'gold') addedGold += net;
+				else addedLocal += net;
 
-		const idx = myInventory.findIndex((i) => i.id === invDocId);
-		if (idx >= 0) myInventory[idx] = restoredItem;
-		else myInventory.push(restoredItem);
+				await updateDoc(doc(db, 'market_orders', order.id), {
+					claimed: true,
+					claimed_at: nowIso
+				});
 
-		updateSummaryStrip();
-		renderActiveTab();
-		showFeedback('info', `<i class="fa-solid fa-rotate-left"></i> Listing <b>${escapeHtml(listing.item_name)}</b> dibatalkan. ${listing.quantity} unit dikembalikan ke inventaris Anda.`);
-	} catch (err) {
-		handleFirestoreError(err, OperationType.UPDATE, `marketplace_listings/${listingId}`);
-		showFeedback('danger', `Gagal membatalkan listing: ${escapeHtml(err.message)}`);
-	}
-}
+				const txId = `tx_sell_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+				const txData = {
+					id: txId,
+					user_id: uid,
+					type: 'market_sell',
+					description: `Terjual ${order.quantity}x ${order.item_name} ke ${order.buyer_name || 'Pembeli'} (Bersih -2.5%)`,
+					amount: Number(net.toFixed(2)),
+					currency_type: order.currency_type || 'local',
+					status: 'completed',
+					created_at: nowIso
+				};
+				await setDoc(doc(db, 'users', uid, 'transactions', txId), txData);
+				myTransactions.unshift(txData);
+			}
 
-async function claimStarterSupply() {
-	if (!currentUser) return;
-	const btn = document.getElementById('btn-claim-starter-pack');
-	if (btn) {
-		btn.disabled = true;
-		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Suplai...';
-	}
-
-	const nowIso = new Date().toISOString();
-	const starterItems = [
-		{ id: 'bread_q1', item_id: 'bread', item_name: 'Roti Gandum (Bread)', item_icon: 'fa-solid fa-bread-slice', category: 'food', quality: 1, quantity: 5 },
-		{ id: 'coffee_q1', item_id: 'coffee', item_name: 'Kopi Energi (Coffee)', item_icon: 'fa-solid fa-mug-hot', category: 'food', quality: 1, quantity: 3 },
-		{ id: 'iron_ore_q1', item_id: 'iron_ore', item_name: 'Bijih Besi (Iron Ore)', item_icon: 'fa-solid fa-cubes', category: 'raw', quality: 1, quantity: 10 }
-	];
-
-	try {
-		for (const s of starterItems) {
-			const payload = {
-				id: s.id,
-				owner_id: currentUser.uid,
-				item_id: s.item_id,
-				item_name: s.item_name,
-				item_icon: s.item_icon,
-				category: s.category,
-				quality: s.quality,
-				quantity: s.quantity,
+			const newGold = Number((Number(currentUserProfile.gold || 0) + addedGold).toFixed(2));
+			const newCurrency = Number((Number(currentUserProfile.currency || 0) + addedLocal).toFixed(2));
+			await updateDoc(doc(db, 'users', uid), {
+				gold: newGold,
+				currency: newCurrency,
 				updated_at: nowIso
-			};
-			await setDoc(doc(db, 'users', currentUser.uid, 'inventory', s.id), payload);
-			myInventory.push(payload);
+			});
+			currentUserProfile.gold = newGold;
+			currentUserProfile.currency = newCurrency;
+
+			const claimedCount = pendingOrders.length;
+			pendingOrders = [];
+			showFeedback(
+				'success',
+				`<i class="fa-solid fa-coins"></i> <b>Hasil Penjualan Diterima!</b> ${claimedCount} pesanan terjual diklaim (+${addedLocal.toFixed(2)} Lokal, +${addedGold.toFixed(2)} Gold).`
+			);
 		}
-		updateSummaryStrip();
-		renderActiveTab();
-		showFeedback('success', '<i class="fa-solid fa-gift"></i> <b>Paket Suplai Pemula Diterima!</b> 5x Roti, 3x Kopi, dan 10x Bijih Besi siap dijual atau digunakan.');
 	} catch (err) {
-		handleFirestoreError(err, OperationType.WRITE, `users/${currentUser.uid}/inventory`);
-		showFeedback('danger', `Gagal mengklaim suplai pemula: ${escapeHtml(err.message)}`);
+		handleFirestoreError(err, OperationType.LIST, 'market_orders');
 	}
 }
 
 // ============================================================
-// UI EVENT WIRING & HELPERS
+// UI EVENT WIRING & AUTH SETUP
 // ============================================================
 function setupUIEvents() {
-	document.getElementById('btn-mode-local').addEventListener('click', () => setMarketMode('local'));
-	document.getElementById('btn-mode-global').addEventListener('click', () => setMarketMode('global'));
+	const bind = (id, eventName, handler) => {
+		const el = document.getElementById(id);
+		if (el) el.addEventListener(eventName, handler);
+	};
 
-	document.getElementById('market-tabs').addEventListener('click', (e) => {
+	bind('btn-mode-local', 'click', () => setMarketMode('local'));
+	bind('btn-mode-global', 'click', () => setMarketMode('global'));
+
+	bind('market-tabs', 'click', (e) => {
 		const btn = e.target.closest('button[data-tab]');
 		if (!btn) return;
 		switchTab(btn.getAttribute('data-tab'));
 	});
 
-	document.getElementById('category-filter-pills').addEventListener('click', (e) => {
+	bind('category-filter-pills', 'click', (e) => {
 		const btn = e.target.closest('button[data-cat]');
 		if (!btn) return;
 		document.querySelectorAll('#category-filter-pills .filter-btn').forEach((b) => b.classList.remove('active'));
@@ -1983,97 +1977,199 @@ function setupUIEvents() {
 		renderActiveTab();
 	});
 
-	document.getElementById('market-search-input').addEventListener('input', (e) => {
+	bind('market-search-input', 'input', (e) => {
 		searchKeyword = e.target.value.trim();
 		renderActiveTab();
 	});
 
-	document.getElementById('market-sort-select').addEventListener('change', (e) => {
+	bind('market-sort-select', 'change', (e) => {
 		sortMode = e.target.value;
 		renderActiveTab();
 	});
 
 	// Buy modal controls
-	document.getElementById('btn-close-buy-modal').addEventListener('click', closeBuyModal);
-	document.getElementById('btn-cancel-buy').addEventListener('click', closeBuyModal);
-	document.getElementById('buy-qty-input').addEventListener('input', updateBuyTotalPreview);
-	document.getElementById('btn-buy-max').addEventListener('click', () => {
-		if (selectedBuyListing) {
-			document.getElementById('buy-qty-input').value = selectedBuyListing.quantity;
+	bind('btn-close-buy-modal', 'click', closeBuyModal);
+	bind('btn-cancel-buy', 'click', closeBuyModal);
+	bind('buy-qty-input', 'input', updateBuyTotalPreview);
+	bind('btn-buy-max', 'click', () => {
+		const qtyInput = document.getElementById('buy-qty-input');
+		if (selectedBuyListing && qtyInput) {
+			qtyInput.value = selectedBuyListing.quantity;
 			updateBuyTotalPreview();
 		}
 	});
-	document.getElementById('btn-confirm-buy').addEventListener('click', confirmPurchase);
+	bind('btn-confirm-buy', 'click', confirmPurchase);
 
 	// Sell modal controls
-	document.getElementById('btn-close-sell-modal').addEventListener('click', closeSellModal);
-	document.getElementById('btn-cancel-sell').addEventListener('click', closeSellModal);
-	document.getElementById('sell-qty-input').addEventListener('input', updateSellNetPreview);
-	document.getElementById('sell-price-input').addEventListener('input', updateSellNetPreview);
-	document.getElementById('sell-currency-select').addEventListener('change', updateSellNetPreview);
-	document.getElementById('btn-confirm-sell').addEventListener('click', confirmCreateListing);
+	bind('btn-close-sell-modal', 'click', closeSellModal);
+	bind('btn-cancel-sell', 'click', closeSellModal);
+	bind('sell-qty-input', 'input', updateSellNetPreview);
+	bind('sell-price-input', 'input', updateSellNetPreview);
+	bind('sell-currency-select', 'change', updateSellNetPreview);
+	bind('btn-confirm-sell', 'click', confirmCreateListing);
 }
 
-function setMarketMode(mode) {
-	marketMode = mode === 'global' ? 'global' : 'local';
-	const btnLocal = document.getElementById('btn-mode-local');
-	const btnGlobal = document.getElementById('btn-mode-global');
+function setupAuth() {
+	if (!auth || !db || !fbAuthMod || !fbFirestoreMod) return;
+	const { onAuthStateChanged, signOut } = fbAuthMod;
+	const { doc, getDoc, setDoc } = fbFirestoreMod;
 
-	btnLocal.className = marketMode === 'local' ? 'mode-btn active' : 'mode-btn';
-	btnGlobal.className = marketMode === 'global' ? 'mode-btn active-gold' : 'mode-btn';
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
 
-	updateSummaryStrip();
-	renderActiveTab();
-}
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
 
-function switchTab(tabName) {
-	activeTab = tabName;
-	document.querySelectorAll('#market-tabs li').forEach((li) => {
-		const btn = li.querySelector('button');
-		li.classList.toggle('active', btn && btn.getAttribute('data-tab') === tabName);
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					currentUserProfile = {
+						id: user.uid,
+						username: user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain'),
+						email: user.email || '',
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 100,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					const btnLogout = document.getElementById('btn-logout');
+					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+				await Promise.all([
+					loadMyInventory(user.uid),
+					loadMyTransactions(user.uid),
+					loadAndClaimPendingOrders(user.uid)
+				]);
+
+				updateMyListingsFromAll();
+				renderPlayerProfile(currentUserProfile, user);
+				updateSummaryStrip();
+				renderActiveTab();
+
+			} catch (err) {
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+			}
+		} else {
+			currentUserProfile = null;
+			myInventory = [];
+			myListings = [];
+			myTransactions = [];
+			pendingOrders = [];
+
+			renderGuestState();
+			updateSummaryStrip();
+			renderActiveTab();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk membeli &amp; menjual barang:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
 	});
-	renderActiveTab();
 }
 
-function showFeedback(type, htmlMsg) {
-	const banner = document.getElementById('market-feedback-banner');
-	if (!banner) return;
-	banner.className = `alert alert-${type}`;
-	banner.innerHTML = htmlMsg;
-	banner.style.display = 'block';
-	window.scrollTo({ top: banner.offsetTop - 20, behavior: 'smooth' });
+// ============================================================
+// SEQUENTIAL INITIALIZATION AFTER DOM READY
+// 1. Load firebase-app first
+// 2. Load firebase-auth & firebase-firestore
+// 3. Initialize app -> db -> auth, wire UI, load market data
+// ============================================================
+async function initMarketFirebase() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		setupUIEvents();
+
+		// Step 1: Load firebase-app first
+		fbAppMod = await import(`${FIREBASE_CDN_BASE}/firebase-app.js`);
+		const { initializeApp, getApps, getApp } = fbAppMod;
+		app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+		// Step 2: Load firebase-auth and firebase-firestore after firebase-app
+		const [authModule, firestoreModule] = await Promise.all([
+			import(`${FIREBASE_CDN_BASE}/firebase-auth.js`),
+			import(`${FIREBASE_CDN_BASE}/firebase-firestore.js`)
+		]);
+		fbAuthMod = authModule;
+		fbFirestoreMod = firestoreModule;
+
+		db = fbFirestoreMod.getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = fbAuthMod.getAuth(app);
+
+		await testConnection();
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
+		}
+
+		setupAuth();
+		await loadMarketplaceListings();
+		renderActiveTab();
+	} catch (err) {
+		console.warn('Firebase init warning in market_local:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+		renderActiveTab();
+	}
 }
 
-function getCategoryIcon(cat) {
-	const map = {
-		food: 'fa-solid fa-utensils',
-		weapons: 'fa-solid fa-gun',
-		raw: 'fa-solid fa-cubes',
-		utilities: 'fa-solid fa-bolt',
-		other: 'fa-solid fa-box'
-	};
-	return map[cat] || 'fa-solid fa-box';
-}
-
-function getCategoryLabel(cat) {
-	const map = {
-		food: 'Makanan & Energi',
-		weapons: 'Senjata & Militer',
-		raw: 'Bahan Baku',
-		utilities: 'Utilitas',
-		other: 'Lainnya'
-	};
-	return map[cat] || 'Umum';
-}
-
-function escapeHtml(str) {
-	if (str === null || str === undefined) return '';
-	return String(str)
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;');
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initMarketFirebase);
+} else {
+	initMarketFirebase();
 }
 </script>
 
