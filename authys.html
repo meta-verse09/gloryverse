@@ -3,334 +3,417 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Glory Verse – Autentikasi Pemain</title>
-<meta name="description" content="Masuk atau Daftar akun pemain Glory Verse - Game Strategi Online">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glory Verse - Masuk &amp; Daftar</title>
+<meta name="description" content="Gerbang Masuk dan Pendaftaran Akun Pemain Glory Verse - Online Strategy Browser Game">
 <link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<!-- FontAwesome 6 (CDN) -->
+<!-- Google Fonts: Roboto Slab & Roboto (Sesuai tema Glory Verse) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,700|Roboto:400,500,700">
+<!-- FontAwesome 6 CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
   :root {
-    --navy: #0e1520;
-    --navy-deep: #080c13;
-    --panel: #162030;
-    --panel-sub: #1b273b;
-    --line: #293b58;
-    --line-focus: #4a6fa5;
+    --navy-deep: #080d16;
+    --navy: #0e1726;
+    --panel: #152136;
+    --panel-inner: #10192b;
+    --border: #283c5f;
     --gold: #d4a64a;
-    --gold-hover: #b88a32;
+    --gold-bright: #f0c04a;
+    --gold-hover: #bc8d33;
     --text: #eef2fa;
-    --muted: #95a5c0;
+    --muted: #9aa9c4;
     --err: #ff6b6b;
-    --err-bg: rgba(255, 107, 107, 0.12);
+    --err-bg: rgba(255, 107, 107, 0.14);
     --ok: #51cf66;
-    --ok-bg: rgba(81, 207, 102, 0.12);
+    --ok-bg: rgba(81, 207, 102, 0.14);
     --radius: 12px;
   }
+
   * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
   body {
-    background: radial-gradient(circle at 50% 20%, #16253d 0%, var(--navy-deep) 100%);
+    background:
+      radial-gradient(circle at 50% 15%, rgba(36, 62, 107, 0.55) 0%, transparent 60%),
+      linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 24px 16px;
     min-height: 100vh;
   }
-  .card {
+
+  .auth-card {
     width: 100%;
-    max-width: 420px;
+    max-width: 430px;
     background: var(--panel);
-    border: 1px solid var(--line);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
     border-radius: var(--radius);
-    padding: 28px 24px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+    padding: 28px 24px 24px;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.55);
   }
+
   .brand-header {
     text-align: center;
     margin-bottom: 20px;
   }
+
   .brand-logo {
     display: inline-block;
-    max-width: 150px;
+    max-width: 156px;
     height: auto;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
+
   .brand-title {
-    font-family: Palatino, "Palatino Linotype", "Book Antiqua", Georgia, serif;
+    font-family: "Roboto Slab", Georgia, serif;
     font-size: 26px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--gold-bright);
     margin: 0 0 6px;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
   }
+
   .sub-title {
     margin: 0;
     color: var(--muted);
     font-size: 13.5px;
-    line-height: 1.4;
   }
+
+  .status-init {
+    text-align: center;
+    color: var(--muted);
+    padding: 30px 10px;
+    font-size: 13.5px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    vertical-align: middle;
+  }
+
+  .status-init .spinner {
+    width: 28px;
+    height: 28px;
+    border-width: 3px;
+    color: var(--gold-bright);
+    margin-bottom: 12px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
   .tabs {
-    display: flex;
-    background: var(--navy-deep);
-    border: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    background: var(--panel-inner);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 3px;
-    margin: 18px 0;
+    padding: 4px;
+    margin: 18px 0 20px;
   }
+
   .tabs button {
-    flex: 1;
     border: 0;
     background: transparent;
     color: var(--muted);
-    padding: 9px 12px;
+    padding: 10px 12px;
+    font-family: "Roboto Slab", Georgia, serif;
     font-size: 13.5px;
-    font-weight: 600;
+    font-weight: 700;
     border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .tabs button.on {
-    background: var(--gold);
-    color: #12161f;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  }
-  .already-banner {
-    background: var(--panel-sub);
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 16px;
-    font-size: 13px;
-    display: flex;
+    transition: background 0.2s, color 0.2s;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    gap: 7px;
   }
-  .already-banner .btn-sm {
-    padding: 4px 10px;
-    font-size: 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 0;
-    font-weight: 600;
+
+  .tabs button:hover:not(.on) {
+    color: var(--text);
   }
+
+  .tabs button.on {
+    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+    color: #101622;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+
   .form-group {
-    margin-bottom: 14px;
+    margin-bottom: 15px;
   }
-  label {
+
+  .form-group label {
     display: block;
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--muted);
     margin-bottom: 6px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.45px;
   }
+
   .input-wrap {
     position: relative;
     display: flex;
     align-items: center;
   }
-  .input-wrap i {
+
+  .input-wrap > i {
     position: absolute;
-    left: 12px;
+    left: 13px;
     color: var(--muted);
     font-size: 14px;
     pointer-events: none;
   }
-  input {
+
+  .input-wrap input {
     width: 100%;
-    padding: 11px 12px 11px 36px;
+    padding: 11px 12px 11px 38px;
     font-size: 14.5px;
     color: var(--text);
-    background: var(--navy-deep);
-    border: 1px solid var(--line);
+    background: var(--panel-inner);
+    border: 1px solid var(--border);
     border-radius: 8px;
+    font-family: inherit;
     transition: border-color 0.2s, box-shadow 0.2s;
   }
-  input:focus {
+
+  .input-wrap input::placeholder {
+    color: #637391;
+  }
+
+  .input-wrap input:focus {
     outline: none;
     border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(212, 166, 74, 0.2);
+    box-shadow: 0 0 0 3px rgba(212, 166, 74, 0.22);
   }
+
   .btn-submit {
     width: 100%;
-    margin-top: 10px;
-    padding: 12px;
+    margin-top: 6px;
+    padding: 12px 16px;
     border: 0;
     border-radius: 8px;
-    background: var(--gold);
-    color: #12161f;
+    background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+    color: #101622;
+    font-family: "Roboto Slab", Georgia, serif;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    transition: filter 0.15s, transform 0.1s;
   }
+
   .btn-submit:hover:not(:disabled) {
-    background: var(--gold-hover);
+    filter: brightness(1.06);
   }
+
+  .btn-submit:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
   .btn-submit:disabled {
-    opacity: 0.6;
+    opacity: 0.65;
     cursor: not-allowed;
   }
+
   .divider {
     display: flex;
     align-items: center;
     text-align: center;
     color: var(--muted);
-    font-size: 12px;
+    font-size: 11.5px;
     margin: 18px 0;
   }
-  .divider::before, .divider::after {
-    content: '';
+
+  .divider::before,
+  .divider::after {
+    content: "";
     flex: 1;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--border);
   }
+
   .divider span {
     padding: 0 10px;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
   }
+
   .btn-google {
     width: 100%;
-    padding: 11px;
-    border: 1px solid var(--line);
+    padding: 11px 14px;
+    border: 1px solid #d5dbe5;
     border-radius: 8px;
     background: #ffffff;
-    color: #333333;
+    color: #20293a;
     font-size: 14px;
     font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: background 0.2s;
+    transition: background 0.15s;
   }
-  .btn-google:hover {
-    background: #f1f3f5;
+
+  .btn-google:hover:not(:disabled) {
+    background: #f1f4f9;
   }
+
+  .btn-google:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
   .links-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     margin-top: 16px;
     font-size: 13px;
   }
+
   .link-btn {
     background: none;
     border: 0;
     color: var(--muted);
     cursor: pointer;
-    text-decoration: underline;
     padding: 0;
     font-size: 13px;
+    font-family: inherit;
+    text-decoration: none;
   }
+
   .link-btn:hover {
-    color: var(--gold);
+    color: var(--gold-bright);
+    text-decoration: underline;
   }
+
   .msg-box {
-    margin-top: 14px;
-    padding: 10px 14px;
+    margin-top: 15px;
+    padding: 11px 14px;
     border-radius: 8px;
     font-size: 13px;
-    line-height: 1.4;
+    line-height: 1.45;
     display: none;
   }
+
   .msg-box.err {
     display: block;
     background: var(--err-bg);
     border: 1px solid var(--err);
-    color: var(--err);
+    color: #ff9c9c;
   }
+
   .msg-box.ok {
     display: block;
     background: var(--ok-bg);
     border: 1px solid var(--ok);
-    color: var(--ok);
+    color: #8ee59d;
   }
-  .hide { display: none !important; }
-  .spinner {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 50%;
-    border-top-color: currentColor;
-    animation: spin 0.8s linear infinite;
+
+  .hide {
+    display: none !important;
   }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  .status-init {
+
+  .card-footer {
+    margin-top: 18px;
     text-align: center;
+    font-size: 12px;
     color: var(--muted);
-    padding: 28px 0;
   }
-  .back-home {
-    display: block;
-    text-align: center;
-    margin-top: 20px;
+
+  .card-footer a {
     color: var(--muted);
     text-decoration: none;
-    font-size: 13px;
   }
-  .back-home:hover {
-    color: var(--text);
+
+  .card-footer a:hover {
+    color: var(--gold-bright);
+  }
+
+  @media (max-width: 480px) {
+    body {
+      padding: 16px 12px;
+    }
+    .auth-card {
+      padding: 22px 16px 20px;
+    }
+    .brand-title {
+      font-size: 22px;
+    }
+    .tabs button {
+      font-size: 13px;
+      padding: 9px 8px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="card">
+<main class="auth-card">
   <div class="brand-header">
-    <a href="/index.html"><img src="/img/logo-site.png" alt="Glory Verse" class="brand-logo" onerror="this.style.display='none'"></a>
+    <a href="/index.html">
+      <img src="/img/logo-site.png" alt="Glory Verse" class="brand-logo" onerror="this.style.display='none'">
+    </a>
     <h1 class="brand-title">Glory Verse</h1>
-    <p class="sub-title" id="sub-title">Menghubungkan ke layanan autentikasi Firebase…</p>
+    <p class="sub-title" id="sub-title">Menghubungkan ke layanan autentikasi…</p>
   </div>
 
-  <!-- Loading State -->
+  <!-- Loading Check Session -->
   <div id="init-status" class="status-init">
-    <div class="spinner" style="width:24px; height:24px; border-width:3px; margin-bottom:10px; color:var(--gold);"></div>
-    <div>Memeriksa sesi akun...</div>
+    <div class="spinner"></div>
+    <div>Memeriksa status login akun Anda…</div>
   </div>
 
-  <!-- Main Auth Box -->
+  <!-- Login & Register Form -->
   <div id="auth-box" class="hide">
-
-    <!-- Banner when already signed in -->
-    <div id="already-signed-in" class="already-banner hide">
-      <div>
-        <div style="font-weight:600; color:var(--text);"><i class="fa-solid fa-circle-check" style="color:var(--ok);"></i> Sudah login:</div>
-        <div id="signed-in-user-email" style="color:var(--muted); font-size:12px;">user@example.com</div>
-      </div>
-      <div style="display:flex; gap:6px;">
-        <a href="/dashboard.html" class="btn-sm" style="background:var(--gold); color:#111; text-decoration:none;">Dashboard</a>
-        <button type="button" id="btn-signout-here" class="btn-sm" style="background:#495057; color:#fff;">Ganti Akun</button>
-      </div>
-    </div>
-
-    <!-- Tabs: Login vs Register -->
-    <div class="tabs" role="tablist">
-      <button type="button" id="tab-login" class="on" role="tab"><i class="fa-solid fa-right-to-bracket"></i> Masuk</button>
-      <button type="button" id="tab-register" role="tab"><i class="fa-solid fa-user-plus"></i> Daftar Baru</button>
+    <div class="tabs" role="tablist" aria-label="Pilih mode autentikasi">
+      <button type="button" id="tab-login" class="on" role="tab" aria-selected="true">
+        <i class="fa-solid fa-right-to-bracket"></i> Masuk
+      </button>
+      <button type="button" id="tab-register" role="tab" aria-selected="false">
+        <i class="fa-solid fa-user-plus"></i> Daftar
+      </button>
     </div>
 
     <form id="auth-form" novalidate autocomplete="on">
-      <div class="form-group" id="group-username" class="hide" style="display:none;">
+      <div class="form-group hide" id="group-username">
         <label for="username">Nama Karakter / Username</label>
         <div class="input-wrap">
           <i class="fa-solid fa-user"></i>
-          <input id="username" type="text" autocomplete="nickname" placeholder="Nama karakter di game" maxlength="30">
+          <input id="username" name="username" type="text" autocomplete="nickname" placeholder="Nama karakter Anda di game" maxlength="30">
         </div>
       </div>
 
@@ -338,7 +421,7 @@
         <label for="email">Alamat Email</label>
         <div class="input-wrap">
           <i class="fa-solid fa-envelope"></i>
-          <input id="email" type="email" autocomplete="email" placeholder="nama@email.com" required>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required>
         </div>
       </div>
 
@@ -346,7 +429,7 @@
         <label for="password">Kata Sandi</label>
         <div class="input-wrap">
           <i class="fa-solid fa-lock"></i>
-          <input id="password" type="password" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="Minimal 6 karakter" required>
         </div>
       </div>
 
@@ -354,7 +437,7 @@
         <label for="confirm-password">Konfirmasi Kata Sandi</label>
         <div class="input-wrap">
           <i class="fa-solid fa-shield-halved"></i>
-          <input id="confirm-password" type="password" autocomplete="new-password" placeholder="Ketik ulang kata sandi">
+          <input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" placeholder="Ketik ulang kata sandi">
         </div>
       </div>
 
@@ -367,78 +450,96 @@
 
     <button type="button" class="btn-google" id="btn-google">
       <img width="18" height="18" src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-      <span>Masuk dengan Akun Google</span>
+      <span>Lanjutkan dengan Google</span>
     </button>
 
     <div class="links-row">
       <button class="link-btn" id="btn-forgot" type="button">Lupa kata sandi?</button>
-      <a href="/index.html" class="link-btn" style="text-decoration:none;">&larr; Halaman Depan</a>
+      <a href="/index.html" class="link-btn">&larr; Kembali ke Beranda</a>
     </div>
 
-    <div class="msg-box" id="msg-box" role="alert"></div>
+    <div class="msg-box" id="msg-box" role="alert" aria-live="polite"></div>
+  </div>
+</main>
 
-  </div><!-- end #auth-box -->
+<footer class="card-footer">
+  &copy; 2026 Glory Verse &bull; <a href="/privacy_policy.html">Privasi</a> &bull; <a href="/tos.html">Ketentuan</a>
+</footer>
 
-  <a href="/index.html" class="back-home">&larr; Kembali ke Glory Verse</a>
-</div>
-
-<!-- Firebase ESM Modules -->
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
+import { initializeApp, getApps, getApp } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js';
 import {
   getAuth,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signInWithPopup,
-  GoogleAuthProvider,
   sendPasswordResetEmail,
-  signOut,
-  onAuthStateChanged
+  updateProfile
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js';
 import {
   getFirestore,
   doc,
   getDoc,
-  setDoc
+  setDoc,
+  getDocFromServer
 } from 'https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js';
-
-// Bersihkan token Supabase lama dari localStorage agar tidak bentrok
-try {
-  for (let i = localStorage.length - 1; i >= 0; i--) {
-    const k = localStorage.key(i);
-    if (k && (k.startsWith('sb-') || k.includes('supabase'))) {
-      localStorage.removeItem(k);
-    }
-  }
-} catch (e) {
-  // abaikan error storage
-}
 
 const DASHBOARD_URL = '/dashboard.html';
 
-let auth = null;
-let db = null;
-let currentMode = 'login'; // 'login' | 'register'
-let signedInUser = null;
+const firebaseConfig = {
+  projectId: "gen-lang-client-0514427323",
+  appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+  apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+  authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+  firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+  storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+  messagingSenderId: "16121083015",
+  measurementId: "",
+  oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+  recaptchaSiteKey: ""
+};
 
-// DOM Elements
+const OperationType = {
+  CREATE: 'create',
+  UPDATE: 'update',
+  DELETE: 'delete',
+  LIST: 'list',
+  GET: 'get',
+  WRITE: 'write'
+};
+
+let app = null;
+let db = null;
+let auth = null;
+let currentMode = 'login';
+let isSubmittingAuth = false;
+
 const initStatus = document.getElementById('init-status');
 const authBox = document.getElementById('auth-box');
 const subTitle = document.getElementById('sub-title');
 const tabLogin = document.getElementById('tab-login');
 const tabRegister = document.getElementById('tab-register');
-const form = document.getElementById('auth-form');
+const authForm = document.getElementById('auth-form');
 const groupUsername = document.getElementById('group-username');
 const confirmWrap = document.getElementById('confirm-wrap');
 const submitBtn = document.getElementById('submit-btn');
 const btnGoogle = document.getElementById('btn-google');
 const btnForgot = document.getElementById('btn-forgot');
 const msgBox = document.getElementById('msg-box');
-const alreadySignedIn = document.getElementById('already-signed-in');
-const signedInUserEmail = document.getElementById('signed-in-user-email');
-const btnSignoutHere = document.getElementById('btn-signout-here');
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function showMsg(text, type = 'err') {
+  if (!msgBox) return;
   if (!text) {
     msgBox.className = 'msg-box';
     msgBox.textContent = '';
@@ -448,45 +549,84 @@ function showMsg(text, type = 'err') {
   msgBox.className = `msg-box ${type}`;
 }
 
+function setSubmitButtonIdle() {
+  if (!submitBtn) return;
+  submitBtn.disabled = false;
+  submitBtn.innerHTML = currentMode === 'register'
+    ? '<i class="fa-solid fa-user-plus"></i> Buat Akun Baru'
+    : '<i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang';
+}
+
 function setMode(mode) {
-  currentMode = mode;
-  const isRegister = (mode === 'register');
-  tabLogin.classList.toggle('on', !isRegister);
-  tabRegister.classList.toggle('on', isRegister);
-  confirmWrap.classList.toggle('hide', !isRegister);
-  groupUsername.style.display = isRegister ? 'block' : 'none';
+  currentMode = mode === 'register' ? 'register' : 'login';
+  const isRegister = currentMode === 'register';
 
-  const pwd = document.getElementById('password');
-  pwd.autocomplete = isRegister ? 'new-password' : 'current-password';
-
-  if (isRegister) {
-    subTitle.textContent = 'Daftar akun pemain baru Glory Verse.';
-    submitBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Buat Akun Baru';
-    btnForgot.classList.add('hide');
-  } else {
-    subTitle.textContent = 'Selamat datang kembali. Masuk ke akun Anda.';
-    submitBtn.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang';
-    btnForgot.classList.remove('hide');
+  if (tabLogin) {
+    tabLogin.classList.toggle('on', !isRegister);
+    tabLogin.setAttribute('aria-selected', String(!isRegister));
   }
+  if (tabRegister) {
+    tabRegister.classList.toggle('on', isRegister);
+    tabRegister.setAttribute('aria-selected', String(isRegister));
+  }
+  if (groupUsername) groupUsername.classList.toggle('hide', !isRegister);
+  if (confirmWrap) confirmWrap.classList.toggle('hide', !isRegister);
+  if (btnForgot) btnForgot.classList.toggle('hide', isRegister);
+
+  const pwdInput = document.getElementById('password');
+  if (pwdInput) {
+    pwdInput.autocomplete = isRegister ? 'new-password' : 'current-password';
+  }
+
+  if (subTitle) {
+    subTitle.textContent = isRegister
+      ? 'Buat akun pemain baru untuk bergabung ke Glory Verse.'
+      : 'Masuk ke akun Anda untuk melanjutkan ke dashboard.';
+  }
+
+  setSubmitButtonIdle();
   showMsg('');
 }
 
-function goDashboard() {
+function redirectToDashboard() {
   window.location.replace(DASHBOARD_URL);
 }
 
-// Inisialisasi profil Firestore jika pemain baru
+function handleFirestoreError(error, operationType, path) {
+  const user = auth && auth.currentUser ? auth.currentUser : null;
+  const errInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: user ? user.uid : null,
+      email: user ? user.email : null,
+      emailVerified: user ? user.emailVerified : null,
+      isAnonymous: user ? user.isAnonymous : null,
+      tenantId: user ? user.tenantId : null,
+      providerInfo: user && Array.isArray(user.providerData)
+        ? user.providerData.map((p) => ({ providerId: p.providerId, email: p.email }))
+        : []
+    },
+    operationType,
+    path
+  };
+  console.warn('Firestore Error:', JSON.stringify(errInfo));
+}
+
 async function ensureUserProfile(user, preferredUsername = '') {
-  if (!user) return;
+  if (!user || !db) return;
+  const path = `users/${user.uid}`;
   try {
     const userRef = doc(db, 'users', user.uid);
     const snap = await getDoc(userRef);
     if (!snap.exists()) {
-      const uname = preferredUsername || user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain');
+      const fallbackName = user.email ? user.email.split('@')[0] : 'Pemain';
+      const cleanName = (preferredUsername || user.displayName || fallbackName || 'Pemain').trim().slice(0, 50) || 'Pemain';
+      const nowIso = new Date().toISOString();
+
       await setDoc(userRef, {
         id: user.uid,
-        username: uname,
-        email: user.email || '',
+        username: cleanName,
+        email: (user.email || '').slice(0, 128),
         country_code: 'ID',
         country_name: 'Indonesia',
         region_name: 'Jakarta',
@@ -501,195 +641,220 @@ async function ensureUserProfile(user, preferredUsername = '') {
         income: 0,
         alerts: 0,
         messages: 0,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        work_bonus: 0,
+        created_at: nowIso,
+        updated_at: nowIso
       });
     }
   } catch (err) {
-    console.warn('Gagal sinkronisasi profil user:', err);
+    handleFirestoreError(err, OperationType.WRITE, path);
   }
 }
 
 function translateFirebaseError(err) {
-  const code = err.code || '';
-  const msg = err.message || '';
-  if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
-    return 'Email atau kata sandi tidak cocok. Silakan periksa kembali.';
+  const code = (err && err.code) || '';
+  switch (code) {
+    case 'auth/invalid-credential':
+    case 'auth/wrong-password':
+      return 'Email atau kata sandi salah. Silakan periksa kembali kata sandi Anda.';
+    case 'auth/user-not-found':
+      return 'Akun dengan email tersebut belum terdaftar. Silakan pilih tab Daftar.';
+    case 'auth/email-already-in-use':
+      return 'Email ini sudah terdaftar. Silakan pindah ke tab Masuk untuk login.';
+    case 'auth/weak-password':
+      return 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.';
+    case 'auth/invalid-email':
+      return 'Format alamat email tidak valid.';
+    case 'auth/user-disabled':
+      return 'Akun ini sedang dinonaktifkan.';
+    case 'auth/too-many-requests':
+      return 'Terlalu banyak percobaan login gagal. Silakan tunggu beberapa menit atau gunakan fitur Lupa kata sandi.';
+    case 'auth/popup-closed-by-user':
+    case 'auth/cancelled-popup-request':
+      return 'Popup login Google ditutup sebelum proses selesai.';
+    case 'auth/popup-blocked':
+      return 'Popup login diblokir oleh browser. Izinkan popup untuk situs ini lalu coba lagi.';
+    case 'auth/network-request-failed':
+      return 'Koneksi jaringan bermasalah. Periksa internet Anda dan coba lagi.';
+    case 'auth/operation-not-allowed':
+      return 'Metode login ini belum diaktifkan di konsol Firebase.';
+    default:
+      return (err && err.message) ? err.message : 'Terjadi kesalahan autentikasi. Silakan coba lagi.';
   }
-  if (code === 'auth/email-already-in-use') {
-    return 'Alamat email ini sudah terdaftar. Silakan pilih tab Masuk.';
-  }
-  if (code === 'auth/weak-password') {
-    return 'Kata sandi terlalu lemah. Gunakan minimal 6 karakter.';
-  }
-  if (code === 'auth/invalid-email') {
-    return 'Format alamat email tidak valid.';
-  }
-  if (code === 'auth/popup-closed-by-user') {
-    return 'Jendela login Google ditutup sebelum selesai.';
-  }
-  if (code === 'auth/too-many-requests') {
-    return 'Terlalu banyak percobaan gagal. Silakan tunggu beberapa saat atau reset kata sandi.';
-  }
-  return msg || 'Terjadi kesalahan autentikasi. Silakan coba lagi.';
 }
 
-// Konfigurasi Firebase langsung sebagai JavaScript Object (tanpa fetch / JSON.parse)
-const firebaseConfig = {
-  projectId: "gen-lang-client-0514427323",
-  appId: "1:16121083015:web:3d017df91f8ec727fcf422",
-  apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
-  authDomain: "gen-lang-client-0514427323.firebaseapp.com",
-  firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
-  storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
-  messagingSenderId: "16121083015",
-  measurementId: "",
-  oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
-  recaptchaSiteKey: ""
-};
-
-async function init() {
+async function testConnection() {
   try {
-    const app = initializeApp(firebaseConfig);
+    await getDocFromServer(doc(db, 'test', 'connection'));
+  } catch (err) {
+    if (err instanceof Error && err.message.includes('the client is offline')) {
+      console.warn('Firebase client is offline. Periksa konfigurasi Firebase.');
+    }
+  }
+}
+
+function wireUIEvents() {
+  if (tabLogin) tabLogin.addEventListener('click', () => setMode('login'));
+  if (tabRegister) tabRegister.addEventListener('click', () => setMode('register'));
+
+  if (authForm) {
+    authForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!auth) {
+        showMsg('Layanan autentikasi belum siap. Muat ulang halaman.', 'err');
+        return;
+      }
+
+      const emailEl = document.getElementById('email');
+      const passEl = document.getElementById('password');
+      const userEl = document.getElementById('username');
+      const confirmEl = document.getElementById('confirm-password');
+
+      const email = emailEl ? emailEl.value.trim() : '';
+      const password = passEl ? passEl.value : '';
+      const username = userEl ? userEl.value.trim() : '';
+      const confirmPassword = confirmEl ? confirmEl.value : '';
+
+      if (!email) {
+        showMsg('Alamat email wajib diisi.', 'err');
+        return;
+      }
+      if (!password) {
+        showMsg('Kata sandi wajib diisi.', 'err');
+        return;
+      }
+
+      if (currentMode === 'register') {
+        if (password.length < 6) {
+          showMsg('Kata sandi minimal harus 6 karakter.', 'err');
+          return;
+        }
+        if (password !== confirmPassword) {
+          showMsg('Konfirmasi kata sandi tidak cocok.', 'err');
+          return;
+        }
+      }
+
+      isSubmittingAuth = true;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
+      }
+      showMsg('');
+
+      try {
+        if (currentMode === 'login') {
+          const cred = await signInWithEmailAndPassword(auth, email, password);
+          await ensureUserProfile(cred.user);
+          showMsg('Login berhasil! Mengalihkan ke dashboard…', 'ok');
+          redirectToDashboard();
+        } else {
+          const cred = await createUserWithEmailAndPassword(auth, email, password);
+          if (username) {
+            try {
+              await updateProfile(cred.user, { displayName: username.slice(0, 50) });
+            } catch (profileErr) {
+              console.warn('Update displayName skipped:', profileErr);
+            }
+          }
+          await ensureUserProfile(cred.user, username);
+          showMsg('Pendaftaran berhasil! Mengalihkan ke dashboard…', 'ok');
+          redirectToDashboard();
+        }
+      } catch (err) {
+        isSubmittingAuth = false;
+        showMsg(translateFirebaseError(err), 'err');
+        setSubmitButtonIdle();
+      }
+    });
+  }
+
+  if (btnGoogle) {
+    btnGoogle.addEventListener('click', async () => {
+      if (!auth) {
+        showMsg('Layanan autentikasi belum siap. Muat ulang halaman.', 'err');
+        return;
+      }
+      isSubmittingAuth = true;
+      btnGoogle.disabled = true;
+      showMsg('');
+      try {
+        const provider = new GoogleAuthProvider();
+        const cred = await signInWithPopup(auth, provider);
+        await ensureUserProfile(cred.user);
+        showMsg('Login Google berhasil! Mengalihkan ke dashboard…', 'ok');
+        redirectToDashboard();
+      } catch (err) {
+        isSubmittingAuth = false;
+        showMsg(translateFirebaseError(err), 'err');
+        btnGoogle.disabled = false;
+      }
+    });
+  }
+
+  if (btnForgot) {
+    btnForgot.addEventListener('click', async () => {
+      if (!auth) return;
+      const emailEl = document.getElementById('email');
+      const email = emailEl ? emailEl.value.trim() : '';
+      if (!email) {
+        showMsg('Masukkan alamat email Anda terlebih dahulu, lalu klik Lupa kata sandi.', 'err');
+        return;
+      }
+      try {
+        await sendPasswordResetEmail(auth, email);
+        showMsg('Tautan reset kata sandi telah dikirim ke email Anda. Periksa inbox atau folder spam.', 'ok');
+      } catch (err) {
+        showMsg(translateFirebaseError(err), 'err');
+      }
+    });
+  }
+}
+
+async function initAuthGateway() {
+  try {
+    app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
     db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
     auth = getAuth(app);
+
+    wireUIEvents();
+    testConnection();
 
     const params = new URLSearchParams(window.location.search);
     const requestedMode = params.get('mode') === 'register' ? 'register' : 'login';
 
-    // Dengarkan status sesi Firebase
     onAuthStateChanged(auth, async (user) => {
-      signedInUser = user;
-      initStatus.classList.add('hide');
-      authBox.classList.remove('hide');
-
       if (user) {
-        signedInUserEmail.textContent = user.email || user.displayName || 'Akun Aktif';
-
-        // JIKA user sengaja membuka ?mode=register, JANGAN auto-redirect!
-        // Tampilkan banner bahwa mereka sudah login, dan biarkan form register tetap terbuka jika ingin buat akun baru
-        if (requestedMode === 'register') {
-          alreadySignedIn.classList.remove('hide');
-          setMode('register');
-        } else {
-          // Jika mode login biasa dan user sudah login, langsung ke dashboard
-          goDashboard();
+        if (!isSubmittingAuth) {
+          if (initStatus) {
+            initStatus.innerHTML = '<div class="spinner"></div><div>Akun sudah aktif. Mengalihkan ke dashboard…</div>';
+          }
+          redirectToDashboard();
         }
-      } else {
-        alreadySignedIn.classList.add('hide');
-        setMode(requestedMode);
+        return;
       }
-    });
 
+      if (initStatus) initStatus.classList.add('hide');
+      if (authBox) authBox.classList.remove('hide');
+      setMode(requestedMode);
+    });
   } catch (err) {
     console.error('Inisialisasi Firebase gagal:', err);
-    initStatus.innerHTML = `
-      <div style="color:var(--err); margin-bottom:8px;"><i class="fa-solid fa-triangle-exclamation"></i> Inisialisasi Firebase gagal: ${escapeHtml(err.message || String(err))}</div>
-      <small style="color:var(--muted);">Silakan muat ulang halaman atau hubungi administrator.</small>
-    `;
+    if (initStatus) {
+      initStatus.innerHTML = `
+        <div style="color: var(--err); margin-bottom: 8px;">
+          <i class="fa-solid fa-triangle-exclamation"></i> Gagal menghubungkan layanan autentikasi: ${escapeHtml(err && err.message ? err.message : String(err))}
+        </div>
+        <small style="color: var(--muted);">Silakan muat ulang halaman ini.</small>
+      `;
+    }
   }
 }
 
-// Tab handlers
-tabLogin.addEventListener('click', () => setMode('login'));
-tabRegister.addEventListener('click', () => setMode('register'));
-
-// Logout button if user wants to switch account on register page
-btnSignoutHere.addEventListener('click', async () => {
-  try {
-    await signOut(auth);
-    alreadySignedIn.classList.add('hide');
-    showMsg('Anda telah keluar. Silakan masukkan data akun baru.', 'ok');
-  } catch (e) {
-    showMsg('Gagal keluar: ' + e.message, 'err');
-  }
-});
-
-// Form submission (Email/Password Login & Register)
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('email').value.trim();
-  const password = document.getElementById('password').value;
-  const username = document.getElementById('username').value.trim();
-
-  if (!email || !password) {
-    showMsg('Silakan isi email dan kata sandi.', 'err');
-    return;
-  }
-
-  if (currentMode === 'register') {
-    if (password.length < 6) {
-      showMsg('Kata sandi minimal harus 6 karakter.', 'err');
-      return;
-    }
-    const confirm = document.getElementById('confirm-password').value;
-    if (password !== confirm) {
-      showMsg('Konfirmasi kata sandi tidak cocok.', 'err');
-      return;
-    }
-  }
-
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<span class="spinner"></span> Memproses...';
-  showMsg('');
-
-  try {
-    if (currentMode === 'login') {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
-      await ensureUserProfile(cred.user);
-      goDashboard();
-    } else {
-      const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await ensureUserProfile(cred.user, username);
-      showMsg('Pendaftaran berhasil! Mengalihkan ke dashboard...', 'ok');
-      setTimeout(goDashboard, 800);
-    }
-  } catch (err) {
-    showMsg(translateFirebaseError(err), 'err');
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = currentMode === 'register' 
-      ? '<i class="fa-solid fa-user-plus"></i> Buat Akun Baru' 
-      : '<i class="fa-solid fa-right-to-bracket"></i> Masuk Sekarang';
-  }
-});
-
-// Google Sign In
-btnGoogle.addEventListener('click', async () => {
-  if (!auth) return;
-  showMsg('');
-  btnGoogle.disabled = true;
-  try {
-    const provider = new GoogleAuthProvider();
-    const cred = await signInWithPopup(auth, provider);
-    await ensureUserProfile(cred.user);
-    goDashboard();
-  } catch (err) {
-    showMsg(translateFirebaseError(err), 'err');
-  } finally {
-    btnGoogle.disabled = false;
-  }
-});
-
-// Forgot Password
-btnForgot.addEventListener('click', async () => {
-  const email = document.getElementById('email').value.trim();
-  if (!email) {
-    showMsg('Ketik alamat email Anda di atas terlebih dahulu, lalu klik Lupa kata sandi.', 'err');
-    return;
-  }
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showMsg('Tautan reset kata sandi telah dikirim ke email Anda. Silakan periksa inbox atau spam.', 'ok');
-  } catch (err) {
-    showMsg(translateFirebaseError(err), 'err');
-  }
-});
-
-// Jalankan inisialisasi
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', initAuthGateway);
 } else {
-  init();
+  initAuthGateway();
 }
 </script>
 
