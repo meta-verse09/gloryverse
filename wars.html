@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
@@ -396,7 +397,7 @@
 				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
-						<b><span id="stat-svct">0.00</span></b>
+						<b><span id="stat-svct">0.000</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
@@ -404,7 +405,7 @@
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
 						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
-						<b><span id="stat-gold">10.00</span></b>
+						<b><span id="stat-gold">0.00</span></b>
 					</div>
 					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
 						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
@@ -452,8 +453,11 @@
 
 					<div style="display: flex; gap: 8px; flex-wrap: wrap;">
 						<button id="btn-quick-strike" class="btn btn-danger btn-sm">
-							<i class="fa-solid fa-fire"></i> Luncurkan Serangan Cepat (-5% Energi)
+							<i class="fa-solid fa-fire"></i> Serangan Cepat (-5% Energi)
 						</button>
+						<a href="/war.html?id=training_arena" class="btn btn-primary btn-sm" title="Masuk Medan Perang Detail">
+							<i class="fa-solid fa-crosshairs"></i> Medan Tempur Detail
+						</a>
 						<a href="/documentation.html" class="btn btn-default btn-sm" title="Panduan Perang di Dokumentasi">
 							<i class="fa-solid fa-book"></i> Panduan Militer
 						</a>
@@ -538,74 +542,33 @@
 					</div>
 				</div>
 
-				<!-- Latest Military Casualties Section (Matches classic gloryverse feature) -->
+				<!-- Latest Combat Hits Log (Synced with Firestore war_hits, no legacy player data) -->
 				<div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
 					<div style="padding: 12px 16px; background: #fafbfc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
 						<b style="font-size: 13.5px; color: var(--text-dark);">
 							<i class="fa-solid fa-jet-fighter" style="color: var(--red); margin-right: 6px;"></i>
-							Laporan Kendaraan Tempur Terhancurkan (Combat Kill Log)
+							Log Serangan &amp; Pertempuran Terbaru
 						</b>
-						<span class="badge" style="background: var(--red);">Log Tempur Global</span>
+						<span class="badge" style="background: var(--red);">Firestore: war_hits</span>
 					</div>
 
 					<div class="table-responsive" style="margin: 0;">
 						<table class="table table-condensed table-hover" style="margin-bottom: 0; font-size: 12px;">
 							<thead>
 								<tr style="background: #f8fafc;">
-									<th style="width: 20%;">Wilayah</th>
-									<th style="width: 32%;">Penghancur (Killer)</th>
-									<th style="width: 32%;">Korban (Victim)</th>
-									<th style="width: 16%; text-align: right;">Waktu</th>
+									<th style="width: 22%;">Wilayah Front</th>
+									<th style="width: 24%;">Prajurit</th>
+									<th style="width: 26%;">Pihak &amp; Senjata</th>
+									<th style="width: 14%; text-align: right;">Damage</th>
+									<th style="width: 14%; text-align: right;">Waktu (London)</th>
 								</tr>
 							</thead>
 							<tbody id="military-kill-logs-body">
 								<tr>
-									<td><b>Phoenix</b></td>
-									<td>
-										<span class="label label-danger">RU</span> <b>Spetsnaz_Alpha</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-jet-fighter"></i> Bomber Jet</span>
+									<td colspan="5" class="text-center" style="padding: 24px 14px; color: var(--muted);">
+										<i class="fa-solid fa-circle-notch fa-spin" style="color: var(--accent); margin-right: 6px;"></i>
+										Memuat log serangan terbaru dari Firestore...
 									</td>
-									<td>
-										<span class="label label-info">US</span> <b>GhostRider</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-shield"></i> Heavy Tank</span>
-									</td>
-									<td class="text-right small text-muted">15 menit lalu</td>
-								</tr>
-								<tr>
-									<td><b>Lamia</b></td>
-									<td>
-										<span class="label label-danger">ID</span> <b>GarudaSakti</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-jet-fighter"></i> Fighter Jet</span>
-									</td>
-									<td>
-										<span class="label label-warning">MV</span> <b>SeaViper</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-truck-pickup"></i> Armored APC</span>
-									</td>
-									<td class="text-right small text-muted">42 menit lalu</td>
-								</tr>
-								<tr>
-									<td><b>Zadar</b></td>
-									<td>
-										<span class="label label-danger">ID</span> <b>BantengKomando</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-shield"></i> Heavy Tank</span>
-									</td>
-									<td>
-										<span class="label label-info">QA</span> <b>DuneStriker</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-jet-fighter"></i> Bomber Jet</span>
-									</td>
-									<td class="text-right small text-muted">2 jam lalu</td>
-								</tr>
-								<tr>
-									<td><b>Nis</b></td>
-									<td>
-										<span class="label label-danger">ME</span> <b>BalkanWolf</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-jet-fighter"></i> Bomber Jet</span>
-									</td>
-									<td>
-										<span class="label label-info">LB</span> <b>CedarShield</b><br>
-										<span class="small text-muted"><i class="fa-solid fa-shield"></i> Light Tank</span>
-									</td>
-									<td class="text-right small text-muted">5 jam lalu</td>
 								</tr>
 							</tbody>
 						</table>
@@ -695,27 +658,11 @@ document.getElementById('btn-manual-refresh').addEventListener('click', () => {
 });
 </script>
 
-<!-- Firebase SDK Module: Direct JS config without fetch/JSON.parse -->
+<!-- Firebase SDK Module: Sequential 10.13.2 + Explicit firestoreDatabaseId -->
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import {
-	getAuth,
-	onAuthStateChanged,
-	signOut
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import {
-	getFirestore,
-	doc,
-	getDoc,
-	setDoc,
-	updateDoc,
-	collection,
-	getDocs,
-	query,
-	limit
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+const FIREBASE_CDN_BASE = 'https://www.gstatic.com/firebasejs/10.13.2';
 
-// Direct Firebase Configuration Object
+// Direct Firebase Configuration Object (Exact match with dashboard.html & war.html)
 const firebaseConfig = {
 	projectId: "gen-lang-client-0514427323",
 	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
@@ -729,135 +676,135 @@ const firebaseConfig = {
 	recaptchaSiteKey: ""
 };
 
-let app, auth, db;
+const OperationType = {
+	CREATE: 'create',
+	UPDATE: 'update',
+	DELETE: 'delete',
+	LIST: 'list',
+	GET: 'get',
+	WRITE: 'write'
+};
+
+let fbAppMod = null;
+let fbAuthMod = null;
+let fbFirestoreMod = null;
+
+let app = null;
+let auth = null;
+let db = null;
+
 let currentUser = null;
 let currentUserProfile = null;
 let activeWarsList = [];
+let recentWarHits = [];
 let activeFilter = 'all';
 let searchKeyword = '';
+let isSubmittingCombat = false;
 
-// Tactical starter wars if collection is fresh
-const starterWars = [
-	{
-		id: 'war-phx-01',
-		region: 'Phoenix',
-		attacker_country_code: 'RU',
-		attacker_country_name: 'Russia',
-		attacker_percent: 54,
-		defender_country_code: 'US',
-		defender_country_name: 'United States',
-		defender_percent: 46,
-		status: 'Active',
-		round: 14,
-		poi: true
-	},
-	{
-		id: 'war-lamia-02',
-		region: 'Lamia',
-		attacker_country_code: 'ID',
-		attacker_country_name: 'Indonesia',
-		attacker_percent: 68,
-		defender_country_code: 'MV',
-		defender_country_name: 'Maldives',
-		defender_percent: 32,
-		status: 'Active',
-		round: 8,
-		poi: false
-	},
-	{
-		id: 'war-zadar-03',
-		region: 'Zadar',
-		attacker_country_code: 'QA',
-		attacker_country_name: 'Qatar',
-		attacker_percent: 45,
-		defender_country_code: 'ID',
-		defender_country_name: 'Indonesia',
-		defender_percent: 55,
-		status: 'Active',
-		round: 19,
-		poi: false
-	},
-	{
-		id: 'war-nis-04',
-		region: 'Nis',
-		attacker_country_code: 'LB',
-		attacker_country_name: 'Lebanon',
-		attacker_percent: 31,
-		defender_country_code: 'ME',
-		defender_country_name: 'Montenegro',
-		defender_percent: 69,
-		status: 'Active',
-		round: 6,
-		poi: true
-	},
-	{
-		id: 'war-leeds-05',
-		region: 'Leeds',
-		attacker_country_code: 'NG',
-		attacker_country_name: 'Nigeria',
-		attacker_percent: 18,
-		defender_country_code: 'KP',
-		defender_country_name: 'North Korea',
-		defender_percent: 82,
-		status: 'Active',
-		round: 22,
-		poi: false
-	},
-	{
-		id: 'war-daegu-06',
-		region: 'Daegu',
-		attacker_country_code: 'SV',
-		attacker_country_name: 'El Salvador',
-		attacker_percent: 40,
-		defender_country_code: 'PH',
-		defender_country_name: 'Philippines',
-		defender_percent: 60,
-		status: 'Active',
-		round: 11,
-		poi: false
+function handleFirestoreError(error, operationType, path) {
+	const errInfo = {
+		error: error instanceof Error ? error.message : String(error),
+		operationType,
+		path,
+		authInfo: {
+			userId: auth && auth.currentUser ? auth.currentUser.uid : null,
+			email: auth && auth.currentUser ? auth.currentUser.email : null
+		}
+	};
+	console.warn('Firestore Error:', JSON.stringify(errInfo));
+	return errInfo;
+}
+
+function setTxt(id, val) {
+	const el = document.getElementById(id);
+	if (el) el.textContent = val;
+}
+
+function formatLondonTime(isoStr) {
+	try {
+		const dateObj = isoStr ? new Date(isoStr) : new Date();
+		if (Number.isNaN(dateObj.getTime())) return '--:--:--';
+		return new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			day: '2-digit',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		}).format(dateObj);
+	} catch (e) {
+		return isoStr || '-';
 	}
-];
+}
 
-// Initialize on DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-	initFirebase();
-});
+async function testConnection() {
+	if (!db || !fbFirestoreMod) return;
+	const { doc, getDocFromServer } = fbFirestoreMod;
+	try {
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (err) {
+		if (err instanceof Error && err.message.includes('the client is offline')) {
+			console.error('Firestore client is offline. Periksa konfigurasi Firebase Anda.');
+		}
+		handleFirestoreError(err, OperationType.GET, 'test/connection');
+	}
+}
 
-function initFirebase() {
+async function initWarsPage() {
 	const statusEl = document.getElementById('firebase-connection-status');
 	try {
-		app = initializeApp(firebaseConfig);
-		auth = getAuth(app);
-		db = getFirestore(app);
+		setupControls();
+
+		// Sequential Firebase loading: firebase-app first, then auth & firestore
+		fbAppMod = await import(`${FIREBASE_CDN_BASE}/firebase-app.js`);
+		const { initializeApp, getApps, getApp } = fbAppMod;
+		app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+		const [authModule, firestoreModule] = await Promise.all([
+			import(`${FIREBASE_CDN_BASE}/firebase-auth.js`),
+			import(`${FIREBASE_CDN_BASE}/firebase-firestore.js`)
+		]);
+		fbAuthMod = authModule;
+		fbFirestoreMod = firestoreModule;
+
+		// Connect explicitly to named Enterprise Firestore database
+		db = fbFirestoreMod.getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = fbAuthMod.getAuth(app);
+
+		await testConnection();
 
 		if (statusEl) {
 			statusEl.className = 'label label-success';
-			statusEl.textContent = 'Firebase Terhubung';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
 		}
 
-		// Auth Observer
 		setupAuth();
 
-		// One-time fetch: Load Active Wars
-		loadActiveWars();
-
-		// Setup Filters & Actions
-		setupControls();
-
+		// One-time refresh-based fetch for active wars and recent war hits
+		await Promise.all([
+			loadActiveWars(),
+			loadRecentWarHits()
+		]);
 	} catch (err) {
-		console.error('Firebase init error in wars.html:', err);
+		console.warn('Firebase init error in wars.html:', err);
 		if (statusEl) {
 			statusEl.className = 'label label-danger';
 			statusEl.textContent = 'Koneksi Gagal';
 		}
-		// Fallback to starter wars
-		activeWarsList = starterWars;
+		activeWarsList = [];
+		recentWarHits = [];
 		updateWarSummary();
 		renderWarsList();
+		renderRecentWarHits();
 	}
 }
 
 function setupAuth() {
+	if (!auth || !db || !fbAuthMod || !fbFirestoreMod) return;
+	const { onAuthStateChanged, signOut } = fbAuthMod;
+	const { doc, getDoc, setDoc } = fbFirestoreMod;
+
 	const headerAuthContainer = document.getElementById('header-auth-container');
 	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
 
@@ -871,27 +818,34 @@ function setupAuth() {
 				if (userSnap.exists()) {
 					currentUserProfile = userSnap.data();
 				} else {
+					const nowIso = new Date().toISOString();
 					currentUserProfile = {
 						id: user.uid,
-						username: user.displayName || user.email.split('@')[0],
-						email: user.email,
+						username: (user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain')).slice(0, 50),
+						email: user.email || '',
 						country_code: 'ID',
 						country_name: 'Indonesia',
-						region: 'Jakarta',
+						region_name: 'Jakarta',
 						level: 1,
 						xp: 0,
 						energy: 100,
 						health: 100,
 						gold: 10,
 						euro: 0,
+						svct: 0,
+						currency: 0,
+						income: 0,
+						alerts: 0,
+						messages: 0,
 						work_bonus: 0,
-						created_at: new Date().toISOString(),
-						updated_at: new Date().toISOString()
+						created_at: nowIso,
+						updated_at: nowIso
 					};
 					await setDoc(userRef, currentUserProfile);
 				}
 
 				renderPlayerProfile(currentUserProfile, user);
+				updatePlayerDamageStat();
 
 				if (headerAuthContainer) {
 					headerAuthContainer.innerHTML = `
@@ -913,13 +867,13 @@ function setupAuth() {
 						</div>
 					`;
 				}
-
 			} catch (err) {
-				console.warn('Error fetching user profile in wars:', err);
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
 			}
 		} else {
 			currentUserProfile = null;
 			renderGuestState();
+			updatePlayerDamageStat();
 
 			if (headerAuthContainer) {
 				headerAuthContainer.innerHTML = `
@@ -932,7 +886,7 @@ function setupAuth() {
 			if (authPromptSidebar) {
 				authPromptSidebar.innerHTML = `
 					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
-						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk bertempur &amp; raih exp:</small>
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk bertempur &amp; raih XP:</small>
 						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
 							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
 						</a>
@@ -944,55 +898,46 @@ function setupAuth() {
 }
 
 function renderPlayerProfile(p, user) {
-	const usernameEl = document.getElementById('player-username');
-	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
+	setTxt('player-username', p.username || 'Pemain');
 
 	const avatarEl = document.getElementById('player-avatar');
 	if (avatarEl && user && user.photoURL) {
 		avatarEl.src = user.photoURL;
 	}
 
-	const countryEl = document.getElementById('player-country');
-	const regionEl = document.getElementById('player-region');
-	const countryTag = document.getElementById('war-user-country');
-
 	const cName = p.country_name || 'Indonesia';
 	const cCode = p.country_code || 'ID';
-	if (countryEl) countryEl.textContent = cName;
-	if (regionEl) regionEl.textContent = p.region || 'Jakarta';
-	if (countryTag) countryTag.textContent = `${cName} (${cCode})`;
+	const rName = p.region_name || p.region || 'Jakarta';
+	setTxt('player-country', cName);
+	setTxt('player-region', rName);
+	setTxt('war-user-country', `${cName} (${cCode})`);
 
 	const energy = Math.round(Number(p.energy !== undefined ? p.energy : 100));
 	const health = Math.round(Number(p.health !== undefined ? p.health : 100));
 	const level = Number(p.level || 1);
 	const xp = Number(p.xp || 0);
 
-	const energyVal = document.getElementById('stat-energy-val');
+	setTxt('stat-energy-val', `${energy}%`);
 	const energyBar = document.getElementById('stat-energy-bar');
-	if (energyVal) energyVal.textContent = energy + '%';
-	if (energyBar) energyBar.style.width = Math.min(100, Math.max(0, energy)) + '%';
+	if (energyBar) energyBar.style.width = `${Math.min(100, Math.max(0, energy))}%`;
 
-	const healthVal = document.getElementById('stat-health-val');
+	setTxt('stat-health-val', `${health}%`);
 	const healthBar = document.getElementById('stat-health-bar');
-	if (healthVal) healthVal.textContent = health + '%';
-	if (healthBar) healthBar.style.width = Math.min(100, Math.max(0, health)) + '%';
+	if (healthBar) healthBar.style.width = `${Math.min(100, Math.max(0, health))}%`;
 
-	const levelVal = document.getElementById('stat-level-val');
+	setTxt('stat-level-val', `Level ${level} (${xp} XP)`);
 	const xpBar = document.getElementById('stat-xp-bar');
-	if (levelVal) levelVal.textContent = `Level ${level} (${xp} XP)`;
-	if (xpBar) xpBar.style.width = Math.min(100, (xp % 100)) + '%';
+	if (xpBar) xpBar.style.width = `${Math.min(100, (xp % 100))}%`;
 
-	const svctEl = document.getElementById('stat-svct');
-	const euroEl = document.getElementById('stat-euro');
-	const goldEl = document.getElementById('stat-gold');
-	const currEl = document.getElementById('stat-currency');
+	setTxt('stat-svct', Number(p.svct || 0).toFixed(3));
+	setTxt('stat-euro', Number(p.euro || 0).toFixed(2));
+	setTxt('stat-gold', Number(p.gold !== undefined ? p.gold : 0).toFixed(2));
+	setTxt('stat-currency', Number(p.currency || 0).toFixed(2));
 
-	if (svctEl) svctEl.textContent = Number(p.svct || 0).toFixed(3);
-	if (euroEl) euroEl.textContent = Number(p.euro || 0).toFixed(2);
-	if (goldEl) goldEl.textContent = Number(p.gold !== undefined ? p.gold : 10).toFixed(2);
-	if (currEl) currEl.textContent = Number(p.currency || 0).toFixed(2);
+	setTxt('player-income-badge', `Income (${p.income || 0})`);
+	setTxt('player-alerts-badge', `Alerts (${p.alerts || 0})`);
+	setTxt('player-messages-badge', `Messages (${p.messages || 0})`);
 
-	// Combat readiness badge
 	const readinessEl = document.getElementById('stat-combat-readiness');
 	if (readinessEl) {
 		if (energy >= 50 && health >= 50) {
@@ -1009,63 +954,156 @@ function renderPlayerProfile(p, user) {
 }
 
 function renderGuestState() {
-	const usernameEl = document.getElementById('player-username');
-	if (usernameEl) usernameEl.textContent = 'Tamu (Belum Login)';
+	setTxt('player-username', 'Tamu (Belum Login)');
+	setTxt('player-country', 'Indonesia');
+	setTxt('player-region', 'Jakarta');
+	setTxt('war-user-country', 'Indonesia (ID)');
 
-	const countryEl = document.getElementById('player-country');
-	const regionEl = document.getElementById('player-region');
-	if (countryEl) countryEl.textContent = 'Indonesia';
-	if (regionEl) regionEl.textContent = 'Jakarta';
+	setTxt('stat-energy-val', '100%');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyBar) energyBar.style.width = '100%';
 
-	const svctEl = document.getElementById('stat-svct');
-	const euroEl = document.getElementById('stat-euro');
-	const goldEl = document.getElementById('stat-gold');
-	const currEl = document.getElementById('stat-currency');
+	setTxt('stat-health-val', '100%');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthBar) healthBar.style.width = '100%';
 
-	if (svctEl) svctEl.textContent = '0.00';
-	if (euroEl) euroEl.textContent = '0.00';
-	if (goldEl) goldEl.textContent = '10.00';
-	if (currEl) currEl.textContent = '0.00';
+	setTxt('stat-level-val', 'Level 1 (0 XP)');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (xpBar) xpBar.style.width = '0%';
+
+	setTxt('stat-svct', '0.000');
+	setTxt('stat-euro', '0.00');
+	setTxt('stat-gold', '0.00');
+	setTxt('stat-currency', '0.00');
+	setTxt('stat-player-damage', '0');
+
+	setTxt('player-income-badge', 'Income (0)');
+	setTxt('player-alerts-badge', 'Alerts (0)');
+	setTxt('player-messages-badge', 'Messages (0)');
+
+	const readinessEl = document.getElementById('stat-combat-readiness');
+	if (readinessEl) {
+		readinessEl.textContent = 'Tamu';
+		readinessEl.style.color = 'var(--muted)';
+	}
 }
 
-// One-Time Fetch: Active Wars from Firestore
+function updatePlayerDamageStat() {
+	const el = document.getElementById('stat-player-damage');
+	if (!el) return;
+	if (!currentUser) {
+		el.textContent = '0';
+		return;
+	}
+	let total = 0;
+	recentWarHits.forEach((h) => {
+		if (h.uid === currentUser.uid) {
+			total += Number(h.damage || 0);
+		}
+	});
+	el.textContent = total.toLocaleString('id-ID');
+}
+
+// One-Time Fetch: Active Wars from Firestore (no fake starterWars fallback)
 async function loadActiveWars() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, getDocs, query, limit } = fbFirestoreMod;
 	try {
 		const q = query(collection(db, 'wars'), limit(25));
 		const snap = await getDocs(q);
 
 		activeWarsList = [];
-		if (!snap.empty) {
-			snap.forEach((d) => {
-				const data = d.data();
-				activeWarsList.push({
-					id: d.id,
-					region: data.region || 'Unknown Region',
-					attacker_country_code: data.attacker_country_code || 'RU',
-					attacker_country_name: data.attacker_country_name || data.attacker_country_code || 'Attacker',
-					attacker_percent: Number(data.attacker_percent || 50),
-					defender_country_code: data.defender_country_code || 'US',
-					defender_country_name: data.defender_country_name || data.defender_country_code || 'Defender',
-					defender_percent: Number(data.defender_percent || 50),
-					status: data.status || 'Active',
-					round: data.round || 1,
-					poi: Boolean(data.poi)
-				});
+		snap.forEach((d) => {
+			const data = d.data();
+			activeWarsList.push({
+				id: d.id,
+				region: data.region || d.id,
+				attacker_country_code: data.attacker_country_code || 'ATK',
+				attacker_country_name: data.attacker_country_name || data.attacker_country_code || 'Penyerang',
+				attacker_percent: Number(data.attacker_percent !== undefined ? data.attacker_percent : 50),
+				defender_country_code: data.defender_country_code || 'DEF',
+				defender_country_name: data.defender_country_name || data.defender_country_code || 'Bertahan',
+				defender_percent: Number(data.defender_percent !== undefined ? data.defender_percent : 50),
+				status: data.status || 'Active',
+				round: Number(data.round || 1),
+				poi: Boolean(data.poi)
 			});
-		} else {
-			// Fallback to starter wars if firestore collection has not been populated
-			activeWarsList = starterWars;
-		}
-
-		updateWarSummary();
-		renderWarsList();
-
+		});
 	} catch (err) {
-		console.warn('Error fetching active wars:', err);
-		activeWarsList = starterWars;
-		updateWarSummary();
-		renderWarsList();
+		handleFirestoreError(err, OperationType.LIST, 'wars');
+		activeWarsList = [];
 	}
+
+	updateWarSummary();
+	renderWarsList();
+}
+
+// One-Time Fetch: Recent Combat Hits from Firestore (war_hits)
+async function loadRecentWarHits() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, getDocs, query, limit } = fbFirestoreMod;
+	try {
+		const q = query(collection(db, 'war_hits'), limit(40));
+		const snap = await getDocs(q);
+
+		recentWarHits = [];
+		snap.forEach((d) => recentWarHits.push({ id: d.id, ...d.data() }));
+
+		recentWarHits.sort((a, b) => {
+			const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+			const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+			return tb - ta;
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'war_hits');
+		recentWarHits = [];
+	}
+
+	updatePlayerDamageStat();
+	renderRecentWarHits();
+}
+
+function renderRecentWarHits() {
+	const tbody = document.getElementById('military-kill-logs-body');
+	if (!tbody) return;
+
+	if (!recentWarHits || recentWarHits.length === 0) {
+		tbody.innerHTML = `
+			<tr>
+				<td colspan="5" class="text-center" style="padding: 28px 14px; color: var(--muted);">
+					<i class="fa-solid fa-crosshairs" style="font-size: 20px; margin-bottom: 6px; display: block; opacity: 0.5;"></i>
+					Belum ada log serangan terbaru di Firestore.<br>
+					<small>Masuk dengan akun Anda dan klik <b>Serangan Cepat</b> atau kunjungi <a href="/war.html?id=training_arena">Medan Tempur Detail</a> untuk mencatat serangan perdana.</small>
+				</td>
+			</tr>
+		`;
+		return;
+	}
+
+	tbody.innerHTML = recentWarHits.slice(0, 20).map((h) => {
+		const isDef = h.side === 'defender';
+		const sideBadge = isDef
+			? '<span class="label label-info">Defenders</span>'
+			: '<span class="label label-danger">Attackers</span>';
+		const warLink = h.war_id ? `/war.html?id=${encodeURIComponent(h.war_id)}` : '/war.html?id=training_arena';
+		return `
+			<tr>
+				<td>
+					<a href="${warLink}" style="font-weight: 700; color: var(--text-dark);">${escapeHtml(h.war_region || h.war_id || 'Arena Latihan')}</a>
+				</td>
+				<td>
+					<span class="label ${isDef ? 'label-info' : 'label-danger'}" style="margin-right: 4px;">${escapeHtml(h.country_code || 'ID')}</span>
+					<b>${escapeHtml(h.username || 'Prajurit')}</b>
+				</td>
+				<td>
+					${sideBadge}
+					<span class="small text-muted" style="margin-left: 6px;"><i class="fa-solid fa-gun"></i> ${escapeHtml(h.weapon_name || 'Infanteri Dasar')}</span>
+				</td>
+				<td class="text-right"><b style="color: ${isDef ? 'var(--accent)' : 'var(--red)'};">+${Number(h.damage || 0).toLocaleString('id-ID')} DMG</b></td>
+				<td class="text-right small text-muted">${escapeHtml(formatLondonTime(h.created_at))}</td>
+			</tr>
+		`;
+	}).join('');
 }
 
 function updateWarSummary() {
@@ -1081,28 +1119,41 @@ function updateWarSummary() {
 		if (diff <= 15) countHeavy++;
 	});
 
-	document.getElementById('stat-total-wars').textContent = total;
-	document.getElementById('stat-indonesia-wars').textContent = countId;
-
-	document.getElementById('count-war-all').textContent = total;
-	document.getElementById('count-war-id').textContent = countId;
-	document.getElementById('count-war-heavy').textContent = countHeavy;
+	setTxt('stat-total-wars', total);
+	setTxt('stat-indonesia-wars', countId);
+	setTxt('count-war-all', total);
+	setTxt('count-war-id', countId);
+	setTxt('count-war-heavy', countHeavy);
 }
 
 function renderWarsList() {
 	const tbody = document.getElementById('wars-table-body');
 	if (!tbody) return;
 
+	if (activeWarsList.length === 0) {
+		tbody.innerHTML = `
+			<tr>
+				<td colspan="5" class="text-center" style="padding: 36px 14px; color: var(--muted);">
+					<i class="fa-solid fa-peace" style="font-size: 26px; margin-bottom: 8px; display: block; color: var(--accent); opacity: 0.7;"></i>
+					Belum ada front perang antarnegara yang terbuka di Firestore saat ini.<br>
+					<small style="display: inline-block; margin-top: 4px; margin-bottom: 10px;">Prajurit baru tetap dapat melatih kemampuan tempur melalui <b>Arena Latihan Nasional</b>.</small><br>
+					<a href="/war.html?id=training_arena" class="btn btn-primary btn-xs">
+						<i class="fa-solid fa-crosshairs"></i> Masuk Arena Latihan (war.html)
+					</a>
+				</td>
+			</tr>
+		`;
+		return;
+	}
+
 	let filtered = activeWarsList;
 
-	// Pill filter
 	if (activeFilter === 'id') {
 		filtered = filtered.filter((w) => w.attacker_country_code === 'ID' || w.defender_country_code === 'ID');
 	} else if (activeFilter === 'heavy') {
 		filtered = filtered.filter((w) => Math.abs((w.attacker_percent || 50) - (w.defender_percent || 50)) <= 15);
 	}
 
-	// Search keyword
 	if (searchKeyword) {
 		const kw = searchKeyword.toLowerCase();
 		filtered = filtered.filter((w) =>
@@ -1127,18 +1178,17 @@ function renderWarsList() {
 		return;
 	}
 
-	let html = '';
-	filtered.forEach((w) => {
+	tbody.innerHTML = filtered.map((w) => {
 		const atkPct = Math.round(Number(w.attacker_percent || 50));
 		const defPct = Math.round(Number(w.defender_percent || (100 - atkPct)));
-
 		const isAtkId = w.attacker_country_code === 'ID';
 		const isDefId = w.defender_country_code === 'ID';
+		const warUrl = `/war.html?id=${encodeURIComponent(w.id)}`;
 
-		html += `
+		return `
 			<tr>
 				<td>
-					<b style="font-size: 13.5px; color: var(--text-dark);">${escapeHtml(w.region)}</b>
+					<a href="${warUrl}" style="font-size: 13.5px; font-weight: 700; color: var(--text-dark);">${escapeHtml(w.region)}</a>
 					${w.poi ? '<i class="fa-solid fa-location-crosshairs" style="color: var(--red); margin-left: 4px;" title="Wilayah Strategis (POI)"></i>' : ''}
 					<br>
 					<span class="small text-muted">Ronde ${w.round || 1} &bull; Status: <span class="text-success">${escapeHtml(w.status || 'Active')}</span></span>
@@ -1163,18 +1213,18 @@ function renderWarsList() {
 					<span class="label ${isDefId ? 'label-warning' : 'label-info'}" style="margin-left: 4px;">${escapeHtml(w.defender_country_code)}</span>
 					<div class="small" style="color: var(--accent); font-weight: 700;">${defPct}% Dominasi</div>
 				</td>
-				<td style="text-align: center;">
-					<button class="btn btn-danger btn-xs btn-fight-action" data-war-id="${escapeHtml(w.id)}" data-war-region="${escapeHtml(w.region)}" style="font-weight: 700; padding: 4px 10px;">
+				<td style="text-align: center; white-space: nowrap;">
+					<button class="btn btn-danger btn-xs btn-fight-action" data-war-id="${escapeHtml(w.id)}" data-war-region="${escapeHtml(w.region)}" style="font-weight: 700; padding: 4px 8px;">
 						<i class="fa-solid fa-crosshairs"></i> Tempur
 					</button>
+					<a href="${warUrl}" class="btn btn-default btn-xs" style="padding: 4px 8px; margin-left: 3px;" title="Buka Medan Tempur Detail">
+						<i class="fa-solid fa-arrow-up-right-from-square"></i>
+					</a>
 				</td>
 			</tr>
 		`;
-	});
+	}).join('');
 
-	tbody.innerHTML = html;
-
-	// Attach fight button click handlers
 	document.querySelectorAll('.btn-fight-action').forEach((btn) => {
 		btn.addEventListener('click', (e) => {
 			const warId = e.currentTarget.getAttribute('data-war-id');
@@ -1184,61 +1234,94 @@ function renderWarsList() {
 	});
 }
 
-// Combat Logic (Refresh-based, consumes 5% Energy, rolls DMG, increments XP)
+// Combat Logic (Writes to users/{uid} AND war_hits/{hitId} in Firestore)
 async function handleFightAction(warId, region) {
-	if (!currentUser) {
-		alert('Silakan Masuk (Login) terlebih dahulu untuk bergabung dalam pertempuran!');
-		window.location.href = '/authys.html';
-		return;
-	}
+	if (isSubmittingCombat) return;
 
-	const currentEnergy = Number(currentUserProfile ? currentUserProfile.energy : 100);
-	if (currentEnergy < 5) {
+	if (!currentUser || !currentUserProfile) {
 		showFeedback(
-			'danger',
-			`<i class="fa-solid fa-triangle-exclamation"></i> <b>Energi Tidak Cukup!</b> Anda butuh minimal 5% Energi untuk menyerang. Kunjungi <a href="/local_bar.html" style="color:#fff; text-decoration:underline;">The Local Bar</a> atau konsumsi makanan untuk mengisi energi.`
+			'warning',
+			`<i class="fa-solid fa-right-to-bracket"></i> <b>Silakan Masuk Akun Terlebih Dahulu!</b> Anda harus login agar serangan dan XP tersimpan di Firebase. <a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="margin-left: 8px;">Masuk / Daftar</a>`
 		);
 		return;
 	}
 
-	// Roll combat damage (20 - 55 DMG)
-	const hitDamage = Math.floor(Math.random() * 36) + 20;
-	const newEnergy = Math.max(0, currentEnergy - 5);
+	const currentEnergy = Number(currentUserProfile.energy !== undefined ? currentUserProfile.energy : 100);
+	if (currentEnergy < 5) {
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-triangle-exclamation"></i> <b>Energi Tidak Cukup!</b> Anda butuh minimal 5% Energi untuk menyerang. Kunjungi <a href="/local_bar.html" style="text-decoration:underline;">The Local Bar</a> atau konsumsi makanan dari inventaris.`
+		);
+		return;
+	}
+
+	const levelBonus = Math.max(0, (Number(currentUserProfile.level || 1) - 1) * 3);
+	const hitDamage = Math.floor(Math.random() * 26) + 20 + levelBonus;
+	const newEnergy = Math.max(0, Math.min(100, currentEnergy - 5));
 	const currentXp = Number(currentUserProfile.xp || 0);
 	const newXp = currentXp + 1;
 	const currentLvl = Number(currentUserProfile.level || 1);
 	const newLvl = newXp >= currentLvl * 100 ? currentLvl + 1 : currentLvl;
+	const nowIso = new Date().toISOString();
 
-	// Update UI immediately
-	currentUserProfile.energy = newEnergy;
-	currentUserProfile.xp = newXp;
-	currentUserProfile.level = newLvl;
-	renderPlayerProfile(currentUserProfile, currentUser);
+	const targetWarId = String(warId || 'training_arena').slice(0, 128);
+	const targetRegion = String(region || 'Arena Latihan Nasional').slice(0, 100);
 
-	// Update player total damage stat
-	const playerDmgEl = document.getElementById('stat-player-damage');
-	if (playerDmgEl) {
-		const curDmg = parseInt(playerDmgEl.textContent || '0', 10);
-		playerDmgEl.textContent = curDmg + hitDamage;
-	}
-
-	// Show feedback banner
-	showFeedback(
-		'success',
-		`<i class="fa-solid fa-explosion"></i> <b>Serangan Berhasil di Front ${escapeHtml(region)}!</b> Anda menghasilkan <b>+${hitDamage} DMG</b> untuk negara Anda. (-5% Energi, +1 XP)`
-	);
-
-	// Save updated stats to Firestore users/{uid}
+	isSubmittingCombat = true;
 	try {
-		const userRef = doc(db, 'users', currentUser.uid);
-		await updateDoc(userRef, {
-			energy: newEnergy,
-			xp: newXp,
-			level: newLvl,
-			updated_at: new Date().toISOString()
-		});
+		const { doc, setDoc, updateDoc } = fbFirestoreMod;
+		const hitId = `hit_${currentUser.uid.slice(0, 8)}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`.replace(/[^a-zA-Z0-9_\-]/g, '_');
+
+		const matchedWar = activeWarsList.find((w) => w.id === targetWarId);
+		const userCountry = String(currentUserProfile.country_code || 'ID').slice(0, 5);
+		const chosenSide = matchedWar && matchedWar.defender_country_code === userCountry ? 'defender' : 'attacker';
+
+		const hitPayload = {
+			id: hitId,
+			war_id: targetWarId,
+			war_region: targetRegion,
+			uid: currentUser.uid,
+			username: String(currentUserProfile.username || 'Prajurit').slice(0, 50),
+			country_code: userCountry,
+			side: chosenSide,
+			weapon_name: 'Tangan Kosong (Serangan Cepat)',
+			damage: hitDamage,
+			created_at: nowIso
+		};
+
+		await Promise.all([
+			updateDoc(doc(db, 'users', currentUser.uid), {
+				energy: newEnergy,
+				xp: newXp,
+				level: newLvl,
+				updated_at: nowIso
+			}),
+			setDoc(doc(db, 'war_hits', hitId), hitPayload)
+		]);
+
+		currentUserProfile.energy = newEnergy;
+		currentUserProfile.xp = newXp;
+		currentUserProfile.level = newLvl;
+		currentUserProfile.updated_at = nowIso;
+
+		recentWarHits.unshift(hitPayload);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		updatePlayerDamageStat();
+		renderRecentWarHits();
+
+		showFeedback(
+			'success',
+			`<i class="fa-solid fa-explosion"></i> <b>Serangan Tercatat di Firebase!</b> Anda menghasilkan <b>+${hitDamage} DMG</b> di front <b>${escapeHtml(targetRegion)}</b>. (-5% Energi, +1 XP)`
+		);
 	} catch (err) {
-		console.warn('Error updating user energy/xp after combat:', err);
+		handleFirestoreError(err, OperationType.WRITE, 'war_hits');
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-triangle-exclamation"></i> <b>Gagal Mencatat Serangan:</b> ${escapeHtml(err.message || 'Terjadi kesalahan saat menyimpan ke Firebase.')}`
+		);
+	} finally {
+		isSubmittingCombat = false;
 	}
 }
 
@@ -1250,11 +1333,10 @@ function showFeedback(type, messageHtml) {
 	banner.innerHTML = messageHtml;
 	banner.style.display = 'block';
 
-	window.scrollTo({ top: banner.offsetTop - 20, behavior: 'smooth' });
+	window.scrollTo({ top: Math.max(0, banner.offsetTop - 20), behavior: 'smooth' });
 }
 
 function setupControls() {
-	// Filter pills
 	const pillContainer = document.getElementById('war-filter-pills');
 	if (pillContainer) {
 		pillContainer.addEventListener('click', (e) => {
@@ -1269,7 +1351,6 @@ function setupControls() {
 		});
 	}
 
-	// Search input
 	const searchInput = document.getElementById('war-search-input');
 	if (searchInput) {
 		searchInput.addEventListener('input', (e) => {
@@ -1278,15 +1359,14 @@ function setupControls() {
 		});
 	}
 
-	// Clear filter
 	const btnClear = document.getElementById('btn-clear-filter');
 	if (btnClear) {
 		btnClear.addEventListener('click', () => {
 			if (searchInput) searchInput.value = '';
 			searchKeyword = '';
 			activeFilter = 'all';
-			const allBtn = pillContainer.querySelector('[data-filter="all"]');
-			if (allBtn) {
+			const allBtn = pillContainer ? pillContainer.querySelector('[data-filter="all"]') : null;
+			if (allBtn && pillContainer) {
 				pillContainer.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
 				allBtn.classList.add('active');
 			}
@@ -1294,7 +1374,6 @@ function setupControls() {
 		});
 	}
 
-	// Quick strike button in top header
 	const btnQuickStrike = document.getElementById('btn-quick-strike');
 	if (btnQuickStrike) {
 		btnQuickStrike.addEventListener('click', () => {
@@ -1302,7 +1381,7 @@ function setupControls() {
 				const targetWar = activeWarsList[0];
 				handleFightAction(targetWar.id, targetWar.region);
 			} else {
-				alert('Tidak ada front perang aktif saat ini.');
+				handleFightAction('training_arena', 'Arena Latihan Nasional');
 			}
 		});
 	}
@@ -1316,6 +1395,12 @@ function escapeHtml(str) {
 		.replace(/>/g, '&gt;')
 		.replace(/"/g, '&quot;')
 		.replace(/'/g, '&#39;');
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initWarsPage);
+} else {
+	initWarsPage();
 }
 </script>
 
