@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <!-- Plaza Base -->
+  <polygon points="80,28 148,66 80,104 12,66" fill="#f5f3ef" stroke="#d4cec3" stroke-width="1.5"/>
+  <polygon points="80,104 148,66 148,74 80,112" fill="#b5ae9f"/>
+  <polygon points="80,104 12,66 12,74 80,112" fill="#ccc6b8"/>
+  <!-- Civic / Academy Building -->
+  <polygon points="42,56 80,34 118,56 80,78" fill="#fffbeb"/>
+  <polygon points="42,56 80,78 80,94 42,72" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1"/>
+  <polygon points="80,78 118,56 118,72 80,94" fill="#d1d5db"/>
+  <!-- Gold Pediment Roof -->
+  <polygon points="38,56 80,28 122,56 80,78" fill="#1e3a5f" stroke="#0f172a" stroke-width="1"/>
+  <polygon points="80,28 122,56 102,66 80,44" fill="#152a45"/>
+  <!-- Columns -->
+  <line x1="50" y1="64" x2="50" y2="75" stroke="#ffffff" stroke-width="3"/>
+  <line x1="60" y1="70" x2="60" y2="81" stroke="#ffffff" stroke-width="3"/>
+  <line x1="70" y1="75" x2="70" y2="86" stroke="#ffffff" stroke-width="3"/>
+  <!-- Gold Crest -->
+  <circle cx="80" cy="40" r="6" fill="#f1b21c" stroke="#ffffff" stroke-width="1.2"/>
+</svg>

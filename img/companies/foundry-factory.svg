@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <!-- Factory concrete pad -->
+  <polygon points="80,28 148,66 80,104 12,66" fill="#e2e8f0" stroke="#b6c2d1" stroke-width="1.5"/>
+  <polygon points="80,104 148,66 148,74 80,112" fill="#94a3b8"/>
+  <polygon points="80,104 12,66 12,74 80,112" fill="#b0bccb"/>
+  <!-- Main Factory Hall -->
+  <polygon points="36,58 84,32 124,54 76,80" fill="#64748b"/>
+  <polygon points="36,58 76,80 76,96 36,74" fill="#94a3b8"/>
+  <polygon points="76,80 124,54 124,70 76,96" fill="#475569"/>
+  <!-- Sawtooth Industrial Roof -->
+  <polygon points="36,58 52,40 92,62 76,80" fill="#334155" stroke="#1e293b" stroke-width="1"/>
+  <polygon points="56,47 72,29 112,51 96,69" fill="#475569" stroke="#1e293b" stroke-width="1"/>
+  <!-- Smokestacks -->
+  <rect x="92" y="20" width="7" height="24" rx="2" fill="#334155"/>
+  <rect x="104" y="26" width="7" height="22" rx="2" fill="#334155"/>
+  <line x1="92" y1="25" x2="99" y2="25" stroke="#f1b21c" stroke-width="2"/>
+  <line x1="104" y1="31" x2="111" y2="31" stroke="#f1b21c" stroke-width="2"/>
+  <!-- Molten / Warehouse Windows -->
+  <polygon points="44,68 54,73 54,81 44,76" fill="#f59e0b"/>
+  <polygon points="60,76 70,81 70,89 60,84" fill="#f59e0b"/>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <!-- Stone courtyard -->
+  <polygon points="80,28 148,66 80,104 12,66" fill="#f7efe2" stroke="#dfc9a6" stroke-width="1.5"/>
+  <polygon points="80,104 148,66 148,74 80,112" fill="#c7ad83"/>
+  <polygon points="80,104 12,66 12,74 80,112" fill="#dbbfa0"/>
+  <!-- Bakery building walls -->
+  <polygon points="44,54 80,34 116,54 80,74" fill="#f6d594"/>
+  <polygon points="44,54 80,74 80,94 44,74" fill="#f4e2c6"/>
+  <polygon points="80,74 116,54 116,74 80,94" fill="#d9c09c"/>
+  <!-- Pitched warm tile roof -->
+  <polygon points="40,54 80,28 120,54 80,74" fill="#d97706" stroke="#92400e" stroke-width="1"/>
+  <polygon points="80,28 120,54 100,64 80,44" fill="#b45309"/>
+  <!-- Brick Chimney -->
+  <polygon points="94,30 102,26 102,42 94,46" fill="#991b1b"/>
+  <polygon points="86,26 94,30 94,46 86,42" fill="#b91c1c"/>
+  <!-- Striped Awning -->
+  <polygon points="48,68 74,82 70,88 44,74" fill="#b51324"/>
+  <polygon points="55,72 62,76 58,82 51,78" fill="#ffffff"/>
+  <!-- Bread sign -->
+  <ellipse cx="98" cy="70" rx="7" ry="4" fill="#f1b21c" stroke="#78350f" stroke-width="1"/>
+</svg>

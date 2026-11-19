@@ -1,4 +1,3 @@
-
 /* ============================================================
    GLORY VERSE - DASHBOARD STYLESHEET (INDEX.HTML COLOR THEME)
    Matches the bright, clean, classic Gloryverse palette:
@@ -68,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 	line-height: 1.2;
 	margin-top: 0;
 }
- 
+
 h5 {
 	font-size: 14.5px;
 	border-bottom: 1px solid var(--border-light);

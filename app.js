@@ -1,5 +1,4 @@
-
-var B='https://gloryverse.id/';
+var B='/';
 
 // ===== DAFTAR MENU: tambah/ubah link cukup di sini. Format: ['Nama','nama_file'] =====
 var MENU={

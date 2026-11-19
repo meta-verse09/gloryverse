@@ -1,348 +1,2176 @@
 <!DOCTYPE html>
-<html lang="id">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Marketplace - GloryVerse · GloryVerse</title>
-<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'] }, colors: { brand: { dark:'#0B0F19', card:'#151B2B', accent:'#F59E0B' } } } } }
-</script>
-<style>
-  body { background: linear-gradient(135deg,#e0f2fe 0%,#ede9fe 40%,#fce7f3 70%,#fef9c3 100%); }
-  .legacy-content table { width:100%; border-collapse:collapse; }
-  .legacy-content th, .legacy-content td { padding:8px 10px; border-bottom:1px solid #e2e8f0; color:#1e293b; font-size:13px; }
-  .legacy-content th { background:linear-gradient(90deg,#60a5fa,#a78bfa); color:#fff; }
-  .legacy-content tr:hover td { background:#f1f5f9; }
-  .legacy-content a { color:#7c3aed; font-weight:600; }
-  .legacy-content img { max-width:100%; height:auto; border-radius:8px; }
-  .card-hover { transition: transform .2s ease, box-shadow .2s ease; }
-  .card-hover:hover { transform: translateY(-4px); box-shadow:0 16px 32px rgba(0,0,0,.12); }
-</style>
-<link rel="stylesheet" href="css/gloryverse.css">
-<script src="js/gloryverse.js"></script>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Pasar Barang Lokal (Local Goods Market)</title>
+	<meta name="description" content="Glory Verse - Beli dan jual barang kebutuhan, makanan, senjata, dan bahan baku antar pemain di Pasar Lokal & Global">
+	<meta name="copyright" content="Glory Verse">
+
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
+
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
+
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+	<style>
+		/* ============================================================
+		   LOCAL GOODS MARKET 2-COLUMN GRID (MATCHES DASHBOARD THEME)
+		   ============================================================ */
+		.market-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
+
+		.leftbar,
+		.main {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
+
+		@media (max-width: 900px) {
+			.market-wrapper {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		/* Summary Strip */
+		.summary-strip {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 12px;
+			margin-bottom: 18px;
+		}
+		.summary-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			text-align: center;
+		}
+		.summary-box .num {
+			font-family: 'Roboto Slab', serif;
+			font-size: 20px;
+			font-weight: 700;
+			color: var(--accent);
+			margin: 2px 0;
+		}
+		.summary-box .lbl {
+			font-size: 11px;
+			color: var(--muted);
+			text-transform: uppercase;
+			letter-spacing: 0.3px;
+		}
+
+		/* Market Mode Switcher (Local vs Global) */
+		.market-mode-switch {
+			display: inline-flex;
+			background: #eef1f5;
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 3px;
+			gap: 4px;
+		}
+		.mode-btn {
+			padding: 6px 14px;
+			border-radius: 4px;
+			border: none;
+			background: transparent;
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.mode-btn.active {
+			background: var(--accent);
+			color: #ffffff;
+			box-shadow: 0 1px 3px rgba(5, 122, 158, 0.25);
+		}
+		.mode-btn.active-gold {
+			background: var(--gold-dark);
+			color: #ffffff;
+			box-shadow: 0 1px 3px rgba(192, 127, 16, 0.25);
+		}
+
+		/* Tabs (Matches workplaces.html) */
+		.nav-tabs-custom {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 4px;
+			border-bottom: 2px solid var(--border);
+			margin: 14px 0 14px;
+			padding: 0;
+			list-style: none;
+		}
+		.nav-tabs-custom li {
+			margin-bottom: -2px;
+		}
+		.nav-tabs-custom li button {
+			display: block;
+			padding: 8px 14px;
+			background: #f1f3f6;
+			border: 1px solid var(--border);
+			border-bottom: 2px solid transparent;
+			border-radius: 6px 6px 0 0;
+			color: var(--text);
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s ease;
+			font-family: 'Roboto', sans-serif;
+		}
+		.nav-tabs-custom li button:hover {
+			background: #e8ecf1;
+			color: var(--accent);
+		}
+		.nav-tabs-custom li.active button {
+			background: #ffffff;
+			color: var(--accent);
+			border-color: var(--border);
+			border-bottom-color: #ffffff;
+			box-shadow: 0 -2px 0 var(--accent);
+		}
+
+		/* Filter Toolbar */
+		.market-filter-bar {
+			background: #fafbfc;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			margin-bottom: 16px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+		}
+		.filter-pills {
+			display: flex;
+			gap: 6px;
+			flex-wrap: wrap;
+		}
+		.filter-btn {
+			padding: 5px 11px;
+			border-radius: 20px;
+			border: 1px solid var(--border);
+			background: #ffffff;
+			color: var(--text-dark);
+			font-size: 11.5px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s ease;
+		}
+		.filter-btn:hover {
+			background: #f1f5f9;
+			border-color: #cbd5e1;
+		}
+		.filter-btn.active {
+			background: var(--accent);
+			color: #ffffff;
+			border-color: var(--accent);
+		}
+
+		/* Item & Listing Cards */
+		.market-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+			gap: 14px;
+		}
+		.listing-card {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			transition: box-shadow 0.2s ease, border-color 0.2s ease;
+		}
+		.listing-card:hover {
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+			border-color: #cbd5e1;
+		}
+		.item-icon-box {
+			width: 44px;
+			height: 44px;
+			border-radius: 8px;
+			background: #eef7fc;
+			border: 1px solid #c7e3f4;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+			color: var(--accent);
+			flex-shrink: 0;
+		}
+		.quality-stars {
+			color: var(--gold);
+			font-size: 10px;
+			letter-spacing: 1px;
+		}
+		.listing-meta-box {
+			background: #fafbfc;
+			border: 1px solid #eef0f4;
+			border-radius: 5px;
+			padding: 8px 10px;
+			margin: 10px 0 12px;
+			font-size: 12px;
+		}
+		.listing-meta-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 2px 0;
+		}
+
+		/* Custom Modals (Pure CSS/JS, no Bootstrap conflict) */
+		.gv-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			background: rgba(15, 18, 24, 0.65);
+			z-index: 2000;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 16px;
+		}
+		.gv-modal-backdrop.open {
+			display: flex;
+		}
+		.gv-modal-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			max-width: 440px;
+			width: 100%;
+			box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+			overflow: hidden;
+		}
+		.gv-modal-header {
+			background: #fafbfc;
+			border-bottom: 1px solid var(--border);
+			padding: 12px 16px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+		.gv-modal-header h5 {
+			margin: 0;
+			border: none;
+			padding: 0;
+			font-size: 15px;
+		}
+		.gv-modal-close {
+			background: transparent;
+			border: none;
+			font-size: 18px;
+			color: var(--muted);
+			cursor: pointer;
+			line-height: 1;
+		}
+		.gv-modal-close:hover {
+			color: var(--text-dark);
+		}
+		.gv-modal-body {
+			padding: 16px;
+		}
+		.gv-modal-footer {
+			background: #fafbfc;
+			border-top: 1px solid var(--border);
+			padding: 10px 16px;
+			display: flex;
+			justify-content: flex-end;
+			gap: 8px;
+		}
+
+		/* Feedback Banner */
+		#market-feedback-banner {
+			display: none;
+			margin-bottom: 14px;
+		}
+
+		/* Form select compact */
+		.select-compact {
+			height: 30px;
+			padding: 4px 8px;
+			font-size: 12px;
+			border: 1px solid #ccd0d6;
+			border-radius: 4px;
+			background: #ffffff;
+			color: var(--text-dark);
+		}
+	</style>
 </head>
-<body class="min-h-screen font-sans text-slate-800">
-<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-500 via-violet-500 to-pink-500 text-white shadow-lg">
-  <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
-    <a href="index.html" class="flex items-center gap-2 font-black text-xl">
-      <span class="w-9 h-9 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">G</span>
-      GLORY<span class="text-yellow-300">VERSE</span>
-    </a>
-    <div class="hidden md:flex items-center gap-2 text-sm font-semibold">
-      <span class="bg-white/20 rounded-full px-3 py-1.5">🪙 <b>360.72</b></span>
-      <span class="bg-white/20 rounded-full px-3 py-1.5">💎 <b>12</b></span>
-      <span class="bg-white/20 rounded-full px-3 py-1.5">⚡ <b>62%</b></span>
-    </div>
-    <a href="index.html" class="bg-white text-violet-600 font-bold px-4 py-2 rounded-xl hover:scale-105 transition">← Home</a>
-  </div>
-</nav>
-<div class="flex max-w-7xl mx-auto px-4 py-6 gap-6">
-  <aside class="w-64 shrink-0 hidden lg:block">
-    <div class="bg-white rounded-2xl p-4 shadow-lg card-hover">
-      <div class="text-center mb-3">
-        <img src="https://mplstatic.com/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460" class="w-16 h-16 rounded-full mx-auto mb-2 border-4 border-violet-200" alt="ADVAN">
-        <div class="font-black text-slate-800">ADVAN</div>
-        <div class="text-xs text-slate-500">Maldives · Krsko</div>
-      </div>
-      <div class="space-y-2 text-xs">
-        <div class="flex justify-between"><span>Energy</span><b class="text-green-600">62.41%</b></div>
-        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full" style="width:62.41%"></div></div>
-        <div class="flex justify-between"><span>Health</span><b class="text-red-500">95.0%</b></div>
-        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-red-400 to-pink-500 rounded-full" style="width:95%"></div></div>
-        <div class="flex justify-between"><span>Level</span><b class="text-blue-600">29</b></div>
-        <div class="h-1.5 bg-slate-100 rounded-full"><div class="h-1.5 bg-gradient-to-r from-blue-400 to-violet-500 rounded-full" style="width:73%"></div></div>
-      </div>
-      <ul class="mt-4 space-y-1 text-sm">
-        <li><a href="skip_beda_topbar/my_companies.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Companies</a></li>
-        <li><a href="skip_beda_topbar/my-inventory.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Inventory</a></li>
-        <li><a href="skip_beda_topbar/my-financials.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Finances</a></li>
-        <li><a href="skip_beda_topbar/my-regions.html" class="block px-3 py-1.5 rounded-lg hover:bg-violet-50 text-violet-700 font-semibold">My Regions</a></li>
-      </ul>
-    </div>
-  </aside>
-  <main class="flex-1 min-w-0">
-    <div class="bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg">
-      <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600 mb-4">Marketplace - GloryVerse</h1>
-      <div class="legacy-content">
-<div class="pt-[130px] pb-8 max-w-7xl mx-auto px-4">
-        <div class="mb-6">
-            <h1 class="text-3xl font-extrabold text-white mb-1">🏪 Unified Marketplace</h1>
-            <p class="text-slate-400 text-sm">Beli dan jual resource real-time dengan player lain.</p>
-            
-            <div class="flex items-center gap-4 mt-6 bg-slate-800/50 border border-slate-700 rounded-xl p-2 w-fit">
-                <button onclick="setMarketMode('local')" id="btn-local" class="toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2"> Local Market</button>
-                <button onclick="setMarketMode('global')" id="btn-global" class="toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2">💰 Global Market</button>
-            </div>
-        </div>
 
-        <div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 mb-6 backdrop-blur-sm flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex gap-2 w-full md:w-auto overflow-x-auto">
-                <button onclick="switchTab('buy')" id="tab-buy" class="tab-active text-xs font-bold px-6 py-2 rounded-lg transition whitespace-nowrap">🛒 Beli Resource</button>
-                <button onclick="switchTab('sell')" id="tab-sell" class="tab-inactive text-xs font-bold px-6 py-2 rounded-lg transition whitespace-nowrap">💰 Jual Resource</button>
-                <button onclick="switchTab('history')" id="tab-history" class="tab-inactive text-xs font-bold px-6 py-2 rounded-lg transition whitespace-nowrap">🧾 Riwayat</button>
-            </div>
-            <div class="flex gap-2 w-full md:w-auto">
-                <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="🔍 Cari item..." class="bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs placeholder-slate-500 focus:outline-none focus:border-amber-500 w-full md:w-48">
-            </div>
-        </div>
+<body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-        <div id="content-area" class="min-h-[400px]"><div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">⏳ Memuat data marketplace...</div></div>
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (Matches dashboard.html) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-arrows-rotate" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Sistem Pembaruan: <b>Refresh Manual (F5)</b>. Data pasar dimuat sekali saat halaman dibuka tanpa polling latar belakang.</span>
+		</div>
+		<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+			<span id="firebase-connection-status" class="label label-light" style="background: #e2e8f0; color: #475569;">
+				<i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan Firebase...
+			</span>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm">
+				<i class="fa-solid fa-arrow-rotate-right"></i> Refresh Halaman (F5)
+			</button>
+		</div>
+	</div>
 
-        <div class="mt-8 bg-slate-800/30 border border-slate-700 rounded-xl p-4 backdrop-blur-sm"><p class="text-slate-400 text-xs text-center mb-2">Advertisement</p><div class="flex justify-center"><div id="container-155237578e6f84c2a6d93ea22b88ea6d"></div></div></div>
-        <footer class="text-center py-6 text-slate-500 text-sm border-t border-slate-800 bg-slate-900/50 mt-8 rounded-xl"><p class="font-bold text-slate-400 tracking-widest uppercase">Glory Verse - One World, One Game</p><p class="mt-2 text-xs">&copy; 2024 GloryVerse. All rights reserved.</p></footer>
-    </div>
+	<!-- HEADER AREA (game-head matching dashboard.html) -->
+	<div class="game-head">
+		<div class="container">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-    <!-- MODAL BELI -->
-    <div id="buy-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-start mb-4"><h3 class="text-xl font-bold text-white">Konfirmasi Pembelian</h3><button onclick="closeBuyModal()" class="text-slate-400 hover:text-white text-2xl">✕</button></div>
-            <div class="bg-slate-800 rounded-lg p-4 mb-4 space-y-2">
-                <div class="flex justify-between"><span class="text-slate-400">Item:</span><span class="text-white font-bold" id="buy-item-name">-</span></div>
-                <div class="flex justify-between"><span class="text-slate-400">Penjual:</span><span class="text-white" id="buy-seller-name">-</span></div>
-                <div class="flex justify-between"><span class="text-slate-400">Jumlah:</span><span class="text-white" id="buy-item-qty">-</span></div>
-                <div class="flex justify-between border-t border-slate-700 pt-2 mt-2"><span class="text-slate-400">Total Harga:</span><span class="font-bold text-lg" id="buy-total-price">-</span></div>
-            </div>
-            <button onclick="confirmPurchase()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-lg transition">✅ Beli Sekarang</button>
-        </div>
-    </div>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- London Server Clock -->
+				<div style="text-align: right;">
+					<span class="label label-light" style="background: rgba(255,255,255,0.92); color: #333; border: 1px solid #cbd5e1;">
+						<i class="fa-regular fa-clock" style="margin-right: 4px; color: var(--accent);"></i>
+						<b id="server_time">--:--:--</b> London
+					</span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 65%; border-radius: 2px; background: #f0ad4e;"></div>
+					</div>
+				</div>
 
-    <!-- MODAL JUAL -->
-    <div id="sell-modal" class="hidden fixed inset-0 z-[1000] bg-black/80 backdrop-blur-sm items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl max-w-md w-full p-6">
-            <div class="flex justify-between items-start mb-4"><h3 class="text-xl font-bold text-white">Pasang Iklan Jual</h3><button onclick="closeSellModal()" class="text-slate-400 hover:text-white text-2xl">✕</button></div>
-            <div class="space-y-3">
-                <div><label class="text-xs text-slate-400 mb-1 block">Item</label><input type="text" id="sell-item-name" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white"></div>
-                <div><label class="text-xs text-slate-400 mb-1 block">Stok Tersedia</label><input type="text" id="sell-max-qty" readonly class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-slate-400"></div>
-                <div><label class="text-xs text-slate-400 mb-1 block">Jumlah yang dijual</label><input type="number" id="sell-qty" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500"></div>
-                <div><label class="text-xs text-slate-400 mb-1 block">Harga per Unit (<span id="sell-currency-label">Gold</span>)</label><input type="number" id="sell-price" value="100" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-amber-500"></div>
-            </div>
-            <button onclick="confirmListing()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-lg transition mt-6">📢 Pasang di Marketplace</button>
-        </div>
-    </div>
-    <!-- Library Supabase -->
-      </div>
-    </div>
-  </main>
+				<!-- Quick Search -->
+				<div style="min-width: 210px;">
+					<form method="get" action="/market_local.html" onsubmit="event.preventDefault(); document.getElementById('market-search-input').focus();">
+						<input type="text" class="form-control" placeholder="Cari Barang / Penjual..." style="width: 210px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<a href="/financial.html" class="label label-success" id="player-income-badge">Income (0)</a>
+					<a href="/dashboard.html" class="label label-warning" id="player-alerts-badge">Alerts (0)</a>
+					<a href="/dashboard.html" class="label label-light" id="player-messages-badge">Messages (0)</a>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Masuk</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Clean light bar with all dropdowns matching dashboard.html) -->
+	<nav class="topnav">
+		<div class="topnav-inner">
+			<div class="container">
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
+
+					<li><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
+
+					<li class="active"><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/market_local.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li><a href="/my_companies.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;My Companies</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
+
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Military Power</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
+
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/my_profile.html"><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i> My Profile</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="market-wrapper">
+
+			<!-- LEFT SIDEBAR: Dynamic Player Card (No legacy ADVAN data; populated by Firebase) -->
+			<div class="leftbar">
+				<!-- Player Avatar & Name -->
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
+					</div>
+				</div>
+
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
+
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
+
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
+
+				<!-- Currency Balances (Connected to Firebase users/{uid}) -->
+				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
+
+				<!-- Sidebar Quick Navigation -->
+				<ul class="list-group" style="margin-bottom: 14px;">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Kembali ke Dashboard</a></li>
+					<li class="list-group-item active" style="background: var(--accent); border-color: var(--accent);"><a href="/market_local.html" style="color: #fff;"><i class="fa-solid fa-store" style="margin-right: 6px;"></i> Pasar Barang Lokal</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Inventaris Saya</a></li>
+					<li class="list-group-item"><a href="/my_companies.html"><i class="fa-solid fa-building" style="margin-right: 6px;"></i> Perusahaan Saya</a></li>
+					<li class="list-group-item"><a href="/workplaces.html"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Tempat Kerja</a></li>
+					<li class="list-group-item"><a href="/financial.html"><i class="fa-solid fa-chart-line" style="margin-right: 6px;"></i> Pasar Finansial</a></li>
+					<li class="list-group-item"><a href="/wars.html"><i class="fa-solid fa-crosshairs" style="margin-right: 6px;"></i> Aktivitas Perang</a></li>
+				</ul>
+
+				<!-- Action Buttons -->
+				<div style="display: flex; gap: 6px; margin-bottom: 12px;">
+					<a class="btn btn-success btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-download"></i> Invest</a>
+					<a class="btn btn-danger btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-upload"></i> Withdraw</a>
+				</div>
+
+				<!-- Prompt login if guest -->
+				<div id="auth-prompt-sidebar" style="margin-top: 10px;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: Local & Global Goods Market -->
+			<div class="main">
+
+				<!-- Feedback Banner (replaces window.alert) -->
+				<div id="market-feedback-banner" class="alert alert-success"></div>
+
+				<!-- Page Header + Market Mode Switch -->
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+					<div>
+						<h4 style="margin: 0 0 4px;">
+							<i class="fa-solid fa-store" style="color: var(--accent); margin-right: 8px;"></i>
+							Pasar Barang Lokal (Local Goods Market)
+						</h4>
+						<p class="small" style="color: #64748b; margin: 0;">
+							Wilayah aktif: <b id="market-country-label">Indonesia (ID)</b> &bull; Pajak Transaksi Pasar: <b>2.5%</b> &bull; Data langsung dari Firebase Firestore.
+						</p>
+					</div>
+
+					<div class="market-mode-switch" role="group" aria-label="Pilih mode pasar">
+						<button type="button" id="btn-mode-local" class="mode-btn active">
+							<i class="fa-solid fa-location-dot"></i> Pasar Lokal (Local)
+						</button>
+						<button type="button" id="btn-mode-global" class="mode-btn">
+							<i class="fa-solid fa-globe"></i> Pasar Global (Gold)
+						</button>
+					</div>
+				</div>
+
+				<!-- Summary Stats Strip -->
+				<div class="summary-strip">
+					<div class="summary-box">
+						<div class="lbl">Listing Aktif</div>
+						<div class="num" id="stat-market-listings">0</div>
+						<div class="lbl">Penawaran Tersedia</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Inventaris Anda</div>
+						<div class="num" id="stat-my-inventory-qty" style="color: var(--green);">0</div>
+						<div class="lbl">Total Unit Barang</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Listing Anda</div>
+						<div class="num" id="stat-my-active-listings" style="color: var(--orange);">0</div>
+						<div class="lbl">Sedang Dijual</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Pemasukan Pending</div>
+						<div class="num" id="stat-pending-payouts" style="color: var(--gold-dark);">0</div>
+						<div class="lbl">Pesanan Terjual</div>
+					</div>
+				</div>
+
+				<!-- Market Navigation Tabs -->
+				<ul class="nav-tabs-custom" id="market-tabs">
+					<li class="active"><button type="button" data-tab="buy"><i class="fa-solid fa-cart-shopping"></i> Beli Barang (<span id="badge-tab-buy">0</span>)</button></li>
+					<li><button type="button" data-tab="sell"><i class="fa-solid fa-tags"></i> Jual dari Inventaris (<span id="badge-tab-sell">0</span>)</button></li>
+					<li><button type="button" data-tab="mylistings"><i class="fa-solid fa-list-check"></i> Listing Saya (<span id="badge-tab-mine">0</span>)</button></li>
+					<li><button type="button" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Transaksi (<span id="badge-tab-history">0</span>)</button></li>
+				</ul>
+
+				<!-- Filter Toolbar (shown in Buy tab) -->
+				<div class="market-filter-bar" id="buy-filter-toolbar">
+					<div class="filter-pills" id="category-filter-pills">
+						<button type="button" class="filter-btn active" data-cat="all">Semua</button>
+						<button type="button" class="filter-btn" data-cat="food"><i class="fa-solid fa-utensils"></i> Makanan &amp; Energi</button>
+						<button type="button" class="filter-btn" data-cat="weapons"><i class="fa-solid fa-gun"></i> Senjata &amp; Militer</button>
+						<button type="button" class="filter-btn" data-cat="raw"><i class="fa-solid fa-cubes"></i> Bahan Baku</button>
+						<button type="button" class="filter-btn" data-cat="utilities"><i class="fa-solid fa-bolt"></i> Utilitas</button>
+						<button type="button" class="filter-btn" data-cat="other"><i class="fa-solid fa-box"></i> Lainnya</button>
+					</div>
+
+					<div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+						<input type="text" id="market-search-input" class="form-control" placeholder="Cari nama item..." style="width: 170px; height: 30px; font-size: 12px;">
+						<select id="market-sort-select" class="select-compact" title="Urutkan barang">
+							<option value="price_asc">Harga Termurah</option>
+							<option value="price_desc">Harga Termahal</option>
+							<option value="newest">Terbaru</option>
+							<option value="qty_desc">Stok Terbanyak</option>
+						</select>
+					</div>
+				</div>
+
+				<!-- Dynamic Tab Content Area -->
+				<div id="market-content-area">
+					<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+						<i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: var(--accent); margin-bottom: 10px;"></i>
+						<div style="color: var(--muted);">Memuat data pasar dari Firebase Firestore...</div>
+					</div>
+				</div>
+
+				<!-- Market Info / Rules Box -->
+				<div class="well well-sm" style="margin-top: 18px; background: #fafbfc; border-color: var(--border);">
+					<h5 style="margin: 0 0 6px; font-size: 13px; border: none; padding: 0;">
+						<i class="fa-solid fa-circle-info" style="color: var(--accent); margin-right: 6px;"></i>
+						Informasi Perdagangan Pasar Lokal &amp; Global:
+					</h5>
+					<ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #64748b; line-height: 1.6;">
+						<li><b>Pasar Lokal (Local Market)</b> menggunakan saldo <b>Uang Lokal</b> untuk transaksi barang di dalam negara Anda.</li>
+						<li><b>Pasar Global (Global Market)</b> menggunakan saldo <b>Gold</b> untuk perdagangan lintas negara.</li>
+						<li>Hasil penjualan barang dikenakan biaya pasar <b>2.5%</b> dan otomatis masuk ke saldo penjual saat halaman dimuat atau melalui tombol klaim.</li>
+						<li>Data dimuat menggunakan sistem <b>Refresh Halaman (F5)</b> agar stabil dan hemat pembacaan database Firebase.</li>
+					</ul>
+				</div>
+
+			</div><!-- end .main -->
+
+		</div><!-- end .market-wrapper -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- FOOTER (Matches dashboard.html) -->
+<div class="footer">
+	<div class="container">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="copyright">
+					<b>Glory Verse</b> &copy; 2026. Online Economic &amp; Military Strategy Browser Game.<br>
+					Server Time (London): <span id="footer_server_time">--:--:--</span> &bull;
+					<a href="/dashboard.html">Dashboard</a> &bull;
+					<a href="/workplaces.html">Workplaces</a> &bull;
+					<a href="/my_companies.html">My Companies</a> &bull;
+					<a href="/wars.html">Wars</a> &bull;
+					<a href="/market_local.html">Local Market</a> &bull;
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
+
+<!-- MODAL: KONFIRMASI BELI BARANG -->
+<div id="modal-buy" class="gv-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-buy-title">
+	<div class="gv-modal-box">
+		<div class="gv-modal-header">
+			<h5 id="modal-buy-title"><i class="fa-solid fa-cart-shopping" style="color: var(--accent); margin-right: 6px;"></i> Konfirmasi Pembelian</h5>
+			<button type="button" class="gv-modal-close" id="btn-close-buy-modal" aria-label="Tutup">&times;</button>
+		</div>
+		<div class="gv-modal-body">
+			<div class="well well-sm" style="background: #fafbfc; margin-bottom: 12px;">
+				<div class="listing-meta-row"><span>Barang:</span><b id="buy-item-name">-</b></div>
+				<div class="listing-meta-row"><span>Penjual:</span><b id="buy-seller-name">-</b></div>
+				<div class="listing-meta-row"><span>Wilayah:</span><span id="buy-region-name">-</span></div>
+				<div class="listing-meta-row"><span>Stok Tersedia:</span><b id="buy-available-qty">0</b></div>
+				<div class="listing-meta-row"><span>Harga Satuan:</span><b id="buy-unit-price">0</b></div>
+			</div>
+
+			<div style="margin-bottom: 10px;">
+				<label for="buy-qty-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Jumlah yang Dibeli:</label>
+				<div style="display: flex; gap: 6px;">
+					<input type="number" id="buy-qty-input" class="form-control" min="1" value="1">
+					<button type="button" id="btn-buy-max" class="btn btn-default btn-sm">Semua</button>
+				</div>
+			</div>
+
+			<div class="alert alert-info" style="margin-bottom: 0; display: flex; justify-content: space-between; align-items: center;">
+				<span>Total Pembayaran:</span>
+				<b id="buy-total-cost" style="font-size: 15px;">0.00</b>
+			</div>
+		</div>
+		<div class="gv-modal-footer">
+			<button type="button" class="btn btn-default btn-sm" id="btn-cancel-buy">Batal</button>
+			<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-confirm-buy">
+				<i class="fa-solid fa-check"></i> Beli Sekarang
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- MODAL: PASANG LISTING JUAL BARANG -->
+<div id="modal-sell" class="gv-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-sell-title">
+	<div class="gv-modal-box">
+		<div class="gv-modal-header">
+			<h5 id="modal-sell-title"><i class="fa-solid fa-tag" style="color: var(--green); margin-right: 6px;"></i> Jual Barang ke Pasar</h5>
+			<button type="button" class="gv-modal-close" id="btn-close-sell-modal" aria-label="Tutup">&times;</button>
+		</div>
+		<div class="gv-modal-body">
+			<div class="well well-sm" style="background: #fafbfc; margin-bottom: 12px;">
+				<div class="listing-meta-row"><span>Item Inventaris:</span><b id="sell-item-name">-</b></div>
+				<div class="listing-meta-row"><span>Kategori / Kualitas:</span><span id="sell-item-meta">-</span></div>
+				<div class="listing-meta-row"><span>Stok Anda:</span><b id="sell-available-qty">0</b></div>
+			</div>
+
+			<div style="margin-bottom: 10px;">
+				<label for="sell-currency-select" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Target Pasar:</label>
+				<select id="sell-currency-select" class="form-control">
+					<option value="local">Pasar Lokal (Uang Lokal)</option>
+					<option value="gold">Pasar Global (Gold)</option>
+				</select>
+			</div>
+
+			<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+				<div>
+					<label for="sell-qty-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Jumlah Jual:</label>
+					<input type="number" id="sell-qty-input" class="form-control" min="1" value="1">
+				</div>
+				<div>
+					<label for="sell-price-input" style="font-size: 12px; font-weight: 700; display: block; margin-bottom: 4px;">Harga / Unit:</label>
+					<input type="number" id="sell-price-input" class="form-control" min="0.01" step="0.01" value="1.50">
+				</div>
+			</div>
+
+			<div class="alert alert-warning" style="margin-bottom: 0; font-size: 11.5px;">
+				Estimasi Bersih setelah Pajak Pasar (2.5%): <b id="sell-net-preview">0.00</b>
+			</div>
+		</div>
+		<div class="gv-modal-footer">
+			<button type="button" class="btn btn-default btn-sm" id="btn-cancel-sell">Batal</button>
+			<button type="button" class="btn btn-success btn-sm" id="btn-confirm-sell">
+				<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar
+			</button>
+		</div>
+	</div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT: LONDON CLOCK & FIREBASE MARKET INTEGRATION
+     ============================================================ -->
 <script>
-        // 1. SETUP SUPABASE & VARIABLES
-        const supabaseUrl = 'https://gfhcqbosxtcuvxttmzsm.supabase.co';
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmaGNxYm9zeHRjdXZ4dHRtenNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MTU1OTQsImV4cCI6MjEwMjI5MTU5NH0.kJR_qsWyqLZTP7zLld-Ejc6FazLSrjKRTzzh0BhuvXg'; 
-        // ⚠️ JANGAN LUPA GANTI 'xxxxx' DENGAN ANON KEY ASLI KAMU!
-        
-        const sb = supabase.createClient(supabaseUrl, supabaseAnonKey);
-        let currentUser = null, playerData = null, myInventory = [], allListings = [], sellerNameMap = {}, myTransactions = [];
-        let currentTab = 'buy', marketMode = 'global', selectedListing = null, selectedInventoryItem = null;
-        const MARKET_FEE = 0.025;
+(function () {
+	'use strict';
 
-        // 2. AUTH GUARD & LOAD DATA
-        async function checkAuth() {
-            const { data: { session }, error } = await sb.auth.getSession();
-            if (error || !session) { window.location.href = 'index.html'; return; }
-            currentUser = session.user;
-            await Promise.all([loadPlayerProfile(), loadMarketData(), loadMyInventory(), loadMyTransactions()]);
-            updateNavbarStats();
-            switchTab('buy');
-        }
-        async function loadPlayerProfile() {
-            const { data } = await sb.from('player_profiles').select('*').eq('id', currentUser.id).single();
-            playerData = data;
-        }
-        async function loadMarketData() {
-            const { data: listings } = await sb.from('marketplace_listings').select('*').order('created_at', { ascending: false });
-            allListings = listings || [];
-            const sellerIds = [...new Set(allListings.map(l => l.seller_id))];
-            if (sellerIds.length > 0) {
-                const { data: profiles } = await sb.from('player_profiles').select('id, username').in('id', sellerIds);
-                if (profiles) profiles.forEach(p => sellerNameMap[p.id] = p.username || 'Anonymous');
-            }
-        }
-        async function loadMyInventory() {
-            const { data } = await sb.from('player_inventory').select('*').eq('player_id', currentUser.id);
-            myInventory = data || [];
-        }
-        async function loadMyTransactions() {
-            const { data } = await sb.from('transactions').select('*').eq('player_id', currentUser.id).order('created_at', { ascending: false }).limit(20);
-            myTransactions = data || [];
-        }
-        function updateNavbarStats() {
-            if (!playerData) return;
-            document.getElementById('stat-gold').innerText = Math.floor(playerData.gold_balance || 0).toLocaleString();
-            document.getElementById('stat-currency').innerText = Math.floor(playerData.currency_balance || 0).toLocaleString();
-        }
+	// London Clock (Europe/London)
+	function updateLondonClock() {
+		try {
+			const now = new Date();
+			const formatter = new Intl.DateTimeFormat('en-GB', {
+				timeZone: 'Europe/London',
+				hour12: false,
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit'
+			});
+			const timeStr = formatter.format(now);
+			const clockEl = document.getElementById('server_time');
+			const footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = timeStr;
+			if (footerEl) footerEl.textContent = timeStr;
+		} catch (e) {
+			const d = new Date();
+			const pad = (n) => (n < 10 ? '0' + n : n);
+			const fallback = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+			const clockEl = document.getElementById('server_time');
+			const footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = fallback;
+			if (footerEl) footerEl.textContent = fallback;
+		}
+	}
 
-        // 3. MARKET MODE & TABS
-        function setMarketMode(mode) {
-            marketMode = mode;
-            document.getElementById('btn-local').className = mode === 'local' ? 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2' : 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-            document.getElementById('btn-global').className = mode === 'global' ? 'toggle-active px-6 py-2 rounded-lg transition text-sm flex items-center gap-2' : 'toggle-inactive px-6 py-2 rounded-lg transition text-sm flex items-center gap-2';
-            if (currentTab === 'buy') renderBuyTab(); else if (currentTab === 'sell') renderSellTab();
-        }
-        function switchTab(tabName) {
-            currentTab = tabName;
-            document.querySelectorAll('[id^="tab-"]').forEach(btn => { btn.classList.remove('tab-active'); btn.classList.add('tab-inactive'); });
-            document.getElementById(`tab-${tabName}`).classList.remove('tab-inactive');
-            document.getElementById(`tab-${tabName}`).classList.add('tab-active');
-            if (tabName === 'buy') renderBuyTab(); else if (tabName === 'sell') renderSellTab(); else if (tabName === 'history') renderHistoryTab();
-        }
+	function initHeaderControls() {
+		updateLondonClock();
+		setInterval(updateLondonClock, 1000);
 
-        // 4. RENDER FUNCTIONS
-        function renderBuyTab() {
-            const content = document.getElementById('content-area');
-            const search = document.getElementById('search-input').value.toLowerCase();
-            let filtered = allListings.filter(l => l.currency_type === marketMode);
-            if (search) filtered = filtered.filter(l => l.item_name.toLowerCase().includes(search));
-            if (filtered.length === 0) { content.innerHTML = `<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">Tidak ada listing di ${marketMode === 'global' ? 'Global' : 'Local'} Market.</div>`; return; }
-            content.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${filtered.map(listing => {
-                const sellerName = sellerNameMap[listing.seller_id] || 'Unknown Player';
-                const total = listing.price_per_unit * listing.quantity;
-                return `<div class="bg-slate-800/50 border border-slate-700 rounded-xl p-4 hover:border-amber-500 transition">
-                    <div class="flex items-center gap-3 mb-3"><div class="w-12 h-12 bg-slate-900 rounded-lg flex items-center justify-center text-2xl">${listing.item_icon || '📦'}</div><div><h4 class="text-white font-bold">${listing.item_name}</h4><p class="text-slate-400 text-xs">📍 ${listing.region || 'Global'} • Penjual: ${sellerName}</p></div></div>
-                    <div class="space-y-2 mb-4"><div class="flex justify-between text-sm"><span class="text-slate-400">Stok:</span><span class="text-amber-500 font-bold">${listing.quantity} unit</span></div><div class="flex justify-between text-sm border-t border-slate-700 pt-2"><span class="text-slate-400">Total Harga:</span><span class="font-bold text-lg ${marketMode === 'global' ? 'text-yellow-400' : 'text-blue-400'}">${total.toLocaleString()} ${marketMode === 'global' ? '💰' : '🪙'}</span></div></div>
-                    <button onclick='openBuyModal(${JSON.stringify(listing).replace(/'/g, "&apos;")})' class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 rounded-lg transition text-sm">🛒 Beli Semua</button></div>`;
-            }).join('')}</div>`;
-        }
-        function renderSellTab() {
-            const content = document.getElementById('content-area');
-            if (myInventory.length === 0) { content.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700"> Inventory kamu kosong. Kerja dulu di Activity Work!</div>'; return; }
-            content.innerHTML = `<div class="bg-slate-800/50 border border-slate-700 rounded-xl p-6"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold text-white">📦 Jual dari Inventory</h3><span class="text-xs bg-amber-500/20 text-amber-500 px-3 py-1 rounded-full">Mode: ${marketMode === 'global' ? 'Gold 💰' : 'Currency '}</span></div><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">${myInventory.map(item => `<div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 flex items-center justify-between"><div class="flex items-center gap-3"><span class="text-3xl">${item.item_icon || ''}</span><div><p class="text-white font-bold">${item.item_name}</p><p class="text-slate-400 text-xs">Stok: ${item.quantity}</p></div></div><button onclick='openSellModal(${JSON.stringify(item).replace(/'/g, "&apos;")})' class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition text-sm">Jual</button></div>`).join('')}</div></div>`;
-        }
-        function renderHistoryTab() {
-            const content = document.getElementById('content-area');
-            if (myTransactions.length === 0) { content.innerHTML = '<div class="text-center py-12 text-slate-500 bg-slate-800/30 rounded-xl border border-slate-700">🧾 Belum ada riwayat transaksi.</div>'; return; }
-            content.innerHTML = `<div class="bg-slate-800/50 border border-slate-700 rounded-xl overflow-hidden"><table class="w-full text-left text-sm"><thead class="bg-slate-900/80 text-slate-400 uppercase text-xs"><tr><th class="px-6 py-3">Tanggal</th><th class="px-6 py-3">Tipe</th><th class="px-6 py-3">Deskripsi</th><th class="px-6 py-3 text-right">Jumlah</th><th class="px-6 py-3 text-center">Status</th></tr></thead><tbody class="divide-y divide-slate-700">${myTransactions.map(tx => { const date = new Date(tx.created_at).toLocaleString('id-ID'); const color = tx.amount < 0 ? 'text-red-400' : 'text-green-400'; return `<tr class="hover:bg-slate-800/50 transition"><td class="px-6 py-4 text-slate-400 whitespace-nowrap">${date}</td><td class="px-6 py-4 text-white font-semibold uppercase">${tx.type}</td><td class="px-6 py-4 text-slate-300">${tx.description}</td><td class="px-6 py-4 text-right font-bold ${color}">${tx.amount} ${tx.currency_type}</td><td class="px-6 py-4 text-center"><span class="bg-green-500/10 text-green-400 text-xs font-bold px-2 py-1 rounded border border-green-500/20">${tx.status}</span></td></tr>`; }).join('')}</tbody></table></div>`;
-        }
-        function applyFilters() { if (currentTab === 'buy') renderBuyTab(); }
+		const refreshBtn = document.getElementById('btn-manual-refresh');
+		if (refreshBtn) {
+			refreshBtn.addEventListener('click', () => {
+				window.location.reload();
+			});
+		}
+	}
 
-        // 5. MODAL BELI & LOGIKA TRANSAKSI
-        function openBuyModal(listing) {
-            selectedListing = listing;
-            const total = listing.price_per_unit * listing.quantity;
-            const currencyIcon = listing.currency_type === 'gold' ? '💰 Gold' : '🪙 Currency';
-            const sellerName = sellerNameMap[listing.seller_id] || 'Unknown Player';
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initHeaderControls);
+	} else {
+		initHeaderControls();
+	}
+})();
+</script>
 
-            document.getElementById('buy-item-name').innerText = `${listing.item_icon || '📦'} ${listing.item_name}`;
-            document.getElementById('buy-seller-name').innerText = sellerName;
-            document.getElementById('buy-item-qty').innerText = `${listing.quantity} unit`;
-            document.getElementById('buy-total-price').innerText = `${total.toLocaleString()} ${currencyIcon}`;
-            document.getElementById('buy-total-price').className = `font-bold text-lg ${listing.currency_type === 'gold' ? 'text-yellow-400' : 'text-blue-400'}`;
+<!-- Firebase Refresh-Based Market Module -->
+<script type="module">
+// Direct Firebase Configuration Object (no fetch / JSON.parse)
+const firebaseConfig = {
+	projectId: "gen-lang-client-0514427323",
+	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+	apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+	authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+	firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+	storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+	messagingSenderId: "16121083015",
+	measurementId: "",
+	oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+	recaptchaSiteKey: ""
+};
 
-            const modal = document.getElementById('buy-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-        }
-        function closeBuyModal() {
-            document.getElementById('buy-modal').classList.add('hidden');
-            document.getElementById('buy-modal').classList.remove('flex');
-            selectedListing = null;
-        }
+const OperationType = {
+	CREATE: 'create',
+	UPDATE: 'update',
+	DELETE: 'delete',
+	LIST: 'list',
+	GET: 'get',
+	WRITE: 'write'
+};
 
-        async function confirmPurchase() {
-            if (!selectedListing) return;
-            const totalCost = selectedListing.price_per_unit * selectedListing.quantity;
-            const isGold = selectedListing.currency_type === 'gold';
-            const currentBalance = isGold ? playerData.gold_balance : playerData.currency_balance;
+const MARKET_FEE = 0.025;
+const FIREBASE_CDN_BASE = 'https://www.gstatic.com/firebasejs/10.13.2';
 
-            if (currentBalance < totalCost) { alert(`❌ Saldo ${isGold ? 'Gold' : 'Currency'} tidak cukup!`); return; }
+// Firebase module references (loaded sequentially: firebase-app first, then firebase-auth & firebase-firestore)
+let fbAppMod = null;
+let fbAuthMod = null;
+let fbFirestoreMod = null;
 
-            // Update UI Lokal Dulu (Biar Cepat)
-            if (isGold) playerData.gold_balance -= totalCost;
-            else playerData.currency_balance -= totalCost;
-            allListings = allListings.filter(l => l.id !== selectedListing.id);
-            updateNavbarStats();
-            closeBuyModal();
-            renderBuyTab();
+let app = null;
+let auth = null;
+let db = null;
+let currentUser = null;
+let currentUserProfile = null;
 
-            // Simpan ke Database
-            try {
-                const sellerNetAmount = totalCost * (1 - MARKET_FEE);
-                const sellerName = sellerNameMap[selectedListing.seller_id] || 'Unknown';
-                
-                // Ambil saldo penjual saat ini
-                const { data: sellerData } = await sb.from('player_profiles').select(isGold ? 'gold_balance' : 'currency_balance').eq('id', selectedListing.seller_id).single();
-                const sellerNewBalance = (sellerData[isGold ? 'gold_balance' : 'currency_balance'] || 0) + sellerNetAmount;
+let activeTab = 'buy';       // 'buy' | 'sell' | 'mylistings' | 'history'
+let marketMode = 'local';    // 'local' | 'global'
+let categoryFilter = 'all';  // 'all' | 'food' | 'weapons' | 'raw' | 'utilities' | 'other'
+let searchKeyword = '';
+let sortMode = 'price_asc';
 
-                await Promise.all([
-                    sb.from('player_profiles').update({ [isGold ? 'gold_balance' : 'currency_balance']: playerData[isGold ? 'gold_balance' : 'currency_balance'] }).eq('id', currentUser.id),
-                    sb.from('player_profiles').update({ [isGold ? 'gold_balance' : 'currency_balance']: sellerNewBalance }).eq('id', selectedListing.seller_id),
-                    sb.from('player_inventory').upsert({ player_id: currentUser.id, item_name: selectedListing.item_name, item_icon: selectedListing.item_icon, category: selectedListing.category, rarity: 'common', quantity: selectedListing.quantity }, { onConflict: 'player_id, item_name' }),
-                    sb.from('marketplace_listings').delete().eq('id', selectedListing.id),
-                    sb.from('transactions').insert({ player_id: currentUser.id, type: 'market_buy', description: `Beli ${selectedListing.quantity} ${selectedListing.item_name} dari ${sellerName}`, amount: -totalCost, currency_type: selectedListing.currency_type, status: 'success' }),
-                    sb.from('transactions').insert({ player_id: selectedListing.seller_id, type: 'market_sell', description: `Jual ${selectedListing.quantity} ${selectedListing.item_name} (Fee 2.5%)`, amount: sellerNetAmount, currency_type: selectedListing.currency_type, status: 'success' })
-                ]);
-                alert(`✅ Pembelian berhasil! ${selectedListing.item_name} masuk Inventory.`);
-            } catch (err) {
-                console.error('Gagal transaksi:', err);
-                alert('❌ Terjadi kesalahan. Silakan refresh.');
-                await loadMarketData(); await loadPlayerProfile(); updateNavbarStats(); renderBuyTab();
-            }
-        }
+let allListings = [];
+let myInventory = [];
+let myListings = [];
+let myTransactions = [];
+let pendingOrders = [];
 
-        // 6. MODAL JUAL & LOGIKA LISTING
-        function openSellModal(item) {
-            selectedInventoryItem = item;
-            const currencyName = marketMode === 'global' ? 'Gold' : 'Currency';
-            document.getElementById('sell-item-name').value = item.item_name;
-            document.getElementById('sell-max-qty').value = item.quantity;
-            document.getElementById('sell-qty').value = 1;
-            document.getElementById('sell-qty').max = item.quantity;
-            document.getElementById('sell-price').value = 100;
-            document.getElementById('sell-currency-label').innerText = currencyName;
-            const modal = document.getElementById('sell-modal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-        }
-        function closeSellModal() {
-            document.getElementById('sell-modal').classList.add('hidden');
-            document.getElementById('sell-modal').classList.remove('flex');
-            selectedInventoryItem = null;
-        }
+let selectedBuyListing = null;
+let selectedSellItem = null;
 
-        async function confirmListing() {
-            if (!selectedInventoryItem) return;
-            const qty = parseInt(document.getElementById('sell-qty').value);
-            const price = parseFloat(document.getElementById('sell-price').value);
-            const maxQty = selectedInventoryItem.quantity;
+// ============================================================
+// UTILITY HELPERS (Defined before use)
+// ============================================================
+function escapeHtml(str) {
+	if (str === null || str === undefined) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
 
-            if (qty <= 0 || qty > maxQty) return alert('❌ Jumlah tidak valid!');
-            if (price <= 0) return alert('❌ Harga harus lebih dari 0!');
+function getCategoryIcon(cat) {
+	const map = {
+		food: 'fa-solid fa-utensils',
+		weapons: 'fa-solid fa-gun',
+		raw: 'fa-solid fa-cubes',
+		utilities: 'fa-solid fa-bolt',
+		other: 'fa-solid fa-box'
+	};
+	return map[cat] || 'fa-solid fa-box';
+}
 
-            // Update UI Lokal
-            selectedInventoryItem.quantity -= qty;
-            if (selectedInventoryItem.quantity === 0) myInventory = myInventory.filter(i => i.id !== selectedInventoryItem.id);
-            const newListing = { seller_id: currentUser.id, item_name: selectedInventoryItem.item_name, item_icon: selectedInventoryItem.item_icon, category: selectedInventoryItem.category, quantity: qty, price_per_unit: price, currency_type: marketMode, region: 'Global' };
-            allListings.unshift(newListing);
-            closeSellModal();
-            switchTab('buy');
+function getCategoryLabel(cat) {
+	const map = {
+		food: 'Makanan & Energi',
+		weapons: 'Senjata & Militer',
+		raw: 'Bahan Baku',
+		utilities: 'Utilitas',
+		other: 'Lainnya'
+	};
+	return map[cat] || 'Umum';
+}
 
-            // Simpan ke Database
-            try {
-                await Promise.all([
-                    sb.from('player_inventory').update({ quantity: selectedInventoryItem.quantity }).eq('id', selectedInventoryItem.id),
-                    sb.from('marketplace_listings').insert(newListing),
-                    sb.from('transactions').insert({ player_id: currentUser.id, type: 'market_listing', description: `Pasang iklan jual ${qty} ${selectedInventoryItem.item_name} @ ${price}`, amount: 0, currency_type: marketMode, status: 'listed' })
-                ]);
-                alert(`✅ Listing berhasil dipasang di ${marketMode === 'global' ? 'Global' : 'Local'} Market!`);
-            } catch (err) {
-                console.error('Gagal pasang listing:', err);
-                alert(' Gagal memasang listing.');
-                await loadMyInventory(); await loadMarketData(); renderSellTab();
-            }
-        }
+function showFeedback(type, htmlMsg) {
+	const banner = document.getElementById('market-feedback-banner');
+	if (!banner) return;
+	banner.className = `alert alert-${type}`;
+	banner.innerHTML = htmlMsg;
+	banner.style.display = 'block';
+	window.scrollTo({ top: Math.max(0, banner.offsetTop - 20), behavior: 'smooth' });
+}
 
-        // 7. JAM LONDON & INIT
-        function updateLondonClock() {
-            const now = new Date();
-            document.getElementById('london-clock').innerText = `LON: ${now.toLocaleString("en-GB", { timeZone: "Europe/London", hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}`;
-        }
-        setInterval(updateLondonClock, 1000);
-        updateLondonClock();
+function handleFirestoreError(error, operationType, path) {
+	const errInfo = {
+		error: error instanceof Error ? error.message : String(error),
+		authInfo: {
+			userId: auth && auth.currentUser ? auth.currentUser.uid : null,
+			email: auth && auth.currentUser ? auth.currentUser.email : null,
+			emailVerified: auth && auth.currentUser ? auth.currentUser.emailVerified : null
+		},
+		operationType,
+		path
+	};
+	console.warn('Firestore Warning:', JSON.stringify(errInfo));
+	return errInfo;
+}
 
-        checkAuth();
-    </script>
+// ============================================================
+// PLAYER PROFILE & SUMMARY RENDERING
+// ============================================================
+function renderPlayerProfile(p, user) {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = p.username || 'Pemain';
+
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const cName = p.country_name || 'Indonesia';
+	const cCode = p.country_code || 'ID';
+	const rName = p.region_name || p.region || 'Jakarta';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	const marketCountryEl = document.getElementById('market-country-label');
+
+	if (countryEl) countryEl.textContent = cName;
+	if (regionEl) regionEl.textContent = rName;
+	if (marketCountryEl) marketCountryEl.textContent = `${cName} (${cCode})`;
+
+	const energy = Math.round(Number(p.energy !== undefined ? p.energy : 100));
+	const health = Math.round(Number(p.health !== undefined ? p.health : 100));
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	const energyVal = document.getElementById('stat-energy-val');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyVal) energyVal.textContent = energy + '%';
+	if (energyBar) energyBar.style.width = Math.min(100, Math.max(0, energy)) + '%';
+
+	const healthVal = document.getElementById('stat-health-val');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthVal) healthVal.textContent = health + '%';
+	if (healthBar) healthBar.style.width = Math.min(100, Math.max(0, health)) + '%';
+
+	const levelVal = document.getElementById('stat-level-val');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (levelVal) levelVal.textContent = `Level ${level} (${xp} XP)`;
+	if (xpBar) xpBar.style.width = Math.min(100, (xp % 100)) + '%';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = Number(p.svct || 0).toFixed(3);
+	if (euroEl) euroEl.textContent = Number(p.euro || 0).toFixed(2);
+	if (goldEl) goldEl.textContent = Number(p.gold !== undefined ? p.gold : 10).toFixed(2);
+	if (currEl) currEl.textContent = Number(p.currency || 0).toFixed(2);
+
+	const incomeBadge = document.getElementById('player-income-badge');
+	const alertsBadge = document.getElementById('player-alerts-badge');
+	const msgBadge = document.getElementById('player-messages-badge');
+	if (incomeBadge) incomeBadge.textContent = `Income (${p.income || 0})`;
+	if (alertsBadge) alertsBadge.textContent = `Alerts (${p.alerts || 0})`;
+	if (msgBadge) msgBadge.textContent = `Messages (${p.messages || 0})`;
+}
+
+function renderGuestState() {
+	const usernameEl = document.getElementById('player-username');
+	if (usernameEl) usernameEl.textContent = 'Tamu (Belum Login)';
+
+	const countryEl = document.getElementById('player-country');
+	const regionEl = document.getElementById('player-region');
+	if (countryEl) countryEl.textContent = 'Indonesia';
+	if (regionEl) regionEl.textContent = 'Jakarta';
+
+	const svctEl = document.getElementById('stat-svct');
+	const euroEl = document.getElementById('stat-euro');
+	const goldEl = document.getElementById('stat-gold');
+	const currEl = document.getElementById('stat-currency');
+
+	if (svctEl) svctEl.textContent = '0.00';
+	if (euroEl) euroEl.textContent = '0.00';
+	if (goldEl) goldEl.textContent = '0.00';
+	if (currEl) currEl.textContent = '0.00';
+}
+
+function updateMyListingsFromAll() {
+	if (!currentUser) {
+		myListings = [];
+		return;
+	}
+	myListings = allListings.filter((l) => l.seller_id === currentUser.uid);
+}
+
+function getModeListings() {
+	const targetCurr = marketMode === 'global' ? 'gold' : 'local';
+	return allListings.filter((l) => l.currency_type === targetCurr && Number(l.quantity || 0) > 0);
+}
+
+function updateSummaryStrip() {
+	const modeFiltered = getModeListings();
+	const totalInvQty = myInventory.reduce((acc, i) => acc + Number(i.quantity || 0), 0);
+
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+
+	setTxt('stat-market-listings', modeFiltered.length);
+	setTxt('stat-my-inventory-qty', totalInvQty);
+	setTxt('stat-my-active-listings', myListings.length);
+	setTxt('stat-pending-payouts', pendingOrders.length);
+
+	setTxt('badge-tab-buy', modeFiltered.length);
+	setTxt('badge-tab-sell', myInventory.length);
+	setTxt('badge-tab-mine', myListings.length);
+	setTxt('badge-tab-history', myTransactions.length);
+}
+
+// ============================================================
+// MODALS & TRANSACTION ACTIONS
+// ============================================================
+function updateBuyTotalPreview() {
+	if (!selectedBuyListing) return;
+	const qtyInput = document.getElementById('buy-qty-input');
+	const totalEl = document.getElementById('buy-total-cost');
+	if (!qtyInput || !totalEl) return;
+
+	let qty = parseInt(qtyInput.value, 10) || 1;
+	const maxQty = Number(selectedBuyListing.quantity || 1);
+	if (qty < 1) qty = 1;
+	if (qty > maxQty) qty = maxQty;
+
+	const total = qty * Number(selectedBuyListing.price_per_unit || 0);
+	const curr = selectedBuyListing.currency_type === 'gold' ? 'Gold' : 'Uang Lokal';
+	totalEl.textContent = `${total.toFixed(2)} ${curr}`;
+}
+
+function openBuyModal(listing) {
+	if (!currentUser) {
+		showFeedback('warning', '<i class="fa-solid fa-right-to-bracket"></i> Silakan <a href="/authys.html">masuk ke akun Anda</a> terlebih dahulu untuk membeli barang.');
+		return;
+	}
+	selectedBuyListing = listing;
+	const curr = listing.currency_type === 'gold' ? 'Gold' : 'Lokal';
+
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('buy-item-name', `${listing.item_name || 'Item'} (Q${listing.quality || 1})`);
+	setTxt('buy-seller-name', listing.seller_name || 'Pemain');
+	setTxt('buy-region-name', `${listing.country_name || listing.country_code || 'ID'} (${listing.region || '-'})`);
+	setTxt('buy-available-qty', `${listing.quantity || 0} unit`);
+	setTxt('buy-unit-price', `${Number(listing.price_per_unit || 0).toFixed(2)} ${curr}`);
+
+	const qtyInput = document.getElementById('buy-qty-input');
+	if (qtyInput) {
+		qtyInput.max = listing.quantity || 1;
+		qtyInput.value = 1;
+	}
+	updateBuyTotalPreview();
+
+	const modal = document.getElementById('modal-buy');
+	if (modal) modal.classList.add('open');
+}
+
+function closeBuyModal() {
+	const modal = document.getElementById('modal-buy');
+	if (modal) modal.classList.remove('open');
+	selectedBuyListing = null;
+}
+
+function updateSellNetPreview() {
+	const qtyInput = document.getElementById('sell-qty-input');
+	const priceInput = document.getElementById('sell-price-input');
+	const currSelect = document.getElementById('sell-currency-select');
+	const previewEl = document.getElementById('sell-net-preview');
+	if (!qtyInput || !priceInput || !currSelect || !previewEl) return;
+
+	const qty = parseInt(qtyInput.value, 10) || 0;
+	const price = parseFloat(priceInput.value) || 0;
+	const curr = currSelect.value === 'gold' ? 'Gold' : 'Uang Lokal';
+	const net = qty * price * (1 - MARKET_FEE);
+	previewEl.textContent = `${net.toFixed(2)} ${curr}`;
+}
+
+function openSellModal(item) {
+	selectedSellItem = item;
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('sell-item-name', item.item_name || 'Item');
+	setTxt('sell-item-meta', `${getCategoryLabel(item.category)} • Q${item.quality || 1}`);
+	setTxt('sell-available-qty', `${item.quantity || 0} unit`);
+
+	const currSelect = document.getElementById('sell-currency-select');
+	if (currSelect) currSelect.value = marketMode === 'global' ? 'gold' : 'local';
+
+	const qtyInput = document.getElementById('sell-qty-input');
+	if (qtyInput) {
+		qtyInput.max = item.quantity || 1;
+		qtyInput.value = 1;
+	}
+
+	const priceInput = document.getElementById('sell-price-input');
+	if (priceInput) priceInput.value = marketMode === 'global' ? '0.50' : '5.00';
+
+	updateSellNetPreview();
+
+	const modal = document.getElementById('modal-sell');
+	if (modal) modal.classList.add('open');
+}
+
+function closeSellModal() {
+	const modal = document.getElementById('modal-sell');
+	if (modal) modal.classList.remove('open');
+	selectedSellItem = null;
+}
+
+async function confirmPurchase() {
+	if (!selectedBuyListing || !currentUser || !currentUserProfile || !db || !fbFirestoreMod) return;
+
+	const { doc, getDoc, setDoc, updateDoc } = fbFirestoreMod;
+	const qtyInput = document.getElementById('buy-qty-input');
+	const qty = parseInt(qtyInput ? qtyInput.value : '0', 10);
+	if (!qty || qty <= 0 || qty > selectedBuyListing.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah pembelian tidak valid.');
+		closeBuyModal();
+		return;
+	}
+
+	const isGold = selectedBuyListing.currency_type === 'gold';
+	const totalCost = Number((qty * Number(selectedBuyListing.price_per_unit || 0)).toFixed(2));
+	const currentBal = isGold ? Number(currentUserProfile.gold || 0) : Number(currentUserProfile.currency || 0);
+
+	if (currentBal < totalCost) {
+		showFeedback('danger', `<i class="fa-solid fa-wallet"></i> Saldo <b>${isGold ? 'Gold' : 'Uang Lokal'}</b> tidak cukup! Dibutuhkan ${totalCost.toFixed(2)}, saldo Anda ${currentBal.toFixed(2)}.`);
+		closeBuyModal();
+		return;
+	}
+
+	const confirmBtn = document.getElementById('btn-confirm-buy');
+	if (confirmBtn) {
+		confirmBtn.disabled = true;
+		confirmBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const listing = selectedBuyListing;
+
+	try {
+		const newBal = Number((currentBal - totalCost).toFixed(2));
+		const userPatch = isGold ? { gold: newBal, updated_at: nowIso } : { currency: newBal, updated_at: nowIso };
+		await updateDoc(doc(db, 'users', currentUser.uid), userPatch);
+		if (isGold) currentUserProfile.gold = newBal;
+		else currentUserProfile.currency = newBal;
+
+		const remainingQty = Number(listing.quantity) - qty;
+		const newStatus = remainingQty <= 0 ? 'sold' : 'active';
+		await updateDoc(doc(db, 'marketplace_listings', listing.id), {
+			quantity: remainingQty,
+			status: newStatus,
+			updated_at: nowIso
+		});
+
+		const baseItemId = listing.item_id || listing.item_name || 'item';
+		const invDocId = `${baseItemId}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevInvQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const updatedInvItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: String(baseItemId),
+			item_name: listing.item_name || 'Barang',
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevInvQty + qty,
+			updated_at: nowIso
+		};
+		await setDoc(invRef, updatedInvItem);
+
+		const txId = `tx_buy_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_buy',
+			description: `Beli ${qty}x ${listing.item_name || 'Barang'} dari ${listing.seller_name || 'Penjual'}`,
+			amount: -totalCost,
+			currency_type: listing.currency_type,
+			status: 'completed',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+
+		const orderId = `ord_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const netAmount = Number((totalCost * (1 - MARKET_FEE)).toFixed(2));
+		await setDoc(doc(db, 'market_orders', orderId), {
+			id: orderId,
+			listing_id: listing.id,
+			buyer_id: currentUser.uid,
+			buyer_name: currentUserProfile.username || 'Pembeli',
+			seller_id: listing.seller_id,
+			item_name: listing.item_name || 'Barang',
+			quantity: qty,
+			net_amount: netAmount,
+			currency_type: listing.currency_type,
+			claimed: false,
+			created_at: nowIso
+		});
+
+		if (remainingQty <= 0) {
+			allListings = allListings.filter((x) => x.id !== listing.id);
+		} else {
+			listing.quantity = remainingQty;
+		}
+		const existingInvIdx = myInventory.findIndex((i) => i.id === invDocId);
+		if (existingInvIdx >= 0) myInventory[existingInvIdx] = updatedInvItem;
+		else myInventory.push(updatedInvItem);
+		myTransactions.unshift(txData);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		updateSummaryStrip();
+		renderActiveTab();
+		closeBuyModal();
+
+		showFeedback('success', `<i class="fa-solid fa-circle-check"></i> <b>Pembelian Berhasil!</b> ${qty}x ${escapeHtml(listing.item_name)} telah masuk ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `marketplace_listings/${listing.id}`);
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memproses pembelian: ${escapeHtml(err.message)}`);
+	} finally {
+		if (confirmBtn) {
+			confirmBtn.disabled = false;
+			confirmBtn.innerHTML = '<i class="fa-solid fa-check"></i> Beli Sekarang';
+		}
+	}
+}
+
+async function confirmCreateListing() {
+	if (!selectedSellItem || !currentUser || !currentUserProfile || !db || !fbFirestoreMod) return;
+
+	const { doc, setDoc, updateDoc, deleteDoc } = fbFirestoreMod;
+	const qtyInput = document.getElementById('sell-qty-input');
+	const priceInput = document.getElementById('sell-price-input');
+	const currSelect = document.getElementById('sell-currency-select');
+
+	const qty = parseInt(qtyInput ? qtyInput.value : '0', 10);
+	const price = parseFloat(priceInput ? priceInput.value : '0');
+	const currencyType = currSelect && currSelect.value === 'gold' ? 'gold' : 'local';
+
+	if (!qty || qty <= 0 || qty > selectedSellItem.quantity) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Jumlah barang yang dijual melebihi stok inventaris Anda.');
+		return;
+	}
+	if (!price || price <= 0) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Harga per unit harus lebih besar dari 0.');
+		return;
+	}
+
+	const btn = document.getElementById('btn-confirm-sell');
+	if (btn) {
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memasang...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const item = selectedSellItem;
+
+	try {
+		const remQty = Number(item.quantity) - qty;
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', item.id);
+		if (remQty <= 0) {
+			await deleteDoc(invRef);
+			myInventory = myInventory.filter((i) => i.id !== item.id);
+		} else {
+			await updateDoc(invRef, { quantity: remQty, updated_at: nowIso });
+			item.quantity = remQty;
+		}
+
+		const listingId = `lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const newListing = {
+			id: listingId,
+			seller_id: currentUser.uid,
+			seller_name: currentUserProfile.username || 'Pemain',
+			item_id: String(item.item_id || item.id || 'item'),
+			item_name: item.item_name || 'Barang',
+			item_icon: item.item_icon || 'fa-solid fa-box',
+			category: item.category || 'other',
+			quality: Number(item.quality || 1),
+			quantity: qty,
+			price_per_unit: Number(price.toFixed(2)),
+			currency_type: currencyType,
+			country_code: currentUserProfile.country_code || 'ID',
+			country_name: currentUserProfile.country_name || 'Indonesia',
+			region: currentUserProfile.region_name || currentUserProfile.region || 'Jakarta',
+			status: 'active',
+			created_at: nowIso,
+			updated_at: nowIso
+		};
+		await setDoc(doc(db, 'marketplace_listings', listingId), newListing);
+		allListings.unshift(newListing);
+		updateMyListingsFromAll();
+
+		const txId = `tx_lst_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+		const txData = {
+			id: txId,
+			user_id: currentUser.uid,
+			type: 'market_listing',
+			description: `Pasang jual ${qty}x ${item.item_name} @ ${price.toFixed(2)} ${currencyType === 'gold' ? 'Gold' : 'Lokal'}`,
+			amount: 0,
+			currency_type: currencyType,
+			status: 'active',
+			created_at: nowIso
+		};
+		await setDoc(doc(db, 'users', currentUser.uid, 'transactions', txId), txData);
+		myTransactions.unshift(txData);
+
+		closeSellModal();
+		setMarketMode(currencyType === 'gold' ? 'global' : 'local');
+		updateSummaryStrip();
+		switchTab('buy');
+		showFeedback('success', `<i class="fa-solid fa-bullhorn"></i> <b>Listing Dipasang!</b> ${qty}x ${escapeHtml(item.item_name)} sekarang tersedia di ${currencyType === 'gold' ? 'Pasar Global' : 'Pasar Lokal'}.`);
+
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'marketplace_listings');
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal memasang listing: ${escapeHtml(err.message)}`);
+	} finally {
+		if (btn) {
+			btn.disabled = false;
+			btn.innerHTML = '<i class="fa-solid fa-bullhorn"></i> Pasang di Pasar';
+		}
+	}
+}
+
+async function cancelOwnListing(listingId) {
+	if (!currentUser || !db || !fbFirestoreMod) return;
+	const listing = allListings.find((l) => l.id === listingId);
+	if (!listing) return;
+
+	const { doc, getDoc, setDoc, updateDoc } = fbFirestoreMod;
+	const nowIso = new Date().toISOString();
+	try {
+		await updateDoc(doc(db, 'marketplace_listings', listingId), {
+			status: 'cancelled',
+			updated_at: nowIso
+		});
+
+		const baseItemId = listing.item_id || listing.item_name || 'item';
+		const invDocId = `${baseItemId}_q${listing.quality || 1}`.replace(/[^a-zA-Z0-9_-]/g, '_');
+		const invRef = doc(db, 'users', currentUser.uid, 'inventory', invDocId);
+		const invSnap = await getDoc(invRef);
+		const prevQty = invSnap.exists() ? Number(invSnap.data().quantity || 0) : 0;
+		const restoredItem = {
+			id: invDocId,
+			owner_id: currentUser.uid,
+			item_id: String(baseItemId),
+			item_name: listing.item_name || 'Barang',
+			item_icon: listing.item_icon || 'fa-solid fa-box',
+			category: listing.category || 'other',
+			quality: Number(listing.quality || 1),
+			quantity: prevQty + Number(listing.quantity || 0),
+			updated_at: nowIso
+		};
+		await setDoc(invRef, restoredItem);
+
+		allListings = allListings.filter((l) => l.id !== listingId);
+		updateMyListingsFromAll();
+
+		const idx = myInventory.findIndex((i) => i.id === invDocId);
+		if (idx >= 0) myInventory[idx] = restoredItem;
+		else myInventory.push(restoredItem);
+
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('info', `<i class="fa-solid fa-rotate-left"></i> Listing <b>${escapeHtml(listing.item_name)}</b> dibatalkan. ${listing.quantity} unit dikembalikan ke inventaris Anda.`);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.UPDATE, `marketplace_listings/${listingId}`);
+		showFeedback('danger', `Gagal membatalkan listing: ${escapeHtml(err.message)}`);
+	}
+}
+
+async function claimStarterSupply() {
+	if (!currentUser || !db || !fbFirestoreMod) return;
+	const { doc, setDoc } = fbFirestoreMod;
+	const btn = document.getElementById('btn-claim-starter-pack');
+	if (btn) {
+		btn.disabled = true;
+		btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim Suplai...';
+	}
+
+	const nowIso = new Date().toISOString();
+	const starterItems = [
+		{ id: 'bread_q1', item_id: 'bread', item_name: 'Roti Gandum (Bread)', item_icon: 'fa-solid fa-bread-slice', category: 'food', quality: 1, quantity: 5 },
+		{ id: 'coffee_q1', item_id: 'coffee', item_name: 'Kopi Energi (Coffee)', item_icon: 'fa-solid fa-mug-hot', category: 'food', quality: 1, quantity: 3 },
+		{ id: 'iron_ore_q1', item_id: 'iron_ore', item_name: 'Bijih Besi (Iron Ore)', item_icon: 'fa-solid fa-cubes', category: 'raw', quality: 1, quantity: 10 }
+	];
+
+	try {
+		for (const s of starterItems) {
+			const payload = {
+				id: s.id,
+				owner_id: currentUser.uid,
+				item_id: s.item_id,
+				item_name: s.item_name,
+				item_icon: s.item_icon,
+				category: s.category,
+				quality: s.quality,
+				quantity: s.quantity,
+				updated_at: nowIso
+			};
+			await setDoc(doc(db, 'users', currentUser.uid, 'inventory', s.id), payload);
+			myInventory.push(payload);
+		}
+		updateSummaryStrip();
+		renderActiveTab();
+		showFeedback('success', '<i class="fa-solid fa-gift"></i> <b>Paket Suplai Pemula Diterima!</b> 5x Roti, 3x Kopi, dan 10x Bijih Besi siap dijual atau digunakan.');
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, `users/${currentUser.uid}/inventory`);
+		showFeedback('danger', `Gagal mengklaim suplai pemula: ${escapeHtml(err.message)}`);
+	}
+}
+
+// ============================================================
+// RENDER TABS
+// ============================================================
+function switchTab(tabName) {
+	activeTab = tabName;
+	document.querySelectorAll('#market-tabs li').forEach((li) => {
+		const btn = li.querySelector('button');
+		li.classList.toggle('active', Boolean(btn && btn.getAttribute('data-tab') === tabName));
+	});
+	renderActiveTab();
+}
+
+function setMarketMode(mode) {
+	marketMode = mode === 'global' ? 'global' : 'local';
+	const btnLocal = document.getElementById('btn-mode-local');
+	const btnGlobal = document.getElementById('btn-mode-global');
+
+	if (btnLocal) btnLocal.className = marketMode === 'local' ? 'mode-btn active' : 'mode-btn';
+	if (btnGlobal) btnGlobal.className = marketMode === 'global' ? 'mode-btn active-gold' : 'mode-btn';
+
+	updateSummaryStrip();
+	renderActiveTab();
+}
+
+function renderBuyTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	let list = getModeListings();
+
+	if (categoryFilter !== 'all') {
+		list = list.filter((l) => (l.category || 'other') === categoryFilter);
+	}
+
+	if (searchKeyword) {
+		const kw = searchKeyword.toLowerCase();
+		list = list.filter((l) =>
+			(l.item_name && l.item_name.toLowerCase().includes(kw)) ||
+			(l.seller_name && l.seller_name.toLowerCase().includes(kw)) ||
+			(l.country_name && l.country_name.toLowerCase().includes(kw))
+		);
+	}
+
+	list = [...list].sort((a, b) => {
+		if (sortMode === 'price_asc') return Number(a.price_per_unit || 0) - Number(b.price_per_unit || 0);
+		if (sortMode === 'price_desc') return Number(b.price_per_unit || 0) - Number(a.price_per_unit || 0);
+		if (sortMode === 'qty_desc') return Number(b.quantity || 0) - Number(a.quantity || 0);
+		return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+	});
+
+	if (list.length === 0) {
+		const modeLabel = marketMode === 'global' ? 'Pasar Global (Gold)' : 'Pasar Lokal (Uang Lokal)';
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 18px; background: #ffffff; border-color: var(--border);">
+				<div style="width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%; background: #eef7fc; display: flex; align-items: center; justify-content: center;">
+					<i class="fa-solid fa-store-slash" style="font-size: 26px; color: var(--accent); opacity: 0.7;"></i>
+				</div>
+				<h5 style="margin-bottom: 6px; border-bottom: none; font-size: 16px;">Belum Ada Penawaran di ${modeLabel}</h5>
+				<p style="color: #64748b; max-width: 480px; margin: 0 auto 16px; font-size: 12.5px;">
+					Belum ada pemain yang memasang barang pada kategori ini di Firebase. Anda dapat menjual barang dari inventaris Anda atau bekerja di perusahaan untuk menghasilkan suplai baru.
+				</p>
+				<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+					<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-empty-go-sell">
+						<i class="fa-solid fa-tags"></i> Jual Barang dari Inventaris
+					</button>
+					<a href="/workplaces.html" class="btn btn-default btn-sm">
+						<i class="fa-solid fa-briefcase"></i> Cari Pekerjaan
+					</a>
+				</div>
+			</div>
+		`;
+		const goSell = document.getElementById('btn-empty-go-sell');
+		if (goSell) goSell.addEventListener('click', () => switchTab('sell'));
+		return;
+	}
+
+	const currLabel = marketMode === 'global' ? 'Gold' : 'Lokal';
+	let html = '<div class="market-grid">';
+	list.forEach((l) => {
+		const quality = Number(l.quality || 1);
+		const stars = '★'.repeat(Math.min(5, Math.max(1, quality)));
+		const isOwn = currentUser && l.seller_id === currentUser.uid;
+		html += `
+			<div class="listing-card">
+				<div>
+					<div style="display: flex; align-items: center; gap: 10px;">
+						<div class="item-icon-box">
+							<i class="${getCategoryIcon(l.category)}"></i>
+						</div>
+						<div style="min-width: 0; flex: 1;">
+							<div style="font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 14px; color: var(--text-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+								${escapeHtml(l.item_name)}
+							</div>
+							<div class="small">
+								<span class="quality-stars" title="Kualitas Q${quality}">${stars}</span>
+								&bull; <span class="label label-light" style="color: var(--text-dark); border: 1px solid #cbd5e1; padding: 1px 6px;">${escapeHtml(l.country_code || 'ID')}</span>
+							</div>
+						</div>
+					</div>
+
+					<div class="listing-meta-box">
+						<div class="listing-meta-row">
+							<span class="text-muted">Penjual:</span>
+							<b>${escapeHtml(l.seller_name || 'Pemain')}</b>
+						</div>
+						<div class="listing-meta-row">
+							<span class="text-muted">Stok Tersedia:</span>
+							<b style="color: var(--green);">${Number(l.quantity).toLocaleString()} unit</b>
+						</div>
+						<div class="listing-meta-row">
+							<span class="text-muted">Harga / Unit:</span>
+							<b style="color: ${marketMode === 'global' ? 'var(--gold-dark)' : 'var(--accent)'}; font-size: 13px;">
+								${Number(l.price_per_unit).toFixed(2)} ${currLabel}
+							</b>
+						</div>
+					</div>
+				</div>
+
+				<div>
+					${isOwn
+						? `<button type="button" class="btn btn-default btn-sm btn-block btn-cancel-own-listing" data-id="${escapeHtml(l.id)}">
+								<i class="fa-solid fa-rotate-left"></i> Tarik Listing Sendiri
+							</button>`
+						: `<button type="button" class="btn btn-warning-bvl btn-sm btn-block btn-open-buy" data-id="${escapeHtml(l.id)}">
+								<i class="fa-solid fa-cart-plus"></i> Beli Barang
+							</button>`
+					}
+				</div>
+			</div>
+		`;
+	});
+	html += '</div>';
+	container.innerHTML = html;
+
+	container.querySelectorAll('.btn-open-buy').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			const listing = allListings.find((x) => x.id === id);
+			if (listing) openBuyModal(listing);
+		});
+	});
+
+	container.querySelectorAll('.btn-cancel-own-listing').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			cancelOwnListing(id);
+		});
+	});
+}
+
+function renderSellTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-lock" style="font-size: 26px; color: var(--orange); margin-bottom: 10px;"></i>
+				<h5 style="border: none; margin-bottom: 6px;">Masuk Akun untuk Menjual Barang</h5>
+				<p class="small" style="color: #64748b; margin-bottom: 14px;">Silakan masuk agar inventaris Anda dimuat dari Firebase Firestore.</p>
+				<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar</a>
+			</div>
+		`;
+		return;
+	}
+
+	if (myInventory.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 18px; background: #ffffff;">
+				<i class="fa-solid fa-box-open" style="font-size: 28px; color: var(--accent); opacity: 0.65; margin-bottom: 10px;"></i>
+				<h5 style="border: none; margin-bottom: 6px;">Inventaris Anda Masih Kosong</h5>
+				<p style="color: #64748b; max-width: 480px; margin: 0 auto 14px; font-size: 12.5px;">
+					Anda belum memiliki barang untuk dijual. Produksi barang melalui perusahaan Anda atau klaim paket suplai pemula gratis di bawah ini untuk mencoba berdagang.
+				</p>
+				<div style="display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+					<button type="button" id="btn-claim-starter-pack" class="btn btn-success btn-sm">
+						<i class="fa-solid fa-gift"></i> Klaim Suplai Pemula (Gratis)
+					</button>
+					<a href="/my_companies.html" class="btn btn-default btn-sm">
+						<i class="fa-solid fa-building"></i> Kelola Perusahaan
+					</a>
+				</div>
+			</div>
+		`;
+		const claimBtn = document.getElementById('btn-claim-starter-pack');
+		if (claimBtn) claimBtn.addEventListener('click', claimStarterSupply);
+		return;
+	}
+
+	let html = '<div class="market-grid">';
+	myInventory.forEach((item) => {
+		const quality = Number(item.quality || 1);
+		const stars = '★'.repeat(Math.min(5, Math.max(1, quality)));
+		html += `
+			<div class="listing-card">
+				<div>
+					<div style="display: flex; align-items: center; gap: 10px;">
+						<div class="item-icon-box" style="background: #f5fbf7; border-color: #c3e6cb; color: var(--green);">
+							<i class="${getCategoryIcon(item.category)}"></i>
+						</div>
+						<div>
+							<div style="font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 14px; color: var(--text-dark);">
+								${escapeHtml(item.item_name)}
+							</div>
+							<div class="small">
+								<span class="quality-stars">${stars}</span> &bull; ${escapeHtml(getCategoryLabel(item.category))}
+							</div>
+						</div>
+					</div>
+
+					<div class="listing-meta-box">
+						<div class="listing-meta-row">
+							<span class="text-muted">Stok Tersedia:</span>
+							<b style="color: var(--accent);">${Number(item.quantity).toLocaleString()} unit</b>
+						</div>
+					</div>
+				</div>
+
+				<button type="button" class="btn btn-success btn-sm btn-block btn-open-sell" data-id="${escapeHtml(item.id)}">
+					<i class="fa-solid fa-tag"></i> Jual ke Pasar
+				</button>
+			</div>
+		`;
+	});
+	html += '</div>';
+	container.innerHTML = html;
+
+	container.querySelectorAll('.btn-open-sell').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			const id = e.currentTarget.getAttribute('data-id');
+			const item = myInventory.find((x) => x.id === id);
+			if (item) openSellModal(item);
+		});
+	});
+}
+
+function renderMyListingsTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 32px 16px; background: #ffffff;">
+				<p class="small" style="color: #64748b;">Silakan <a href="/authys.html">masuk akun</a> untuk melihat listing Anda.</p>
+			</div>
+		`;
+		return;
+	}
+
+	if (myListings.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-clipboard-list" style="font-size: 26px; color: var(--muted); margin-bottom: 8px;"></i>
+				<div style="font-weight: 600; color: var(--text-dark); margin-bottom: 4px;">Tidak Ada Listing Aktif Milik Anda</div>
+				<div class="small" style="margin-bottom: 12px;">Buka tab "Jual dari Inventaris" untuk memasang barang di pasar.</div>
+				<button type="button" class="btn btn-warning-bvl btn-sm" id="btn-mine-to-sell"><i class="fa-solid fa-plus"></i> Pasang Listing Baru</button>
+			</div>
+		`;
+		const btn = document.getElementById('btn-mine-to-sell');
+		if (btn) btn.addEventListener('click', () => switchTab('sell'));
+		return;
+	}
+
+	let rows = '';
+	myListings.forEach((l) => {
+		const curr = l.currency_type === 'gold' ? 'Gold' : 'Lokal';
+		rows += `
+			<tr>
+				<td><b>${escapeHtml(l.item_name)}</b> <span class="quality-stars">Q${l.quality || 1}</span></td>
+				<td><span class="label ${l.currency_type === 'gold' ? 'label-warning' : 'label-info'}">${l.currency_type === 'gold' ? 'Global' : 'Lokal'}</span></td>
+				<td><b>${Number(l.quantity).toLocaleString()}</b> unit</td>
+				<td><b>${Number(l.price_per_unit).toFixed(2)} ${curr}</b></td>
+				<td class="text-right">
+					<button type="button" class="btn btn-danger btn-sm btn-cancel-listing-row" data-id="${escapeHtml(l.id)}">
+						<i class="fa-solid fa-xmark"></i> Batalkan
+					</button>
+				</td>
+			</tr>
+		`;
+	});
+
+	container.innerHTML = `
+		<div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+			<table class="table table-hover" style="margin: 0;">
+				<thead>
+					<tr>
+						<th>Barang</th>
+						<th>Pasar</th>
+						<th>Sisa Stok</th>
+						<th>Harga / Unit</th>
+						<th class="text-right">Aksi</th>
+					</tr>
+				</thead>
+				<tbody>${rows}</tbody>
+			</table>
+		</div>
+	`;
+
+	container.querySelectorAll('.btn-cancel-listing-row').forEach((btn) => {
+		btn.addEventListener('click', (e) => {
+			cancelOwnListing(e.currentTarget.getAttribute('data-id'));
+		});
+	});
+}
+
+function renderHistoryTab() {
+	const container = document.getElementById('market-content-area');
+	if (!container) return;
+
+	if (!currentUser) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 32px 16px; background: #ffffff;">
+				<p class="small" style="color: #64748b;">Silakan <a href="/authys.html">masuk akun</a> untuk melihat riwayat transaksi Anda.</p>
+			</div>
+		`;
+		return;
+	}
+
+	if (myTransactions.length === 0) {
+		container.innerHTML = `
+			<div class="well well-sm text-center" style="padding: 36px 16px; background: #ffffff;">
+				<i class="fa-solid fa-receipt" style="font-size: 26px; color: var(--muted); margin-bottom: 8px;"></i>
+				<div style="font-weight: 600; color: var(--text-dark);">Belum Ada Riwayat Transaksi</div>
+				<div class="small">Aktivitas pembelian, penjualan, dan pemasangan listing akan tercatat otomatis di sini.</div>
+			</div>
+		`;
+		return;
+	}
+
+	let rows = '';
+	myTransactions.forEach((tx) => {
+		const dateStr = tx.created_at ? new Date(tx.created_at).toLocaleString('id-ID') : '-';
+		const amt = Number(tx.amount || 0);
+		const amtColor = amt < 0 ? 'var(--red)' : (amt > 0 ? 'var(--green)' : 'var(--muted)');
+		const curr = tx.currency_type === 'gold' ? 'Gold' : 'Lokal';
+		rows += `
+			<tr>
+				<td class="small" style="white-space: nowrap;">${escapeHtml(dateStr)}</td>
+				<td><span class="label label-info">${escapeHtml(tx.type || 'market')}</span></td>
+				<td>${escapeHtml(tx.description || '')}</td>
+				<td class="text-right" style="font-weight: 700; color: ${amtColor}; white-space: nowrap;">
+					${amt > 0 ? '+' : ''}${amt.toFixed(2)} ${curr}
+				</td>
+				<td class="text-center"><span class="label label-success">${escapeHtml(tx.status || 'completed')}</span></td>
+			</tr>
+		`;
+	});
+
+	container.innerHTML = `
+		<div style="background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;">
+			<table class="table table-hover" style="margin: 0;">
+				<thead>
+					<tr>
+						<th>Waktu</th>
+						<th>Tipe</th>
+						<th>Deskripsi</th>
+						<th class="text-right">Nominal</th>
+						<th class="text-center">Status</th>
+					</tr>
+				</thead>
+				<tbody>${rows}</tbody>
+			</table>
+		</div>
+	`;
+}
+
+function renderActiveTab() {
+	const filterBar = document.getElementById('buy-filter-toolbar');
+	if (filterBar) {
+		filterBar.style.display = activeTab === 'buy' ? 'flex' : 'none';
+	}
+
+	if (activeTab === 'buy') renderBuyTab();
+	else if (activeTab === 'sell') renderSellTab();
+	else if (activeTab === 'mylistings') renderMyListingsTab();
+	else if (activeTab === 'history') renderHistoryTab();
+}
+
+// ============================================================
+// ONE-TIME FIRESTORE LOADERS
+// ============================================================
+async function testConnection() {
+	if (!db || !fbFirestoreMod) return;
+	const { doc, getDocFromServer } = fbFirestoreMod;
+	try {
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (error) {
+		if (error instanceof Error && error.message.includes('the client is offline')) {
+			console.warn('Firebase client is offline. Periksa koneksi atau konfigurasi Firebase.');
+		}
+	}
+}
+
+async function loadMarketplaceListings() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, where, limit, getDocs } = fbFirestoreMod;
+	try {
+		const q = query(
+			collection(db, 'marketplace_listings'),
+			where('status', '==', 'active'),
+			limit(100)
+		);
+		const snap = await getDocs(q);
+		allListings = [];
+		snap.forEach((d) => {
+			allListings.push({ id: d.id, ...d.data() });
+		});
+		updateMyListingsFromAll();
+		updateSummaryStrip();
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'marketplace_listings');
+		allListings = [];
+	}
+}
+
+async function loadMyInventory(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, limit, getDocs } = fbFirestoreMod;
+	const path = `users/${uid}/inventory`;
+	try {
+		const q = query(collection(db, 'users', uid, 'inventory'), limit(100));
+		const snap = await getDocs(q);
+		myInventory = [];
+		snap.forEach((d) => {
+			const data = d.data();
+			if (Number(data.quantity || 0) > 0) {
+				myInventory.push({ id: d.id, ...data });
+			}
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myInventory = [];
+	}
+}
+
+async function loadMyTransactions(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, orderBy, limit, getDocs } = fbFirestoreMod;
+	const path = `users/${uid}/transactions`;
+	try {
+		const q = query(
+			collection(db, 'users', uid, 'transactions'),
+			orderBy('created_at', 'desc'),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		myTransactions = [];
+		snap.forEach((d) => {
+			myTransactions.push({ id: d.id, ...d.data() });
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, path);
+		myTransactions = [];
+	}
+}
+
+async function loadAndClaimPendingOrders(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, where, limit, getDocs, doc, updateDoc, setDoc } = fbFirestoreMod;
+	try {
+		// Single where() clause avoids composite index errors while respecting Firestore security rules
+		const q = query(
+			collection(db, 'market_orders'),
+			where('seller_id', '==', uid),
+			limit(30)
+		);
+		const snap = await getDocs(q);
+		pendingOrders = [];
+		snap.forEach((d) => {
+			const data = d.data();
+			if (data && data.claimed === false) {
+				pendingOrders.push({ id: d.id, ...data });
+			}
+		});
+
+		if (pendingOrders.length > 0 && currentUserProfile) {
+			let addedGold = 0;
+			let addedLocal = 0;
+			const nowIso = new Date().toISOString();
+
+			for (const order of pendingOrders) {
+				const net = Number(order.net_amount || 0);
+				if (order.currency_type === 'gold') addedGold += net;
+				else addedLocal += net;
+
+				await updateDoc(doc(db, 'market_orders', order.id), {
+					claimed: true,
+					claimed_at: nowIso
+				});
+
+				const txId = `tx_sell_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+				const txData = {
+					id: txId,
+					user_id: uid,
+					type: 'market_sell',
+					description: `Terjual ${order.quantity}x ${order.item_name} ke ${order.buyer_name || 'Pembeli'} (Bersih -2.5%)`,
+					amount: Number(net.toFixed(2)),
+					currency_type: order.currency_type || 'local',
+					status: 'completed',
+					created_at: nowIso
+				};
+				await setDoc(doc(db, 'users', uid, 'transactions', txId), txData);
+				myTransactions.unshift(txData);
+			}
+
+			const newGold = Number((Number(currentUserProfile.gold || 0) + addedGold).toFixed(2));
+			const newCurrency = Number((Number(currentUserProfile.currency || 0) + addedLocal).toFixed(2));
+			await updateDoc(doc(db, 'users', uid), {
+				gold: newGold,
+				currency: newCurrency,
+				updated_at: nowIso
+			});
+			currentUserProfile.gold = newGold;
+			currentUserProfile.currency = newCurrency;
+
+			const claimedCount = pendingOrders.length;
+			pendingOrders = [];
+			showFeedback(
+				'success',
+				`<i class="fa-solid fa-coins"></i> <b>Hasil Penjualan Diterima!</b> ${claimedCount} pesanan terjual diklaim (+${addedLocal.toFixed(2)} Lokal, +${addedGold.toFixed(2)} Gold).`
+			);
+		}
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'market_orders');
+	}
+}
+
+// ============================================================
+// UI EVENT WIRING & AUTH SETUP
+// ============================================================
+function setupUIEvents() {
+	const bind = (id, eventName, handler) => {
+		const el = document.getElementById(id);
+		if (el) el.addEventListener(eventName, handler);
+	};
+
+	bind('btn-mode-local', 'click', () => setMarketMode('local'));
+	bind('btn-mode-global', 'click', () => setMarketMode('global'));
+
+	bind('market-tabs', 'click', (e) => {
+		const btn = e.target.closest('button[data-tab]');
+		if (!btn) return;
+		switchTab(btn.getAttribute('data-tab'));
+	});
+
+	bind('category-filter-pills', 'click', (e) => {
+		const btn = e.target.closest('button[data-cat]');
+		if (!btn) return;
+		document.querySelectorAll('#category-filter-pills .filter-btn').forEach((b) => b.classList.remove('active'));
+		btn.classList.add('active');
+		categoryFilter = btn.getAttribute('data-cat') || 'all';
+		renderActiveTab();
+	});
+
+	bind('market-search-input', 'input', (e) => {
+		searchKeyword = e.target.value.trim();
+		renderActiveTab();
+	});
+
+	bind('market-sort-select', 'change', (e) => {
+		sortMode = e.target.value;
+		renderActiveTab();
+	});
+
+	// Buy modal controls
+	bind('btn-close-buy-modal', 'click', closeBuyModal);
+	bind('btn-cancel-buy', 'click', closeBuyModal);
+	bind('buy-qty-input', 'input', updateBuyTotalPreview);
+	bind('btn-buy-max', 'click', () => {
+		const qtyInput = document.getElementById('buy-qty-input');
+		if (selectedBuyListing && qtyInput) {
+			qtyInput.value = selectedBuyListing.quantity;
+			updateBuyTotalPreview();
+		}
+	});
+	bind('btn-confirm-buy', 'click', confirmPurchase);
+
+	// Sell modal controls
+	bind('btn-close-sell-modal', 'click', closeSellModal);
+	bind('btn-cancel-sell', 'click', closeSellModal);
+	bind('sell-qty-input', 'input', updateSellNetPreview);
+	bind('sell-price-input', 'input', updateSellNetPreview);
+	bind('sell-currency-select', 'change', updateSellNetPreview);
+	bind('btn-confirm-sell', 'click', confirmCreateListing);
+}
+
+function setupAuth() {
+	if (!auth || !db || !fbAuthMod || !fbFirestoreMod) return;
+	const { onAuthStateChanged, signOut } = fbAuthMod;
+	const { doc, getDoc, setDoc } = fbFirestoreMod;
+
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					currentUserProfile = {
+						id: user.uid,
+						username: user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain'),
+						email: user.email || '',
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 100,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: new Date().toISOString(),
+						updated_at: new Date().toISOString()
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					const btnLogout = document.getElementById('btn-logout');
+					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+				await Promise.all([
+					loadMyInventory(user.uid),
+					loadMyTransactions(user.uid),
+					loadAndClaimPendingOrders(user.uid)
+				]);
+
+				updateMyListingsFromAll();
+				renderPlayerProfile(currentUserProfile, user);
+				updateSummaryStrip();
+				renderActiveTab();
+
+			} catch (err) {
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+			}
+		} else {
+			currentUserProfile = null;
+			myInventory = [];
+			myListings = [];
+			myTransactions = [];
+			pendingOrders = [];
+
+			renderGuestState();
+			updateSummaryStrip();
+			renderActiveTab();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk membeli &amp; menjual barang:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
+	});
+}
+
+// ============================================================
+// SEQUENTIAL INITIALIZATION AFTER DOM READY
+// 1. Load firebase-app first
+// 2. Load firebase-auth & firebase-firestore
+// 3. Initialize app -> db -> auth, wire UI, load market data
+// ============================================================
+async function initMarketFirebase() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		setupUIEvents();
+
+		// Step 1: Load firebase-app first
+		fbAppMod = await import(`${FIREBASE_CDN_BASE}/firebase-app.js`);
+		const { initializeApp, getApps, getApp } = fbAppMod;
+		app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+		// Step 2: Load firebase-auth and firebase-firestore after firebase-app
+		const [authModule, firestoreModule] = await Promise.all([
+			import(`${FIREBASE_CDN_BASE}/firebase-auth.js`),
+			import(`${FIREBASE_CDN_BASE}/firebase-firestore.js`)
+		]);
+		fbAuthMod = authModule;
+		fbFirestoreMod = firestoreModule;
+
+		db = fbFirestoreMod.getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = fbAuthMod.getAuth(app);
+
+		await testConnection();
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
+		}
+
+		setupAuth();
+		await loadMarketplaceListings();
+		renderActiveTab();
+	} catch (err) {
+		console.warn('Firebase init warning in market_local:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+		renderActiveTab();
+	}
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initMarketFirebase);
+} else {
+	initMarketFirebase();
+}
+</script>
+
 </body>
 </html>

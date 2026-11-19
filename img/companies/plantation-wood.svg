@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <!-- Forest / Plantation ground -->
+  <polygon points="80,28 148,66 80,104 12,66" fill="#dff0d8" stroke="#adcfa1" stroke-width="1.5"/>
+  <polygon points="80,104 148,66 148,74 80,112" fill="#8cb37d"/>
+  <polygon points="80,104 12,66 12,74 80,112" fill="#a8c99a"/>
+  <!-- Greenhouse / Timber Shed -->
+  <polygon points="34,62 62,46 86,60 58,76" fill="#8d5524"/>
+  <polygon points="34,62 58,76 58,90 34,76" fill="#a06532"/>
+  <polygon points="58,76 86,60 86,74 58,90" fill="#6f4219"/>
+  <polygon points="32,62 60,40 88,60 58,76" fill="#3b7609" stroke="#254c04" stroke-width="1"/>
+  <!-- Isometric plantation trees/bushes -->
+  <g>
+    <line x1="100" y1="68" x2="100" y2="54" stroke="#6f4219" stroke-width="3"/>
+    <circle cx="100" cy="48" r="10" fill="#4f9117"/>
+    <circle cx="96" cy="46" r="5" fill="#6cb32e"/>
+  </g>
+  <g>
+    <line x1="120" y1="58" x2="120" y2="45" stroke="#6f4219" stroke-width="3"/>
+    <circle cx="120" cy="40" r="9" fill="#3b7609"/>
+    <circle cx="117" cy="38" r="4" fill="#5da61c"/>
+  </g>
+  <g>
+    <line x1="88" y1="80" x2="88" y2="68" stroke="#6f4219" stroke-width="2.5"/>
+    <circle cx="88" cy="64" r="8" fill="#3b7609"/>
+  </g>
+</svg>

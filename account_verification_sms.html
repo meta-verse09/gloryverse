@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Glory Verse - Online Strategy Browser Game Account Verification · GloryVerse</title>
-<link rel="icon" href="https://gloryverse.id/img/logo-site.png">
+<link rel="icon" href="/img/logo-site.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -274,7 +274,7 @@
 		
 			// STEP 1: Check rate limits on server BEFORE sending SMS
 			$.ajax({
-				url: 'https://gloryverse.id/ajax/sms/check_sms_rate_limit.php',
+				url: '/ajax/sms/check_sms_rate_limit.php',
 				type: 'POST',
 				data: {
 					key: '50589388c8ffd9280bc92f1f8c69834c122665',
@@ -404,7 +404,7 @@
 					.then(function(idToken) {
 					// Send ID token to server for verification
 					$.ajax({
-						url: 'https://gloryverse.id/ajax/sms/firebase_verify_token.php',
+						url: '/ajax/sms/firebase_verify_token.php',
 						type: 'POST',
 							data: {
 								key: '50589388c8ffd9280bc92f1f8c69834c122665',
@@ -421,7 +421,7 @@
 									}
 									// Redirect after 2 seconds
 									setTimeout(function() {
-										window.location.href = 'https://gloryverse.id/account_verification_sms.php';
+										window.location.href = '/account_verification_sms.php';
 									}, 2000);
 								} else {
 									$('#firebaseStatus').html('<div class="alert alert-danger">' + (response.error || 'Verification failed') + '</div>');

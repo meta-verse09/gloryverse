@@ -1,1561 +1,1731 @@
-
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="id">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Dirikan Perusahaan Baru</title>
+	<meta name="description" content="Glory Verse - Dirikan perusahaan baru dengan aset bangunan isometrik dan sinkronisasi Firebase">
+	<meta name="copyright" content="Glory Verse">
 
-<title>Glory Verse - Online Strategy Browser Game</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="My Profit Land" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="My Profit Land - Online Strategy Browser Game" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/js/base.js"></script>
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+	<style>
+		/* ============================================================
+		   COMPANY CREATE 2-COLUMN GRID (MATCHES DASHBOARD THEME)
+		   ============================================================ */
+		.companies-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
 
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+		.leftbar,
+		.main {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
 
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
+		@media (max-width: 900px) {
+			.companies-wrapper {
+				grid-template-columns: 1fr;
 			}
-		});
-	};
+		}
 
-</script>
+		/* Summary Strip */
+		.summary-strip {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+			gap: 12px;
+			margin-bottom: 16px;
+		}
+		.summary-box {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 12px 14px;
+			text-align: center;
+		}
+		.summary-box .num {
+			font-family: 'Roboto Slab', serif;
+			font-size: 20px;
+			font-weight: 700;
+			color: var(--accent);
+			margin: 2px 0;
+		}
+		.summary-box .lbl {
+			font-size: 11.5px;
+			color: var(--muted);
+		}
 
+		/* Selected Company Configurator Panel */
+		.builder-panel {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-top: 3px solid var(--accent);
+			border-radius: var(--radius);
+			padding: 18px;
+			margin-bottom: 18px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+		}
+		.builder-grid {
+			display: grid;
+			grid-template-columns: 220px 1fr;
+			gap: 20px;
+			align-items: start;
+		}
+		@media (max-width: 720px) {
+			.builder-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+		.iso-preview-stage {
+			background: linear-gradient(180deg, #f8fafc 0%, #eef4f8 100%);
+			border: 1px solid #d5e3ee;
+			border-radius: 8px;
+			padding: 14px 12px;
+			text-align: center;
+		}
+		.iso-preview-stage img {
+			width: 170px;
+			height: 128px;
+			object-fit: contain;
+			display: block;
+			margin: 0 auto 8px;
+			filter: drop-shadow(0 6px 10px rgba(15, 23, 42, 0.12));
+		}
+		.recipe-pills {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin: 8px 0 12px;
+		}
+		.recipe-pill {
+			background: #f1f5f9;
+			border: 1px solid #dce4ed;
+			border-radius: 4px;
+			padding: 3px 8px;
+			font-size: 11px;
+			color: var(--text-dark);
+			font-weight: 500;
+		}
+		.builder-form-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+			gap: 12px;
+			margin-bottom: 12px;
+		}
+		.builder-form-grid label {
+			display: block;
+			font-size: 11.5px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin-bottom: 4px;
+		}
 
+		/* Filter Toolbar */
+		.company-filter-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			flex-wrap: wrap;
+			gap: 10px;
+			margin-bottom: 14px;
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: 6px;
+			padding: 10px 12px;
+		}
+		.filter-pills {
+			display: flex;
+			gap: 5px;
+			flex-wrap: wrap;
+		}
+		.filter-btn {
+			border: 1px solid var(--border);
+			background: #f8fafc;
+			color: var(--text);
+			padding: 5px 10px;
+			border-radius: 4px;
+			font-size: 11.5px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.15s;
+		}
+		.filter-btn.active,
+		.filter-btn:hover {
+			background: var(--accent);
+			color: #ffffff;
+			border-color: var(--accent);
+		}
 
+		/* Isometric Catalog Grid */
+		.catalog-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+			gap: 14px;
+		}
+		.catalog-card {
+			background: #ffffff;
+			border: 1px solid var(--border);
+			border-radius: var(--radius);
+			padding: 14px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			cursor: pointer;
+			transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+		}
+		.catalog-card:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+			border-color: #9dc7db;
+		}
+		.catalog-card.selected {
+			border: 2px solid var(--accent);
+			background: #f9fcfe;
+			box-shadow: 0 4px 14px rgba(5, 122, 158, 0.14);
+		}
+		.catalog-iso-wrap {
+			background: linear-gradient(180deg, #f8fafc 0%, #eff5f9 100%);
+			border: 1px solid #e2eaf1;
+			border-radius: 6px;
+			padding: 10px;
+			text-align: center;
+			margin-bottom: 10px;
+			position: relative;
+		}
+		.catalog-iso-wrap img {
+			width: 140px;
+			height: 105px;
+			object-fit: contain;
+			display: block;
+			margin: 0 auto;
+			filter: drop-shadow(0 4px 6px rgba(15, 23, 42, 0.1));
+		}
+		.cost-badge {
+			position: absolute;
+			top: 7px;
+			right: 7px;
+			font-size: 10.5px;
+			font-weight: 700;
+			padding: 2px 7px;
+			border-radius: 10px;
+			color: #ffffff;
+		}
+		.cost-badge.free {
+			background: var(--green);
+		}
+		.cost-badge.paid {
+			background: var(--gold-dark);
+		}
+		.cat-badge {
+			position: absolute;
+			top: 7px;
+			left: 7px;
+			font-size: 10px;
+			font-weight: 700;
+			padding: 2px 6px;
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.92);
+			border: 1px solid #d5dfe9;
+			color: var(--text-dark);
+		}
+		.catalog-title {
+			font-family: 'Roboto Slab', serif;
+			font-size: 14px;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin-bottom: 4px;
+		}
+		.catalog-desc {
+			font-size: 11.5px;
+			color: #64748b;
+			margin-bottom: 10px;
+			line-height: 1.4;
+		}
+		.catalog-specs {
+			background: #fafbfc;
+			border: 1px solid #eef1f5;
+			border-radius: 4px;
+			padding: 7px 9px;
+			font-size: 11px;
+			margin-bottom: 10px;
+		}
+		.catalog-spec-row {
+			display: flex;
+			justify-content: space-between;
+			padding: 2px 0;
+		}
+	</style>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (MATCHES DASHBOARD.HTML) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data stabil &amp; aset SVG isometrik lokal.</span>
+		</div>
+		<div>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
+				<i class="fa-solid fa-arrows-rotate"></i> Refresh Halaman (F5)
+			</button>
+			<span id="firebase-connection-status" class="label label-light" style="margin-left: 6px; background: #e2e8f0; color: #475569;">
+				Menghubungkan ke Firebase...
+			</span>
+		</div>
+	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (game-head with Gloryverse branding) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 19, 2026 02:35:16' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 46.1% (923 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">02:35:16</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 46.1%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (109)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9793)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a>  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- Server Clock: London Time (Europe/London) -->
+				<div style="text-align: right;">
+					<span class="label label-light" title="Waktu Resmi Server (London / GMT)"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b></span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 200px;">
+					<form method="get" action="/leaderboard.html" onsubmit="event.preventDefault(); window.location.href='/leaderboard.html';">
+						<input type="text" class="form-control" placeholder="Cari Pemain / Negara..." style="width: 200px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<span class="label label-success" id="player-income-badge">Income (0)</span>
+					<span class="label label-warning" id="player-alerts-badge">Alerts (0)</span>
+					<span class="label label-light" id="player-messages-badge">Messages (0)</span>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Matches dashboard.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li class="active" > <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_manage.html", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
-															</ul>
-						</li>
+					<li><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li class="active"><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/marketplace.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li><a href="/my_companies.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;My Companies</a></li>
+							<li><a href="/company_create.html"><i class="fa-solid fa-plus-circle"></i>&nbsp;&nbsp;Create Company</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Military Power</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/my_profile.html"><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i> My Profile</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://gloryverse.id/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/ph.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=431">Baguio</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 74.09% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a> 		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="74.09" aria-valuemin="0" aria-valuemax="100" style="width: 74.09%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 100.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100.0" aria-valuemin="0" aria-valuemax="100" style="width: 100.0%;">
-			</div>
-		</div>
-
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 1934/17867&nbsp;&nbsp;&nbsp;10%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.html">Working (2 hours)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.html", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="532.94">532.940</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 2.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 116.88 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"> html: 368.83</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-								
-							
-							<h4>Start a new Company in Philippines</h4>
-
-							<p>You can find below the types of companies you can start. Keep in mind that included with the company comes one random production license. After the license expires, you will need to extend it by paying a fee to the local government.</p>
-
-							
-
-							<div role="tabpanel">
-
-								<ul class="nav nav-tabs" role="tablist">
-																			<li class="active"><a href="#tab_0" aria-controls="tab_0" role="tab" data-toggle="tab">Utilities</a></li>
-																				<li class=""><a href="#tab_1" aria-controls="tab_1" role="tab" data-toggle="tab">Services</a></li>
-																				<li class=""><a href="#tab_2" aria-controls="tab_2" role="tab" data-toggle="tab">Consumer</a></li>
-																				<li class=""><a href="#tab_3" aria-controls="tab_3" role="tab" data-toggle="tab">Gathering</a></li>
-																		</ul>
-
-
-								<div class="tab-content">
-									
-																			<div role="tabpanel" class="tab-pane active" id="tab_0">
-											<br>
-																								<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Solar Panel Farm" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/solar-panel-farm.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Solar Panel Farm</h6>
-															<p class="small">The Solar Panel Farm produces electricity, it requires no raw materials and the production is automated. Electricity is needed by companies in order to work. A player can own only 1 utility company.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Solar Panel Farm in Philippines for 0.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=34">Open Company</a><br>
-																<span class="small">(Costs 0.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Water Well Drilling" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/water-well-drilling.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Water Well Drilling</h6>
-															<p class="small">The Water Well Drilling produces water, it requires no raw materials and the production is automated. Water is needed by companies in order to work. A player can own only 1 utility company.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Water Well Drilling in Philippines for 0.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=35">Open Company</a><br>
-																<span class="small">(Costs 0.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-													
-										</div>
-																				<div role="tabpanel" class="tab-pane " id="tab_1">
-											<br>
-																								<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Cow Farm" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/cow-farm.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Cow Farm</h6>
-															<p class="small">Can produce Raw Milk. Raw Milk is used by the Milk Factory to produce Processed Milk</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Cow Farm in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=4">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Milk Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/milk-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Milk Factory</h6>
-															<p class="small">The Milk Factory can produce Processed Milk. To produce Processed Milk the company needs Raw Milk. Processed Milk is used by Milk and Coffee Shop to produce Milk Jugs.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Milk Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=5">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Foundry" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/foundry.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Foundry</h6>
-															<p class="small">Foundry can produce Steel. In order to produce Steel, the Foundry needs Iron and Coal. Steel is used to produce Houses, Weapons and Cars.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Foundry in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=8">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Refinery" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/refinery.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Refinery</h6>
-															<p class="small">The Refinery produces goods from oil.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Refinery in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=15">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Fabrics Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/fabrics-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Fabrics Factory</h6>
-															<p class="small">Fabrics factory produces Fabrics. To produce Fabrics, the Fabrics factory needs Cotton. Fabrics are used by Clothing Factory to produce Clothes. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Fabrics Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=17">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Plastics Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/plastics-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Plastics Factory</h6>
-															<p class="small">In order to produce Plastics, the Plastic Production needs Chemical Compounds.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Plastics Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=21">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Parts Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/parts-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Parts Factory</h6>
-															<p class="small">Parts Factory produces parts needed by the Vehicle and Military Factories.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Parts Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=20">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Mill" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/mill.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Mill</h6>
-															<p class="small">The Mill can produce Wheat Flour and Corn Flour. To produce Wheat Flour, the Mill needs Wheat. To produce Corn Flour, the Mill needs Corn. Wheat Flour is used by Restaurants to produce Food and Corn Flour is used by the Cow Farm to produce Raw Milk, Meat and Leather. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Mill in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=24">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Paper Mill" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/paper-mill.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Paper Mill</h6>
-															<p class="small">The Paper Mill can produce paper and cotton paper. To produce it needs wood or cotton.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Paper Mill in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=29">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Military Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/military-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Military Factory</h6>
-															<p class="small">The Military Factory builds weapons of mass destruction like nuclear bombs and chemical bombs, also builds military vehicles and Ballistic Missiles.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Military Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=37">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Glass Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/glass-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Glass Factory</h6>
-															<p class="small">The Glass Factory can produce windows and glass panels, they are required for building houses and vehicles.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Glass Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=42">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Recycling Center" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/recycling-center.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Recycling Center</h6>
-															<p class="small">The recycling Center uses scraps that citizens find and Recycles them into usable products</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Recycling Center in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=43">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Fertilizing Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/fertilizer-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Fertilizing Factory</h6>
-															<p class="small">The Fertilizing Factory uses excrement (Manure) that citizens find in farms and produces fertilizer</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Fertilizing Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=44">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Pig Farm" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/pig-farm.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Pig Farm</h6>
-															<p class="small">The Pig Farm produces bacon needed for food products</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Pig Farm in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=46">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Bakery" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/bakery.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Bakery</h6>
-															<p class="small">The Bakery produces bread from wheat flour</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Bakery in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=47">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Laboratory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/laboratory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Laboratory</h6>
-															<p class="small">The Laboratory produces extracts that the Pharmacy can use</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Laboratory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=49">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-													
-										</div>
-																				<div role="tabpanel" class="tab-pane " id="tab_2">
-											<br>
-																								<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Milk and Coffee Shop" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/milk-and-coffee-shop.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Milk and Coffee Shop</h6>
-															<p class="small">The Milk and Coffee Shop can produce Milk Jugs or Coffee. To produce Milk the company needs Processed Milk. To produce Coffee, the company needs Coffee Beans. Milk and Coffee are used by Citizens to increase their Energy. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Milk and Coffee Shop in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=6">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="House Construction" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/house-construction.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>House Construction</h6>
-															<p class="small">The company needs Wood, Steel and Stone to function. Buildings are used by citizens to increase their energy. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a House Construction in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=10">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Attack Weapons Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/attack-weapons-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Attack Weapons Factory</h6>
-															<p class="small">Weapons Factory can produce Weapons. To produce Weapons, the company needs Steel and Wood. Weapons are used by citizens to increase their damage. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Attack Weapons Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=11">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Defence Weapons Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/defence-weapons-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Defence Weapons Factory</h6>
-															<p class="small">Weapons Factory can produce Weapons. To produce Weapons, the company needs Steel and Wood. Weapons are used by citizens to increase their damage. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Defence Weapons Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=12">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Clothes Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/clothes-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Clothes Factory</h6>
-															<p class="small">The Clothes factory can produce Clothes. In order to produce clothes, the Factory needs Fabrics, Polyester and Leather. Clothes are used by citizens to increase their Energy level. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Clothes Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=18">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Vehicles Factory" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/vehicles-factory.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Vehicles Factory</h6>
-															<p class="small">In order to produce vehicles, the factory needs vehicle parts, steel and fabrics. Vehicles are used by citizens for transportation. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Vehicles Factory in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=19">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Winery" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/winery.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Winery</h6>
-															<p class="small">The Wine Production company can produce wine. To produce wine the company needs Grapes. Wine is used by citizens to increase their energy. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Winery in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=22">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Restaurant" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/restaurant.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Restaurant</h6>
-															<p class="small">The Restaurant can produce Food or Coffee. To produce Food Restaurants need Wheat Flour and Meat. To produce Coffee Restaurants need Coffee beans. Food and Coffee are used by citizens to increase their energy. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Restaurant in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=26">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Cheese Shop" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/cheese-shop.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Cheese Shop</h6>
-															<p class="small">The Cheese Shop produces Cheese from Raw Milk. The Cheese is used by Citizens to increase their Energy level by 50. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Cheese Shop in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=27">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Filling Station" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/filling-station.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Filling Station</h6>
-															<p class="small">A filling station is a company that sells fuel to citizens. It uses Processed Fuel and distributes Diesel and Kerosene.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Filling Station in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=30">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Newspaper" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/newspaper.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Newspaper</h6>
-															<p class="small">The Newspaper can produce articles. To produce, the company needs paper and ink. Articles are read by citizens to increase their energy level. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Newspaper in Philippines for 5.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=31">Open Company</a><br>
-																<span class="small">(Costs 5.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Brewery" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/brewery.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Brewery</h6>
-															<p class="small">The Brewery can produce beer from wheat. Beer is used by citizens to increase their energy. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Brewery in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=32">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Notary" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/notary.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Notary</h6>
-															<p class="small">The Notary produces the necessary documents to perform many bureaucratic tasks needed by the players. These documents need paper.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Notary in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=38">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Knowledge Academy" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/knowledge-academy.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Knowledge Academy</h6>
-															<p class="small">The Knowledge Academy produces knowledge books that help you increase the economic score. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Knowledge Academy in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=39">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Bank" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/bank.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Bank</h6>
-															<p class="small">Banks are used for Gold transfers between players and also to give out loans to those who need and prove to be trustworthy. Banks use paper to create receipts.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Bank in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=40">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Pharmacy" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/pharmacy.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Pharmacy</h6>
-															<p class="small">The Pharmacy sells products to help replenish health</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Pharmacy in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=50">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-													
-										</div>
-																				<div role="tabpanel" class="tab-pane " id="tab_3">
-											<br>
-																								<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Iron Mine" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/iron-mine.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Iron Mine</h6>
-															<p class="small">Iron is, besides wood, the most important raw material. It is used by companies that manufacture weapons, houses and means of transportation. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Iron Mine in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=1">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Wood Cutter" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/wood-cutter.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Wood Cutter</h6>
-															<p class="small">Wood is the most widely used raw material. Vital in weapons industries. A safe market in any given country. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Wood Cutter in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=2">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Stone Quarry" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/stone-quarry.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Stone Quarry</h6>
-															<p class="small">Stone is needed to produce houses.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Stone Quarry in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=3">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Coffee Plantation" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/coffee-plantation.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Coffee Plantation</h6>
-															<p class="small">Coffee plantation can produce Coffee Beans. Coffee Beans are used by Restaurants and Catering to produce Coffee.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Coffee Plantation in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=7">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Coal Mine" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/coal-mine.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Coal Mine</h6>
-															<p class="small"> The coal mine produces coal, used by the foundry to produce steel.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Coal Mine in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=9">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Vineyard" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/vineyard.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Vineyard</h6>
-															<p class="small">Grapes Production company produces Grapes. Grapes are used by the Wine Production companies to produce Wine. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Vineyard in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=13">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Oil Extraction" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/oil-extraction.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Oil Extraction</h6>
-															<p class="small">The Oil Extraction can produce Oil. The Oil is used in Refineries.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Oil Extraction in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=14">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Cotton Plantation" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/cotton-plantation.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Cotton Plantation</h6>
-															<p class="small">Cotton plantation can produce Cotton. Cotton is used by Fabrics Factory to produce Fabrics. </p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Cotton Plantation in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=16">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Cereal Farm" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/cereal-farm.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Cereal Farm</h6>
-															<p class="small">Cereal farm can produce Wheat and Corn. Wheat and Corn are used by Mills to produce Wheat Flour or Corn Flour.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Cereal Farm in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=23">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Uranium Mine" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/uranium-mine.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Uranium Mine</h6>
-															<p class="small">Uranium is very rare and is used to build nuclear weapons.</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Uranium Mine in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=36">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Sand Pit" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/sand-pit.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Sand Pit</h6>
-															<p class="small">The Sand Pit extracts sand that is needed by the Glass Factory</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Sand Pit in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=41">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Vegetable Farm" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/vegetable-farm.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Vegetable Farm</h6>
-															<p class="small">Vegetable Farm gathers vegetables from the fields. Vegetables are used to produce food and feed pigs from the Pig Farm</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Vegetable Farm in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=45">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-																										<div class="row">
-
-														<div class="col-sm-2 text-center">
-															<img style="margin-top: 5px" title="Herbs Plantation" width="95" height="95" src="https://gloryverse.id/img/assets/buildings-companies/herbs-plantation.png">														</div>
-
-														<div class="col-sm-7">
-															<h6>Herbs Plantation</h6>
-															<p class="small">Can produce Herbs. Herbs are used by the Botanical Factory to produce extracts</p>
-														</div>
-
-														<div class="col-sm-3">
-															<div class="text-center">
-																<br>
-																<a onClick="return confirm('Open a Herbs Plantation in Philippines for 30.00 Euro?');" class="btn btn-success" href="https://gloryverse.id/company_create.html&acn=buy&id=48">Open Company</a><br>
-																<span class="small">(Costs 30.00 Euro)</span>
-															</div>
-														</div>
-
-													</div>
-													
-										</div>
-										
-								</div>
-
-							</div>
-							
-							
-						</div><!-- end .main -->			
-					
-						<div class="rightbar">
-	
-							<h6>My Friends</h6>
-
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to Phoenix" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=Phoenix"></a> <a href="https://gloryverse.id/profile.html&id=Phoenix">Phoenix</a> <a href="https://gloryverse.id/country.html&id=EH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/eh.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to RAJAPERDANAINTI" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=RAJAPERDANAINTI"></a> <a href="https://gloryverse.id/profile.html&id=RAJAPERDANAINTI">RAJAPERDANAINTI</a> <a href="https://gloryverse.id/country.html&id=LY"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Send a Message to Nicotin" class="icon icon-envelope green" href="https://gloryverse.id/my_pms.html&to=Nicotin"></a> <a href="https://gloryverse.id/profile.html&id=Nicotin">Nicotin</a> <a href="https://gloryverse.id/country.html&id=MV"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 20 minutes ago, Send a Message to aleksokubo" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=aleksokubo"></a> <a href="https://gloryverse.id/profile.html&id=aleksokubo">aleksokubo</a> <a href="https://gloryverse.id/country.html&id=VE"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ve.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 55 minutes ago, Send a Message to Reingkarnasi" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Reingkarnasi"></a> <a href="https://gloryverse.id/profile.html&id=Reingkarnasi">Reingkarnasi</a> <a href="https://gloryverse.id/country.html&id=FO"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/fo.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to kurniawan214" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=kurniawan214"></a> <a href="https://gloryverse.id/profile.html&id=kurniawan214">kurniawan214</a> <a href="https://gloryverse.id/country.html&id=ID"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/id.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to 515" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=515"></a> <a href="https://gloryverse.id/profile.html&id=515">515</a> <a href="https://gloryverse.id/country.html&id=XK"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/xk.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 1 hour ago, Send a Message to julienoor" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=julienoor"></a> <a href="https://gloryverse.id/profile.html&id=julienoor">julienoor</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Bulux" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Bulux"></a> <a href="https://gloryverse.id/profile.html&id=Bulux">Bulux</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Tedong_Naga819" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Tedong_Naga819"></a> <a href="https://gloryverse.id/profile.html&id=Tedong_Naga819">Tedong_Naga819</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 2 hours ago, Send a Message to Dingdong" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Dingdong"></a> <a href="https://gloryverse.id/profile.html&id=Dingdong">Dingdong</a> <a href="https://gloryverse.id/country.html&id=MC"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mc.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 3 hours ago, Send a Message to Pepa" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Pepa"></a> <a href="https://gloryverse.id/profile.html&id=Pepa">Pepa</a> <a href="https://gloryverse.id/country.html&id=ES"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/es.png"></a>
-						</div>
-					
-										<div class="nw">
-							<a data-toggle="tooltip" title="Last Online 5 hours ago, Send a Message to Eagle" class="icon icon-envelope yellow" href="https://gloryverse.id/my_pms.html&to=Eagle"></a> <a href="https://gloryverse.id/profile.html&id=Eagle">Eagle</a> <a href="https://gloryverse.id/country.html&id=PH"><img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ph.png"></a>
-						</div>
-					
-				
-				<a class="small" href="https://gloryverse.id/my_friends.html">View All</a>
-						<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					USA Companies for sale - check my profile and Direct Message to me asking the best price =)				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Mr.Rama">Mr.Rama</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ru.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Cuba needs 5 workers.<br />
-<br />
-Welcome bonus 72g, only TODAY.<br />
-<br />
-All products to 20% OFF				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Only">Only</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sg.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					BANK Owners - I need 1.000 Gold Loan . i am listening/waiting your offers .				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Mr.Rama">Mr.Rama</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ru.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					New General's Castle. Can be placed wherever you like. Send me a private message (PM) right away!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=AlLQaeda">AlLQaeda</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Libya is looking for more workers, and for those who wish to begin their journey as warriors, we serve as a training center. Come and join us! For more information, contact the Prime Minister.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=victorh007">victorh007</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					WTS: Coal mining company in Brazil, production upgrade level 4				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Assasin">Assasin</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/br.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					i sell my companie Attack Weapons  in Indonesia , give me your offer				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=speedtuning">speedtuning</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/gi.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					El Salvador Looking for 5 Active Elite Warriors. Those who own Coffee Shop will be given priority. Many Benefit here. Thx.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=DonCareLeone">DonCareLeone</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+	<!-- MAIN CONTENT CONTAINER -->
+	<div class="container">
+		<div class="companies-wrapper">
+
+			<!-- LEFT SIDEBAR: Dynamic Player Card (Synced with Firebase, zero old data) -->
+			<div class="leftbar">
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
 					</div>
 				</div>
 
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
-			</form>
-		
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
 
-		
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
 
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
 
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
+				<!-- Currency Balances -->
+				<div class="well well-sm" style="margin: 12px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.000</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
 
+				<!-- Sidebar Quick Navigation -->
+				<ul class="list-group" style="margin-bottom: 14px;">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-arrow-left" style="margin-right: 6px;"></i> Kembali ke Dashboard</a></li>
+					<li class="list-group-item"><a href="/my_companies.html"><i class="fa-solid fa-building" style="margin-right: 6px; color: var(--accent);"></i> Perusahaan Saya</a></li>
+					<li class="list-group-item" style="background: var(--accent); border-color: var(--accent);"><a href="/company_create.html" style="color: #ffffff;"><i class="fa-solid fa-plus-circle" style="margin-right: 6px;"></i> Buat Perusahaan Baru</a></li>
+					<li class="list-group-item"><a href="/workplaces.html"><i class="fa-solid fa-briefcase" style="margin-right: 6px;"></i> Lowongan Tempat Kerja</a></li>
+					<li class="list-group-item"><a href="/marketplace.html"><i class="fa-solid fa-store" style="margin-right: 6px;"></i> Pasar Lokal &amp; Global</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Inventaris Barang</a></li>
+				</ul>
 
-			</div><!-- end .contents -->
-			<div class="footer">
+				<div style="display: flex; gap: 6px; margin-bottom: 12px;">
+					<a class="btn btn-success btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-download"></i> Top Up</a>
+					<a class="btn btn-default btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-chart-line"></i> Finansial</a>
+				</div>
+
+				<div id="auth-prompt-sidebar" style="margin-top: 10px;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: Company Creation Catalog & Configurator -->
+			<div class="main">
+
+				<!-- Page Header -->
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+					<div>
+						<h4 style="margin: 0 0 4px;">
+							<i class="fa-solid fa-industry" style="color: var(--accent); margin-right: 8px;"></i>
+							Dirikan Perusahaan Baru (Create Company)
+						</h4>
+						<p class="small" style="color: #64748b; margin: 0;">
+							Pilih jenis usaha dengan ilustrasi bangunan isometrik, tentukan wilayah &amp; upah pekerja, lalu daftarkan perusahaan Anda ke negara <b id="create-country-tag">Indonesia</b>.
+						</p>
+					</div>
+
+					<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+						<a href="/my_companies.html" class="btn btn-default btn-sm">
+							<i class="fa-solid fa-building"></i> Perusahaan Saya
+						</a>
+						<a href="/documentation.html" class="btn btn-default btn-sm">
+							<i class="fa-solid fa-book"></i> Panduan
+						</a>
+					</div>
+				</div>
+
+				<!-- Summary Strip -->
+				<div class="summary-strip">
+					<div class="summary-box">
+						<div class="lbl">Perusahaan Dimiliki</div>
+						<div class="num" id="summary-owned-count">0</div>
+						<div class="lbl">Unit Terdaftar</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Saldo Euro Anda</div>
+						<div class="num" id="summary-euro-bal" style="color: var(--accent);">0.00</div>
+						<div class="lbl">Biaya Pendirian</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Saldo Gold Anda</div>
+						<div class="num" id="summary-gold-bal" style="color: var(--gold-dark);">0.00</div>
+						<div class="lbl">Modal Upah Kerja</div>
+					</div>
+					<div class="summary-box">
+						<div class="lbl">Utilitas Gratis</div>
+						<div class="num" id="summary-free-slots" style="color: var(--green);">2 / 2</div>
+						<div class="lbl">Solar &amp; Water Well</div>
+					</div>
+				</div>
+
+				<!-- Inline Feedback Banner -->
+				<div id="create-feedback-banner" class="alert alert-info" style="display: none; margin-bottom: 14px;"></div>
+
+				<!-- Selected Company Configurator Panel -->
+				<div class="builder-panel" id="selected-company-panel">
+					<div class="builder-grid">
+						<div class="iso-preview-stage">
+							<img id="preview-iso-img" src="/img/companies/solar-panel-farm.svg" alt="Solar Panel Farm Isometrik">
+							<div style="font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 14px; color: var(--text-dark);" id="preview-company-type">Solar Panel Farm</div>
+							<div class="small" id="preview-company-cat" style="margin-bottom: 6px;">Utilitas &bull; Energi Dasar</div>
+							<span class="label label-success" id="preview-cost-badge">GRATIS (0.00 Euro)</span>
+						</div>
+
+						<div>
+							<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 6px;">
+								<h5 style="margin: 0; border: 0; padding: 0;">Konfigurasi Pendirian Perusahaan</h5>
+								<span class="small" id="preview-license-info" style="color: var(--accent); font-weight: 600;">Lisensi Awal: 500 kali pakai &bull; Gudang: 400 Unit</span>
+							</div>
+							<p id="preview-company-desc" style="font-size: 12.5px; color: var(--text); margin: 0 0 8px;">
+								Menghasilkan Listrik otomatis sebagai fondasi seluruh rantai produksi perusahaan di Glory Verse. Gratis untuk pendirian pertama.
+							</p>
+
+							<div class="recipe-pills" id="preview-recipe-pills">
+								<span class="recipe-pill"><i class="fa-solid fa-bolt yellow"></i> Output: Electricity</span>
+								<span class="recipe-pill"><i class="fa-solid fa-box"></i> Bahan: Tanpa Input (Otonom)</span>
+								<span class="recipe-pill"><i class="fa-solid fa-award blue"></i> Skill: Extraction</span>
+							</div>
+
+							<form id="form-create-company">
+								<div class="builder-form-grid">
+									<div>
+										<label for="input-company-name">Nama Perusahaan</label>
+										<input type="text" id="input-company-name" class="form-control" maxlength="50" placeholder="Contoh: Nusantara Solar Energy" required>
+									</div>
+									<div>
+										<label for="input-company-region">Wilayah / Region</label>
+										<input type="text" id="input-company-region" class="form-control" maxlength="80" value="Jakarta" required>
+									</div>
+									<div>
+										<label for="input-company-wage">Upah Pekerja / Jam (Gold)</label>
+										<input type="number" id="input-company-wage" class="form-control" value="10.0" min="1" max="500" step="0.5" required>
+									</div>
+								</div>
+
+								<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--border-light); padding-top: 12px;">
+									<label style="font-size: 12px; color: var(--text); display: inline-flex; align-items: center; gap: 6px; cursor: pointer; margin: 0;">
+										<input type="checkbox" id="input-post-job" checked>
+										<span>Otomatis buka 1 lowongan kerja di halaman <b>Workplaces</b></span>
+									</label>
+
+									<button type="submit" id="btn-create-company" class="btn btn-warning-bvl">
+										<i class="fa-solid fa-hammer"></i> Dirikan Perusahaan (<span id="btn-cost-label">Gratis</span>)
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+
+				<!-- Category Filter & Search -->
+				<div class="company-filter-bar">
+					<div class="filter-pills" id="catalog-filter-pills">
+						<button type="button" class="filter-btn active" data-cat="all">Semua Tipe (<span id="cnt-all">0</span>)</button>
+						<button type="button" class="filter-btn" data-cat="utilities">Utilitas Gratis (<span id="cnt-utilities">0</span>)</button>
+						<button type="button" class="filter-btn" data-cat="gathering">Pertanian &amp; Tambang (<span id="cnt-gathering">0</span>)</button>
+						<button type="button" class="filter-btn" data-cat="services">Industri &amp; Pengolahan (<span id="cnt-services">0</span>)</button>
+						<button type="button" class="filter-btn" data-cat="engineering">Teknik, Militer &amp; Sipil (<span id="cnt-engineering">0</span>)</button>
+					</div>
+
+					<div style="min-width: 200px;">
+						<input type="text" id="catalog-search-input" class="form-control" placeholder="Cari jenis perusahaan / produk...">
+					</div>
+				</div>
+
+				<!-- Isometric SVG Company Catalog Grid -->
+				<div id="company-catalog-grid" class="catalog-grid">
+					<!-- Rendered by JS using local /img/companies/*.svg isometric assets -->
+				</div>
+
+			</div><!-- end .main -->
+
+		</div><!-- end .companies-wrapper -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- FOOTER (Matches dashboard.html) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(7) 0.007s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi.<br>
+					<a href="/dashboard.html">Dashboard</a> &bull;
+					<a href="/my_companies.html">My Companies</a> &bull;
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> | <a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using MyProfitLand, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- CLIENT-SIDE SCRIPT: London Clock & Manual Refresh -->
+<script>
+(function () {
+	'use strict';
 
-			
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+	function updateLondonClock() {
+		try {
+			var now = new Date();
+			var londonFormatter = new Intl.DateTimeFormat('en-GB', {
+				timeZone: 'Europe/London',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+				hour12: false
+			});
+			var clockEl = document.getElementById('server_time');
+			if (clockEl) clockEl.textContent = londonFormatter.format(now);
+		} catch (e) {
+			var d = new Date();
+			var pad = function (n) { return n < 10 ? '0' + n : n; };
+			var clockEl = document.getElementById('server_time');
+			if (clockEl) clockEl.textContent = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+		}
+	}
+
+	function initClockAndRefresh() {
+		updateLondonClock();
+		setInterval(updateLondonClock, 1000);
+
+		var refreshBtn = document.getElementById('btn-manual-refresh');
+		if (refreshBtn) {
+			refreshBtn.addEventListener('click', function () {
+				window.location.reload();
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initClockAndRefresh);
+	} else {
+		initClockAndRefresh();
+	}
+})();
+</script>
+
+<!-- FIREBASE REFRESH-BASED COMPANY CREATE MODULE -->
+<script type="module">
+const firebaseConfig = {
+	projectId: "gen-lang-client-0514427323",
+	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+	apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+	authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+	firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+	storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+	messagingSenderId: "16121083015",
+	measurementId: "",
+	oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+	recaptchaSiteKey: ""
+};
+
+const OperationType = {
+	CREATE: 'create',
+	UPDATE: 'update',
+	DELETE: 'delete',
+	LIST: 'list',
+	GET: 'get',
+	WRITE: 'write'
+};
+
+const FIREBASE_CDN_BASE = 'https://www.gstatic.com/firebasejs/10.13.2';
+
+// Company Catalog using local isometric SVG assets in /img/companies/ (never uploaded to Firebase)
+const COMPANY_CATALOG = [
+	// 1. Utilities
+	{
+		id: 'solar_panel_farm',
+		name: 'Solar Panel Farm',
+		category: 'utilities',
+		categoryLabel: 'Utilitas',
+		dbCategory: 'utilities',
+		jobSkill: 'extraction',
+		costEuro: 0,
+		freeFirstTime: true,
+		output: 'Electricity',
+		input: 'Otonom (Tanpa Bahan)',
+		storage: 400,
+		license: '500 kali pakai',
+		svg: '/img/companies/solar-panel-farm.svg',
+		desc: 'Pembangkit listrik tenaga surya otonom yang memproduksi Electricity untuk kebutuhan semua pabrik Anda. Gratis untuk pendirian pertama.'
+	},
+	{
+		id: 'water_well_drilling',
+		name: 'Water Well Drilling',
+		category: 'utilities',
+		categoryLabel: 'Utilitas',
+		dbCategory: 'utilities',
+		jobSkill: 'extraction',
+		costEuro: 0,
+		freeFirstTime: true,
+		output: 'Water',
+		input: 'Otonom (Tanpa Bahan)',
+		storage: 400,
+		license: '500 kali pakai',
+		svg: '/img/companies/water-well-drilling.svg',
+		desc: 'Menara pengeboran sumur air bersih otomatis untuk menyuplai Water ke pertanian dan industri. Gratis untuk pendirian pertama.'
+	},
+
+	// 2. Gathering & Extraction
+	{
+		id: 'cereal_farm',
+		name: 'Cereal Farm',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'gathering',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Wheat & Corn',
+		input: 'Electricity 0.2, Water 0.2',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/cereal-farm.svg',
+		desc: 'Lahan pertanian gandum dan jagung sebagai bahan baku utama tepung di Mill serta pakan ternak.'
+	},
+	{
+		id: 'coffee_plantation',
+		name: 'Coffee Plantation',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'gathering',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Coffee Beans',
+		input: 'Electricity 0.2, Water 0.3',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/plantation-wood.svg',
+		desc: 'Perkebunan biji kopi berkualitas tinggi untuk suplai kedai kopi dan pemulih energi pemain.'
+	},
+	{
+		id: 'cotton_plantation',
+		name: 'Cotton Plantation',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'gathering',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Cotton',
+		input: 'Electricity 0.2, Water 0.3',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/plantation-wood.svg',
+		desc: 'Perkebunan kapas untuk bahan baku kertas kapas dan industri tekstil / pakaian.'
+	},
+	{
+		id: 'vineyard',
+		name: 'Vineyard',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'gathering',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Grapes',
+		input: 'Electricity 0.2, Water 0.3',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/plantation-wood.svg',
+		desc: 'Kebun anggur untuk bahan baku Winery dan komoditas pangan bernilai ekonomi tinggi.'
+	},
+	{
+		id: 'wood_cutter',
+		name: 'Wood Cutter',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'gathering',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Wood',
+		input: 'Electricity 0.2, Water 0.1',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/plantation-wood.svg',
+		desc: 'Pengolahan hasil hutan kayu untuk bahan konstruksi rumah, pabrik kertas, dan peleburan.'
+	},
+	{
+		id: 'coal_mine',
+		name: 'Coal Mine',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'extraction',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Coal',
+		input: 'Electricity 0.4, Water 0.2',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/mine-extraction.svg',
+		desc: 'Tambang batu bara untuk bahan bakar peleburan logam di Foundry dan kebutuhan energi industri.'
+	},
+	{
+		id: 'iron_mine',
+		name: 'Iron Mine',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'extraction',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Iron Ore',
+		input: 'Electricity 0.4, Water 0.2',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/mine-extraction.svg',
+		desc: 'Tambang bijih besi sebagai bahan utama produksi baja, suku cadang, dan persenjataan militer.'
+	},
+	{
+		id: 'stone_quarry',
+		name: 'Stone Quarry',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'extraction',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Stone & Sand',
+		input: 'Electricity 0.3, Water 0.2',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/mine-extraction.svg',
+		desc: 'Penambangan batu bangunan dan pasir silika untuk konstruksi properti serta pabrik kaca.'
+	},
+	{
+		id: 'oil_extraction',
+		name: 'Oil Extraction',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'extraction',
+		costEuro: 35,
+		freeFirstTime: false,
+		output: 'Crude Oil',
+		input: 'Electricity 0.5, Water 0.3',
+		storage: 300,
+		license: '1000 kali pakai',
+		svg: '/img/companies/oil-refinery.svg',
+		desc: 'Sumur pompa minyak mentah untuk memasok kilang bahan bakar (Refinery) dan pabrik plastik.'
+	},
+	{
+		id: 'uranium_mine',
+		name: 'Uranium Mine',
+		category: 'gathering',
+		categoryLabel: 'Pertanian & Tambang',
+		dbCategory: 'gathering',
+		jobSkill: 'extraction',
+		costEuro: 50,
+		freeFirstTime: false,
+		output: 'Uranium Ore',
+		input: 'Electricity 0.8, Water 0.5',
+		storage: 150,
+		license: '500 kali pakai',
+		svg: '/img/companies/mine-extraction.svg',
+		desc: 'Tambang material strategis langka untuk laboratorium berteknologi tinggi dan persenjataan berat.'
+	},
+
+	// 3. Services & Hand Working
+	{
+		id: 'mill',
+		name: 'Mill',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Wheat Flour',
+		input: 'Wheat 1.0, Elec 0.2, Water 0.1',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/bakery-food.svg',
+		desc: 'Menggiling gandum dari Cereal Farm menjadi tepung terigu siap olah untuk Bakery.'
+	},
+	{
+		id: 'bakery',
+		name: 'Bakery',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Bread & Meals',
+		input: 'Flour 0.8, Elec 0.3, Water 0.2',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/bakery-food.svg',
+		desc: 'Memproduksi roti dan bahan makanan pokok pemulih energi pemain yang selalu laris di pasar.'
+	},
+	{
+		id: 'cow_farm',
+		name: 'Cow Farm',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Milk & Dairy',
+		input: 'Corn 0.6, Water 0.4, Elec 0.2',
+		storage: 300,
+		license: '1000 kali pakai',
+		svg: '/img/companies/cow-farm.svg',
+		desc: 'Peternakan sapi perah penghasil susu segar untuk energi maupun bahan baku keju.'
+	},
+	{
+		id: 'foundry',
+		name: 'Foundry',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Iron & Steel Bars',
+		input: 'Iron Ore 1.0, Coal 0.5, Elec 0.5',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/foundry-factory.svg',
+		desc: 'Pabrik peleburan logam yang mengubah bijih besi dan batu bara menjadi batangan baja industri.'
+	},
+	{
+		id: 'glass_factory',
+		name: 'Glass Factory',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Glass & Windows',
+		input: 'Sand 1.0, Elec 0.4, Water 0.2',
+		storage: 200,
+		license: '1000 kali pakai',
+		svg: '/img/companies/foundry-factory.svg',
+		desc: 'Mengolah pasir silika menjadi lembaran kaca dan jendela untuk sektor konstruksi dan otomotif.'
+	},
+	{
+		id: 'paper_mill',
+		name: 'Paper Mill',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 30,
+		freeFirstTime: false,
+		output: 'Paper & Cotton Paper',
+		input: 'Wood 1.0 / Cotton 0.5, Water 0.4',
+		storage: 250,
+		license: '1000 kali pakai',
+		svg: '/img/companies/foundry-factory.svg',
+		desc: 'Memproduksi kertas untuk penerbitan koran, formulir resmi Notaris, dan buku akademi.'
+	},
+	{
+		id: 'refinery',
+		name: 'Refinery',
+		category: 'services',
+		categoryLabel: 'Industri & Pengolahan',
+		dbCategory: 'services',
+		jobSkill: 'hand_working',
+		costEuro: 35,
+		freeFirstTime: false,
+		output: 'Diesel & Kerosene',
+		input: 'Crude Oil 1.0, Elec 0.5, Water 0.3',
+		storage: 300,
+		license: '1000 kali pakai',
+		svg: '/img/companies/oil-refinery.svg',
+		desc: 'Kilang penyulingan minyak mentah menjadi bahan bakar Diesel dan Kerosene untuk perjalanan.'
+	},
+
+	// 4. Engineering, Military & Civic
+	{
+		id: 'parts_factory',
+		name: 'Parts Factory',
+		category: 'engineering',
+		categoryLabel: 'Teknik, Militer & Sipil',
+		dbCategory: 'services',
+		jobSkill: 'engineering',
+		costEuro: 40,
+		freeFirstTime: false,
+		output: 'Mechanical Parts',
+		input: 'Steel 1.0, Elec 0.6, Water 0.2',
+		storage: 200,
+		license: '800 kali pakai',
+		svg: '/img/companies/engineering-lab.svg',
+		desc: 'Memproduksi komponen mekanis presisi untuk kendaraan, pesawat tempur, dan pabrik lanjutan.'
+	},
+	{
+		id: 'laboratory',
+		name: 'Laboratory',
+		category: 'engineering',
+		categoryLabel: 'Teknik, Militer & Sipil',
+		dbCategory: 'services',
+		jobSkill: 'engineering',
+		costEuro: 40,
+		freeFirstTime: false,
+		output: 'Chemicals & Alloys',
+		input: 'Minerals 0.8, Elec 0.7, Water 0.4',
+		storage: 150,
+		license: '600 kali pakai',
+		svg: '/img/companies/engineering-lab.svg',
+		desc: 'Fasilitas riset kimia & material berteknologi tinggi untuk industri pertahanan modern.'
+	},
+	{
+		id: 'military_factory',
+		name: 'Military Factory',
+		category: 'engineering',
+		categoryLabel: 'Teknik, Militer & Sipil',
+		dbCategory: 'services',
+		jobSkill: 'engineering',
+		costEuro: 50,
+		freeFirstTime: false,
+		output: 'Weapons & Heavy Tanks',
+		input: 'Steel 2.0, Parts 1.5, Elec 1.0',
+		storage: 120,
+		license: '500 kali pakai',
+		svg: '/img/companies/military-weapons.svg',
+		desc: 'Pabrik alutsista strategis penghasil senjata infanteri, tank tempur, dan perlengkapan perang.'
+	},
+	{
+		id: 'vehicles_factory',
+		name: 'Vehicles Factory',
+		category: 'engineering',
+		categoryLabel: 'Teknik, Militer & Sipil',
+		dbCategory: 'services',
+		jobSkill: 'engineering',
+		costEuro: 50,
+		freeFirstTime: false,
+		output: 'Cars & Private Jets',
+		input: 'Steel 1.5, Glass 0.5, Parts 1.0',
+		storage: 100,
+		license: '400 kali pakai',
+		svg: '/img/companies/military-weapons.svg',
+		desc: 'Merakit kendaraan darat dan pesawat pribadi untuk transportasi cepat lintas negara.'
+	},
+	{
+		id: 'knowledge_academy',
+		name: 'Knowledge Academy',
+		category: 'engineering',
+		categoryLabel: 'Teknik, Militer & Sipil',
+		dbCategory: 'services',
+		jobSkill: 'writing_aesthetics',
+		costEuro: 35,
+		freeFirstTime: false,
+		output: 'Economic Books & Forms',
+		input: 'Paper 1.0, Ink 0.5, Elec 0.4',
+		storage: 150,
+		license: '600 kali pakai',
+		svg: '/img/companies/civic-academy.svg',
+		desc: 'Menerbitkan buku pelatihan untuk menaikkan Economic Score pemain serta dokumen tata usaha.'
+	}
+];
+
+let fbAppMod = null;
+let fbAuthMod = null;
+let fbFirestoreMod = null;
+let app = null;
+let auth = null;
+let db = null;
+
+let currentUser = null;
+let currentUserProfile = null;
+let ownedCompanies = [];
+let selectedTemplate = COMPANY_CATALOG[0];
+let activeCategory = 'all';
+let searchKeyword = '';
+
+// ============================================================
+// HELPERS
+// ============================================================
+function escapeHtml(str) {
+	if (str === null || str === undefined) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function showFeedback(type, htmlMsg) {
+	const banner = document.getElementById('create-feedback-banner');
+	if (!banner) return;
+	banner.className = `alert alert-${type}`;
+	banner.innerHTML = htmlMsg;
+	banner.style.display = 'block';
+	window.scrollTo({ top: Math.max(0, banner.offsetTop - 20), behavior: 'smooth' });
+}
+
+function handleFirestoreError(error, operationType, path) {
+	const user = auth && auth.currentUser ? auth.currentUser : null;
+	const errInfo = {
+		error: error instanceof Error ? error.message : String(error),
+		authInfo: {
+			userId: user ? user.uid : null,
+			email: user ? user.email : null,
+			emailVerified: user ? user.emailVerified : null
+		},
+		operationType,
+		path
+	};
+	console.warn('Firestore Warning:', JSON.stringify(errInfo));
+}
+
+function getEffectiveCostEuro(template) {
+	if (!template) return 30;
+	if (!template.freeFirstTime) return Number(template.costEuro || 30);
+	const alreadyOwnsType = ownedCompanies.some((c) => (c.type || '').toLowerCase() === template.name.toLowerCase());
+	return alreadyOwnsType ? 20 : 0;
+}
+
+// ============================================================
+// PROFILE & SUMMARY RENDERING
+// ============================================================
+function renderPlayerProfile(p, user) {
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+
+	setTxt('player-username', p.username || 'Pemain');
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const cName = p.country_name || 'Indonesia';
+	const rName = p.region_name || p.region || 'Jakarta';
+	setTxt('player-country', cName);
+	setTxt('player-region', rName);
+	setTxt('create-country-tag', cName);
+
+	const regionInput = document.getElementById('input-company-region');
+	if (regionInput && (!regionInput.dataset.edited)) {
+		regionInput.value = rName;
+	}
+
+	const energy = Math.round(Number(p.energy !== undefined ? p.energy : 100));
+	const health = Math.round(Number(p.health !== undefined ? p.health : 100));
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	setTxt('stat-energy-val', `${energy}%`);
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyBar) energyBar.style.width = `${Math.min(100, Math.max(0, energy))}%`;
+
+	setTxt('stat-health-val', `${health}%`);
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthBar) healthBar.style.width = `${Math.min(100, Math.max(0, health))}%`;
+
+	setTxt('stat-level-val', `Level ${level} (${xp} XP)`);
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (xpBar) xpBar.style.width = `${Math.min(100, (xp % 100))}%`;
+
+	const euroNum = Number(p.euro || 0);
+	const goldNum = Number(p.gold !== undefined ? p.gold : 0);
+	setTxt('stat-svct', Number(p.svct || 0).toFixed(3));
+	setTxt('stat-euro', euroNum.toFixed(2));
+	setTxt('stat-gold', goldNum.toFixed(2));
+	setTxt('stat-currency', Number(p.currency || 0).toFixed(2));
+
+	setTxt('summary-euro-bal', euroNum.toFixed(2));
+	setTxt('summary-gold-bal', goldNum.toFixed(2));
+
+	setTxt('player-income-badge', `Income (${p.income || 0})`);
+	setTxt('player-alerts-badge', `Alerts (${p.alerts || 0})`);
+	setTxt('player-messages-badge', `Messages (${p.messages || 0})`);
+}
+
+function renderGuestState() {
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('player-username', 'Tamu (Belum Login)');
+	setTxt('player-country', 'Indonesia');
+	setTxt('player-region', 'Jakarta');
+	setTxt('stat-svct', '0.000');
+	setTxt('stat-euro', '0.00');
+	setTxt('stat-gold', '0.00');
+	setTxt('stat-currency', '0.00');
+	setTxt('summary-owned-count', '0');
+	setTxt('summary-euro-bal', '0.00');
+	setTxt('summary-gold-bal', '0.00');
+	setTxt('summary-free-slots', '2 / 2');
+}
+
+function updateOwnedSummary() {
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('summary-owned-count', ownedCompanies.length);
+
+	const hasSolar = ownedCompanies.some((c) => (c.type || '').toLowerCase() === 'solar panel farm');
+	const hasWater = ownedCompanies.some((c) => (c.type || '').toLowerCase() === 'water well drilling');
+	const freeLeft = (hasSolar ? 0 : 1) + (hasWater ? 0 : 1);
+	setTxt('summary-free-slots', `${freeLeft} / 2`);
+}
+
+// ============================================================
+// CONFIGURATOR & ISOMETRIC CATALOG RENDERING
+// ============================================================
+function updateSelectedPanel(template, scrollToPanel = false) {
+	selectedTemplate = template;
+	const cost = getEffectiveCostEuro(template);
+
+	const imgEl = document.getElementById('preview-iso-img');
+	if (imgEl) {
+		imgEl.src = template.svg;
+		imgEl.alt = `${template.name} Isometric`;
+	}
+
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('preview-company-type', template.name);
+	setTxt('preview-company-cat', `${template.categoryLabel} • Output: ${template.output}`);
+	setTxt('preview-company-desc', template.desc);
+	setTxt('preview-license-info', `Lisensi Awal: ${template.license} • Gudang: ${template.storage} Unit`);
+
+	const costBadge = document.getElementById('preview-cost-badge');
+	if (costBadge) {
+		costBadge.className = cost === 0 ? 'label label-success' : 'label label-warning';
+		costBadge.textContent = cost === 0 ? 'GRATIS (0.00 Euro)' : `Biaya: ${cost.toFixed(2)} Euro`;
+	}
+	setTxt('btn-cost-label', cost === 0 ? 'Gratis' : `${cost.toFixed(2)} Euro`);
+
+	const pillsEl = document.getElementById('preview-recipe-pills');
+	if (pillsEl) {
+		pillsEl.innerHTML = `
+			<span class="recipe-pill"><i class="fa-solid fa-box-open green"></i> Output: ${escapeHtml(template.output)}</span>
+			<span class="recipe-pill"><i class="fa-solid fa-gears blue"></i> Bahan: ${escapeHtml(template.input)}</span>
+			<span class="recipe-pill"><i class="fa-solid fa-graduation-cap yellow"></i> Skill: ${escapeHtml(template.jobSkill)}</span>
+		`;
+	}
+
+	const nameInput = document.getElementById('input-company-name');
+	if (nameInput && !nameInput.dataset.userTyped) {
+		const prefix = currentUserProfile && currentUserProfile.username ? currentUserProfile.username : 'Nusantara';
+		nameInput.value = `${prefix} ${template.name}`.slice(0, 50);
+	}
+
+	document.querySelectorAll('.catalog-card').forEach((card) => {
+		card.classList.toggle('selected', card.getAttribute('data-tpl-id') === template.id);
+	});
+
+	if (scrollToPanel) {
+		const panel = document.getElementById('selected-company-panel');
+		if (panel) {
+			window.scrollTo({ top: Math.max(0, panel.offsetTop - 70), behavior: 'smooth' });
+		}
+	}
+}
+
+function updateCategoryCounts() {
+	const setTxt = (id, val) => {
+		const el = document.getElementById(id);
+		if (el) el.textContent = val;
+	};
+	setTxt('cnt-all', COMPANY_CATALOG.length);
+	setTxt('cnt-utilities', COMPANY_CATALOG.filter((c) => c.category === 'utilities').length);
+	setTxt('cnt-gathering', COMPANY_CATALOG.filter((c) => c.category === 'gathering').length);
+	setTxt('cnt-services', COMPANY_CATALOG.filter((c) => c.category === 'services').length);
+	setTxt('cnt-engineering', COMPANY_CATALOG.filter((c) => c.category === 'engineering').length);
+}
+
+function renderCompanyCatalog() {
+	const grid = document.getElementById('company-catalog-grid');
+	if (!grid) return;
+
+	let items = COMPANY_CATALOG;
+	if (activeCategory !== 'all') {
+		items = items.filter((c) => c.category === activeCategory);
+	}
+	if (searchKeyword) {
+		const kw = searchKeyword.toLowerCase();
+		items = items.filter((c) =>
+			c.name.toLowerCase().includes(kw) ||
+			c.output.toLowerCase().includes(kw) ||
+			c.desc.toLowerCase().includes(kw)
+		);
+	}
+
+	if (items.length === 0) {
+		grid.innerHTML = `
+			<div class="well well-sm text-center" style="grid-column: 1 / -1; padding: 30px; background: #ffffff;">
+				<i class="fa-solid fa-magnifying-glass" style="font-size: 24px; color: var(--muted); margin-bottom: 8px;"></i>
+				<div style="font-weight: 700; color: var(--text-dark);">Tidak ada jenis perusahaan yang cocok</div>
+				<div class="small">Coba kata kunci atau kategori lain.</div>
+			</div>
+		`;
+		return;
+	}
+
+	let html = '';
+	items.forEach((c) => {
+		const cost = getEffectiveCostEuro(c);
+		const isSelected = selectedTemplate && selectedTemplate.id === c.id;
+		html += `
+			<div class="catalog-card${isSelected ? ' selected' : ''}" data-tpl-id="${escapeHtml(c.id)}">
+				<div>
+					<div class="catalog-iso-wrap">
+						<span class="cat-badge">${escapeHtml(c.categoryLabel)}</span>
+						<span class="cost-badge ${cost === 0 ? 'free' : 'paid'}">${cost === 0 ? 'GRATIS' : cost + ' Euro'}</span>
+						<img src="${escapeHtml(c.svg)}" alt="${escapeHtml(c.name)} Isometric">
+					</div>
+
+					<div class="catalog-title">${escapeHtml(c.name)}</div>
+					<div class="catalog-desc">${escapeHtml(c.desc)}</div>
+
+					<div class="catalog-specs">
+						<div class="catalog-spec-row">
+							<span class="text-muted">Produksi:</span>
+							<b style="color: var(--accent);">${escapeHtml(c.output)}</b>
+						</div>
+						<div class="catalog-spec-row">
+							<span class="text-muted">Gudang:</span>
+							<b>${c.storage} Unit</b>
+						</div>
+						<div class="catalog-spec-row">
+							<span class="text-muted">Lisensi:</span>
+							<b>${escapeHtml(c.license)}</b>
+						</div>
+					</div>
+				</div>
+
+				<button type="button" class="btn ${isSelected ? 'btn-primary' : 'btn-default'} btn-sm btn-block btn-select-tpl" data-tpl-id="${escapeHtml(c.id)}">
+					<i class="fa-solid ${isSelected ? 'fa-check' : 'fa-arrow-up'}"></i>
+					${isSelected ? 'Sedang Dipilih' : 'Pilih Bangunan Ini'}
+				</button>
+			</div>
+		`;
+	});
+
+	grid.innerHTML = html;
+
+	grid.querySelectorAll('.catalog-card').forEach((card) => {
+		card.addEventListener('click', () => {
+			const id = card.getAttribute('data-tpl-id');
+			const tpl = COMPANY_CATALOG.find((x) => x.id === id);
+			if (tpl) {
+				updateSelectedPanel(tpl, true);
+				renderCompanyCatalog();
+			}
+		});
+	});
+}
+
+// ============================================================
+// FIRESTORE LOADERS & CREATE HANDLER
+// ============================================================
+async function testConnection() {
+	if (!db || !fbFirestoreMod) return;
+	const { doc, getDocFromServer } = fbFirestoreMod;
+	try {
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (error) {
+		if (error instanceof Error && error.message.includes('the client is offline')) {
+			console.warn('Firebase client is offline. Periksa koneksi atau konfigurasi Firebase.');
+		}
+	}
+}
+
+async function loadOwnedCompanies(uid) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, query, where, getDocs } = fbFirestoreMod;
+	try {
+		const q = query(collection(db, 'companies'), where('owner_uid', '==', uid));
+		const snap = await getDocs(q);
+		ownedCompanies = [];
+		snap.forEach((d) => {
+			ownedCompanies.push({ id: d.id, ...d.data() });
+		});
+		updateOwnedSummary();
+		updateSelectedPanel(selectedTemplate, false);
+		renderCompanyCatalog();
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'companies');
+		ownedCompanies = [];
+	}
+}
+
+async function handleCreateCompanySubmit(e) {
+	e.preventDefault();
+	if (!currentUser || !currentUserProfile || !db || !fbFirestoreMod) {
+		showFeedback('warning', '<i class="fa-solid fa-right-to-bracket"></i> Silakan <a href="/authys.html">masuk ke akun Anda</a> terlebih dahulu untuk mendirikan perusahaan.');
+		return;
+	}
+
+	const nameInput = document.getElementById('input-company-name');
+	const regionInput = document.getElementById('input-company-region');
+	const wageInput = document.getElementById('input-company-wage');
+	const postJobChk = document.getElementById('input-post-job');
+	const submitBtn = document.getElementById('btn-create-company');
+
+	const compName = (nameInput ? nameInput.value : '').trim().slice(0, 50);
+	const region = (regionInput ? regionInput.value : '').trim().slice(0, 80) || (currentUserProfile.region_name || 'Jakarta');
+	const wage = Number(parseFloat(wageInput ? wageInput.value : '10') || 10);
+	const costEuro = getEffectiveCostEuro(selectedTemplate);
+
+	if (!compName) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Nama perusahaan wajib diisi.');
+		return;
+	}
+	if (wage < 1) {
+		showFeedback('danger', '<i class="fa-solid fa-triangle-exclamation"></i> Upah pekerja minimal 1.0 Gold.');
+		return;
+	}
+
+	const currentEuro = Number(currentUserProfile.euro || 0);
+	if (costEuro > 0 && currentEuro < costEuro) {
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-wallet"></i> Saldo <b>Euro</b> tidak mencukupi untuk mendirikan <b>${escapeHtml(selectedTemplate.name)}</b> (butuh ${costEuro.toFixed(2)} Euro, saldo Anda ${currentEuro.toFixed(2)} Euro). Anda bisa mencoba <a href="/financial.html">Pasar Finansial</a> atau mendirikan <b>Solar Panel Farm / Water Well Drilling (GRATIS)</b> terlebih dahulu.`
+		);
+		return;
+	}
+
+	if (submitBtn) {
+		submitBtn.disabled = true;
+		submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mendirikan Perusahaan...';
+	}
+
+	const { collection, addDoc, doc, updateDoc } = fbFirestoreMod;
+	const nowIso = new Date().toISOString();
+
+	try {
+		if (costEuro > 0) {
+			const newEuro = Number((currentEuro - costEuro).toFixed(2));
+			await updateDoc(doc(db, 'users', currentUser.uid), {
+				euro: newEuro,
+				updated_at: nowIso
+			});
+			currentUserProfile.euro = newEuro;
+		}
+
+		const newCompanyDoc = {
+			name: compName,
+			type: selectedTemplate.name,
+			category: selectedTemplate.dbCategory,
+			cost_euro: costEuro,
+			image_asset: selectedTemplate.svg,
+			output_item: selectedTemplate.output,
+			level: 1,
+			owner_uid: currentUser.uid,
+			owner_name: currentUserProfile.username || currentUser.displayName || 'Pemain',
+			country_code: currentUserProfile.country_code || 'ID',
+			country_name: currentUserProfile.country_name || 'Indonesia',
+			region: region,
+			workplaces: 1,
+			wage: Number(wage.toFixed(2)),
+			funds_gold: 5.0,
+			funds_currency: 100.0,
+			raw_storage: selectedTemplate.storage,
+			product_storage: selectedTemplate.storage * 2,
+			license_status: `Aktif (${selectedTemplate.license})`,
+			production_status: 'Aktif',
+			created_at: nowIso,
+			updated_at: nowIso
+		};
+
+		const createdRef = await addDoc(collection(db, 'companies'), newCompanyDoc);
+		ownedCompanies.unshift({ id: createdRef.id, ...newCompanyDoc });
+
+		if (postJobChk && postJobChk.checked) {
+			await addDoc(collection(db, 'jobs'), {
+				company_id: createdRef.id,
+				company_name: compName,
+				employer_name: currentUserProfile.username || 'Pemain',
+				employer_uid: currentUser.uid,
+				category: selectedTemplate.jobSkill,
+				type: selectedTemplate.name,
+				wage: Number(wage.toFixed(2)),
+				country_code: currentUserProfile.country_code || 'ID',
+				created_at: nowIso
+			});
+		}
+
+		if (nameInput) delete nameInput.dataset.userTyped;
+		renderPlayerProfile(currentUserProfile, currentUser);
+		updateOwnedSummary();
+		updateSelectedPanel(selectedTemplate, false);
+		renderCompanyCatalog();
+
+		showFeedback(
+			'success',
+			`<i class="fa-solid fa-circle-check"></i> <b>Perusahaan Berhasil Didirikan!</b> <b>${escapeHtml(compName)}</b> (${escapeHtml(selectedTemplate.name)}) telah aktif di Firebase. <a href="/my_companies.html" class="btn btn-default btn-sm" style="margin-left: 8px;"><i class="fa-solid fa-building"></i> Kelola di Perusahaan Saya</a>`
+		);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'companies');
+		showFeedback('danger', `<i class="fa-solid fa-triangle-exclamation"></i> Gagal mendirikan perusahaan: ${escapeHtml(err.message)}`);
+	} finally {
+		if (submitBtn) {
+			submitBtn.disabled = false;
+			const updatedCost = getEffectiveCostEuro(selectedTemplate);
+			submitBtn.innerHTML = `<i class="fa-solid fa-hammer"></i> Dirikan Perusahaan (<span id="btn-cost-label">${updatedCost === 0 ? 'Gratis' : updatedCost.toFixed(2) + ' Euro'}</span>)`;
+		}
+	}
+}
+
+function setupUIEvents() {
+	const filterBar = document.getElementById('catalog-filter-pills');
+	if (filterBar) {
+		filterBar.addEventListener('click', (e) => {
+			const btn = e.target.closest('button[data-cat]');
+			if (!btn) return;
+			filterBar.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+			btn.classList.add('active');
+			activeCategory = btn.getAttribute('data-cat') || 'all';
+			renderCompanyCatalog();
+		});
+	}
+
+	const searchInput = document.getElementById('catalog-search-input');
+	if (searchInput) {
+		searchInput.addEventListener('input', (e) => {
+			searchKeyword = e.target.value.trim();
+			renderCompanyCatalog();
+		});
+	}
+
+	const nameInput = document.getElementById('input-company-name');
+	if (nameInput) {
+		nameInput.addEventListener('input', () => {
+			nameInput.dataset.userTyped = '1';
+		});
+	}
+
+	const regionInput = document.getElementById('input-company-region');
+	if (regionInput) {
+		regionInput.addEventListener('input', () => {
+			regionInput.dataset.edited = '1';
+		});
+	}
+
+	const form = document.getElementById('form-create-company');
+	if (form) {
+		form.addEventListener('submit', handleCreateCompanySubmit);
+	}
+}
+
+function setupAuth() {
+	if (!auth || !db || !fbAuthMod || !fbFirestoreMod) return;
+	const { onAuthStateChanged, signOut } = fbAuthMod;
+	const { doc, getDoc, setDoc } = fbFirestoreMod;
+
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					const nowIso = new Date().toISOString();
+					currentUserProfile = {
+						id: user.uid,
+						username: (user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain')).slice(0, 50),
+						email: user.email || '',
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 0,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: nowIso,
+						updated_at: nowIso
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					const btnLogout = document.getElementById('btn-logout');
+					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Masuk: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+
+				renderPlayerProfile(currentUserProfile, user);
+				await loadOwnedCompanies(user.uid);
+			} catch (err) {
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+			}
+		} else {
+			currentUserProfile = null;
+			ownedCompanies = [];
+			renderGuestState();
+			updateSelectedPanel(selectedTemplate, false);
+			renderCompanyCatalog();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk mendirikan perusahaan:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
+	});
+}
+
+async function initCompanyCreate() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		updateCategoryCounts();
+		setupUIEvents();
+		updateSelectedPanel(COMPANY_CATALOG[0], false);
+		renderCompanyCatalog();
+
+		// Sequential Firebase loading: firebase-app first, then firebase-auth & firebase-firestore
+		fbAppMod = await import(`${FIREBASE_CDN_BASE}/firebase-app.js`);
+		const { initializeApp, getApps, getApp } = fbAppMod;
+		app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+		const [authModule, firestoreModule] = await Promise.all([
+			import(`${FIREBASE_CDN_BASE}/firebase-auth.js`),
+			import(`${FIREBASE_CDN_BASE}/firebase-firestore.js`)
+		]);
+		fbAuthMod = authModule;
+		fbFirestoreMod = firestoreModule;
+
+		db = fbFirestoreMod.getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = fbAuthMod.getAuth(app);
+
+		await testConnection();
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
+		}
+
+		setupAuth();
+	} catch (err) {
+		console.warn('Firebase init error in company_create:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+	}
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initCompanyCreate);
+} else {
+	initCompanyCreate();
+}
+</script>
+
 </body>
 </html>

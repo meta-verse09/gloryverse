@@ -1,0 +1,8 @@
+{
+  "name": "Glory Verse",
+  "description": "Online strategy browser game focused on economic simulation, resource management, and warfare.",
+  "permissions": [],
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120">
+  <!-- Farm soil base -->
+  <polygon points="80,28 148,66 80,104 12,66" fill="#e9f2dc" stroke="#c0d6a7" stroke-width="1.5"/>
+  <polygon points="80,104 148,66 148,74 80,112" fill="#9fb880"/>
+  <polygon points="80,104 12,66 12,74 80,112" fill="#b7cc9c"/>
+  <!-- Wheat crop rows (right field) -->
+  <polygon points="78,68 124,42 140,51 94,77" fill="#d4a024" opacity="0.35"/>
+  <path d="M84,66 L124,44 M90,70 L130,48 M96,74 L136,52" stroke="#d69e2e" stroke-width="3" stroke-dasharray="3,3"/>
+  <!-- Barn -->
+  <polygon points="34,58 58,44 82,58 58,72" fill="#b51324"/>
+  <polygon points="34,58 58,72 58,90 34,76" fill="#d63031"/>
+  <polygon points="58,72 82,58 82,76 58,90" fill="#8b111d"/>
+  <!-- Barn pitched roof -->
+  <polygon points="32,58 58,34 84,58 58,72" fill="#c0392b" stroke="#7f1d1d" stroke-width="1"/>
+  <polygon points="58,34 84,58 72,64 58,44" fill="#991b1b"/>
+  <!-- Barn door -->
+  <polygon points="41,70 50,75 50,86 41,81" fill="#f4d06f"/>
+  <!-- Grain Silo -->
+  <ellipse cx="86" cy="40" rx="10" ry="6" fill="#d9e2ec" stroke="#829ab1" stroke-width="1"/>
+  <path d="M76,40 L76,68 A10,6 0 0,0 96,68 L96,40" fill="#bcccdc" stroke="#829ab1" stroke-width="1"/>
+  <path d="M76,40 A10,10 0 0,1 96,40" fill="#e1e8f0" stroke="#829ab1" stroke-width="1"/>
+</svg>
