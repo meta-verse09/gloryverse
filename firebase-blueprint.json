@@ -181,6 +181,24 @@
         "created_at": { "type": "string", "maxLength": 64 }
       },
       "required": ["id", "listing_id", "buyer_id", "seller_id", "item_name", "quantity", "net_amount", "currency_type", "claimed", "created_at"]
+    },
+    "WarHit": {
+      "title": "WarHit",
+      "description": "Public combat hit record submitted by a player on a war battleground",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "war_id": { "type": "string", "maxLength": 128 },
+        "war_region": { "type": "string", "maxLength": 100 },
+        "uid": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "side": { "type": "string", "enum": ["attacker", "defender"] },
+        "weapon_name": { "type": "string", "maxLength": 80 },
+        "damage": { "type": "number" },
+        "created_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "war_id", "war_region", "uid", "username", "country_code", "side", "weapon_name", "damage", "created_at"]
     }
   },
   "firestore": {
@@ -215,6 +233,10 @@
     "/wars/{warId}": {
       "schema": { "$ref": "#/entities/ActiveWar" },
       "description": "Active conflict regions"
+    },
+    "/war_hits/{hitId}": {
+      "schema": { "$ref": "#/entities/WarHit" },
+      "description": "Public combat hit log entries for battlegrounds"
     },
     "/exchange_rates/{rateId}": {
       "schema": { "$ref": "#/entities/ExchangeRate" },

@@ -187,6 +187,21 @@ service cloud.firestore {
              (!('timestamp' in data) || (data.timestamp is string && data.timestamp.size() <= 64));
     }
 
+    function isValidWarHit(data) {
+      return data.keys().hasAll(['id', 'war_id', 'war_region', 'uid', 'username', 'country_code', 'side', 'weapon_name', 'damage', 'created_at']) &&
+             data.keys().hasOnly(['id', 'war_id', 'war_region', 'uid', 'username', 'country_code', 'side', 'weapon_name', 'damage', 'created_at']) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.war_id is string && data.war_id.size() > 0 && data.war_id.size() <= 128 &&
+             data.war_region is string && data.war_region.size() > 0 && data.war_region.size() <= 100 &&
+             data.uid is string && data.uid.size() > 0 && data.uid.size() <= 128 &&
+             data.username is string && data.username.size() > 0 && data.username.size() <= 50 &&
+             data.country_code is string && data.country_code.size() > 0 && data.country_code.size() <= 5 &&
+             data.side in ['attacker', 'defender'] &&
+             data.weapon_name is string && data.weapon_name.size() > 0 && data.weapon_name.size() <= 80 &&
+             data.damage is number && data.damage > 0 && data.damage <= 10000 &&
+             data.created_at is string && data.created_at.size() <= 64;
+    }
+
     // Connection health check document
     match /test/connection {
       allow read: if true;
@@ -275,6 +290,16 @@ service cloud.firestore {
     match /wars/{warId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // War Combat Hits Collection (Public battle log entries without PII)
+    match /war_hits/{hitId} {
+      allow get, list: if true;
+      allow create: if isSignedIn() && isValidId(hitId) && isValidWarHit(incoming()) &&
+                    incoming().id == hitId &&
+                    incoming().uid == request.auth.uid &&
+                    (incoming().war_id == 'training_arena' || exists(/databases/$(database)/documents/wars/$(incoming().war_id)));
+      allow update, delete: if isAdmin();
     }
 
     // Exchange Rates Collection
