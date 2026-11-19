@@ -1,1025 +1,1894 @@
 
-
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en">
 <head>
 	<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Glory Verse - Medan Perang (Battleground)</title>
+	<meta name="description" content="Glory Verse - Medan tempur front perang, statistik dominasi negara, peringkat prajurit, pemilihan senjata, medali, dan log serangan berbasis Firebase.">
+	<meta name="copyright" content="Glory Verse">
 
-<title>Glory Verse - Online Strategy Browser Game</title>
+	<!-- Favicon -->
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/img/touch-icon.png">
 
-<meta name="keywords" content="Economic, Strategy game, simulation game, management games, manager games, war strategy, war games online, free online games multiplayer, business game" />
-<meta name="description" content="" />
-<meta name="copyright" content="Glory Verse" />
-	
-<!-- For Sharing ++ -->
-<meta property="og:title" content="Glory Verse - Online Strategy Browser Game" />
-<meta property="og:description" content="" />
-<meta property="og:type" content="website" />
+	<!-- Google Fonts: Roboto Slab & Roboto (Matches dashboard.html) -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,700|Roboto:400,500,700">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<!-- Core Stylesheets: Matches dashboard.html color palette -->
+	<link rel="stylesheet" href="/dashboard.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!-- Favicon -->
-<link rel="shortcut icon" href="https://gloryverse.id/favicon.ico">
-<link rel="apple-touch-icon" href="https://gloryverse.id/img/touch-icon.png">
+	<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="/js/base.js"></script>
 
-<!-- Core CSS -->
-<link rel="stylesheet" href="https://gloryverse.id/css-game/base.css?2">
-<link rel="stylesheet" href="https://gloryverse.id/css-game/fa6.5.1/css/all.min.css?1">
+	<style>
+		/* ============================================================
+		   3-COLUMN DASHBOARD GRID LAYOUT (MATCHES DASHBOARD.HTML)
+		   ============================================================ */
+		.dashboard-wrapper {
+			display: grid;
+			grid-template-columns: 280px 1fr 320px;
+			gap: 20px;
+			align-items: start;
+			margin-top: 18px;
+		}
 
-<!-- Core JS -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://gloryverse.id/js/base.js"></script>
-<script src="https://gloryverse.id/js/plugins/jquery.form.js"></script>
+		.leftbar,
+		.main,
+		.rightbar {
+			align-self: start !important;
+			float: none !important;
+			width: auto !important;
+			margin: 0 !important;
+		}
 
-<!-- Extra JS -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
-
-<script>
-
-	function ajaxcall(my_url, my_div, my_data){
-		$.ajax({
-			url: my_url,
-			data: my_data,
-			type: 'get',
-			crossDomain: true,
-			headers: {'X-Requested-With': 'XMLHttpRequest'},
-			beforeSend: function() {
-			    $('*').css('cursor', 'progress');
-			},
-			error: function (request, error) {
-		        console.log(arguments);
-		        //alert("Error: " + error);
-		        $('*').css('cursor', '');
-		    },
-			success: function(output){
-				$(my_div).html(output);
-				$('*').css('cursor', '');
+		@media (max-width: 1100px) {
+			.dashboard-wrapper {
+				grid-template-columns: 260px 1fr;
 			}
-		});
-	};
-
-</script>
-
-
-	
-	<script type="text/javascript">
-
-		$( document ).ready(function() {
-			
-						function getTimeRemaining(endtime) {
-			  var t = Date.parse(endtime) - Date.parse(new Date());
-			  var seconds = Math.floor((t / 1000) % 60);
-			  var minutes = Math.floor((t / 1000 / 60) % 60);
-			  var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
-			  var days = Math.floor(t / (1000 * 60 * 60 * 24));
-			  return {
-			    'total': t,
-			    'days': days,
-			    'hours': hours,
-			    'minutes': minutes,
-			    'seconds': seconds
-			  };
+			.rightbar {
+				grid-column: 1 / -1;
 			}
+		}
 
-			function initializeClock(id, endtime) {
-			  var clock = document.getElementById(id);
-			  //var daysSpan = clock.querySelector('.days');
-			  var hoursSpan = clock.querySelector('.hours');
-			  var minutesSpan = clock.querySelector('.minutes');
-			  var secondsSpan = clock.querySelector('.seconds');
-
-			  function updateClock() {
-			    var t = getTimeRemaining(endtime);
-
-			    //daysSpan.innerHTML = t.days;
-			    hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
-			    minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
-			    secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
-
-			    if (t.total <= 0) {
-			      clearInterval(timeinterval);
-			    }
-			  }
-
-			  updateClock();
-			  var timeinterval = setInterval(updateClock, 1000);
+		@media (max-width: 768px) {
+			.dashboard-wrapper {
+				grid-template-columns: 1fr;
 			}
+			.rightbar {
+				grid-column: auto;
+			}
+		}
 
-			var deadline = new Date(1795137134000);
-			initializeClock('clockdiv', deadline);
-			
-		});
+		/* Battleground Specific Cards inside Dashboard Theme */
+		.battle-stage {
+			background: #f8fafc;
+			border: 1px solid #e2e8f0;
+			border-radius: 6px;
+			padding: 14px 16px;
+			margin-bottom: 14px;
+		}
 
-	</script>
-	
-	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+		.battle-teams-row {
+			display: grid;
+			grid-template-columns: 1fr auto 1fr;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 10px;
+		}
 
+		@media (max-width: 600px) {
+			.battle-teams-row {
+				grid-template-columns: 1fr;
+				text-align: center;
+			}
+		}
+
+		.team-box {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.team-box.defender {
+			justify-content: flex-end;
+			text-align: right;
+		}
+
+		@media (max-width: 600px) {
+			.team-box,
+			.team-box.defender {
+				justify-content: center;
+				text-align: center;
+			}
+		}
+
+		.team-name {
+			font-family: 'Roboto Slab', serif;
+			font-size: 15px;
+			font-weight: 700;
+			color: var(--text-dark);
+		}
+
+		.dominance-bar-track {
+			height: 16px;
+			background: #e2e8f0;
+			border-radius: 5px;
+			overflow: hidden;
+			display: flex;
+			border: 1px solid #cbd5e1;
+		}
+
+		.dominance-bar-atk {
+			background: linear-gradient(90deg, #9f1220, #d92638);
+			height: 100%;
+			transition: width 0.35s ease;
+		}
+
+		.dominance-bar-def {
+			background: linear-gradient(90deg, #046583, #1798c1);
+			height: 100%;
+			transition: width 0.35s ease;
+		}
+
+		.combat-console-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 12px;
+			margin-bottom: 12px;
+		}
+
+		@media (max-width: 640px) {
+			.combat-console-grid {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		.side-toggle-group {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 8px;
+		}
+
+		.side-btn {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 2px;
+			padding: 9px 10px;
+			border: 2px solid var(--border);
+			border-radius: 6px;
+			background: #ffffff;
+			color: var(--text-dark);
+			cursor: pointer;
+			text-align: left;
+			transition: all 0.15s ease;
+			font-family: 'Roboto', sans-serif;
+		}
+
+		.side-btn:hover {
+			border-color: #94a3b8;
+			background: #f8fafc;
+		}
+
+		.side-btn.active-atk {
+			border-color: var(--red);
+			background: #fdf2f2;
+		}
+
+		.side-btn.active-def {
+			border-color: var(--accent);
+			background: #eff8fc;
+		}
+
+		.energy-actions-strip {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 8px;
+			margin-bottom: 16px;
+		}
+
+		.empty-state-box {
+			text-align: center;
+			padding: 20px 12px;
+			color: var(--muted);
+			font-size: 12px;
+		}
+
+		.empty-state-box i {
+			font-size: 22px;
+			display: block;
+			margin-bottom: 6px;
+			opacity: 0.55;
+			color: var(--accent);
+		}
+	</style>
 </head>
 
 <body>
+<div class="viewport">
+<div class="page">
+<div class="contents">
 
-	<div class="viewport">
-		<div class="page">
-			
-			<div class="contents">
-				
-	<!-- PRE-HEADER ----------------------------
-	---------------------------------------- -->
-	<!-- For server-wide and account related alerts (non-game alerts) -->
+	<!-- REFRESH ARCHITECTURE NOTICE BAR (Matches dashboard.html) -->
+	<div class="refresh-notice-bar">
+		<div>
+			<i class="fa-solid fa-cloud-arrow-down" style="color: var(--accent); margin-right: 6px;"></i>
+			<span>Mode Arsitektur Data: <b>Pembaharuan Refresh (Page Load)</b> — Data medan perang stabil &amp; tidak berkedip.</span>
+		</div>
+		<div>
+			<button id="btn-manual-refresh" class="btn btn-default btn-sm" title="Muat ulang data dari database">
+				<i class="fa-solid fa-arrows-rotate"></i> Refresh Halaman (F5)
+			</button>
+			<span id="firebase-connection-status" class="label label-light" style="margin-left: 6px; background: #e2e8f0; color: #475569;">
+				Menghubungkan ke Firebase...
+			</span>
+		</div>
+	</div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-12">
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container --> 
-	<!-- end pre-header ------------------------
-	---------------------------------------- --> 
-	
-	<!-- HEADER --------------------------------
-	---------------------------------------- --> 
-	<!-- For Logo, search, languague selection and account related information -->
-		<div class="game-head" style="background-image: url(https://gloryverse.id/img/game-head.jpeg)">
+	<!-- HEADER AREA (Matches dashboard.html game-head) -->
+	<div class="game-head">
 		<div class="container">
-		
-			
-			<a class="brand" href="https://gloryverse.id/dashboard.html">
-				<img alt="gloryverse.id" src="https://gloryverse.id/img/logo-site.png">
-			</a>
-		
-			<div class="pull-right">
-				<div class="pull-left" style="margin-right: 8px">
-					
-				</div>
-				<div class="pull-left" style="margin-right: 16px">
-					<script type="text/javascript">
+			<div class="brand">
+				<a href="/dashboard.html"><img alt="Glory Verse" src="/img/logo-site.png" onerror="this.src='/koa/bendera.png'"></a>
+			</div>
 
-						var currenttime = 'November 19, 2026 03:48:39' 
-
-						var serverdate=new Date(currenttime)
-
-						function padlength(what){
-							var output=(what.toString().length==1)? "0"+what : what
-							return output
-						}
-
-						function displaytime(){
-							serverdate.setSeconds(serverdate.getSeconds()+1)
-
-							var timestring=padlength(serverdate.getHours())+":"+padlength(serverdate.getMinutes())+":"+padlength(serverdate.getSeconds())
-							document.getElementById("server_time").innerHTML=timestring
-						}
-
-						setInterval("displaytime()", 1000);
-						
-						$( document ).ready(function() {
-							$('#topnav-transactions-alert').on('click', function(){
-							    $('#topnav-transactions-alert').removeClass('label-success');
-							    $(this).addClass('label-light');
-							});
-
-							$('#topnav-alerts-alert').on('click', function(){
-							    $('#topnav-alerts-alert').removeClass('label-warning');
-							    $(this).addClass('label-light');
-							});
-						});
-
-
-					</script>
-
-											<a href="https://gloryverse.id/my_medals.html" data-toggle="tooltip" title="Next Medal Session: 47.1% (942 / 2000 Gold)" style="display: inline-block; text-decoration: none;">
-							<span class="label label-light"><span class="icon-clock"></span><b id="server_time">03:48:39</b></span>
-							<div style="height: 2px; background: rgba(255,255,255,0.15); border-radius: 1px; margin-top: 0px;">
-								<div style="height: 100%; width: 47.1%; border-radius: 1px; background: #f0ad4e;"></div>
-							</div>
-						</a>
-						
-				</div><!-- end .col -->
-				
-				<div class="pull-left" style="margin-right: 16px; margin-top: -3px;">
-					<form method="post" action="https://gloryverse.id/search.html">
-						<input type="text" class="form-control" placeholder="Search Players / Companies / Countries" name="search" style="width:275px" >
-					</form>
-				</div><!-- end .col -->
-				
-				<div class="pull-left">
-					<div class="text-right">
-						<a id="topnav-transactions-alert" class="label label-success" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_transactions.html", "#modal_ajax")'>Income (109)</a>
-						<a id="topnav-alerts-alert" class="label label-warning" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/my_alerts.html", "#modal_ajax")'>Alerts (9793)</a>
-						<a class="label label-light" href="https://gloryverse.id/my_pms.html">Messages (0)</a>&nbsp;&nbsp;<a class="label label-danger" href="https://gloryverse.id/bad_logins.html"><i class="icon-warning"></i></a>  <a class="label label-info" title="Personal Notepad" data-toggle="modal tooltip" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/notepad.html", "#modal_ajax")'><i class="icon-file-text-o"></i></a> <a data-toggle="tooltip" title="Personal Settings" class="label label-info" href="https://gloryverse.id/my_settings.html"><i class="icon icon-cog"></i></a>&nbsp;&nbsp;<a data-toggle="tooltip" title="Logout" class="label label-info" href="https://gloryverse.id/logout.html"><i class="icon icon-logout"></i></a> <br>
-						<small></small>
+			<div class="pull-right" style="display: flex; align-items: center; flex-wrap: wrap; gap: 14px;">
+				<!-- Server Clock (Europe/London) -->
+				<div style="text-align: right;">
+					<span class="label label-light"><i class="fa-regular fa-clock" style="margin-right: 4px;"></i><b id="server_time">--:--:--</b> London</span>
+					<div style="height: 3px; background: rgba(255,255,255,.2); border-radius: 2px; margin-top: 3px;">
+						<div style="height: 100%; width: 50%; border-radius: 2px; background: #f0ad4e;"></div>
 					</div>
-				</div><!-- end .col -->
-			</div><!-- end .row -->
-		</div><!-- end .container -->
-	</div><!-- end .game-head --> 
-	
-	<!-- end header ----------------------------
-	---------------------------------------- --> 
-	
-	<!-- TOPNAV --------------------------------
-	---------------------------------------- -->
+				</div>
+
+				<!-- Quick Search -->
+				<div style="min-width: 210px;">
+					<form method="get" action="/leaderboard.html" onsubmit="event.preventDefault(); window.location.href='/leaderboard.html';">
+						<input type="text" class="form-control" placeholder="Cari Pemain / Negara..." style="width: 210px;">
+					</form>
+				</div>
+
+				<!-- Header Badges & User Status -->
+				<div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+					<span class="label label-success" id="player-income-badge">Income (0)</span>
+					<span class="label label-warning" id="player-alerts-badge">Alerts (0)</span>
+					<span class="label label-light" id="player-messages-badge">Messages (0)</span>
+
+					<div id="header-auth-container" style="display: inline-block;">
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm"><i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- TOPNAV (Matches dashboard.html) -->
 	<nav class="topnav">
 		<div class="topnav-inner">
 			<div class="container">
-								
-				<!-- Collect the nav links, forms, and other content for toggling -->
-				
-				<div class="topnav-collapse" id="topnav-collapse">
-					<ul class="nav topnav-nav">
-											<li class="active" > <a href="https://gloryverse.id/dashboard.html">Home</a> </li>
+				<ul class="nav topnav-nav">
+					<li><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 4px;"></i> Home</a></li>
 
-						<li> <a data-toggle="dropdown"> Activities
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/workplaces.html"><span class="icon-briefcase "></span>&nbsp;&nbsp;Work
-																		</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/wars.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;War Activity</a></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/dailyhero.html"><span class="icon-star yellow" aria-hidden="true"></span>&nbsp;&nbsp;Daily Hero</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/northkorea.html"><span class="flag-icon-kp flag-circle" aria-hidden="true"></span>&nbsp;&nbsp;North Korea Wars</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/lookouts.html"><span class="icon-flag "></span>&nbsp;&nbsp;Lookout Posts</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/newspapers.html"><span class="icon-news "></span>&nbsp;&nbsp;Newspapers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/local_bar.html"><span class="icon-glass "></span>&nbsp;&nbsp;The Local Bar</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/fund_offers.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/offers_contest.html"><span class="icon-tag "></span>&nbsp;&nbsp;Offers Contest</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Markets <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/market_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Goods Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Goods Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_financial.html"><span class="icon-line-chart"></span>&nbsp;&nbsp;Financial Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_recruits.html"><span class="icon-users"></span>&nbsp;&nbsp;Recruits Auctions</a></li> 
-								<li><a tabindex="-1" href="https://gloryverse.id/market_real_estate.html"><span class="icon-home"></span>&nbsp;&nbsp;Real Estate Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_companies.html"><span class="icon-shop"></span>&nbsp;&nbsp;Company Auctions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_medals.html"><span class="icon-star"></span>&nbsp;&nbsp;Medals Market</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_regions.html"><span class="icon-flag"></span>&nbsp;&nbsp;Regions Market</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/medals_shop.html"><span class="icon-certificate"></span>&nbsp;&nbsp;Medals Shop</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/market_vct.html"><i data-toggle="tooltip" title="Victory Token" class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Victory Tokens Market</a></li>
-							</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Philippines <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/country_accountancy.html"><span class="icon-pie-chart"></span>&nbsp;&nbsp;Accountancy</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_statistics.html"><span class="icon-area-chart"></span>&nbsp;&nbsp;Statistics</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_regions.html"><span class="icon-flag "></span>&nbsp;&nbsp;Regions</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_resources.html"><span class="icon-bin-open "></span>&nbsp;&nbsp;Resources</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_storage.html"><span class="icon-database "></span>&nbsp;&nbsp;Storage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_taxes.html"><span class="icon-documents "></span>&nbsp;&nbsp;Taxes Ideologies and Bonuses</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_govmembers.html"><span class="icon-users "></span>&nbsp;&nbsp;Government Members</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_lawproposals.html"><span class="icon-feather "></span>&nbsp;&nbsp;Law Proposals</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_elections.html"><span class="icon-v-card "></span>&nbsp;&nbsp;Government Elections</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_patriots.html"><span class="icon-hand-o-up "></span>&nbsp;&nbsp;Patriots</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_army.html"><span class="icon-crosshairs "></span>&nbsp;&nbsp;Army</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/country_companies.html"><span class="icon-shop  "></span>&nbsp;&nbsp;Companies</a></li>
-															</ul>
-						</li>
-						<li> <a data-toggle="dropdown"> Organizations <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_local.html"><span class="icon-location-pin"></span>&nbsp;&nbsp;Local Organizations</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/organizations_global.html"><span class="icon-globe"></span>&nbsp;&nbsp;Global Organizations</a></li>
-																<li class="divider" ></li>
-								<li><a tabindex="-1" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/organization_manage.html", "#modal_ajax")'><span class="icon-cog"></span>&nbsp;&nbsp;Organization Panel</a></li>
-															</ul>
-						</li>
+					<li class="active"><a>Activities <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/workplaces.html"><i class="fa-solid fa-briefcase"></i>&nbsp;&nbsp;Work</a></li>
+							<li class="divider"></li>
+							<li><a href="/wars.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;War Activity</a></li>
+							<li><a href="/war.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;Battleground</a></li>
+							<li><a href="/activity_work.html"><i class="fa-solid fa-hammer"></i>&nbsp;&nbsp;Activity Work</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Partners 
-														<span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_fund.html"><span class="icon-area-chart "></span>&nbsp;&nbsp;The Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_market.html"><span class="icon-pie-chart "></span>&nbsp;&nbsp;Share Market
-																</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_shareholders.html"><span class="icon-list "></span>&nbsp;&nbsp;Shareholders</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/partners_myshares.html"><span class="icon-wallet "></span>&nbsp;&nbsp;My Shares</a></li>
-							</ul>
-						</li>
-						
-						<li> <a data-toggle="dropdown"> Rankings <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_playerlevel.html"><i class="fa-solid fa-ranking-star"></i>&nbsp;&nbsp;Player Level Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_networth.html"><i class="fa-solid fa-sack-dollar"></i>&nbsp;&nbsp;Net Worth Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_energy.html"><i class="fa-solid fa-bolt"></i>&nbsp;&nbsp;Energy Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_economic_score.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Economic Score Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wardamage.html"><i class="fa-solid fa-explosion"></i>&nbsp;&nbsp;War Damage Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_wars.html"><i class="fa-solid fa-burst"></i>&nbsp;&nbsp;Top Wars Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruits.html"><i class="fa-solid fa-users"></i>&nbsp;&nbsp;Recruits Count Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_recruit_income.html"><i class="fa-solid fa-money-bill-trend-up"></i>&nbsp;&nbsp;Recruits Income Ranking</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_top_offers.html"><i class="fa-solid fa-tag"></i>&nbsp;&nbsp;Top Paid Offers</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_offers_euro.html"><i class="fa-solid fa-hand-holding-dollar"></i>&nbsp;&nbsp;Offers Top Earners</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_vctholders.html"><i class="fa-solid fa-v yellow"></i>&nbsp;&nbsp;Top VCT Holders</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_damage.html"><i class="fa-solid fa-truck-monster"></i>&nbsp;&nbsp;Military Vehicles Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_countrydamage.html"><i class="fa-solid fa-crosshairs"></i>&nbsp;&nbsp;Military Vehicles War Damage</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_kills.html"><i class="fa-solid fa-skull"></i>&nbsp;&nbsp;Military Vehicles Kills</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_mvehicles_killstreak.html"><i class="fa-solid fa-fire"></i>&nbsp;&nbsp;Military Vehicles Kill Streak</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Countries by Military Power</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryregions.html"><i class="fa-solid fa-map"></i>&nbsp;&nbsp;Countries by Region Count</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryactives.html"><i class="fa-solid fa-chart-simple"></i>&nbsp;&nbsp;Countries by Activity</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/rankings_countryinfrastructures.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;Countries by Infrastructure</a></li>
-							</ul>
-						</li>
+					<li><a>Markets <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/market_local.html"><i class="fa-solid fa-store"></i>&nbsp;&nbsp;Local Goods Market</a></li>
+							<li><a href="/financial.html"><i class="fa-solid fa-chart-line"></i>&nbsp;&nbsp;Financial Market</a></li>
+							<li><a href="/my_companies.html"><i class="fa-solid fa-building"></i>&nbsp;&nbsp;My Companies</a></li>
+							<li class="divider"></li>
+							<li><a href="/topup.html"><i class="fa-solid fa-coins yellow"></i>&nbsp;&nbsp;Top Up Gold</a></li>
+						</ul>
+					</li>
 
-						<li> <a data-toggle="dropdown"> Community <span class="caret"></span> </a>
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a tabindex="-1" href="https://gloryverse.id/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
-								<li class="divider"></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/arena_fund.html"><i class="fa-solid fa-trophy"></i>&nbsp;&nbsp;Arena Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/globalmarket_fund.html"><i class="fa-solid fa-globe"></i>&nbsp;&nbsp;Global Market Fund</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/warfund.html"><i class="fa-solid fa-bomb"></i>&nbsp;&nbsp;War Fund</a></li>
-								<li class="divider" ></li>
-																<li><a tabindex="-1" href="https://gloryverse.id/private_countries.html"><i class="fa-solid fa-gavel"></i>&nbsp;&nbsp;Private Country Auction</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/referral_rights.html"><i class="fa-solid fa-user-plus"></i>&nbsp;&nbsp;Referral Rights Auction</a></li>
-								<li class="divider" ></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/latest_citizens.html"><i class="fa-solid fa-user-clock"></i>&nbsp;&nbsp;Latest Citizens</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/citizenship_changes.html"><i class="fa-solid fa-right-left"></i>&nbsp;&nbsp;Citizenship Changes</a></li>
-								<li><a tabindex="-1" href="https://gloryverse.id/abandoned_recruits.html"><i class="fa-solid fa-user-slash"></i>&nbsp;&nbsp;Abandoned Recruits</a></li>
-							</ul>
-						</li>
+					<li><a>Rankings <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/leaderboard.html"><i class="fa-solid fa-trophy yellow"></i>&nbsp;&nbsp;Leaderboard</a></li>
+							<li><a href="/rankings_country.html"><i class="fa-solid fa-flag"></i>&nbsp;&nbsp;Countries by Citizenship</a></li>
+							<li><a href="/rankings_countrymilitary.html"><i class="fa-solid fa-shield"></i>&nbsp;&nbsp;Military Power</a></li>
+							<li><a href="/rankings_gold.html"><i class="fa-solid fa-coins"></i>&nbsp;&nbsp;Gold Ranking</a></li>
+							<li><a href="/rankings_euro.html"><i class="fa-solid fa-euro-sign"></i>&nbsp;&nbsp;Euros Ranking</a></li>
+						</ul>
+					</li>
 
-					</ul>
-				</div><!-- end .topnav-collapse -->
-				
-			</div><!-- end .container -->
-		</div><!-- end .topnav-inner -->
+					<li><a>Community <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="/forum.html"><i class="fa-solid fa-comments"></i>&nbsp;&nbsp;Forums</a></li>
+							<li><a href="/alliances.html"><i class="fa-solid fa-handshake"></i>&nbsp;&nbsp;Alliances</a></li>
+							<li><a href="/documentation.html"><i class="fa-solid fa-book"></i>&nbsp;&nbsp;Documentation</a></li>
+							<li><a href="/code_of_conduct.html"><i class="fa-solid fa-scale-balanced"></i>&nbsp;&nbsp;Code of Conduct</a></li>
+						</ul>
+					</li>
+
+					<li><a href="/inventory.html"><i class="fa-solid fa-box-open" style="margin-right: 4px;"></i> Inventory</a></li>
+					<li><a href="/my_profile.html"><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i> My Profile</a></li>
+				</ul>
+			</div>
+		</div>
 	</nav>
-	
-	<!-- end topnav ----------------------------
-	---------------------------------------- -->
-	
-	
 
-				<!-- CONTENT AREA -------------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
-				<div class="container">
-					<div class="clearfix">
-					
-						<div class="leftbar">
-		
-	
-	
-		<div style="position:relative; padding-left:85px; height:78px">
-			<div style="position:absolute; left:0; top:0; ">
-				<a href="https://gloryverse.id/profile.html&id=ADVAN">
-											<img title="ADVAN" width="75" height="75" class="img-circle" src="https://gloryverse.id/avatars/b98a727e0b490619d96855788a47d410.jpg?1788961460">
-										</a>
-			</div>
-	
-			<p class="nw">
-				<b><a href="https://gloryverse.id/profile.html&id=ADVAN">ADVAN</a></b>
-				<br>
-				<img width="13" height="13" src="https://gloryverse.id/img/country_flags/16/ph.png"> <span class="small"><a href="https://gloryverse.id/country.html&id=PH">Philippines</a>
-				<br>
-				<a href="https://gloryverse.id/region.html&id=431">Baguio</a></span>			</p>
-		</div>
-	
-		<div class="text-center small">
-			<b>Energy:</b> 74.31% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about energy" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_energy_breakdown.html", "#modal_ajax")'></a> 		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="74.31" aria-valuemin="0" aria-valuemax="100" style="width: 74.31%;">
-			</div>
-		</div>
-		
-			
-		<div class="text-center small">
-			<b>Health:</b> 100.0% <a class="icon icon-circle-info" data-toggle="modal tooltip" title="More about health" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_health_breakdown.html", "#modal_ajax")'></a>
-		</div>
-		<div class="progress progress-xs mb-sm-10">
-			<div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="100.0" aria-valuemin="0" aria-valuemax="100" style="width: 100.0%;">
-			</div>
-		</div>
-
-
-
-		        <div class="text-center small">
-			<b>XP Level:</b> 30		</div>
-
-		<div class="progress progress-xs mb-sm-10" data-toggle="tooltip" title="Progress: 1934/17867&nbsp;&nbsp;&nbsp;10%">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;"></div>
-        </div>
-
-		
-		<div class="text-center">
-			<p><a class="label label-info" href="https://gloryverse.id/my_work_history.html">Working (1 hour)</a> <a class="label label-success" data-toggle="modal tooltip" title="Early Release" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/work_early_release.html", "#modal_ajax")'><i class="fa-solid fa-unlock"></i></a></p>								</div>
-	
-
-		<p style="margin-bottom: 5px;"><i style="margin-right: 5px;" data-toggle="tooltip" title="Stashed VCT" class="fa-solid fa-v yellow"></i> <span data-toggle="tooltip" title="532.94">532.940</span> sVCT <a href="https://gloryverse.id/my_vct.html"><span data-toggle="tooltip" title="Check your Victory Tokens" class="fa-regular fa-rocket-launch"></span></a></p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/euro_icon.png"> Euro: 2.03</p>
-		<p style="margin-bottom: 5px;"><img width="15" height="15" src="https://gloryverse.id/img/gold_icon.png"> Gold: 116.88 <a class="icon icon-line-chart" href="https://gloryverse.id/market_financial.html"></a></p>
-		<p><img width="15" height="15" src="https://gloryverse.id/img/country_flags/16/ph.png"> html: 368.83</p>
-		
-
-
-				
-
-
-		<ul class="list-group">
-			
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companies.html">My Companies</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_inventory.html">My Inventory</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_companion.html">My Companion</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_vehicles.html">My Vehicles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_financials.html">My Finances</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_weapons.html">My Weapons & Info</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_clothing.html">My Clothing</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_real_estate.html">My Real Estate</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_recruits.html">My Recruits</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_medals.html">My Medals</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_newspapers.html">My Newspaper Articles</a></li>
-			<li class="list-group-item"><a href="https://gloryverse.id/my_regions.html">My Regions</a></li>
-					</ul>
-		
-		<p class="text-center"><a class="btn btn-success btn-sm" href="https://gloryverse.id/fund.html">Invest <i class="icon icon-download"></i></a> <a class="btn btn-danger btn-sm" href="https://gloryverse.id/withdraw_resellers.html">Withdraw <i class="icon icon-upload"></i></a></p>
-		
-					<style>
-				.kob-glow {
-					position: relative;
-					display: inline-block;
-					padding: 3px;
-					border-radius: 5px;
-					background: conic-gradient(from var(--kob-angle, 0deg), rgba(0, 255, 136, 0.15), #00ff88, rgba(0, 255, 136, 0.15) 40%, rgba(0, 255, 136, 0.15));
-					animation: kob-spin 6s linear infinite;
-					box-shadow: 0 0 7px rgba(0, 255, 136, 0.4);
-				}
-				.kob-glow img {
-					display: block;
-					border-radius: 4px;
-				}
-				@property --kob-angle {
-					syntax: '<angle>';
-					initial-value: 0deg;
-					inherits: false;
-				}
-				@keyframes kob-spin {
-					to { --kob-angle: 360deg; }
-				}
-				@supports not (background: conic-gradient(from 0deg, red, blue)) {
-					.kob-glow { background: #00ff88; }
-				}
-			</style>
-			
-			
-		<br>
-
-					<div id="google_translate_element"></div>
-			<script type="text/javascript">
-				function googleTranslateElementInit() {
-				  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
-				}
-			</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-			
-		<br>
-
-
-		</div><!-- end .leftbar -->					
-						<div class="main">
-							
-
-														
-
-
-							<p class="big text-center">
-								<b><a href="https://gloryverse.id/country.html&id=PH">Philippines</a></b> vs <b><a href="https://gloryverse.id/country.html&id=CU">Cuba</a></b> for the region <b><a href="https://gloryverse.id/region.html&id=221">Alexandroupollis</a></b>   <a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/user_travel.html&travel_country_id=56&travel_country_region_id=221", "#modal_ajax")' class="btn btn-default btn-sm"><i class="icon icon-location-pin"></i></a><br>
-								<span class="small">War started by the organization <b><a href="https://gloryverse.id/organizations_info.html&id=232">The Strongest Philippines</a></b></span>
-							</p>
-							
-
-
-
-							<div class="row">
-								<div class="col-sm-4 ">
-									
-									
-									<div style="position:relative; padding-left:75px; height:45px">
-										<div style="position:absolute; left:0; top:0; display:flex; align-items:center; gap:6px;">
-
-											<span style="display:flex; flex-direction:column; width:16px;">
-											<a href="https://gloryverse.id/country.html&id=LY"><img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/ly.png"></a>
-											</span>
-											<a href="https://gloryverse.id/country.html&id=PH"><img width="48" height="48" src="https://gloryverse.id/img/country_flags/48/ph.png"></a>
-										</div>
-
-										<b data-toggle="modal tooltip" title="0 - 0">0</b> 50%
-										
-										
-																				
-									</div>
-									
-									<div style="padding-left:35px;">
-										<a href="https://gloryverse.id/rankings_countrymilitary.html" class="smaller">Military Power of <b>244,087</b></a>
-									</div>
-
-								</div>
-								
-								<div class="col-sm-4 text-center">
-									<span class="icon-clock bigger"></span>
-									
-																				<div id="clockdiv">
-																				
-												<span class="hours"></span>:<span class="minutes"></span>:<span class="seconds"></span>
-											
-											</div>
-																				
-
-								</div>
-
-								<div class="col-sm-4 ">
-									
-									
-									<div style="position:relative; padding-left:75px; height:45px">
-										<div style="position:absolute; left:0; top:0; display:flex; align-items:center; gap:6px;">
-
-											<span style="display:flex; flex-direction:column; width:16px;">
-											<a href="https://gloryverse.id/country.html&id=SV"><img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/sv.png"></a><a href="https://gloryverse.id/country.html&id=SG"><img width="16" height="16" src="https://gloryverse.id/img/country_flags/16/sg.png"></a>
-											</span>
-											<a href="https://gloryverse.id/country.html&id=CU"><img width="48" height="48" src="https://gloryverse.id/img/country_flags/48/cu.png"></a>
-										</div>
-			
-										<b data-toggle="modal tooltip" title="0 - 0">0</b> 50%
-
-																				
-										
-										
-									</div>
-									
-									<div style="padding-left:35px;">
-										<a href="https://gloryverse.id/rankings_countrymilitary.html" class="smaller">Military Power of <b>4,155,594</b></a>
-									</div>
-
-								</div>
-							</div>
-							
-							<div class="row">
-								<div class="progress">
-									<div class="progress-bar progress-bar-warning progress-bar-striped" style="width: 50%">
-									</div>
-									<div class="progress-bar progress-bar-info progress-bar-striped" style="width: 50%">
-									</div>
-								</div>
-							</div>
-
-							<div class="row mb-sm-10">
-							
-																	
-
-																			<div class="well">
-											<div class="row">
-																									<div class="col-sm-4 text-center">
-														<b>Alexandroupollis</b><br>
-														<span class="label label-warning">Is not fortified by a Bunker</span>													</div>
-													
-																										<div class="col-sm-4 text-center">
-														<b>Your Effective Damage is</b><br>
-														3589 per hit <span class="icon icon-circle-info blue" data-html="true" data-toggle="info-popover" data-title="Damage Breakdown" data-content="<b>Number of Weapons:</b> 6<br>
-														<b>Military Rank:</b> Sergeant<br><br>
-														
-														<b>The Math:</b><br>
-														(Energy(74.31)<br>
-														*WeaponDamage(3000)<br>
-														*OrgBonus(1.4)<br>
-														*MilitaryBonus(1.15)<br>
-														*CountryRegionsBonus(1)<br>
-														/100)<br>
-														*BunkerModifier(1)<br>
-														*10ClothingSlotsModifier(1)<br>
-														*NativeRegionBonus(1)<br>
-														*NKBadgeOfHonor(1)
-													"></span>
-													</div>
-
-													<div class="col-sm-4 text-center">
-														<form action="https://gloryverse.id/war.html&id=99913" method="post">
-															<input name="acn" type="hidden" value="go" />
-															<input name="dcode" type="hidden" value="1795060120" />
-															
-															<button type="submit" data-loading-text="Loading..." class="btn btn-danger bigger" autocomplete="off">
-																Attack!															</button>
-
-																															&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn bigger btn-default" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/war_autohit.html&war_id=99913", "#modal_ajax")'><i class="fa-solid fa-user-robot"></i></a>
-																
-														</form>
-													</div>
-																								</div>
-										</div>
-										
-							</div>
-							
-															<div class="row mb-sm-20">
-									<a class="btn btn-brown btn-sm" href="https://gloryverse.id/war.html&id=99913&acn=drinkcoffee">Drink Coffee <i class="icon icon-coffee"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-brown btn-sm" href="https://gloryverse.id/war.html&id=99913&acn=drinkmocaccino">Drink Mocaccino <i class="icon icon-coffee"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-white btn-sm" href="https://gloryverse.id/war.html&id=99913&acn=drinkmilk">Drink Milk <i class="icon icon-tint"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-default btn-sm" href="https://gloryverse.id/war.html&id=99913&acn=buyenergy&boost=10" onclick="return confirm('Buy 10% energy for 0.10 EUR?')">10% Energy - Euro</a>
-								</div>
-
-
-								
-
-
-
-							<div class="row mb-sm-20">
-
-
-																<div class="col-sm-6">
-
-									<div class="clearfix">
-										<div class="pull-left">
-											<b>Attackers (0)</b>
-										</div>
-
-										<div class="pull-right">
-											<a class="icon icon-gift " data-toggle="modal" href="#prizemoneymodal"></a> 0.00 Euro &nbsp;&nbsp;
-										</div>
-									</div>
-
-
-
-									
-									<div class="alert alert-warning alert-sm">No attackers made damage</div>									
-									<table class="table table-condensed table-hover">
-										<tr>
-											<td>
-												<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/military_vehicles_region.html&id=221", "#modal_ajax")' class="small">Currently <b>0</b> military vehicles</a>
-											</td>
-											<td class="text-center" width="100">0<br><p class="smaller">Damage done</p></td>
-										</tr>
-									</table>
-
-								</div>
-								
-
-
-																<div class="col-sm-6">
-
-									<div class="clearfix">
-										<div class="pull-left">
-											<b>Defenders (0)</b>
-										</div>
-
-										<div class="pull-right">
-											<a class="icon icon-gift " data-toggle="modal" href="#prizemoneymodal"></a> 0.00 Euro &nbsp;&nbsp;
-										</div>
-									</div>
-											
-									
-									<div class="alert alert-warning alert-sm">No defenders made damage</div>									
-									<table class="table table-condensed table-hover">
-										<tr>
-											<td>
-												<a data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/military_vehicles_region.html&id=221", "#modal_ajax")' class="small">Currently <b>0</b> military vehicles</a>
-											</td>
-											<td class="text-center" width="100">0<br><p class="smaller">Damage done</p></td>
-										</tr>
-									</table>
-
-								</div>
-								
-
-							</div>
-							
-							
-
-							
-
-
-
-
-							<div class="row mb-sm-20">
-								<h5>Medals</h5>
-								
-								<p>Winning medals is required to increase your military rank. A higher military rank deals more damage. You can also sell your extra medals to the War Fund to win some gold. You can earn these medals by dealing the required damage but you only get paid if the war fund has the funds to pay you.</p>
-								
-								<div class="col-sm-6">
-									<table class="table table-condensed">
-										<thead>
-											<th>Medal</th>
-											<th class="text-center" width="90">Dmg. Req.</th>
-											<th class="text-center" width="100">Gold <span class="small">(Org)</span></th>
-										</thead>
-
-																					<tr>
-												<td class="small">
-													Private<br>
-													<i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">20,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 6 <span class="small">(1)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													Corporal<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">40,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 10 <span class="small">(1.67)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													Sergeant<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">90,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 13 <span class="small">(2.17)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													Lieutenant<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">150,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 20 <span class="small">(3.33)</span></td>
-												</td>
-											</tr>
-																				</table>
-								</div>
-								
-								<div class="col-sm-6">
-									<table class="table table-condensed">
-										<thead>
-											<th>Medal</th>
-											<th class="text-center" width="90">Dmg. Req.</th>
-											<th class="text-center" width="110">Gold <span class="small">(Org)</span></th>
-										</thead>
-
-																					<tr>
-												<td class="small">
-													Captain<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">300,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 36 <span class="small">(6)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													Major<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">600,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 45 <span class="small">(7.5)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													Colonel<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">1,000,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 68 <span class="small">(11.33)</span></td>
-												</td>
-											</tr>
-																						<tr>
-												<td class="small">
-													General<br>
-													<i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i><i class="icon icon-star yellow smaller"></i>												</td>
-												<td class="text-center">1,500,000</td>
-												<td class="text-center"><img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> 86 <span class="small">(14.33)</span></td>
-												</td>
-											</tr>
-																				</table>
-								</div>
-
-							</div>
-							
-
-
-							
-							<div id="prizemoneymodal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog">
-									<div class="modal-content">
-										
-										<form method="post" class="form-default" action="https://gloryverse.id/war.html&id=99913">
-											<input name="acn" type="hidden" value="sponsorwar">
-
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-												<div class="h3 modal-title">War Sponsorship</div>
-											</div><!-- end .modal-header -->
-
- 											<div class="modal-body">
- 												 												<p>If you wish to incentivize one of the sides of this war to do damage, you can set a prize money for defenders and/or attackers. If the side you choose to sponsor wins, all the winners from that winning side will get a cut of that prize based on how much damage they did. If the side you sponsored loses, the funds are returned to you.</p>
-
- 												<div class="form-cols-row">
- 													<label class="control-label form-col-xs-12 form-col-sm-3" for="war_sponsorship_side">Who to Sponsor</label>
- 													<div class="form-col-xs-12 form-col-sm-3">
- 														<select class="form-control" name="war_sponsorship_side">
- 															<option value="0">Choose a side</option>
- 															<option  value="a">Attackers</option>
- 															<option  value="d">Defenders</option>
- 														</select>
- 													</div>
- 												</div><!-- end .form-row -->
-
- 												<div class="form-cols-row">
- 													<label class="control-label form-col-xs-12 form-col-sm-3" for="war_sponsorship_amount">Euro Amount</label>
- 													<div class="form-col-xs-12 form-col-sm-2">
- 														<input size="30" name="war_sponsorship_amount" type="text" class="form-control" value="">
- 													</div>
- 												</div><!-- end .form-row -->
-
-												<br>
-
-												<div class="row">
-
-													
-																									</div>
-
-											</div><!-- end .modal-body -->
-
-											<div class="modal-footer">
-												<div class="hidden-xs form-col-sm-4"></div>
-												<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-												<button type="submit" class="btn btn-success">Submit</button>
-											</div><!-- end .modal-footer -->
-										
-										</form>
-
-									</div><!-- end .modal-content -->
-								</div><!-- end .modal-dialog -->
-							</div><!-- end .modal -->
-
-
-						</div><!-- end .main -->			
-					
-						<div class="rightbar">
-	
-			<br>
-
-			<a class="btn btn-default btn-sm" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/missile_launch.html&id=99913", "#modal_ajax")'>Missile Launch <i class="icon icon-rocket"></i></a><br><br>
-			<a class="btn btn-default btn-sm" data-toggle="modal" href="#modal_ajax" onclick='ajaxcall("https://gloryverse.id/ajax/military_vehicles_region_scans.html&id=99913", "#modal_ajax")'>Scans <i class="icon icon-wifi"></i></a><br><br>
-
-			<h6>War Fund</h6>
-
-			<div>
-				<img width="14" height="14" src="https://gloryverse.id/img/gold_icon.png"> <b>Gold:</b> <img src="https://gloryverse.id/img/nobot_images/wf_6408.html">
-			</div>
-
-			<div>
-				<img width="14" height="14" src="https://gloryverse.id/img/euro_icon.png"> <b>Euro:</b> <img src="https://gloryverse.id/img/nobot_images/wf_6408.html&t=1"><br>
-			</div>
-
-			<br>
-
-			<h6>Inventory</h6>
-
-			Coffee: 18<br>
-			Moccaccino: 57<br>
-			Milk Jug: 5<br>
-
-			<br>
-
-						<h6>Weapons</h6>
-
-			Attack <span class="small">11%</span> <span class="smaller">21 hits</span>
-			<div class="progress progress-xxs mb-sm-0">
-				<div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="11" aria-valuemin="0" aria-valuemax="100" style="width: 11%;"></div>
-			</div>
-
-			Defence <span class="small">34%</span> <span class="smaller">68 hits</span>
-			<div class="progress progress-xxs mb-sm-0">
-				<div class="progress-bar" role="progressbar" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%;"></div>
-			</div>
-
-			<br>
-
-			<h6>Military Vehicles</h6>
-			
-										<div class="alert alert-warning alert-sm">Cant use Bomber Jet</div>
-										<div class="alert alert-warning alert-sm">Cant use Heavy Tank</div>
-				
-								<br>
-			<h6>Worldwide shouts</h6>
-
-							<span class="small">
-					USA Companies for sale - check my profile and Direct Message to me asking the best price =)				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Mr.Rama">Mr.Rama</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ru.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Cuba needs 5 workers.<br />
-<br />
-Welcome bonus 72g, only TODAY.<br />
-<br />
-All products to 20% OFF				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Only">Only</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sg.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					BANK Owners - I need 1.000 Gold Loan . i am listening/waiting your offers .				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Mr.Rama">Mr.Rama</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ru.png"><br>
-						1 day ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					New General's Castle. Can be placed wherever you like. Send me a private message (PM) right away!				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=AlLQaeda">AlLQaeda</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/mv.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					Libya is looking for more workers, and for those who wish to begin their journey as warriors, we serve as a training center. Come and join us! For more information, contact the Prime Minister.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=victorh007">victorh007</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/ly.png"><br>
-						2 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					WTS: Coal mining company in Brazil, production upgrade level 4				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=Assasin">Assasin</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/br.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					i sell my companie Attack Weapons  in Indonesia , give me your offer				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=speedtuning">speedtuning</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/gi.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-							<span class="small">
-					El Salvador Looking for 5 Active Elite Warriors. Those who own Coffee Shop will be given priority. Many Benefit here. Thx.				</span>
-
-				<br>
-				<span class="small">
-					<b>by <a href="https://gloryverse.id/profile.html&id=DonCareLeone">DonCareLeone</a> <img width="14" height="14" src="https://gloryverse.id/img/country_flags/16/sv.png"><br>
-						3 days ago</b> 				</span>
-				<br><br>
-			
-
-			<form action="https://gloryverse.id/dashboard.html" method="post" class="form-horizontal">
-				<input name="acn" type="hidden" value="newworldshout" />
-
-				<div class="form-cols-row">
-					<div class="form-col-sm-12">
-						<textarea maxlength="255" name="user_shout_text" class="form-control" rows="3"></textarea>
+	<!-- MAIN 3-COLUMN CONTENT CONTAINER (Matches dashboard.html) -->
+	<div class="container">
+		<div class="dashboard-wrapper">
+
+			<!-- LEFT SIDEBAR: Dynamic Player Card (Zero legacy player data) -->
+			<div class="leftbar">
+				<div style="position: relative; padding-left: 78px; min-height: 74px; margin-bottom: 12px;">
+					<div style="position: absolute; left: 0; top: 0;">
+						<img id="player-avatar" title="Avatar Pemain" width="68" height="68" class="img-circle"
+						     src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='68' height='68'><rect width='68' height='68' fill='%23f1f3f6'/><circle cx='34' cy='25' r='12' fill='%239aa0ac'/><path d='M10 62c0-14 11-20 24-20s24 6 24 20z' fill='%239aa0ac'/></svg>"
+						     style="border: 2px solid #dddedf; object-fit: cover;">
+					</div>
+					<div style="padding-top: 4px;">
+						<b style="font-size: 14px;"><a href="/my_profile.html" id="player-username" style="color: var(--text-dark);">Tamu (Belum Login)</a></b><br>
+						<span class="small" id="player-location-text">
+							<i class="fa-solid fa-location-dot" style="color: var(--accent); margin-right: 3px;"></i>
+							<span id="player-country">Indonesia</span> &bull; <span id="player-region">Jakarta</span>
+						</span>
 					</div>
 				</div>
 
-				<button onClick="return confirm('Shouts are non refundable if rejected. English only and no smalk talk.');" type="submit" class="btn btn-inverse-flt btn-block" data-loading-text="Loading..." autocomplete="off">Send Shout *</button>
-				<span class="small">*Costs 2 gold</span>
-			</form>
-		
+				<!-- Energy Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Energy:</b></span>
+					<span id="stat-energy-val" style="color: var(--green); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-energy-bar" class="progress-bar progress-bar-success" style="width: 100%;"></div>
+				</div>
 
-		
+				<!-- Health Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>Health:</b></span>
+					<span id="stat-health-val" style="color: var(--red); font-weight: 700;">100%</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-health-bar" class="progress-bar progress-bar-danger" style="width: 100%;"></div>
+				</div>
 
+				<!-- Level & XP Bar -->
+				<div style="display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 2px;">
+					<span><b>XP Level:</b></span>
+					<span id="stat-level-val" style="color: var(--accent); font-weight: 700;">Level 1 (0 XP)</span>
+				</div>
+				<div class="progress progress-xs">
+					<div id="stat-xp-bar" class="progress-bar progress-bar-info" style="width: 0%;"></div>
+				</div>
 
-	</div><!-- end .rightbar -->						
-					</div><!-- end .contents-inner -->
-				</div><!-- end .container -->
-				<!-- end content area ---------------------------------------------------------------
-				--------------------------------------------------------------------------------- -->
+				<!-- Currency Balances -->
+				<div class="well well-sm" style="margin: 14px 0; background: #fafbfc; border-color: #e2e5e9;">
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-v yellow" style="margin-right: 4px;"></i> sVCT:</span>
+						<b><span id="stat-svct">0.000</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-euro-sign" style="color: var(--accent); margin-right: 4px;"></i> Euro:</span>
+						<b><span id="stat-euro">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed #e2e5e9;">
+						<span><i class="fa-solid fa-coins yellow" style="margin-right: 4px;"></i> Gold:</span>
+						<b><span id="stat-gold">0.00</span></b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+						<span><i class="fa-solid fa-money-bill-wave green" style="margin-right: 4px;"></i> Uang Lokal:</span>
+						<b><span id="stat-currency">0.00</span></b>
+					</div>
+				</div>
 
+				<!-- Navigation List Group -->
+				<ul class="list-group">
+					<li class="list-group-item"><a href="/dashboard.html"><i class="fa-solid fa-house" style="margin-right: 6px; color: var(--accent);"></i> Dashboard</a></li>
+					<li class="list-group-item"><a href="/wars.html"><i class="fa-solid fa-shield-halved" style="margin-right: 6px; color: var(--red);"></i> Daftar Perang Aktif</a></li>
+					<li class="list-group-item" style="background: var(--accent); border-color: var(--accent);"><a href="/war.html" style="color: #ffffff;"><i class="fa-solid fa-crosshairs" style="margin-right: 6px;"></i> Medan Perang</a></li>
+					<li class="list-group-item"><a href="/my_companies.html"><i class="fa-solid fa-building" style="margin-right: 6px; color: var(--accent);"></i> My Companies</a></li>
+					<li class="list-group-item"><a href="/inventory.html"><i class="fa-solid fa-box-archive" style="margin-right: 6px; color: var(--gold-dark);"></i> My Inventory</a></li>
+					<li class="list-group-item"><a href="/market_local.html"><i class="fa-solid fa-store" style="margin-right: 6px; color: var(--green);"></i> Pasar Lokal</a></li>
+				</ul>
 
-			</div><!-- end .contents -->
-			<div class="footer">
+				<!-- Action Buttons -->
+				<div class="row" style="margin: 0 -4px;">
+					<div class="col-sm-6" style="padding: 0 4px;">
+						<a class="btn btn-warning-bvl btn-sm btn-block" href="/topup.html"><i class="fa-solid fa-arrow-down"></i> Top Up</a>
+					</div>
+					<div class="col-sm-6" style="padding: 0 4px;">
+						<a class="btn btn-default btn-sm btn-block" href="/financial.html"><i class="fa-solid fa-arrow-up"></i> Withdraw</a>
+					</div>
+				</div>
+
+				<div id="auth-prompt-sidebar" style="margin-top: 14px; text-align: center;"></div>
+			</div><!-- end .leftbar -->
+
+			<!-- MAIN CONTENT: Battlefield Dominance, Combat Console, Leaderboards, Medals & Log -->
+			<div class="main">
+
+				<!-- Inline Feedback Banner -->
+				<div id="war-feedback-banner" class="alert alert-info" style="display: none;"></div>
+
+				<!-- Battle Header + Front Selector -->
+				<div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+					<div>
+						<h4 style="margin: 0 0 3px;">
+							<i class="fa-solid fa-explosion red" style="margin-right: 6px;"></i>
+							<span id="battle-region-title">Arena Latihan Nasional</span>
+							<span id="battle-poi-badge" class="label label-warning" style="display: none; margin-left: 6px;">POI</span>
+						</h4>
+						<div class="small">
+							<span class="label label-danger" id="battle-round-badge">Ronde 1</span>
+							<span class="label label-info" id="battle-status-badge" style="margin-left: 4px;">Siap Menerima Data Pemain</span>
+							<span style="margin-left: 8px;">Negara Anda: <b id="war-user-country" style="color: var(--text-dark);">Indonesia (ID)</b></span>
+						</div>
+					</div>
+
+					<div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+						<select id="select-war-front" class="form-control" style="width: auto; min-width: 210px;" aria-label="Pilih Front Pertempuran">
+							<option value="training_arena">Arena Latihan Nasional (Netral)</option>
+						</select>
+						<a href="/wars.html" class="btn btn-default btn-sm"><i class="fa-solid fa-list"></i> Semua Front</a>
+					</div>
+				</div>
+
+				<!-- Battle Teams & Dominance Progress -->
+				<div class="battle-stage">
+					<div class="battle-teams-row">
+						<div class="team-box attacker">
+							<span class="label label-danger" id="atk-country-badge">ATK</span>
+							<div>
+								<div class="team-name" id="atk-country-name">Tim Penyerang</div>
+								<div class="small"><b id="atk-percent-text" style="color: var(--red);">50%</b> &bull; DMG: <b id="battle-total-atk-dmg">0</b></div>
+							</div>
+						</div>
+
+						<div style="text-align: center;">
+							<span class="label label-light" style="background: #ffffff; color: var(--text-dark); border: 1px solid var(--border);">
+								<i class="fa-solid fa-crosshairs red"></i> <b id="stat-front-hits-count">0</b> Hit
+							</span>
+						</div>
+
+						<div class="team-box defender">
+							<div>
+								<div class="team-name" id="def-country-name">Tim Pertahanan</div>
+								<div class="small"><b id="def-percent-text" style="color: var(--accent);">50%</b> &bull; DMG: <b id="battle-total-def-dmg">0</b></div>
+							</div>
+							<span class="label label-info" id="def-country-badge">DEF</span>
+						</div>
+					</div>
+
+					<div class="dominance-bar-track">
+						<div id="battle-bar-atk" class="dominance-bar-atk" style="width: 50%;"></div>
+						<div id="battle-bar-def" class="dominance-bar-def" style="width: 50%;"></div>
+					</div>
+
+					<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-top: 8px; font-size: 11.5px; color: var(--muted);">
+						<span>Penyerang: <b id="battle-atk-fighters">0</b> Prajurit</span>
+						<span id="battle-empty-notice" style="color: var(--accent);">Mode Arena Latihan Firebase (siap menerima data pemain baru)</span>
+						<span>Bertahan: <b id="battle-def-fighters">0</b> Prajurit</span>
+					</div>
+				</div>
+
+				<!-- Combat Console Well (Matches classic GloryVerse war well) -->
+				<div class="well" style="background: #ffffff; border-color: var(--border);">
+					<div class="row" style="align-items: center; margin-bottom: 12px;">
+						<div class="col-sm-4 text-center">
+							<b id="console-region-name" style="color: var(--text-dark);">Arena Latihan Nasional</b><br>
+							<span class="label label-warning" id="console-bunker-badge">Belum ada Bunker</span>
+						</div>
+						<div class="col-sm-4 text-center">
+							<b>Perkiraan Damage Anda</b><br>
+							<span id="console-effective-dmg" style="font-size: 14px; font-weight: 700; color: var(--accent);">20 - 45 DMG</span>
+							<div class="small">Kontribusi Anda: <b id="stat-my-front-damage">0</b> DMG</div>
+						</div>
+						<div class="col-sm-4 text-center">
+							<button type="button" id="btn-launch-strike" class="btn btn-danger btn-lg" style="width: 100%;">
+								<i class="fa-solid fa-fire"></i> Attack! (-5% Energi)
+							</button>
+						</div>
+					</div>
+
+					<div class="combat-console-grid">
+						<div>
+							<label style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">
+								Pilih Pihak Pertempuran
+							</label>
+							<div class="side-toggle-group">
+								<button type="button" id="btn-choose-atk" class="side-btn active-atk">
+									<span style="font-weight: 700; font-size: 12px; color: var(--red);"><i class="fa-solid fa-crosshairs"></i> Attackers</span>
+									<span class="small" id="side-atk-label">Tim Penyerang</span>
+								</button>
+								<button type="button" id="btn-choose-def" class="side-btn">
+									<span style="font-weight: 700; font-size: 12px; color: var(--accent);"><i class="fa-solid fa-shield"></i> Defenders</span>
+									<span class="small" id="side-def-label">Tim Pertahanan</span>
+								</button>
+							</div>
+						</div>
+
+						<div>
+							<label for="select-weapon" style="display: block; font-size: 11.5px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px;">
+								Pilih Senjata (Inventaris Firebase)
+							</label>
+							<select id="select-weapon" class="form-control">
+								<option value="unarmed|Tangan Kosong (Infanteri Dasar)|20|45">Tangan Kosong — Infanteri Dasar (20 - 45 DMG)</option>
+							</select>
+							<div class="small" style="margin-top: 4px;">
+								Beli senjata &amp; amunisi di <a href="/market_local.html">Pasar Lokal</a>.
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Energy Quick Recovery Strip (Uses real user inventory if owned) -->
+				<div class="energy-actions-strip">
+					<button type="button" class="btn btn-default btn-sm btn-consume-item" data-item-keyword="coffee" data-restore="15" data-label="Coffee">
+						<i class="fa-solid fa-mug-hot" style="color: #875508;"></i> Drink Coffee (+15% Energi)
+					</button>
+					<button type="button" class="btn btn-default btn-sm btn-consume-item" data-item-keyword="mocaccino" data-restore="25" data-label="Mocaccino">
+						<i class="fa-solid fa-mug-saucer" style="color: #6b4226;"></i> Drink Mocaccino (+25% Energi)
+					</button>
+					<button type="button" class="btn btn-default btn-sm btn-consume-item" data-item-keyword="milk" data-restore="20" data-label="Milk">
+						<i class="fa-solid fa-droplet" style="color: var(--accent);"></i> Drink Milk (+20% Energi)
+					</button>
+					<a href="/market_local.html" class="btn btn-warning-bvl btn-sm">
+						<i class="fa-solid fa-store"></i> Beli Energi di Pasar
+					</a>
+				</div>
+
+				<!-- TWO-COLUMN ATTACKERS & DEFENDERS LEADERBOARDS (CLEAN EMPTY STATE) -->
+				<div class="row" style="margin-bottom: 16px;">
+					<div class="col-sm-6">
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+							<b><i class="fa-solid fa-skull-crossbones red"></i> Attackers (<span id="badge-top-atk-count">0</span>)</b>
+							<span class="small" id="atk-fighter-dmg-pill">0 DMG</span>
+						</div>
+						<div class="well well-sm" style="padding: 0; background: #ffffff;">
+							<table class="table table-hover" style="margin: 0;">
+								<thead>
+									<tr>
+										<th width="34">#</th>
+										<th>Prajurit</th>
+										<th width="50" class="text-right">Hit</th>
+										<th width="80" class="text-right">Damage</th>
+									</tr>
+								</thead>
+								<tbody id="top-attackers-body">
+									<tr>
+										<td colspan="4">
+											<div class="empty-state-box">
+												<i class="fa-solid fa-user-shield"></i>
+												Belum ada penyerang yang menghasilkan damage.
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+					<div class="col-sm-6">
+						<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+							<b><i class="fa-solid fa-shield-halved blue"></i> Defenders (<span id="badge-top-def-count">0</span>)</b>
+							<span class="small" id="def-fighter-dmg-pill">0 DMG</span>
+						</div>
+						<div class="well well-sm" style="padding: 0; background: #ffffff;">
+							<table class="table table-hover" style="margin: 0;">
+								<thead>
+									<tr>
+										<th width="34">#</th>
+										<th>Prajurit</th>
+										<th width="50" class="text-right">Hit</th>
+										<th width="80" class="text-right">Damage</th>
+									</tr>
+								</thead>
+								<tbody id="top-defenders-body">
+									<tr>
+										<td colspan="4">
+											<div class="empty-state-box">
+												<i class="fa-solid fa-shield"></i>
+												Belum ada pihak bertahan yang menghasilkan damage.
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+				<!-- COMBAT HIT LOGS (CLEAN EMPTY STATE FOR INCOMING PLAYERS) -->
+				<h5><i class="fa-solid fa-scroll blue" style="margin-right: 6px;"></i> Log Serangan Front (Firebase war_hits)</h5>
+				<div class="well well-sm" style="padding: 0; overflow-x: auto; background: #ffffff; margin-bottom: 18px;">
+					<table class="table table-hover" style="margin: 0;">
+						<thead>
+							<tr>
+								<th>Prajurit</th>
+								<th>Pihak</th>
+								<th>Senjata / Unit</th>
+								<th class="text-right">Damage</th>
+								<th class="text-right">Waktu (London)</th>
+							</tr>
+						</thead>
+						<tbody id="combat-hits-log-body">
+							<tr>
+								<td colspan="5">
+									<div class="empty-state-box">
+										<i class="fa-solid fa-crosshairs"></i>
+										Belum ada log serangan di front ini.<br>
+										<small>Masuk dengan akun Anda dan klik <b>Attack!</b> untuk mencatat hit perdana di Firebase.</small>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- MEDALS REFERENCE SECTION (Game Rules Reference, Zero Player Data) -->
+				<h5><i class="fa-solid fa-medal yellow" style="margin-right: 6px;"></i> Medali Pangkat Militer (Medals)</h5>
+				<p class="small" style="margin-bottom: 10px;">
+					Mengumpulkan damage meningkatkan pangkat militer Anda dan membuka bonus hadiah Gold dari War Fund sesuai ketentuan permainan:
+				</p>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="well well-sm" style="padding: 0; background: #ffffff;">
+							<table class="table table-hover" style="margin: 0;">
+								<thead>
+									<tr><th>Medali</th><th class="text-center">Target DMG</th><th class="text-right">Hadiah Gold</th></tr>
+								</thead>
+								<tbody>
+									<tr><td><b>Private</b></td><td class="text-center">20,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 6</td></tr>
+									<tr><td><b>Corporal</b></td><td class="text-center">40,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 10</td></tr>
+									<tr><td><b>Sergeant</b></td><td class="text-center">90,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 13</td></tr>
+									<tr><td><b>Lieutenant</b></td><td class="text-center">150,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 20</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="well well-sm" style="padding: 0; background: #ffffff;">
+							<table class="table table-hover" style="margin: 0;">
+								<thead>
+									<tr><th>Medali</th><th class="text-center">Target DMG</th><th class="text-right">Hadiah Gold</th></tr>
+								</thead>
+								<tbody>
+									<tr><td><b>Captain</b></td><td class="text-center">300,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 36</td></tr>
+									<tr><td><b>Major</b></td><td class="text-center">600,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 45</td></tr>
+									<tr><td><b>Colonel</b></td><td class="text-center">1,000,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 68</td></tr>
+									<tr><td><b>General</b></td><td class="text-center">1,500,000</td><td class="text-right"><i class="fa-solid fa-coins yellow"></i> 86</td></tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+
+			</div><!-- end .main -->
+
+			<!-- RIGHT SIDEBAR: Inventory Status, Weapons, Worldwide Shouts (Matches dashboard.html) -->
+			<div class="rightbar">
+				<h6><i class="fa-solid fa-boxes-stacked" style="margin-right: 6px;"></i> Bekal Energi &amp; Inventaris</h6>
+				<div class="well well-sm" id="rightbar-inventory-box" style="background: #ffffff;">
+					<div style="display: flex; justify-content: space-between; padding: 3px 0;">
+						<span>Coffee:</span><b id="inv-coffee-count">0</b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 3px 0;">
+						<span>Mocaccino:</span><b id="inv-mocaccino-count">0</b>
+					</div>
+					<div style="display: flex; justify-content: space-between; padding: 3px 0;">
+						<span>Milk:</span><b id="inv-milk-count">0</b>
+					</div>
+					<div style="margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-light); font-size: 11px; color: var(--muted);">
+						<a href="/inventory.html">Kelola seluruh inventaris &rarr;</a>
+					</div>
+				</div>
+
+				<h6><i class="fa-solid fa-gun" style="margin-right: 6px;"></i> Persenjataan &amp; Kendaraan</h6>
+				<div id="rightbar-weapons-box">
+					<div class="well well-sm" style="text-align: center; padding: 14px 10px; color: var(--muted); background: #ffffff;">
+						<i class="fa-solid fa-shield" style="font-size: 18px; display: block; margin-bottom: 4px; opacity: 0.55; color: var(--accent);"></i>
+						Belum ada senjata khusus di inventaris.<br>
+						<small>Menggunakan <b>Tangan Kosong</b> secara default.</small>
+					</div>
+				</div>
+
+				<h6 style="margin-top: 20px;"><i class="fa-solid fa-bullhorn yellow" style="margin-right: 6px;"></i> Shout Global (Worldwide)</h6>
+				<div id="war-worldwide-shouts">
+					<div class="well well-sm" style="text-align: center; padding: 16px 10px; color: var(--muted); background: #ffffff;">
+						<i class="fa-solid fa-earth-americas" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.55; color: var(--accent);"></i>
+						Belum ada pesan shout global.<br>
+						<small>Pesan global terbaru dari Firebase akan tampil di sini.</small>
+					</div>
+				</div>
+
+				<!-- Worldwide Shout Form (Matches dashboard.html) -->
+				<div class="well well-sm" style="background: #fafbfc; border-color: #ccd0d6; margin-top: 10px;">
+					<form id="form-worldwide-shout">
+						<label for="worldwide_shout_text" style="margin-top: 0; font-weight: 700; color: var(--text-dark); display: block; margin-bottom: 4px;">Kirim Pesan Global</label>
+						<textarea id="worldwide_shout_text" maxlength="255" class="form-control" rows="2" placeholder="Pesan global untuk semua negara..."></textarea>
+						<button type="submit" class="btn btn-warning-bvl btn-block btn-sm" style="margin-top: 6px;">
+							<i class="fa-solid fa-paper-plane"></i> Kirim Shout Global
+						</button>
+						<small style="display: block; text-align: center; margin-top: 4px; color: var(--gold-dark); font-weight: 600;">*Biaya: 2 Gold per kirim</small>
+					</form>
+				</div>
+			</div><!-- end .rightbar -->
+
+		</div><!-- end .dashboard-wrapper -->
+	</div><!-- end .container -->
+
+</div><!-- end .contents -->
+
+<!-- FOOTER (Matches dashboard.html clean style) -->
+<div class="footer">
 	<div class="container">
 		<div class="row">
 			<div class="col-sm-12">
-			
 				<div class="copyright">
-					Copyright 2026 &copy; gloryverse.id. All rights reserved. <a href="https://gloryverse.id/privacy_policy.html">Privacy policy</a> | <a href="https://gloryverse.id/tos.html">Terms and conditions</a> <small>(26) 0.011s</small>
-				</div><!-- end .copyright -->
-			
-			</div><!-- end .col -->
-		</div><!-- end .row -->
-	</div><!-- end .container -->
+					Copyright &copy; 2026 Glory Verse. Seluruh hak cipta dilindungi. &bull;
+					Server Time (London): <span id="footer_server_time">--:--:--</span><br>
+					<a href="/dashboard.html">Dashboard</a> |
+					<a href="/wars.html">Daftar Perang</a> |
+					<a href="/privacy_policy.html">Kebijakan Privasi</a> |
+					<a href="/tos.html">Syarat &amp; Ketentuan</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="accept-cookies-notice">
-	<div class="container">
-		<div class="inner">
-			<div class="accept-cookies btn btn-sm btn-white-otl">I Accept!</div>
-			We cookies to ensure you get the best possible experience. By using GloryVerse, you agree to our <a href="https://gloryverse.id/tos.html">Privacy Policy</a>
-		</div><!-- end .inner -->
-	</div><!-- end .container -->
-</div>
+</div><!-- end .page -->
+</div><!-- end .viewport -->
 
-<div id="modal_ajax" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true"></div>
+<!-- CLIENT-SIDE SCRIPT: London Clock & Manual Refresh -->
+<script>
+(function () {
+	'use strict';
 
-			
-		</div><!-- end .page -->
-	</div><!-- end .viewport -->
-	
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"3fe81db77c1b4c44a63015b7ed0f4228","r":1,"spa":2}' crossorigin="anonymous"></script>
+	function updateLondonClock() {
+		try {
+			var now = new Date();
+			var londonFormatter = new Intl.DateTimeFormat('en-GB', {
+				timeZone: 'Europe/London',
+				hour: '2-digit',
+				minute: '2-digit',
+				second: '2-digit',
+				hour12: false
+			});
+			var timeStr = londonFormatter.format(now);
+			var clockEl = document.getElementById('server_time');
+			var footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = timeStr;
+			if (footerEl) footerEl.textContent = timeStr;
+		} catch (e) {
+			var d = new Date();
+			var pad = function (n) { return n < 10 ? '0' + n : n; };
+			var fallback = pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes()) + ':' + pad(d.getUTCSeconds());
+			var clockEl = document.getElementById('server_time');
+			var footerEl = document.getElementById('footer_server_time');
+			if (clockEl) clockEl.textContent = fallback;
+			if (footerEl) footerEl.textContent = fallback;
+		}
+	}
+
+	function initClockAndRefresh() {
+		updateLondonClock();
+		setInterval(updateLondonClock, 1000);
+
+		var btnRefresh = document.getElementById('btn-manual-refresh');
+		if (btnRefresh) {
+			btnRefresh.addEventListener('click', function () {
+				window.location.reload();
+			});
+		}
+	}
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initClockAndRefresh);
+	} else {
+		initClockAndRefresh();
+	}
+})();
+</script>
+
+<!-- FIREBASE REFRESH-BASED WAR BATTLEGROUND MODULE -->
+<script type="module">
+const firebaseConfig = {
+	projectId: "gen-lang-client-0514427323",
+	appId: "1:16121083015:web:3d017df91f8ec727fcf422",
+	apiKey: "AIzaSyAt3OUy0y-K_oNC2KDtIBcXPSujqubxzIc",
+	authDomain: "gen-lang-client-0514427323.firebaseapp.com",
+	firestoreDatabaseId: "ai-studio-gloryverse-0730533f-7a64-4d8a-ae24-862b182ccd86",
+	storageBucket: "gen-lang-client-0514427323.firebasestorage.app",
+	messagingSenderId: "16121083015",
+	measurementId: "",
+	oAuthClientId: "16121083015-8cap9l3knpnie8g4hfnapn4qh970sjt4.apps.googleusercontent.com",
+	recaptchaSiteKey: ""
+};
+
+const OperationType = {
+	CREATE: 'create',
+	UPDATE: 'update',
+	DELETE: 'delete',
+	LIST: 'list',
+	GET: 'get',
+	WRITE: 'write'
+};
+
+const FIREBASE_CDN_BASE = 'https://www.gstatic.com/firebasejs/10.13.2';
+
+const NEUTRAL_TRAINING_FRONT = {
+	id: 'training_arena',
+	region: 'Arena Latihan Nasional',
+	attacker_country_code: 'ATK',
+	attacker_country_name: 'Pasukan Penyerang',
+	attacker_percent: 50,
+	defender_country_code: 'DEF',
+	defender_country_name: 'Pasukan Bertahan',
+	defender_percent: 50,
+	round: 1,
+	status: 'Siap Menerima Data Pemain',
+	poi: false,
+	isTrainingArena: true
+};
+
+let fbAppMod = null;
+let fbAuthMod = null;
+let fbFirestoreMod = null;
+let app = null;
+let auth = null;
+let db = null;
+
+let currentUser = null;
+let currentUserProfile = null;
+let activeWarsList = [];
+let selectedWar = NEUTRAL_TRAINING_FRONT;
+let selectedSide = 'attacker';
+let currentWarHits = [];
+let playerInventoryItems = [];
+let isSubmittingStrike = false;
+
+// ============================================================
+// HELPERS
+// ============================================================
+function escapeHtml(str) {
+	if (str === null || str === undefined) return '';
+	return String(str)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function setTxt(id, val) {
+	const el = document.getElementById(id);
+	if (el) el.textContent = String(val);
+}
+
+function showFeedback(type, htmlMsg) {
+	const banner = document.getElementById('war-feedback-banner');
+	if (!banner) return;
+	banner.className = `alert alert-${type}`;
+	banner.innerHTML = htmlMsg;
+	banner.style.display = 'block';
+	window.scrollTo({ top: Math.max(0, banner.offsetTop - 20), behavior: 'smooth' });
+}
+
+function handleFirestoreError(error, operationType, path) {
+	const user = auth && auth.currentUser ? auth.currentUser : null;
+	const errInfo = {
+		error: error instanceof Error ? error.message : String(error),
+		authInfo: {
+			userId: user ? user.uid : null,
+			email: user ? user.email : null,
+			emailVerified: user ? user.emailVerified : null
+		},
+		operationType,
+		path
+	};
+	console.warn('Firestore Warning:', JSON.stringify(errInfo));
+}
+
+function formatLondonTime(isoStr) {
+	try {
+		const dateObj = isoStr ? new Date(isoStr) : new Date();
+		if (Number.isNaN(dateObj.getTime())) return '--:--:--';
+		return new Intl.DateTimeFormat('en-GB', {
+			timeZone: 'Europe/London',
+			day: '2-digit',
+			month: 'short',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit',
+			hour12: false
+		}).format(dateObj);
+	} catch (e) {
+		return isoStr || '-';
+	}
+}
+
+function getRequestedWarId() {
+	try {
+		const params = new URLSearchParams(window.location.search);
+		return params.get('id') || '';
+	} catch (e) {
+		return '';
+	}
+}
+
+// ============================================================
+// FIREBASE CONNECTION CHECK
+// ============================================================
+async function testConnection() {
+	if (!db || !fbFirestoreMod) return;
+	const { doc, getDocFromServer } = fbFirestoreMod;
+	try {
+		await getDocFromServer(doc(db, 'test', 'connection'));
+	} catch (err) {
+		if (err instanceof Error && err.message.includes('the client is offline')) {
+			console.error('Firestore client is offline. Periksa konfigurasi Firebase Anda.');
+		}
+		handleFirestoreError(err, OperationType.GET, 'test/connection');
+	}
+}
+
+// ============================================================
+// PROFILE & INVENTORY RENDERING
+// ============================================================
+function updateEstimatedDamageLabel() {
+	const weaponSelect = document.getElementById('select-weapon');
+	const rawVal = weaponSelect ? weaponSelect.value : 'unarmed|Tangan Kosong (Infanteri Dasar)|20|45';
+	const parts = rawVal.split('|');
+	const minBase = Math.max(10, parseInt(parts[2] || '20', 10));
+	const maxBase = Math.max(minBase + 5, parseInt(parts[3] || '45', 10));
+	const level = currentUserProfile ? Number(currentUserProfile.level || 1) : 1;
+	const levelBonus = Math.max(0, (level - 1) * 3);
+	setTxt('console-effective-dmg', `${minBase + levelBonus} - ${maxBase + levelBonus} DMG`);
+}
+
+function renderPlayerProfile(p, user) {
+	setTxt('player-username', p.username || 'Pemain');
+	const avatarEl = document.getElementById('player-avatar');
+	if (avatarEl && user && user.photoURL) {
+		avatarEl.src = user.photoURL;
+	}
+
+	const cName = p.country_name || 'Indonesia';
+	const cCode = p.country_code || 'ID';
+	const rName = p.region_name || p.region || 'Jakarta';
+	setTxt('player-country', cName);
+	setTxt('player-region', rName);
+	setTxt('war-user-country', `${cName} (${cCode})`);
+
+	const energy = Math.round(Number(p.energy !== undefined ? p.energy : 100));
+	const health = Math.round(Number(p.health !== undefined ? p.health : 100));
+	const level = Number(p.level || 1);
+	const xp = Number(p.xp || 0);
+
+	setTxt('stat-energy-val', `${energy}%`);
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyBar) energyBar.style.width = `${Math.min(100, Math.max(0, energy))}%`;
+
+	setTxt('stat-health-val', `${health}%`);
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthBar) healthBar.style.width = `${Math.min(100, Math.max(0, health))}%`;
+
+	setTxt('stat-level-val', `Level ${level} (${xp} XP)`);
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (xpBar) xpBar.style.width = `${Math.min(100, (xp % 100))}%`;
+
+	setTxt('stat-svct', Number(p.svct || 0).toFixed(3));
+	setTxt('stat-euro', Number(p.euro || 0).toFixed(2));
+	setTxt('stat-gold', Number(p.gold !== undefined ? p.gold : 0).toFixed(2));
+	setTxt('stat-currency', Number(p.currency || 0).toFixed(2));
+
+	setTxt('player-income-badge', `Income (${p.income || 0})`);
+	setTxt('player-alerts-badge', `Alerts (${p.alerts || 0})`);
+	setTxt('player-messages-badge', `Messages (${p.messages || 0})`);
+
+	updateEstimatedDamageLabel();
+}
+
+function renderGuestState() {
+	setTxt('player-username', 'Tamu (Belum Login)');
+	setTxt('player-country', 'Indonesia');
+	setTxt('player-region', 'Jakarta');
+	setTxt('war-user-country', 'Indonesia (ID)');
+
+	setTxt('stat-energy-val', '100%');
+	const energyBar = document.getElementById('stat-energy-bar');
+	if (energyBar) energyBar.style.width = '100%';
+
+	setTxt('stat-health-val', '100%');
+	const healthBar = document.getElementById('stat-health-bar');
+	if (healthBar) healthBar.style.width = '100%';
+
+	setTxt('stat-level-val', 'Level 1 (0 XP)');
+	const xpBar = document.getElementById('stat-xp-bar');
+	if (xpBar) xpBar.style.width = '0%';
+
+	setTxt('stat-svct', '0.000');
+	setTxt('stat-euro', '0.00');
+	setTxt('stat-gold', '0.00');
+	setTxt('stat-currency', '0.00');
+	setTxt('player-income-badge', 'Income (0)');
+	setTxt('player-alerts-badge', 'Alerts (0)');
+	setTxt('player-messages-badge', 'Messages (0)');
+
+	playerInventoryItems = [];
+	renderInventorySidebar([]);
+	updateEstimatedDamageLabel();
+}
+
+function renderInventorySidebar(items) {
+	const selectEl = document.getElementById('select-weapon');
+	const weaponsBox = document.getElementById('rightbar-weapons-box');
+
+	let coffeeCnt = 0;
+	let mocaccinoCnt = 0;
+	let milkCnt = 0;
+	const combatItems = [];
+
+	(items || []).forEach((it) => {
+		const qty = Number(it.quantity || 0);
+		if (qty <= 0) return;
+		const name = String(it.item_name || '').toLowerCase();
+		const cat = String(it.category || '').toLowerCase();
+
+		if (name.includes('coffee')) coffeeCnt += qty;
+		if (name.includes('mocaccino') || name.includes('moccaccino')) mocaccinoCnt += qty;
+		if (name.includes('milk')) milkCnt += qty;
+
+		if (
+			cat.includes('weapon') || cat.includes('military') || cat.includes('vehicle') ||
+			cat.includes('defense') || name.includes('rifle') || name.includes('tank') ||
+			name.includes('jet') || name.includes('gun') || name.includes('ammo')
+		) {
+			combatItems.push(it);
+		}
+	});
+
+	setTxt('inv-coffee-count', coffeeCnt);
+	setTxt('inv-mocaccino-count', mocaccinoCnt);
+	setTxt('inv-milk-count', milkCnt);
+
+	if (selectEl) {
+		const options = [
+			{
+				value: 'unarmed|Tangan Kosong (Infanteri Dasar)|20|45',
+				label: 'Tangan Kosong — Infanteri Dasar (20 - 45 DMG)'
+			}
+		];
+		combatItems.forEach((it) => {
+			const q = Number(it.quality || 1);
+			const minDmg = 30 + q * 18;
+			const maxDmg = 55 + q * 28;
+			const safeName = String(it.item_name || 'Senjata').replace(/\|/g, ' ');
+			options.push({
+				value: `${it.id}|${safeName} (Q${q})|${minDmg}|${maxDmg}`,
+				label: `${safeName} (Q${q} • Stok: ${it.quantity}) [${minDmg} - ${maxDmg} DMG]`
+			});
+		});
+		selectEl.innerHTML = options.map((o) =>
+			`<option value="${escapeHtml(o.value)}">${escapeHtml(o.label)}</option>`
+		).join('');
+		updateEstimatedDamageLabel();
+	}
+
+	if (weaponsBox) {
+		if (combatItems.length === 0) {
+			weaponsBox.innerHTML = `
+				<div class="well well-sm" style="text-align: center; padding: 14px 10px; color: var(--muted); background: #ffffff;">
+					<i class="fa-solid fa-shield" style="font-size: 18px; display: block; margin-bottom: 4px; opacity: 0.55; color: var(--accent);"></i>
+					Belum ada senjata khusus di inventaris.<br>
+					<small>Menggunakan <b>Tangan Kosong</b> secara default.</small>
+				</div>
+			`;
+		} else {
+			weaponsBox.innerHTML = `
+				<div class="well well-sm" style="background: #ffffff;">
+					${combatItems.map((it) => `
+						<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--border-light); font-size: 12px;">
+							<span><i class="fa-solid fa-gun blue"></i> ${escapeHtml(it.item_name)} (Q${Number(it.quality || 1)})</span>
+							<b>x${Number(it.quantity || 0)}</b>
+						</div>
+					`).join('')}
+				</div>
+			`;
+		}
+	}
+}
+
+async function loadPlayerInventory(uid) {
+	if (!db || !fbFirestoreMod || !uid) return;
+	const { collection, getDocs, query, limit } = fbFirestoreMod;
+	try {
+		const snap = await getDocs(query(collection(db, 'users', uid, 'inventory'), limit(50)));
+		const list = [];
+		snap.forEach((d) => list.push({ id: d.id, ...d.data() }));
+		playerInventoryItems = list;
+		renderInventorySidebar(list);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, `users/${uid}/inventory`);
+		renderInventorySidebar([]);
+	}
+}
+
+// ============================================================
+// LOAD ACTIVE WARS, WAR HITS & WORLDWIDE SHOUTS (ONE-TIME FETCH)
+// ============================================================
+async function loadWarsCatalog() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, doc, getDoc, getDocs, query, limit } = fbFirestoreMod;
+	const selectEl = document.getElementById('select-war-front');
+	const reqWarId = getRequestedWarId();
+
+	activeWarsList = [];
+
+	try {
+		if (reqWarId && reqWarId !== 'training_arena') {
+			const specificSnap = await getDoc(doc(db, 'wars', reqWarId));
+			if (specificSnap.exists()) {
+				const d = specificSnap.data();
+				activeWarsList.push({
+					id: specificSnap.id,
+					region: d.region || specificSnap.id,
+					attacker_country_code: d.attacker_country_code || 'ATK',
+					attacker_country_name: d.attacker_country_name || d.attacker_country_code || 'Penyerang',
+					attacker_percent: Number(d.attacker_percent !== undefined ? d.attacker_percent : 50),
+					defender_country_code: d.defender_country_code || 'DEF',
+					defender_country_name: d.defender_country_name || d.defender_country_code || 'Bertahan',
+					defender_percent: Number(d.defender_percent !== undefined ? d.defender_percent : 50),
+					round: Number(d.round || 1),
+					status: d.status || 'Active',
+					poi: Boolean(d.poi),
+					isTrainingArena: false
+				});
+			}
+		}
+
+		const warsSnap = await getDocs(query(collection(db, 'wars'), limit(25)));
+		warsSnap.forEach((docSnap) => {
+			if (activeWarsList.some((w) => w.id === docSnap.id)) return;
+			const d = docSnap.data();
+			activeWarsList.push({
+				id: docSnap.id,
+				region: d.region || docSnap.id,
+				attacker_country_code: d.attacker_country_code || 'ATK',
+				attacker_country_name: d.attacker_country_name || d.attacker_country_code || 'Penyerang',
+				attacker_percent: Number(d.attacker_percent !== undefined ? d.attacker_percent : 50),
+				defender_country_code: d.defender_country_code || 'DEF',
+				defender_country_name: d.defender_country_name || d.defender_country_code || 'Bertahan',
+				defender_percent: Number(d.defender_percent !== undefined ? d.defender_percent : 50),
+				round: Number(d.round || 1),
+				status: d.status || 'Active',
+				poi: Boolean(d.poi),
+				isTrainingArena: false
+			});
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'wars');
+	}
+
+	if (selectEl) {
+		const optionsHtml = activeWarsList.map((w) =>
+			`<option value="${escapeHtml(w.id)}">${escapeHtml(w.region)} (${escapeHtml(w.attacker_country_code)} vs ${escapeHtml(w.defender_country_code)})</option>`
+		);
+		optionsHtml.push('<option value="training_arena">Arena Latihan Nasional (Netral)</option>');
+		selectEl.innerHTML = optionsHtml.join('');
+	}
+
+	if (reqWarId && activeWarsList.some((w) => w.id === reqWarId)) {
+		selectedWar = activeWarsList.find((w) => w.id === reqWarId);
+	} else if (reqWarId && reqWarId !== 'training_arena' && activeWarsList.length === 0) {
+		selectedWar = NEUTRAL_TRAINING_FRONT;
+		showFeedback(
+			'info',
+			`<i class="fa-solid fa-circle-info"></i> Front perang dengan ID <b>${escapeHtml(reqWarId)}</b> belum tersedia di database Firebase. Menampilkan <b>Arena Latihan Nasional</b> agar prajurit baru tetap dapat bertempur.`
+		);
+	} else if (activeWarsList.length > 0 && reqWarId !== 'training_arena') {
+		selectedWar = activeWarsList[0];
+	} else {
+		selectedWar = NEUTRAL_TRAINING_FRONT;
+	}
+
+	if (selectEl) selectEl.value = selectedWar.id;
+
+	renderBattlegroundHeader();
+	await loadWarHitsForFront(selectedWar.id);
+}
+
+async function loadWarHitsForFront(warId) {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, getDocs, query, where, limit } = fbFirestoreMod;
+
+	currentWarHits = [];
+	try {
+		const hitsQuery = query(
+			collection(db, 'war_hits'),
+			where('war_id', '==', warId),
+			limit(100)
+		);
+		const snap = await getDocs(hitsQuery);
+		snap.forEach((d) => currentWarHits.push({ id: d.id, ...d.data() }));
+
+		currentWarHits.sort((a, b) => {
+			const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+			const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+			return tb - ta;
+		});
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, `war_hits?war_id=${warId}`);
+	}
+
+	renderWarHitsAndLeaderboards();
+}
+
+async function loadWorldwideShouts() {
+	if (!db || !fbFirestoreMod) return;
+	const { collection, getDocs, query, where, limit } = fbFirestoreMod;
+	const container = document.getElementById('war-worldwide-shouts');
+	if (!container) return;
+
+	try {
+		const q = query(collection(db, 'shouts'), where('type', '==', 'worldwide'), limit(8));
+		const snap = await getDocs(q);
+		if (snap.empty) {
+			container.innerHTML = `
+				<div class="well well-sm" style="text-align: center; padding: 16px 10px; color: var(--muted); background: #ffffff;">
+					<i class="fa-solid fa-earth-americas" style="font-size: 20px; display: block; margin-bottom: 6px; opacity: 0.55; color: var(--accent);"></i>
+					Belum ada pesan shout global.<br>
+					<small>Pesan global terbaru dari Firebase akan tampil di sini.</small>
+				</div>
+			`;
+			return;
+		}
+
+		const items = [];
+		snap.forEach((d) => items.push(d.data()));
+		items.sort((a, b) => {
+			const ta = a.created_at ? new Date(a.created_at).getTime() : 0;
+			const tb = b.created_at ? new Date(b.created_at).getTime() : 0;
+			return tb - ta;
+		});
+
+		container.innerHTML = items.map((s) => `
+			<div class="well well-sm" style="background: #ffffff; margin-bottom: 8px; border-left: 3px solid var(--gold);">
+				<div style="font-size: 12px; color: var(--text-dark); margin-bottom: 4px;">${escapeHtml(s.text || '')}</div>
+				<div class="small">
+					<b>${escapeHtml(s.username || 'Pemain')}</b> (${escapeHtml(s.country_code || 'ID')}) &bull; ${escapeHtml(formatLondonTime(s.created_at))}
+				</div>
+			</div>
+		`).join('');
+	} catch (err) {
+		handleFirestoreError(err, OperationType.LIST, 'shouts');
+	}
+}
+
+function renderBattlegroundHeader() {
+	const w = selectedWar || NEUTRAL_TRAINING_FRONT;
+	setTxt('battle-region-title', w.region);
+	setTxt('console-region-name', w.region);
+	setTxt('battle-round-badge', `Ronde ${w.round || 1}`);
+	setTxt('battle-status-badge', w.status || 'Active');
+
+	const poiBadge = document.getElementById('battle-poi-badge');
+	if (poiBadge) poiBadge.style.display = w.poi ? 'inline-block' : 'none';
+
+	const bunkerBadge = document.getElementById('console-bunker-badge');
+	if (bunkerBadge) bunkerBadge.textContent = w.poi ? 'Zona Strategis (POI)' : 'Belum ada Bunker';
+
+	setTxt('atk-country-badge', w.attacker_country_code || 'ATK');
+	setTxt('atk-country-name', w.attacker_country_name || w.attacker_country_code || 'Tim Penyerang');
+	setTxt('def-country-badge', w.defender_country_code || 'DEF');
+	setTxt('def-country-name', w.defender_country_name || w.defender_country_code || 'Tim Pertahanan');
+
+	setTxt('side-atk-label', `${w.attacker_country_name || w.attacker_country_code}`);
+	setTxt('side-def-label', `${w.defender_country_name || w.defender_country_code}`);
+
+	const emptyNotice = document.getElementById('battle-empty-notice');
+	if (emptyNotice) {
+		emptyNotice.style.display = w.isTrainingArena ? 'inline' : 'none';
+	}
+}
+
+function renderWarHitsAndLeaderboards() {
+	const w = selectedWar || NEUTRAL_TRAINING_FRONT;
+	let atkDamage = 0;
+	let defDamage = 0;
+	let myDamage = 0;
+
+	const atkMap = new Map();
+	const defMap = new Map();
+
+	currentWarHits.forEach((hit) => {
+		const dmg = Number(hit.damage || 0);
+		if (currentUser && hit.uid === currentUser.uid) {
+			myDamage += dmg;
+		}
+		const isDef = hit.side === 'defender';
+		if (isDef) defDamage += dmg;
+		else atkDamage += dmg;
+
+		const targetMap = isDef ? defMap : atkMap;
+		const prev = targetMap.get(hit.uid) || {
+			uid: hit.uid,
+			username: hit.username || 'Prajurit',
+			country_code: hit.country_code || 'ID',
+			hits: 0,
+			totalDamage: 0
+		};
+		prev.hits += 1;
+		prev.totalDamage += dmg;
+		targetMap.set(hit.uid, prev);
+	});
+
+	let atkPct = Number(w.attacker_percent !== undefined ? w.attacker_percent : 50);
+	let defPct = Number(w.defender_percent !== undefined ? w.defender_percent : (100 - atkPct));
+	const totalCombatDamage = atkDamage + defDamage;
+
+	if (w.isTrainingArena) {
+		if (totalCombatDamage > 0) {
+			atkPct = Math.round((atkDamage / totalCombatDamage) * 100);
+			defPct = 100 - atkPct;
+		} else {
+			atkPct = 50;
+			defPct = 50;
+		}
+	}
+
+	setTxt('atk-percent-text', `${atkPct}%`);
+	setTxt('def-percent-text', `${defPct}%`);
+	setTxt('battle-total-atk-dmg', atkDamage.toLocaleString('id-ID'));
+	setTxt('battle-total-def-dmg', defDamage.toLocaleString('id-ID'));
+	setTxt('atk-fighter-dmg-pill', `${atkDamage.toLocaleString('id-ID')} DMG`);
+	setTxt('def-fighter-dmg-pill', `${defDamage.toLocaleString('id-ID')} DMG`);
+	setTxt('stat-front-hits-count', currentWarHits.length);
+	setTxt('stat-my-front-damage', myDamage.toLocaleString('id-ID'));
+
+	const barAtk = document.getElementById('battle-bar-atk');
+	const barDef = document.getElementById('battle-bar-def');
+	if (barAtk) barAtk.style.width = `${Math.min(100, Math.max(0, atkPct))}%`;
+	if (barDef) barDef.style.width = `${Math.min(100, Math.max(0, defPct))}%`;
+
+	const atkFighters = Array.from(atkMap.values()).sort((a, b) => b.totalDamage - a.totalDamage);
+	const defFighters = Array.from(defMap.values()).sort((a, b) => b.totalDamage - a.totalDamage);
+
+	setTxt('battle-atk-fighters', atkFighters.length);
+	setTxt('battle-def-fighters', defFighters.length);
+	setTxt('badge-top-atk-count', atkFighters.length);
+	setTxt('badge-top-def-count', defFighters.length);
+
+	renderLeaderboardTable('top-attackers-body', atkFighters, 'penyerang', 'label-danger');
+	renderLeaderboardTable('top-defenders-body', defFighters, 'bertahan', 'label-info');
+	renderCombatHitsLogTable();
+}
+
+function renderLeaderboardTable(tbodyId, list, roleLabel, badgeClass) {
+	const tbody = document.getElementById(tbodyId);
+	if (!tbody) return;
+
+	if (!list || list.length === 0) {
+		tbody.innerHTML = `
+			<tr>
+				<td colspan="4">
+					<div class="empty-state-box">
+						<i class="fa-solid ${roleLabel === 'penyerang' ? 'fa-user-shield' : 'fa-shield'}"></i>
+						Belum ada ${escapeHtml(roleLabel)} yang menghasilkan damage.
+					</div>
+				</td>
+			</tr>
+		`;
+		return;
+	}
+
+	tbody.innerHTML = list.slice(0, 10).map((f, idx) => `
+		<tr>
+			<td><b>#${idx + 1}</b></td>
+			<td>
+				<span class="label ${badgeClass}" style="margin-right: 4px;">${escapeHtml(f.country_code)}</span>
+				<b>${escapeHtml(f.username)}</b>
+			</td>
+			<td class="text-right">${f.hits}</td>
+			<td class="text-right"><b>${f.totalDamage.toLocaleString('id-ID')}</b></td>
+		</tr>
+	`).join('');
+}
+
+function renderCombatHitsLogTable() {
+	const tbody = document.getElementById('combat-hits-log-body');
+	if (!tbody) return;
+
+	if (!currentWarHits || currentWarHits.length === 0) {
+		tbody.innerHTML = `
+			<tr>
+				<td colspan="5">
+					<div class="empty-state-box">
+						<i class="fa-solid fa-crosshairs"></i>
+						Belum ada log serangan di front ini.<br>
+						<small>Masuk dengan akun Anda dan klik <b>Attack!</b> untuk mencatat hit perdana di Firebase.</small>
+					</div>
+				</td>
+			</tr>
+		`;
+		return;
+	}
+
+	tbody.innerHTML = currentWarHits.slice(0, 25).map((h) => {
+		const isAtk = h.side !== 'defender';
+		return `
+			<tr>
+				<td>
+					<span class="label ${isAtk ? 'label-danger' : 'label-info'}" style="margin-right: 4px;">${escapeHtml(h.country_code || 'ID')}</span>
+					<b>${escapeHtml(h.username || 'Prajurit')}</b>
+				</td>
+				<td>
+					<span class="label ${isAtk ? 'label-danger' : 'label-info'}">
+						${isAtk ? 'Attackers' : 'Defenders'}
+					</span>
+				</td>
+				<td><i class="fa-solid fa-gun" style="color: var(--muted); margin-right: 4px;"></i> ${escapeHtml(h.weapon_name || 'Infanteri Dasar')}</td>
+				<td class="text-right"><b style="color: ${isAtk ? 'var(--red)' : 'var(--accent)'};">+${Number(h.damage || 0).toLocaleString('id-ID')} DMG</b></td>
+				<td class="text-right small">${escapeHtml(formatLondonTime(h.created_at))}</td>
+			</tr>
+		`;
+	}).join('');
+}
+
+// ============================================================
+// COMBAT STRIKE, ENERGY CONSUMABLES & GLOBAL SHOUT ACTIONS
+// ============================================================
+async function handleLaunchStrike() {
+	if (isSubmittingStrike) return;
+
+	if (!currentUser || !currentUserProfile) {
+		showFeedback(
+			'warning',
+			`<i class="fa-solid fa-right-to-bracket"></i> <b>Silakan Masuk Akun Terlebih Dahulu!</b> Anda harus login agar serangan dan XP tercatat di Firebase. <a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="margin-left: 8px;">Masuk / Daftar</a>`
+		);
+		return;
+	}
+
+	const currentEnergy = Number(currentUserProfile.energy !== undefined ? currentUserProfile.energy : 100);
+	const currentHealth = Number(currentUserProfile.health !== undefined ? currentUserProfile.health : 100);
+
+	if (currentEnergy < 5) {
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-triangle-exclamation"></i> <b>Energi Tidak Cukup!</b> Serangan membutuhkan minimal <b>5% Energi</b>. Gunakan bekal energi Anda atau beli di <a href="/market_local.html">Pasar Lokal</a>.`
+		);
+		return;
+	}
+
+	if (currentHealth < 10) {
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-heart-crack"></i> <b>Kesehatan Terlalu Rendah!</b> Anda membutuhkan minimal <b>10% Health</b> untuk memasuki medan perang.`
+		);
+		return;
+	}
+
+	const weaponSelect = document.getElementById('select-weapon');
+	const rawVal = weaponSelect ? weaponSelect.value : 'unarmed|Tangan Kosong (Infanteri Dasar)|20|45';
+	const parts = rawVal.split('|');
+	const weaponName = (parts[1] || 'Tangan Kosong (Infanteri Dasar)').slice(0, 80);
+	const minDmg = Math.max(10, parseInt(parts[2] || '20', 10));
+	const maxDmg = Math.max(minDmg + 5, parseInt(parts[3] || '45', 10));
+
+	const levelBonus = Math.max(0, (Number(currentUserProfile.level || 1) - 1) * 3);
+	const hitDamage = Math.floor(Math.random() * (maxDmg - minDmg + 1)) + minDmg + levelBonus;
+
+	const newEnergy = Math.max(0, Math.min(100, currentEnergy - 5));
+	const currentXp = Number(currentUserProfile.xp || 0);
+	const newXp = currentXp + 1;
+	const currentLvl = Number(currentUserProfile.level || 1);
+	const newLvl = newXp >= currentLvl * 100 ? currentLvl + 1 : currentLvl;
+	const nowIso = new Date().toISOString();
+
+	const btnStrike = document.getElementById('btn-launch-strike');
+	isSubmittingStrike = true;
+	if (btnStrike) {
+		btnStrike.disabled = true;
+		btnStrike.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...';
+	}
+
+	try {
+		const { doc, setDoc, updateDoc } = fbFirestoreMod;
+		const hitId = `hit_${currentUser.uid.slice(0, 8)}_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`.replace(/[^a-zA-Z0-9_\-]/g, '_');
+
+		const hitPayload = {
+			id: hitId,
+			war_id: String(selectedWar.id || 'training_arena').slice(0, 128),
+			war_region: String(selectedWar.region || 'Arena Latihan Nasional').slice(0, 100),
+			uid: currentUser.uid,
+			username: String(currentUserProfile.username || 'Prajurit').slice(0, 50),
+			country_code: String(currentUserProfile.country_code || 'ID').slice(0, 5),
+			side: selectedSide === 'defender' ? 'defender' : 'attacker',
+			weapon_name: weaponName,
+			damage: hitDamage,
+			created_at: nowIso
+		};
+
+		await Promise.all([
+			updateDoc(doc(db, 'users', currentUser.uid), {
+				energy: newEnergy,
+				xp: newXp,
+				level: newLvl,
+				updated_at: nowIso
+			}),
+			setDoc(doc(db, 'war_hits', hitId), hitPayload)
+		]);
+
+		currentUserProfile.energy = newEnergy;
+		currentUserProfile.xp = newXp;
+		currentUserProfile.level = newLvl;
+		currentUserProfile.updated_at = nowIso;
+
+		currentWarHits.unshift(hitPayload);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		renderWarHitsAndLeaderboards();
+
+		const sideLabel = hitPayload.side === 'defender' ? 'Defenders' : 'Attackers';
+		showFeedback(
+			'success',
+			`<i class="fa-solid fa-explosion"></i> <b>Serangan Tercatat di Firebase!</b> Anda memberikan <b>+${hitDamage} DMG</b> untuk <b>${sideLabel}</b> di <b>${escapeHtml(hitPayload.war_region)}</b> dengan <b>${escapeHtml(weaponName)}</b>. (-5% Energi, +1 XP)`
+		);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'war_hits');
+		showFeedback(
+			'danger',
+			`<i class="fa-solid fa-triangle-exclamation"></i> <b>Gagal Mencatat Serangan:</b> ${escapeHtml(err.message || 'Terjadi kesalahan saat menyimpan ke Firebase.')}`
+		);
+	} finally {
+		isSubmittingStrike = false;
+		if (btnStrike) {
+			btnStrike.disabled = false;
+			btnStrike.innerHTML = selectedSide === 'defender'
+				? '<i class="fa-solid fa-shield"></i> Defend! (-5% Energi)'
+				: '<i class="fa-solid fa-fire"></i> Attack! (-5% Energi)';
+		}
+	}
+}
+
+async function handleConsumeEnergyItem(keyword, restorePct, label) {
+	if (!currentUser || !currentUserProfile) {
+		showFeedback(
+			'warning',
+			`<i class="fa-solid fa-right-to-bracket"></i> Masuk akun terlebih dahulu untuk menggunakan bekal <b>${escapeHtml(label)}</b>. <a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="margin-left: 6px;">Masuk Akun</a>`
+		);
+		return;
+	}
+
+	const matchedItem = playerInventoryItems.find((it) =>
+		Number(it.quantity || 0) > 0 && String(it.item_name || '').toLowerCase().includes(keyword)
+	);
+
+	if (!matchedItem) {
+		showFeedback(
+			'info',
+			`<i class="fa-solid fa-box-open"></i> Anda belum memiliki stok <b>${escapeHtml(label)}</b> di inventaris. Beli terlebih dahulu di <a href="/market_local.html">Pasar Lokal</a>.`
+		);
+		return;
+	}
+
+	const currentEnergy = Number(currentUserProfile.energy !== undefined ? currentUserProfile.energy : 100);
+	if (currentEnergy >= 100) {
+		showFeedback('info', '<i class="fa-solid fa-bolt"></i> Energi Anda sudah penuh <b>100%</b>.');
+		return;
+	}
+
+	try {
+		const { doc, updateDoc, deleteDoc } = fbFirestoreMod;
+		const newEnergy = Math.min(100, currentEnergy + restorePct);
+		const newQty = Number(matchedItem.quantity) - 1;
+		const nowIso = new Date().toISOString();
+
+		const itemRef = doc(db, 'users', currentUser.uid, 'inventory', matchedItem.id);
+		const userRef = doc(db, 'users', currentUser.uid);
+
+		await Promise.all([
+			updateDoc(userRef, { energy: newEnergy, updated_at: nowIso }),
+			newQty > 0
+				? updateDoc(itemRef, { quantity: newQty, updated_at: nowIso })
+				: deleteDoc(itemRef)
+		]);
+
+		currentUserProfile.energy = newEnergy;
+		matchedItem.quantity = newQty;
+		playerInventoryItems = playerInventoryItems.filter((it) => Number(it.quantity || 0) > 0);
+
+		renderPlayerProfile(currentUserProfile, currentUser);
+		renderInventorySidebar(playerInventoryItems);
+		showFeedback(
+			'success',
+			`<i class="fa-solid fa-mug-hot"></i> Berhasil menggunakan 1 <b>${escapeHtml(matchedItem.item_name)}</b>! Energi Anda pulih menjadi <b>${Math.round(newEnergy)}%</b>.`
+		);
+	} catch (err) {
+		handleFirestoreError(err, OperationType.UPDATE, `users/${currentUser.uid}/inventory`);
+		showFeedback('danger', `Gagal menggunakan item: ${escapeHtml(err.message)}`);
+	}
+}
+
+async function handleWorldwideShoutSubmit(e) {
+	e.preventDefault();
+	if (!currentUser || !currentUserProfile) {
+		showFeedback(
+			'warning',
+			'<i class="fa-solid fa-right-to-bracket"></i> Silakan masuk akun untuk mengirim Shout Global. <a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="margin-left: 6px;">Masuk Akun</a>'
+		);
+		return;
+	}
+
+	const inputEl = document.getElementById('worldwide_shout_text');
+	const text = inputEl ? inputEl.value.trim() : '';
+	if (!text) {
+		showFeedback('warning', 'Tuliskan pesan terlebih dahulu sebelum mengirim Shout Global.');
+		return;
+	}
+
+	const currentGold = Number(currentUserProfile.gold || 0);
+	if (currentGold < 2) {
+		showFeedback('danger', 'Saldo <b>Gold</b> Anda kurang dari 2.00 Gold untuk mengirim Shout Global.');
+		return;
+	}
+
+	try {
+		const { addDoc, collection, doc, updateDoc } = fbFirestoreMod;
+		const nowIso = new Date().toISOString();
+		const newGold = Number((currentGold - 2).toFixed(2));
+
+		await Promise.all([
+			updateDoc(doc(db, 'users', currentUser.uid), {
+				gold: newGold,
+				updated_at: nowIso
+			}),
+			addDoc(collection(db, 'shouts'), {
+				uid: currentUser.uid,
+				username: currentUserProfile.username || 'Pemain',
+				country_code: currentUserProfile.country_code || 'ID',
+				type: 'worldwide',
+				text: text.slice(0, 255),
+				created_at: nowIso
+			})
+		]);
+
+		currentUserProfile.gold = newGold;
+		if (inputEl) inputEl.value = '';
+		renderPlayerProfile(currentUserProfile, currentUser);
+		await loadWorldwideShouts();
+		showFeedback('success', '<i class="fa-solid fa-bullhorn"></i> Shout Global berhasil dikirim ke Firebase! (-2.00 Gold)');
+	} catch (err) {
+		handleFirestoreError(err, OperationType.WRITE, 'shouts');
+		showFeedback('danger', `Gagal mengirim Shout Global: ${escapeHtml(err.message)}`);
+	}
+}
+
+// ============================================================
+// CONTROLS & AUTH OBSERVER
+// ============================================================
+function setupControls() {
+	const btnAtk = document.getElementById('btn-choose-atk');
+	const btnDef = document.getElementById('btn-choose-def');
+	const btnStrike = document.getElementById('btn-launch-strike');
+
+	const updateSideButtons = () => {
+		if (btnAtk && btnDef) {
+			btnAtk.className = selectedSide === 'attacker' ? 'side-btn active-atk' : 'side-btn';
+			btnDef.className = selectedSide === 'defender' ? 'side-btn active-def' : 'side-btn';
+		}
+		if (btnStrike && !isSubmittingStrike) {
+			if (selectedSide === 'defender') {
+				btnStrike.className = 'btn btn-primary btn-lg';
+				btnStrike.innerHTML = '<i class="fa-solid fa-shield"></i> Defend! (-5% Energi)';
+			} else {
+				btnStrike.className = 'btn btn-danger btn-lg';
+				btnStrike.innerHTML = '<i class="fa-solid fa-fire"></i> Attack! (-5% Energi)';
+			}
+		}
+	};
+
+	if (btnAtk) {
+		btnAtk.addEventListener('click', () => {
+			selectedSide = 'attacker';
+			updateSideButtons();
+		});
+	}
+	if (btnDef) {
+		btnDef.addEventListener('click', () => {
+			selectedSide = 'defender';
+			updateSideButtons();
+		});
+	}
+
+	const weaponSelect = document.getElementById('select-weapon');
+	if (weaponSelect) {
+		weaponSelect.addEventListener('change', updateEstimatedDamageLabel);
+	}
+
+	const selectFront = document.getElementById('select-war-front');
+	if (selectFront) {
+		selectFront.addEventListener('change', async (e) => {
+			const newId = e.target.value;
+			if (newId === 'training_arena') {
+				selectedWar = NEUTRAL_TRAINING_FRONT;
+			} else {
+				selectedWar = activeWarsList.find((w) => w.id === newId) || NEUTRAL_TRAINING_FRONT;
+			}
+			renderBattlegroundHeader();
+			await loadWarHitsForFront(selectedWar.id);
+		});
+	}
+
+	if (btnStrike) {
+		btnStrike.addEventListener('click', handleLaunchStrike);
+	}
+
+	document.querySelectorAll('.btn-consume-item').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const kw = btn.getAttribute('data-item-keyword') || '';
+			const restore = parseInt(btn.getAttribute('data-restore') || '10', 10);
+			const lbl = btn.getAttribute('data-label') || 'Item';
+			handleConsumeEnergyItem(kw, restore, lbl);
+		});
+	});
+
+	const shoutForm = document.getElementById('form-worldwide-shout');
+	if (shoutForm) {
+		shoutForm.addEventListener('submit', handleWorldwideShoutSubmit);
+	}
+}
+
+function setupAuth() {
+	if (!auth || !db || !fbAuthMod || !fbFirestoreMod) return;
+	const { onAuthStateChanged, signOut } = fbAuthMod;
+	const { doc, getDoc, setDoc } = fbFirestoreMod;
+
+	const headerAuthContainer = document.getElementById('header-auth-container');
+	const authPromptSidebar = document.getElementById('auth-prompt-sidebar');
+
+	onAuthStateChanged(auth, async (user) => {
+		currentUser = user;
+		if (user) {
+			try {
+				const userRef = doc(db, 'users', user.uid);
+				const userSnap = await getDoc(userRef);
+				if (userSnap.exists()) {
+					currentUserProfile = userSnap.data();
+				} else {
+					const nowIso = new Date().toISOString();
+					currentUserProfile = {
+						id: user.uid,
+						username: (user.displayName || (user.email ? user.email.split('@')[0] : 'Pemain')).slice(0, 50),
+						email: user.email || '',
+						country_code: 'ID',
+						country_name: 'Indonesia',
+						region_name: 'Jakarta',
+						level: 1,
+						xp: 0,
+						energy: 100,
+						health: 100,
+						gold: 10,
+						euro: 0,
+						svct: 0,
+						currency: 0,
+						income: 0,
+						alerts: 0,
+						messages: 0,
+						created_at: nowIso,
+						updated_at: nowIso
+					};
+					await setDoc(userRef, currentUserProfile);
+				}
+
+				renderPlayerProfile(currentUserProfile, user);
+				await loadPlayerInventory(user.uid);
+				renderWarHitsAndLeaderboards();
+
+				if (headerAuthContainer) {
+					headerAuthContainer.innerHTML = `
+						<a href="/my_profile.html" class="label label-info" style="cursor:pointer; text-decoration:none;" title="Profil Pemain">
+							<i class="fa-solid fa-user"></i> ${escapeHtml(currentUserProfile.username || 'Pemain')}
+						</a>
+						<button id="btn-logout" class="btn btn-default btn-sm" style="padding: 2px 8px; margin-left: 4px;" title="Keluar">
+							<i class="fa-solid fa-right-from-bracket"></i>
+						</button>
+					`;
+					const btnLogout = document.getElementById('btn-logout');
+					if (btnLogout) btnLogout.addEventListener('click', () => signOut(auth));
+				}
+
+				if (authPromptSidebar) {
+					authPromptSidebar.innerHTML = `
+						<div class="alert alert-success alert-sm" style="text-align:center; margin: 0;">
+							<i class="fa-solid fa-circle-check"></i> Siap Tempur: <b>${escapeHtml(currentUserProfile.username)}</b>
+						</div>
+					`;
+				}
+			} catch (err) {
+				handleFirestoreError(err, OperationType.GET, `users/${user.uid}`);
+			}
+		} else {
+			currentUserProfile = null;
+			renderGuestState();
+			renderWarHitsAndLeaderboards();
+
+			if (headerAuthContainer) {
+				headerAuthContainer.innerHTML = `
+					<a href="/authys.html" class="btn btn-warning-bvl btn-sm" style="font-size: 11px; padding: 4px 10px;">
+						<i class="fa-solid fa-right-to-bracket"></i> Masuk / Daftar
+					</a>
+				`;
+			}
+
+			if (authPromptSidebar) {
+				authPromptSidebar.innerHTML = `
+					<div class="well well-sm text-center" style="margin: 0; background: #fdf5df; border-color: #f0ad4e;">
+						<small style="color: #875508; display: block; margin-bottom: 6px;">Masuk untuk ikut bertempur &amp; raih XP:</small>
+						<a href="/authys.html" class="btn btn-warning-bvl btn-sm btn-block">
+							<i class="fa-solid fa-right-to-bracket"></i> Masuk Akun
+						</a>
+					</div>
+				`;
+			}
+		}
+	});
+}
+
+async function initWarPage() {
+	const statusEl = document.getElementById('firebase-connection-status');
+	try {
+		setupControls();
+
+		// Sequential Firebase loading: firebase-app first, then firebase-auth & firebase-firestore
+		fbAppMod = await import(`${FIREBASE_CDN_BASE}/firebase-app.js`);
+		const { initializeApp, getApps, getApp } = fbAppMod;
+		app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+
+		const [authModule, firestoreModule] = await Promise.all([
+			import(`${FIREBASE_CDN_BASE}/firebase-auth.js`),
+			import(`${FIREBASE_CDN_BASE}/firebase-firestore.js`)
+		]);
+		fbAuthMod = authModule;
+		fbFirestoreMod = firestoreModule;
+
+		db = fbFirestoreMod.getFirestore(app, firebaseConfig.firestoreDatabaseId);
+		auth = fbAuthMod.getAuth(app);
+
+		await testConnection();
+
+		if (statusEl) {
+			statusEl.className = 'label label-success';
+			statusEl.innerHTML = '<i class="fa-solid fa-circle-check"></i> Firebase Terhubung';
+		}
+
+		setupAuth();
+		await Promise.all([
+			loadWarsCatalog(),
+			loadWorldwideShouts()
+		]);
+	} catch (err) {
+		console.warn('Firebase init error in war.html:', err);
+		if (statusEl) {
+			statusEl.className = 'label label-danger';
+			statusEl.textContent = 'Koneksi Gagal';
+		}
+	}
+}
+
+if (document.readyState === 'loading') {
+	document.addEventListener('DOMContentLoaded', initWarPage);
+} else {
+	initWarPage();
+}
+</script>
+
 </body>
 </html>
