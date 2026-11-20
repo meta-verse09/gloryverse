@@ -202,6 +202,60 @@ service cloud.firestore {
              data.created_at is string && data.created_at.size() <= 64;
     }
 
+    function isValidCountryTax(data) {
+      return data.keys().hasAll(['id', 'country_code', 'country_name', 'work_tax_pct', 'vat_tax_pct', 'import_tax_pct', 'updated_at']) &&
+             data.keys().hasOnly([
+               'id', 'country_code', 'country_name', 'work_tax_pct', 'company_tax_pct',
+               'vat_tax_pct', 'import_tax_pct', 'resource_tax_pct', 'property_tax_pct',
+               'min_wage', 'ideology_name', 'ideology_stance', 'government_type',
+               'work_bonus', 'war_damage_bonus_pct', 'resource_bonus_pct', 'recovery_bonus_pct',
+               'updated_by_uid', 'updated_by_username', 'updated_at'
+             ]) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 10 &&
+             data.country_code is string && data.country_code.size() > 0 && data.country_code.size() <= 5 &&
+             data.country_name is string && data.country_name.size() > 0 && data.country_name.size() <= 60 &&
+             data.work_tax_pct is number && data.work_tax_pct >= 0 && data.work_tax_pct <= 50 &&
+             (!('company_tax_pct' in data) || (data.company_tax_pct is number && data.company_tax_pct >= 0 && data.company_tax_pct <= 50)) &&
+             data.vat_tax_pct is number && data.vat_tax_pct >= 0 && data.vat_tax_pct <= 50 &&
+             data.import_tax_pct is number && data.import_tax_pct >= 0 && data.import_tax_pct <= 100 &&
+             (!('resource_tax_pct' in data) || (data.resource_tax_pct is number && data.resource_tax_pct >= 0 && data.resource_tax_pct <= 50)) &&
+             (!('property_tax_pct' in data) || (data.property_tax_pct is number && data.property_tax_pct >= 0 && data.property_tax_pct <= 50)) &&
+             (!('min_wage' in data) || (data.min_wage is number && data.min_wage >= 0 && data.min_wage <= 100000)) &&
+             (!('ideology_name' in data) || (data.ideology_name is string && data.ideology_name.size() <= 60)) &&
+             (!('ideology_stance' in data) || (data.ideology_stance is string && data.ideology_stance.size() <= 60)) &&
+             (!('government_type' in data) || (data.government_type is string && data.government_type.size() <= 60)) &&
+             (!('work_bonus' in data) || (data.work_bonus is number && data.work_bonus >= 0 && data.work_bonus <= 500)) &&
+             (!('war_damage_bonus_pct' in data) || (data.war_damage_bonus_pct is number && data.war_damage_bonus_pct >= 0 && data.war_damage_bonus_pct <= 100)) &&
+             (!('resource_bonus_pct' in data) || (data.resource_bonus_pct is number && data.resource_bonus_pct >= 0 && data.resource_bonus_pct <= 100)) &&
+             (!('recovery_bonus_pct' in data) || (data.recovery_bonus_pct is number && data.recovery_bonus_pct >= 0 && data.recovery_bonus_pct <= 100)) &&
+             (!('updated_by_uid' in data) || (data.updated_by_uid is string && data.updated_by_uid.size() <= 128)) &&
+             (!('updated_by_username' in data) || (data.updated_by_username is string && data.updated_by_username.size() <= 50)) &&
+             data.updated_at is string && data.updated_at.size() <= 64;
+    }
+
+    function isValidTaxProposal(data) {
+      return data.keys().hasAll(['id', 'country_code', 'country_name', 'proposer_uid', 'proposer_username', 'work_tax_pct', 'vat_tax_pct', 'import_tax_pct', 'ideology_name', 'status', 'created_at']) &&
+             data.keys().hasOnly([
+               'id', 'country_code', 'country_name', 'proposer_uid', 'proposer_username',
+               'work_tax_pct', 'company_tax_pct', 'vat_tax_pct', 'import_tax_pct',
+               'ideology_name', 'reason', 'status', 'created_at', 'updated_at'
+             ]) &&
+             data.id is string && data.id.size() > 0 && data.id.size() <= 128 &&
+             data.country_code is string && data.country_code.size() > 0 && data.country_code.size() <= 5 &&
+             data.country_name is string && data.country_name.size() > 0 && data.country_name.size() <= 60 &&
+             data.proposer_uid is string && data.proposer_uid.size() > 0 && data.proposer_uid.size() <= 128 &&
+             data.proposer_username is string && data.proposer_username.size() > 0 && data.proposer_username.size() <= 50 &&
+             data.work_tax_pct is number && data.work_tax_pct >= 0 && data.work_tax_pct <= 50 &&
+             (!('company_tax_pct' in data) || (data.company_tax_pct is number && data.company_tax_pct >= 0 && data.company_tax_pct <= 50)) &&
+             data.vat_tax_pct is number && data.vat_tax_pct >= 0 && data.vat_tax_pct <= 50 &&
+             data.import_tax_pct is number && data.import_tax_pct >= 0 && data.import_tax_pct <= 100 &&
+             data.ideology_name is string && data.ideology_name.size() > 0 && data.ideology_name.size() <= 60 &&
+             (!('reason' in data) || (data.reason is string && data.reason.size() <= 240)) &&
+             data.status in ['pending', 'approved', 'rejected'] &&
+             data.created_at is string && data.created_at.size() <= 64 &&
+             (!('updated_at' in data) || (data.updated_at is string && data.updated_at.size() <= 64));
+    }
+
     // Connection health check document
     match /test/connection {
       allow read: if true;
@@ -277,6 +331,32 @@ service cloud.firestore {
     match /countries/{countryId} {
       allow read: if true;
       allow write: if isAdmin();
+    }
+
+    // Country Taxes, Ideologies, and Bonuses Collection (Public policy config, admin-only mutation)
+    match /country_taxes/{countryId} {
+      allow get: if isValidId(countryId);
+      allow list: if true;
+      allow create, update: if isAdmin() && isValidId(countryId) && isValidCountryTax(incoming()) && incoming().id == countryId;
+      allow delete: if isAdmin() && isValidId(countryId);
+    }
+
+    // Citizen Tax & Ideology Proposals Collection (Public legislative record without PII)
+    match /tax_proposals/{proposalId} {
+      allow get: if isValidId(proposalId);
+      allow list: if true;
+      allow create: if isSignedIn() && isValidId(proposalId) && isValidTaxProposal(incoming()) &&
+                    incoming().id == proposalId && incoming().proposer_uid == request.auth.uid &&
+                    incoming().status == 'pending';
+      allow update: if isSignedIn() && isValidId(proposalId) && isValidTaxProposal(incoming()) && (
+                      isAdmin() ||
+                      (existing().proposer_uid == request.auth.uid && existing().status == 'pending' &&
+                       incoming().status == 'rejected' &&
+                       incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updated_at']))
+                    ) &&
+                    incoming().proposer_uid == existing().proposer_uid &&
+                    incoming().created_at == existing().created_at;
+      allow delete: if isAdmin() && isValidId(proposalId);
     }
 
     // Withdrawals Collection

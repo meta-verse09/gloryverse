@@ -199,6 +199,56 @@
         "created_at": { "type": "string", "maxLength": 64 }
       },
       "required": ["id", "war_id", "war_region", "uid", "username", "country_code", "side", "weapon_name", "damage", "created_at"]
+    },
+    "CountryTax": {
+      "title": "CountryTax",
+      "description": "Country tax rates, national ideology, and regional/economic bonuses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 10 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "country_name": { "type": "string", "maxLength": 60 },
+        "work_tax_pct": { "type": "number" },
+        "company_tax_pct": { "type": "number" },
+        "vat_tax_pct": { "type": "number" },
+        "import_tax_pct": { "type": "number" },
+        "resource_tax_pct": { "type": "number" },
+        "property_tax_pct": { "type": "number" },
+        "min_wage": { "type": "number" },
+        "ideology_name": { "type": "string", "maxLength": 60 },
+        "ideology_stance": { "type": "string", "maxLength": 60 },
+        "government_type": { "type": "string", "maxLength": 60 },
+        "work_bonus": { "type": "number" },
+        "war_damage_bonus_pct": { "type": "number" },
+        "resource_bonus_pct": { "type": "number" },
+        "recovery_bonus_pct": { "type": "number" },
+        "updated_by_uid": { "type": "string", "maxLength": 128 },
+        "updated_by_username": { "type": "string", "maxLength": 50 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "country_code", "country_name", "work_tax_pct", "vat_tax_pct", "import_tax_pct", "updated_at"]
+    },
+    "TaxProposal": {
+      "title": "TaxProposal",
+      "description": "Citizen-submitted legislative proposal for country tax rates and ideology",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "country_code": { "type": "string", "maxLength": 5 },
+        "country_name": { "type": "string", "maxLength": 60 },
+        "proposer_uid": { "type": "string", "maxLength": 128 },
+        "proposer_username": { "type": "string", "maxLength": 50 },
+        "work_tax_pct": { "type": "number" },
+        "company_tax_pct": { "type": "number" },
+        "vat_tax_pct": { "type": "number" },
+        "import_tax_pct": { "type": "number" },
+        "ideology_name": { "type": "string", "maxLength": 60 },
+        "reason": { "type": "string", "maxLength": 240 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "created_at": { "type": "string", "maxLength": 64 },
+        "updated_at": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "country_code", "country_name", "proposer_uid", "proposer_username", "work_tax_pct", "vat_tax_pct", "import_tax_pct", "ideology_name", "status", "created_at"]
     }
   },
   "firestore": {
@@ -225,6 +275,14 @@
     "/countries/{countryId}": {
       "schema": { "$ref": "#/entities/CountryRanking" },
       "description": "Country ranking and job statistics"
+    },
+    "/country_taxes/{countryId}": {
+      "schema": { "$ref": "#/entities/CountryTax" },
+      "description": "Country tax rates, ideology, and regional/economic bonuses"
+    },
+    "/tax_proposals/{proposalId}": {
+      "schema": { "$ref": "#/entities/TaxProposal" },
+      "description": "Citizen tax and ideology proposals for countries"
     },
     "/withdrawals/{withdrawalId}": {
       "schema": { "$ref": "#/entities/Withdrawal" },
